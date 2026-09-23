@@ -1,0 +1,28 @@
+# Raw datasets: re-download, see data/README.md
+data/raw/
+*.zip
+*.parquet
+*.csv.gz
+
+# Secrets
+.env
+.env.*
+**/.streamlit/secrets.toml
+
+# Python / notebooks
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Model caches, vector stores
+models/
+*.faiss
+*.index
+
+# OS / tooling
+.playwright-mcp/
+~$*
+Thumbs.db
+.DS_Store
+desktop.ini

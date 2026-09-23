@@ -1,0 +1,45 @@
+<svg style="font-family:Archivo,Arial,sans-serif;background:#f8f7f3" class="chart" viewBox="0 0 1000 616" width="100%" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="395" y1="8" x2="395" y2="610" stroke="#d8d7d0" stroke-width="2"/>
+<path d="M395,8 h490.0 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-490.0 z" fill="#0d9488"/>
+<text x="379" y="30.9" text-anchor="end" font-size="30" fill="#1c1c1a">Python</text>
+<text x="904.0" y="30.9" font-size="30" font-weight="600" fill="#5b5a55">71%</text>
+<path d="M395,51 h441.2 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-441.2 z" fill="#0d9488"/>
+<text x="379" y="73.9" text-anchor="end" font-size="30" fill="#1c1c1a">SQL</text>
+<text x="855.2" y="73.9" font-size="30" font-weight="600" fill="#5b5a55">64%</text>
+<path d="M395,94 h399.4 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-399.4 z" fill="#0d9488"/>
+<text x="379" y="116.9" text-anchor="end" font-size="30" fill="#1c1c1a">Machine learning</text>
+<text x="813.4" y="116.9" font-size="30" font-weight="600" fill="#5b5a55">58%</text>
+<path d="M395,137 h315.7 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-315.7 z" fill="#0d9488"/>
+<text x="379" y="159.9" text-anchor="end" font-size="30" fill="#1c1c1a">Statistics</text>
+<text x="729.7" y="159.9" font-size="30" font-weight="600" fill="#5b5a55">46%</text>
+<path d="M395,180 h301.8 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-301.8 z" fill="#0d9488"/>
+<text x="379" y="202.9" text-anchor="end" font-size="30" fill="#1c1c1a">Communication</text>
+<text x="715.8" y="202.9" font-size="30" font-weight="600" fill="#5b5a55">44%</text>
+<path d="M395,223 h259.9 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-259.9 z" fill="#c2612b"/>
+<text x="379" y="245.9" text-anchor="end" font-size="30" fill="#1c1c1a">Cloud (AWS, Azure, GCP)</text>
+<text x="673.9" y="245.9" font-size="30" font-weight="600" fill="#5b5a55">38%</text>
+<path d="M395,266 h246.0 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-246.0 z" fill="#0d9488"/>
+<text x="379" y="288.9" text-anchor="end" font-size="30" fill="#1c1c1a">Data visualisation</text>
+<text x="660.0" y="288.9" font-size="30" font-weight="600" fill="#5b5a55">36%</text>
+<path d="M395,309 h197.2 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-197.2 z" fill="#0d9488"/>
+<text x="379" y="331.9" text-anchor="end" font-size="30" fill="#1c1c1a">Deep learning</text>
+<text x="611.2" y="331.9" font-size="30" font-weight="600" fill="#5b5a55">29%</text>
+<path d="M395,352 h183.2 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-183.2 z" fill="#c2612b"/>
+<text x="379" y="374.9" text-anchor="end" font-size="30" fill="#1c1c1a">Spark / big data</text>
+<text x="597.2" y="374.9" font-size="30" font-weight="600" fill="#5b5a55">27%</text>
+<path d="M395,395 h176.3 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-176.3 z" fill="#c2612b"/>
+<text x="379" y="417.9" text-anchor="end" font-size="30" fill="#1c1c1a">Power BI / Tableau</text>
+<text x="590.3" y="417.9" font-size="30" font-weight="600" fill="#5b5a55">26%</text>
+<path d="M395,438 h148.4 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-148.4 z" fill="#0d9488"/>
+<text x="379" y="460.9" text-anchor="end" font-size="30" fill="#1c1c1a">NLP</text>
+<text x="562.4" y="460.9" font-size="30" font-weight="600" fill="#5b5a55">22%</text>
+<path d="M395,481 h141.4 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-141.4 z" fill="#c2612b"/>
+<text x="379" y="503.9" text-anchor="end" font-size="30" fill="#1c1c1a">Git</text>
+<text x="555.4" y="503.9" font-size="30" font-weight="600" fill="#5b5a55">21%</text>
+<path d="M395,524 h113.5 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-113.5 z" fill="#c2612b"/>
+<text x="379" y="546.9" text-anchor="end" font-size="30" fill="#1c1c1a">Experimentation / A-B</text>
+<text x="527.5" y="546.9" font-size="30" font-weight="600" fill="#5b5a55">17%</text>
+<path d="M395,567 h99.6 a5,5 0 0 1 5,5 v21 a5,5 0 0 1 -5,5 h-99.6 z" fill="#c2612b"/>
+<text x="379" y="589.9" text-anchor="end" font-size="30" fill="#1c1c1a">MLOps</text>
+<text x="513.6" y="589.9" font-size="30" font-weight="600" fill="#5b5a55">15%</text>
+</svg>

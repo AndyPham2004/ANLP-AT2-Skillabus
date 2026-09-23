@@ -1,0 +1,12 @@
+# Poster build (AT2A) needs only the standard library + Chrome/Edge for PDF export.
+# AT2B application stack (planned, see poster block 9):
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.5
+spacy>=3.7
+sentence-transformers>=3.0
+faiss-cpu>=1.8
+streamlit>=1.38
+openai>=1.40
+pypdf>=4.3
+matplotlib>=3.9
