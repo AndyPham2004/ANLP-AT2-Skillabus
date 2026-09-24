@@ -16,9 +16,8 @@ they lack and which subject fills each gap. Details and layout in `README.md`.
 ## Team and roles
 
 Quan Pham is the user (role A: story, production, submission). Teammates: Van Thong, Phuong Nhi,
-Hoai Thuong. Role letters assumed from the order given on 24 Sep: B = Van Thong (data, EDA),
-C = Phuong Nhi (pipeline, gap chart, subject table), D = Hoai Thuong (evaluation, plan). Confirm the
-mapping before the final export; it only affects names in the Gantt. Full role plan (Vietnamese) in
+Hoai Thuong. Role letters confirmed by Quan on 25 Sep: B = Van Thong (data, EDA),
+C = Phuong Nhi (pipeline, gap chart, subject table), D = Hoai Thuong (evaluation, plan).  Full role plan (Vietnamese) in
 `docs/Ke hoach poster Skills Map.html`.
 
 ## Poster workflow (AT2A)
@@ -50,26 +49,35 @@ Every figure on the poster traces to a teammate handoff kept in `poster/`:
   Baseline: exact ESCO match covers 36% of a 133-skill dictionary, 55% have no ESCO concept.
 - Role C, blocks 4, 6, 7: `MDSI_Skills_Map_Student_C_pipeline.ipynb`. One Robert Walters ad (Sydney CBD)
   vs one synthetic resume: 14 required skills, 3 covered, 11 missing. Demand axis from the Seek corpus.
-  The notebook needs B's `data-eda/` folder, which is not in this repo; figures were regenerated from the
+  The notebook needs B's `data-eda/` folder, now at `data/raw/data-eda/` (gitignored); figures were regenerated from the
   printed outputs (`poster/figures/block*.png`, 300 dpi).
 - Role D, blocks 8 and 9: `Poster_blocks_8_and_9_Role_D_handoff.html`. Test sets 200 / 50 / 30,
-  weeks from 23 Sep, Python 3.11 + venv, "LLM API" (provider not yet chosen).
+  weeks from 23 Sep, Python 3.11 + venv in the handoff; the repo uses Python 3.12, and the LLM is the OpenAI API (decided 25 Sep).
 - `data/processed/top_skills.csv` and `gap.csv` are those numbers in the form `src/figures.py` reads.
 
-## Open items before submission (as of 24 Sep 2026)
+## Status (25 Sep 2026): poster fact-checked and exported, ready to submit
 
-1. Fix pipeline order in the Claude Design project (Extract → Normalise → Match).
-2. Block 9 lost the technical-setup line (repo, Python 3.11, spaCy, scikit-learn, sentence-transformers,
-   FAISS, Streamlit, LLM API). It is a marking criterion; add it back.
-3. Block 6 has no subject for the two biggest gaps (machine learning 71%, principles of AI 22%) and
-   uses a 0%-demand skill instead. Ask Phuong Nhi to run the matcher for those two.
-4. Block 1 quote from the Robert Walters ad is paraphrased inside quote marks; use the exact wording.
-5. References: add O*NET, LinkedIn US, Resume Dataset, UTS Handbook; get the Seek dataset citation from
-   Van Thong.
-6. Word count is 743; team budget is 550, hard ceiling 800.
-7. Decide LLM provider (API vs Ollama) and confirm the B/C/D name mapping.
-8. Brief asks for a PowerPoint or Canva source file. The current source is HTML; either export from
-   Claude Design or build a PPTX before submitting.
+Every number on `poster/poster_design.html` was re-derived from the files in
+`data/raw/data-eda/` (Van Thong's folder, copied from `C:\MDSI.Big Data Engineering\Assignment2\data-eda`,
+gitignored): Seek 3,204; ESCO `skills_en.csv` 13,960 rows (the ESCO site quotes 13,939 for v1.2;
+we cite the file); O*NET 31.0 unique tool names 8,753; UTS 70 subjects, 19 MDSI; LinkedIn 1,355 data
+roles, of which 247 Data Scientist-titled ads carry the US comparison (LLMs 39/247 = 15.8%);
+resumes 2,484 in 24 categories; ESCO baseline 48/133 = 36% mapped, 73/133 = 55% absent; gap chart
+percentages recomputed identically; top-15 chart matches `outputs/skill_counts_PRIMARY.csv`.
+No ESCO concept contains "generative" or "large language model" (API search, 25 Sep).
+
+Resolved on 25 Sep: pipeline order (already correct in the repo copy); technical-setup line added to
+block 9; block 6 now lists machine learning → 36120, principles of AI → 36121, data models → 94693,
+cloud → 42904 (Student C's keyword matcher re-run over `uts_subjects_2026.csv`; SLO wording checked
+against the Handbook); block 1 ad quote is now verbatim from the ad text in the notebook; references
+cover every source; word count 798 (hard ceiling 800; team target 550 was not reachable with the
+plan the brief demands); LLM = OpenAI API, GPT-4o-mini; B/C/D name mapping confirmed by Quan;
+source file for Canvas = `poster_design_A0.pdf` + `poster_design.html` (brief allows "other files").
+
+Still open: the Claude Design project itself was not edited (DesignSync is read-only for this
+project type), so the repo copy is now ahead of it; Van Thong should confirm the exact Kaggle URL of
+the PromptCloud Seek dataset for the report; the "22%" bar for principles of AI is 22.5% rounded
+half-to-even, as in Student C's chart.
 
 ## Conventions
 

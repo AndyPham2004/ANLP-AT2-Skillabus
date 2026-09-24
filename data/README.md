@@ -1,6 +1,6 @@
 # Data sources
 
-Nothing under `data/raw/` is committed. Download each source into `data/raw/<name>/`
+Nothing under `data/raw/` is committed. Van Thong's full EDA folder (raw files, scripts, outputs, `DATASETS.md`) lives at `data/raw/data-eda/`; ask him for the zip (about 690 MB). Download each source into `data/raw/<name>/`
 and run the notebooks in `notebooks/` to produce the small CSVs in `data/processed/`
 that the poster build reads.
 
