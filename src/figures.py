@@ -95,12 +95,17 @@ def fig_top_skills():
 def fig_gap():
     rows, illustrative = gap_data()
     rows = sorted(rows, key=lambda r: -r[1])
-    svg = hbar_svg([(s, v, 0 if c else 1) for s, v, c in rows],
+    # Skills the ad requires but no Seek ad phrases the ESCO way (0% demand) are
+    # counted in the totals but not drawn, as in Student C's notebook chart.
+    drawn = [r for r in rows if r[1] > 0]
+    omitted = len(rows) - len(drawn)
+    svg = hbar_svg([(s, v, 0 if c else 1) for s, v, c in drawn],
                    colors=[TEAL, COPPER], bar=31, gap=12, font=30)
     covered = sum(1 for r in rows if r[2])
-    missing = [r[0].split(" (")[0].split(" /")[0] for r in rows if not r[2]][:3]
+    missing = [r[0].split(" (")[0].split(" /")[0] for r in drawn if not r[2]][:3]
     return svg, illustrative, {"n": len(rows), "covered": covered,
-                               "missing": len(rows) - covered, "top_missing": missing}
+                               "missing": len(rows) - covered, "top_missing": missing,
+                               "omitted": omitted}
 
 
 def write_standalone(svg: str, path: Path):

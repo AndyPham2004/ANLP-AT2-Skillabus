@@ -53,6 +53,7 @@ def build_html() -> dict:
         "{{GAP_COVERED}}": str(summary["covered"]),
         "{{GAP_MISSING}}": str(summary["missing"]),
         "{{GAP_TOP_MISSING}}": ", ".join(summary["top_missing"]),
+        "{{GAP_OMITTED}}": str(summary["omitted"]),
         "{{DRAFT_CLASS}}": "draft" if illustrative else "",
     }
     for k, v in repl.items():

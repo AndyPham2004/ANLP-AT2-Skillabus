@@ -1,0 +1,19 @@
+# From Student C notebook (MDSI_Skills_Map_Student_C_pipeline.ipynb), cells 13 and 15, 23 Sep 2026.
+# One real "Data Scientist - Python, SQL" ad (Robert Walters, Sydney CBD) vs one synthetic early-career resume.
+# pct_ads = share of 3,204 Seek Australia Data Scientist ads (2019-2022) mentioning the ESCO skill.
+# Labels shortened from ESCO preferred labels; esco_label keeps the original.
+skill,pct_ads,covered,esco_label
+Python,82.8,1,Python (computer programming)
+Machine learning,71.2,0,utilise machine learning
+SQL,56.8,1,SQL
+Predictive models,24.9,0,build predictive models
+AI principles,22.5,0,principles of artificial intelligence
+Business intelligence,6.4,1,business intelligence
+Data models,2.9,0,data models
+Cloud technologies,2.0,0,cloud technologies
+Create data models,0,0,create data models
+Analytical calculations,0,0,execute analytical mathematical calculations
+Integrate ICT data,0,0,integrate ICT data
+OLAP,0,0,online analytical processing
+Data quality processes,0,0,implement data quality processes
+Interpret current data,0,0,interpret current data

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skills Map poster</title>
+<!-- Imported from Claude Design project "Design Layout at A0" (Skills Map Poster.dc.html), 24 Sep 2026.
+     Changes from the design source: plain HTML instead of the x-dc wrapper, @page size for PDF export,
+     logo path, and the pipeline order fixed to Extract -> Normalise -> Match. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+@page { size: 1189mm 841mm; margin: 0; }
+html, body { margin: 0; padding: 0; }
+body { background: #cfd4da; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+a { color: #1f4e8c; } a:hover { color: #c2632a; }
+</style>
+</head>
+<body>
+<div style="position:relative;width:1189mm;height:841mm;background:#e9edf2;font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#0b1a2b;overflow:hidden;">
+
+  <!-- header band -->
+  <div style="position:absolute;left:0;top:0;width:1189mm;height:180mm;background:#0b1a2b;"></div>
+  <div style="position:absolute;left:0;top:178mm;width:1189mm;height:3mm;background:#1f4e8c;"></div>
+  <div style="position:absolute;left:30mm;top:26mm;width:800mm;">
+    <div style="font-size:24pt;font-weight:500;letter-spacing:0.08em;color:#9cc3f5;">36118 Applied NLP · Assessment 2A · Spring 2026</div>
+    <div style="font-size:120pt;font-weight:700;line-height:1;letter-spacing:-0.025em;color:#ffffff;margin-top:6mm;">Skills Map</div>
+    <div style="font-size:48pt;font-weight:400;line-height:1.1;color:#9cc3f5;margin-top:4mm;">Closing the gap between your degree and the job ad</div>
+    <div style="font-size:27pt;line-height:1.35;color:#dfe7f1;margin-top:12mm;max-width:760mm;text-wrap:pretty;">We put subject outlines, job ads and resumes into one skills vocabulary, so a student can see exactly which skills a role needs that they lack, and which subject fills each gap.</div>
+  </div>
+  <div style="position:absolute;right:30mm;top:26mm;width:300mm;display:flex;flex-direction:column;align-items:flex-end;gap:8mm;text-align:right;">
+    <div style="background:#ffffff;border-radius:3mm;padding:5mm 8mm;display:flex;align-items:center;"><img src="figures/uts_logo.png" alt="UTS" style="height:30mm;width:auto;display:block;"></div>
+    <div style="font-size:26pt;font-weight:600;color:#ffffff;line-height:1.4;">Quan Pham · Van Thong<br>Phuong Nhi · Hoai Thuong</div>
+    <div style="font-size:24pt;color:#9cc3f5;line-height:1.4;">Master of Data Science and Innovation<br>University of Technology Sydney</div>
+  </div>
+
+  <!-- column 1 -->
+  <div style="position:absolute;left:22mm;top:197mm;width:286mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">1</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">The problem</span></div>
+    <p style="font-size:25pt;line-height:1.35;margin:6mm 0 0;text-wrap:pretty;">Subject outlines speak academic. Job ads speak industry. Nothing maps one to the other.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:8mm;">
+      <div style="background:#e4eaf1;border-radius:3mm;padding:7mm;display:flex;flex-direction:column;justify-content:space-between;">
+        <div style="font-family:'IBM Plex Serif',Georgia,serif;font-style:italic;font-size:24pt;line-height:1.35;color:#0b1a2b;">“Implement and evaluate advanced machine learning techniques to real-world problems.”</div>
+        <div style="font-size:24pt;color:#1f4e8c;font-weight:600;margin-top:6mm;">UTS Handbook, 36120, learning outcome</div>
+      </div>
+      <div style="background:#f0d6c2;border-radius:3mm;padding:7mm;display:flex;flex-direction:column;justify-content:space-between;">
+        <div style="font-family:'IBM Plex Serif',Georgia,serif;font-style:italic;font-size:24pt;line-height:1.35;color:#0b1a2b;">“Experience building and deploying AI models. In-depth knowledge of deep learning, Generative AI and other advanced AI technologies.”</div>
+        <div style="font-size:24pt;color:#c2632a;font-weight:600;margin-top:6mm;">Robert Walters, Data Scientist, Sydney CBD, Sep 2026</div>
+      </div>
+    </div>
+    <p style="font-size:25pt;line-height:1.35;margin:8mm 0 0;text-wrap:pretty;">Same skill, different words. Only the ad asks for generative AI, a phrase ESCO has no concept for yet.</p>
+  </div>
+
+  <div style="position:absolute;left:22mm;top:462mm;width:286mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">2</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">Three users, one question each</span></div>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:4mm 8mm;font-size:25pt;line-height:1.35;margin-top:6mm;">
+      <div style="font-weight:600;color:#1f4e8c;">Elective chooser</div><div>Which subject moves me closest to my target role?</div>
+      <div style="font-weight:600;color:#1f4e8c;">Job seeker</div><div>What does my resume lack for this ad?</div>
+      <div style="font-weight:600;color:#1f4e8c;">Career switcher</div><div>How far is my profile from a new role?</div>
+    </div>
+    <div style="font-size:24pt;line-height:1.4;color:#4a5866;margin-top:6mm;">Upload a resume or tick subjects taken · pick role and city · gap ranked by demand · electives ranked by gap closed · chat that answers from real ads</div>
+  </div>
+
+  <div style="position:absolute;left:22mm;top:612mm;width:286mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">3</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">Six sources, one vocabulary</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;margin-top:6mm;">
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm;"><div style="font-size:44pt;font-weight:700;color:#1f4e8c;line-height:1;">3,204</div><div style="font-size:24pt;line-height:1.3;margin-top:3mm;">Seek Australia Data Scientist ads, 2019–22</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm;"><div style="font-size:44pt;font-weight:700;color:#1f4e8c;line-height:1;">13,960</div><div style="font-size:24pt;line-height:1.3;margin-top:3mm;">ESCO v1.2.1 skill concepts</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm;"><div style="font-size:44pt;font-weight:700;color:#1f4e8c;line-height:1;">8,753</div><div style="font-size:24pt;line-height:1.3;margin-top:3mm;">O*NET 31.0 tool names ESCO omits</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm;"><div style="font-size:44pt;font-weight:700;color:#1f4e8c;line-height:1;">70</div><div style="font-size:24pt;line-height:1.3;margin-top:3mm;">UTS Handbook subjects, six courses</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm;"><div style="font-size:44pt;font-weight:700;color:#1f4e8c;line-height:1;">1,355</div><div style="font-size:24pt;line-height:1.3;margin-top:3mm;">LinkedIn US data roles, 2023–24</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm;"><div style="font-size:44pt;font-weight:700;color:#1f4e8c;line-height:1;">2,484</div><div style="font-size:24pt;line-height:1.3;margin-top:3mm;">Resumes for the student profile</div></div>
+    </div>
+    <div style="font-size:24pt;color:#4a5866;margin-top:5mm;">Every count read from the downloaded file, not a description page.</div>
+  </div>
+
+  <!-- column 2 -->
+  <div style="position:absolute;left:322mm;top:197mm;width:476mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">4</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">Pipeline</span><span style="font-size:24pt;color:#4a5866;margin-left:4mm;">copper stages compare a traditional and a newer method, scored in 8</span></div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4mm;margin-top:6mm;">
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm 6mm;"><div style="font-size:26pt;font-weight:600;color:#1f4e8c;">Input</div><div style="font-size:24pt;color:#4a5866;line-height:1.3;">resume + ad</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm 6mm;"><div style="font-size:26pt;font-weight:600;color:#1f4e8c;">Clean</div><div style="font-size:24pt;color:#4a5866;line-height:1.3;">lowercase, strip</div></div>
+      <div style="background:#f0d6c2;border-radius:3mm;padding:5mm 6mm;"><div style="font-size:26pt;font-weight:600;color:#c2632a;">Extract skills</div><div style="font-size:24pt;color:#4a5866;line-height:1.3;">ESCO dictionary → NER, LLM</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm 6mm;"><div style="font-size:26pt;font-weight:600;color:#1f4e8c;">Normalise</div><div style="font-size:24pt;color:#4a5866;line-height:1.3;">to ESCO labels</div></div>
+      <div style="background:#f0d6c2;border-radius:3mm;padding:5mm 6mm;"><div style="font-size:26pt;font-weight:600;color:#c2632a;">Match</div><div style="font-size:24pt;color:#4a5866;line-height:1.3;">TF-IDF → embeddings</div></div>
+      <div style="background:#e4eaf1;border-radius:3mm;padding:5mm 6mm;"><div style="font-size:26pt;font-weight:600;color:#1f4e8c;">Output</div><div style="font-size:24pt;color:#4a5866;line-height:1.3;">gap, subjects, chat</div></div>
+    </div>
+  </div>
+
+  <!-- hero -->
+  <div style="position:absolute;left:322mm;top:282mm;width:476mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">5</span><span style="font-size:40pt;font-weight:700;line-height:1.1;">One profile against one role</span></div>
+    <div style="display:flex;gap:22mm;align-items:flex-end;margin-top:8mm;">
+      <div><div style="font-size:84pt;font-weight:700;line-height:0.95;color:#0b1a2b;">14</div><div style="font-size:24pt;color:#4a5866;margin-top:2mm;">skills the ad demands</div></div>
+      <div><div style="font-size:84pt;font-weight:700;line-height:0.95;color:#1f4e8c;">3</div><div style="font-size:24pt;color:#1f4e8c;margin-top:2mm;">resume has</div></div>
+      <div><div style="font-size:84pt;font-weight:700;line-height:0.95;color:#c2632a;">11</div><div style="font-size:24pt;color:#c2632a;margin-top:2mm;">missing</div></div>
+      <div style="flex:1;font-size:25pt;line-height:1.35;color:#0b1a2b;padding-bottom:2mm;text-wrap:pretty;">A real Data Scientist ad, Sydney CBD, against an early-career resume. The biggest gaps are modelling, not tooling.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:170mm 1fr;row-gap:5mm;column-gap:6mm;margin-top:10mm;align-items:center;font-size:24pt;">
+      <div style="text-align:right;color:#0b1a2b;">Python</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:83%;background:#1f4e8c;border-radius:1.5mm;"></div><span style="font-weight:600;color:#1f4e8c;">83%</span></div>
+      <div style="text-align:right;color:#c2632a;font-weight:600;">machine learning</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:71%;background:#c2632a;border-radius:1.5mm;"></div><span style="font-weight:600;color:#c2632a;">71%</span></div>
+      <div style="text-align:right;color:#0b1a2b;">SQL</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:57%;background:#1f4e8c;border-radius:1.5mm;"></div><span style="font-weight:600;color:#1f4e8c;">57%</span></div>
+      <div style="text-align:right;color:#c2632a;font-weight:600;">predictive models</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:25%;background:#c2632a;border-radius:1.5mm;"></div><span style="font-weight:600;color:#c2632a;">25%</span></div>
+      <div style="text-align:right;color:#c2632a;font-weight:600;">principles of AI</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:22%;background:#c2632a;border-radius:1.5mm;"></div><span style="font-weight:600;color:#c2632a;">22%</span></div>
+      <div style="text-align:right;color:#0b1a2b;">business intelligence</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:6%;background:#1f4e8c;border-radius:1.5mm;"></div><span style="font-weight:600;color:#1f4e8c;">6%</span></div>
+      <div style="text-align:right;color:#c2632a;font-weight:600;">data models</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:3%;background:#c2632a;border-radius:1.5mm;"></div><span style="font-weight:600;color:#c2632a;">3%</span></div>
+      <div style="text-align:right;color:#c2632a;font-weight:600;">cloud technologies</div><div style="display:flex;align-items:center;gap:5mm;"><div style="height:16mm;width:2%;background:#c2632a;border-radius:1.5mm;"></div><span style="font-weight:600;color:#c2632a;">2%</span></div>
+    </div>
+    <div style="display:flex;gap:10mm;margin-top:8mm;font-size:24pt;color:#4a5866;line-height:1.35;">
+      <div style="display:flex;gap:4mm;align-items:center;flex:none;"><span style="width:10mm;height:10mm;background:#1f4e8c;border-radius:1mm;display:inline-block;"></span>resume has<span style="width:10mm;height:10mm;background:#c2632a;border-radius:1mm;display:inline-block;margin-left:6mm;"></span>missing</div>
+      <div style="text-wrap:pretty;">Bar = share of 3,204 Seek Australia ads mentioning the skill. ESCO dictionary extraction, TF-IDF matching. Six required skills are ESCO phrasings no ad uses: counted, not drawn. Resume is synthetic.</div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:322mm;top:612mm;width:476mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">6</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">Which UTS subject fills each gap</span></div>
+    <div style="display:grid;grid-template-columns:120mm 1fr;gap:4mm 8mm;margin-top:6mm;font-size:24pt;line-height:1.3;">
+      <div style="color:#c2632a;font-weight:600;padding:4mm 0;border-top:0.6mm solid #cfd8e3;">predictive models</div><div style="padding:4mm 0;border-top:0.6mm solid #cfd8e3;"><span style="font-weight:600;color:#1f4e8c;">36120 Advanced Machine Learning Application</span> <span style="color:#4a5866;">— implement and evaluate advanced ML techniques</span></div>
+      <div style="color:#c2632a;font-weight:600;padding:4mm 0;border-top:0.6mm solid #cfd8e3;">cloud technologies</div><div style="padding:4mm 0;border-top:0.6mm solid #cfd8e3;"><span style="font-weight:600;color:#1f4e8c;">42904 Cloud Computing and Software as a Service</span> <span style="color:#4a5866;">— articulate the need for cloud computing</span></div>
+      <div style="color:#c2632a;font-weight:600;padding:4mm 0;border-top:0.6mm solid #cfd8e3;">data models</div><div style="padding:4mm 0;border-top:0.6mm solid #cfd8e3;"><span style="font-weight:600;color:#1f4e8c;">94693 Big Data Engineering</span> <span style="color:#4a5866;">— data modelling, distributed processing, streaming</span></div>
+      <div style="color:#c2632a;font-weight:600;padding:4mm 0;border-top:0.6mm solid #cfd8e3;">analytical calculations</div><div style="padding:4mm 0;border-top:0.6mm solid #cfd8e3;"><span style="font-weight:600;color:#1f4e8c;">36103 Statistical Thinking for Data Science</span> <span style="color:#4a5866;">— justify the statistical tools used</span></div>
+    </div>
+    <div style="font-size:24pt;color:#4a5866;margin-top:5mm;line-height:1.35;text-wrap:pretty;">Keyword match against learning outcomes of 70 UTS subjects; Part B uses embeddings. 42904 sits outside MDSI but is open as an elective.</div>
+  </div>
+
+  <!-- column 3 -->
+  <div style="position:absolute;left:812mm;top:197mm;width:355mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">7</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">What Australian employers ask for</span></div>
+    <div style="display:grid;grid-template-columns:118mm 1fr;row-gap:2.6mm;column-gap:5mm;margin-top:6mm;align-items:center;font-size:24pt;line-height:1;">
+      <div style="text-align:right;">Python</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:83%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">83%</span></div>
+      <div style="text-align:right;">SQL</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:57%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">57%</span></div>
+      <div style="text-align:right;">Statistics</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:56%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">56%</span></div>
+      <div style="text-align:right;">Spark</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:26%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">26%</span></div>
+      <div style="text-align:right;">Data visualisation</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:25%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">25%</span></div>
+      <div style="text-align:right;">AWS</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:22%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">22%</span></div>
+      <div style="text-align:right;">Optimisation</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:20%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">20%</span></div>
+      <div style="text-align:right;">Tableau</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:19%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">19%</span></div>
+      <div style="text-align:right;">Hadoop</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:17%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">17%</span></div>
+      <div style="text-align:right;">NLP</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:17%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">17%</span></div>
+      <div style="text-align:right;">Deep learning</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:16%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">16%</span></div>
+      <div style="text-align:right;">SAS</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:15%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">15%</span></div>
+      <div style="text-align:right;">Power BI</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:15%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">15%</span></div>
+      <div style="text-align:right;">Scala</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:15%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">15%</span></div>
+      <div style="text-align:right;">Time series forecasting</div><div style="display:flex;align-items:center;gap:4mm;"><div style="height:8.5mm;width:13%;background:#1f4e8c;"></div><span style="font-weight:600;color:#1f4e8c;">13%</span></div>
+    </div>
+    <p style="font-size:25pt;line-height:1.35;margin:7mm 0 0;text-wrap:pretty;">After the top three, no tool passes 26%. Off the chart: communication appears in 28% of ads, more than Tableau, AWS or Hadoop.</p>
+    <div style="font-size:24pt;color:#4a5866;margin-top:4mm;line-height:1.35;text-wrap:pretty;">Seek Australia Data Scientist ads 2019–22, n = 3,204, technical skills. No LLM skill appears: the ads predate 2023. LLMs sit at 0% here, 15.8% in 1,355 US ads 2023–24.</div>
+  </div>
+
+  <div style="position:absolute;left:812mm;top:482mm;width:355mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">8</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">How we score each stage</span></div>
+    <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:3mm 8mm;margin-top:6mm;font-size:24pt;line-height:1.3;">
+      <div style="color:#4a5866;font-weight:500;">Stage</div><div style="color:#4a5866;font-weight:500;">Baseline → modern</div><div style="color:#4a5866;font-weight:500;">Metric, test set</div>
+      <div style="font-weight:600;border-top:0.6mm solid #cfd8e3;padding-top:3mm;">Extraction</div><div style="border-top:0.6mm solid #cfd8e3;padding-top:3mm;">ESCO dictionary → spaCy NER → LLM</div><div style="border-top:0.6mm solid #cfd8e3;padding-top:3mm;">P, R, F1; 200 hand-labelled ads</div>
+      <div style="font-weight:600;border-top:0.6mm solid #cfd8e3;padding-top:3mm;">Matching</div><div style="border-top:0.6mm solid #cfd8e3;padding-top:3mm;">TF-IDF cosine → sentence embeddings</div><div style="border-top:0.6mm solid #cfd8e3;padding-top:3mm;">P@5, MRR; 50 CV–JD pairs</div>
+      <div style="font-weight:600;border-top:0.6mm solid #cfd8e3;padding-top:3mm;">Chat</div><div style="border-top:0.6mm solid #cfd8e3;padding-top:3mm;">Keyword search → RAG with FAISS</div><div style="border-top:0.6mm solid #cfd8e3;padding-top:3mm;">LLM judge 1–5; 30 questions</div>
+    </div>
+    <div style="font-size:24pt;color:#4a5866;margin-top:5mm;line-height:1.35;text-wrap:pretty;">Exact ESCO matching covers only 36% of our 133-skill dictionary; 55%, including the whole LLM stack, have no ESCO concept.</div>
+  </div>
+
+  <div style="position:absolute;left:812mm;top:652mm;width:355mm;padding:8mm 8mm 9mm;box-sizing:border-box;background:#ffffff;border-radius:4mm;box-shadow:0 1mm 4mm rgba(11,26,43,0.06);">
+    <div style="display:flex;align-items:baseline;gap:6mm;"><span style="font-size:24pt;font-weight:700;color:#1f4e8c;">9</span><span style="font-size:32pt;font-weight:600;line-height:1.1;">Three weeks to 14 October</span></div>
+    <div style="display:grid;grid-template-columns:140mm repeat(3,1fr);gap:2.5mm 3mm;margin-top:6mm;font-size:24pt;line-height:1.2;align-items:center;">
+      <div></div><div style="color:#4a5866;text-align:center;white-space:nowrap;">W1 23–29 Sep</div><div style="color:#4a5866;text-align:center;white-space:nowrap;">W2 30 Sep–6 Oct</div><div style="color:#4a5866;text-align:center;white-space:nowrap;">W3 7–14 Oct</div>
+      <div>Data cleaning <span style="color:#4a5866;">· Van Thong</span></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;width:50%;"></div><div></div>
+      <div>Skill extraction <span style="color:#4a5866;">· Phuong Nhi</span></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div><div></div>
+      <div>Matching <span style="color:#4a5866;">· Phuong Nhi</span></div><div></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div>
+      <div>Evaluation <span style="color:#4a5866;">· Hoai Thuong</span></div><div></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div>
+      <div>App and RAG chat <span style="color:#4a5866;">· Quan Pham</span></div><div></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div><div style="height:9mm;background:#1f4e8c;border-radius:1mm;"></div>
+      <div>Report <span style="color:#4a5866;">· all</span></div><div></div><div style="height:9mm;background:#cfdcec;border-radius:1mm;"></div><div style="height:9mm;background:#cfdcec;border-radius:1mm;"></div>
+    </div>
+    <div style="font-size:24pt;color:#4a5866;margin-top:5mm;line-height:1.35;"><span style="color:#c2632a;font-weight:600;">7 Oct</span> pipeline end-to-end · <span style="color:#c2632a;font-weight:600;">11 Oct</span> app and evaluation done · <span style="color:#c2632a;font-weight:600;">14 Oct</span> Part B due</div>
+  </div>
+
+  <!-- footer -->
+  <div style="position:absolute;left:30mm;top:812mm;width:1129mm;display:flex;gap:20mm;font-size:22pt;line-height:1.35;color:#4a5866;">
+    <div style="flex:1;"><span style="font-weight:600;color:#0b1a2b;">Ethics</span> · Resumes stay in memory, never on disk. Names, emails and phones are masked before any LLM call. Ads used under the dataset licence. Results are suggestions, not career advice.</div>
+    <div style="flex:1;"><span style="font-weight:600;color:#0b1a2b;">References</span> · European Commission (2024), ESCO v1.2.1 · Seek Australia Data Scientist ads 2019–22, published dataset · Reimers &amp; Gurevych (2019), Sentence-BERT, EMNLP · Lewis et al. (2020), Retrieval-augmented generation, NeurIPS</div>
+  </div>
+</div>
+</body>
+</html>
