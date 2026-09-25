@@ -13,12 +13,11 @@ that the poster build reads.
 | Resume Dataset (Kaggle, snehaanbhawal) | 2.4k resumes in 24 categories; test set for resume parsing | https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset |
 | Seek AU sample (planned) | Australian ads for the Sydney view; only if the site terms allow a small research sample | — |
 
-## Processed files read by the poster build
+## Processed files behind the poster
 
-`src/build_poster.py` looks for these; if a file is missing it falls back to the
-illustrative sample values baked into `src/figures.py` and stamps the chart as illustrative.
+Small CSVs, committed. They are the record of what the poster shows; the bars in the HTML were generated from them on 25 Sep 2026.
 
 - `data/processed/skills_seed_v2.csv` — the one dictionary every poster chart uses (B's 133 aliases + 5 generic rows)
 - `data/processed/skill_counts_v2.csv` — every dictionary skill counted over the 3,204 Seek ads
-- `data/processed/top_skills.csv` — columns `skill,pct_ads` (share of Data Scientist ads mentioning the skill), `n_ads` in the header comment
-- `data/processed/gap.csv` — columns `skill,pct_ads,covered` (`covered` = 1 if the sample profile already has the skill)
+- `data/processed/top_skills.csv` — block 7: columns `skill,pct_ads`, n in the header comment
+- `data/processed/gap.csv` — block 5: columns `skill,pct_ads,covered` (`covered` = 1 if the sample resume has the skill)
