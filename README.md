@@ -1,4 +1,4 @@
-# MDSI Skills Map
+# Skillabus (MDSI Skills Map)
 
 Group project for **36118 Applied Natural Language Processing** (UTS, Spring 2026),
 Assessment 2. One shared skills vocabulary for UTS subject outlines, job ads and

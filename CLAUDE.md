@@ -1,4 +1,4 @@
-# CLAUDE.md — MDSI Skills Map (36118 ANLP, AT2)
+# CLAUDE.md — Skillabus, formerly MDSI Skills Map (36118 ANLP, AT2)
 
 Notes for Claude Code sessions in this repo. Keep this file short; long material goes in `docs/`.
 
@@ -70,9 +70,21 @@ Resolved on 25 Sep: pipeline order (already correct in the repo copy); technical
 block 9; block 6 now lists machine learning → 36120, principles of AI → 36121, data models → 94693,
 cloud → 42904 (Student C's keyword matcher re-run over `uts_subjects_2026.csv`; SLO wording checked
 against the Handbook); block 1 ad quote is now verbatim from the ad text in the notebook; references
-cover every source; word count 798 (hard ceiling 800; team target 550 was not reachable with the
+cover every source; word count 800 (hard ceiling 800; team target 550 was not reachable with the
 plan the brief demands); LLM = OpenAI API, GPT-4o-mini; B/C/D name mapping confirmed by Quan;
 source file for Canvas = `poster_design_A0.pdf` + `poster_design.html` (brief allows "other files").
+
+Renamed 25 Sep: app = **Skillabus**, poster title = **Syllabus to Seek** (GitHub repo renamed to
+`ANLP-AT2-Skillabus`; the old URL redirects). Layout opened up the same day: section cards removed,
+only the hero (block 5) stays boxed, per the Penn State "limit boxes and lines" rule.
+
+Why blocks 5 and 7 disagree on the same 3,204 ads (Van Thong's question, 25 Sep): two dictionaries.
+Block 7 uses B's 133-alias tool dictionary (`config/skills_seed.csv`), which has no generic
+"machine learning", "AI", "cloud" or "predictive models" entry; block 5 matches ESCO labels plus
+Student C's synonym map. So "machine learning" is 71% in block 5 and absent from block 7, and
+"cloud technologies" (literal ESCO phrase) is 2% in block 5 while AWS is 22% in block 7 (any cloud
+word: 37%). B's extractor on the same ad finds 6 skills (2 have, 4 missing) instead of 14. Both
+captions now say which dictionary they use; the difference is the block 8 baseline, not an error.
 
 Still open: the Claude Design project itself was not edited (DesignSync is read-only for this
 project type), so the repo copy is now ahead of it; Van Thong should confirm the exact Kaggle URL of
