@@ -18,5 +18,7 @@ that the poster build reads.
 `src/build_poster.py` looks for these; if a file is missing it falls back to the
 illustrative sample values baked into `src/figures.py` and stamps the chart as illustrative.
 
+- `data/processed/skills_seed_v2.csv` — the one dictionary every poster chart uses (B's 133 aliases + 5 generic rows)
+- `data/processed/skill_counts_v2.csv` — every dictionary skill counted over the 3,204 Seek ads
 - `data/processed/top_skills.csv` — columns `skill,pct_ads` (share of Data Scientist ads mentioning the skill), `n_ads` in the header comment
 - `data/processed/gap.csv` — columns `skill,pct_ads,covered` (`covered` = 1 if the sample profile already has the skill)

@@ -1,0 +1,139 @@
+skill,category,n_ads,pct_ads
+Python,Programming,2654,82.8
+Machine learning,Machine learning,2314,72.2
+SQL,Programming,1821,56.8
+Statistics,Statistics,1796,56.1
+Predictive modelling,Machine learning,966,30.1
+Communication,Professional,907,28.3
+Spark,Data wrangling,819,25.6
+Data visualisation,Visualisation,810,25.3
+Cloud platforms,Cloud,805,25.1
+Teamwork,Professional,772,24.1
+Artificial intelligence,Machine learning,720,22.5
+AWS,Cloud,694,21.7
+Problem solving,Professional,639,19.9
+Optimisation,Statistics,625,19.5
+Leadership,Professional,625,19.5
+Tableau,Visualisation,605,18.9
+Stakeholder management,Professional,583,18.2
+Hadoop,Data wrangling,556,17.4
+Natural language processing,NLP,545,17.0
+Deep learning,Deep learning,517,16.1
+Agile,Professional,499,15.6
+SAS,Programming,488,15.2
+Power BI,Visualisation,487,15.2
+Scala,Programming,485,15.1
+Time series forecasting,Machine learning,413,12.9
+Azure,Cloud,400,12.5
+R,Programming,375,11.7
+ETL,Engineering,323,10.1
+Git,Engineering,322,10.0
+Java,Programming,321,10.0
+Excel,Visualisation,289,9.0
+Google Cloud,Cloud,276,8.6
+Documentation,Professional,254,7.9
+Clustering,Machine learning,250,7.8
+Random forest,Machine learning,244,7.6
+C++,Programming,240,7.5
+TensorFlow,Deep learning,232,7.2
+Data cleaning,Data wrangling,225,7.0
+Project management,Professional,210,6.6
+Data modelling,Databases,210,6.6
+Business acumen,Professional,192,6.0
+Requirements gathering,Professional,192,6.0
+Redshift,Cloud,185,5.8
+MATLAB,Programming,169,5.3
+Econometrics,Statistics,165,5.1
+XGBoost,Machine learning,155,4.8
+Presentation skills,Professional,141,4.4
+Data warehousing,Databases,130,4.1
+SQL Server,Databases,130,4.1
+Databricks,Data wrangling,128,4.0
+scikit-learn,Machine learning,125,3.9
+NoSQL,Databases,123,3.8
+pandas,Data wrangling,121,3.8
+Data quality,Governance,121,3.8
+Feature engineering,Machine learning,119,3.7
+Qlik,Visualisation,117,3.7
+A/B testing,Statistics,116,3.6
+Bayesian methods,Statistics,114,3.6
+JavaScript,Programming,113,3.5
+MLOps,Engineering,111,3.5
+Keras,Deep learning,104,3.2
+Computer vision,Computer vision,100,3.1
+NumPy,Data wrangling,100,3.1
+PyTorch,Deep learning,96,3.0
+Docker,Engineering,87,2.7
+Logistic regression,Machine learning,86,2.7
+C#,Programming,83,2.6
+Plotly,Visualisation,82,2.6
+Gradient boosting,Machine learning,81,2.5
+SageMaker,Cloud,79,2.5
+Anomaly detection,Machine learning,79,2.5
+CI/CD,Engineering,76,2.4
+BigQuery,Cloud,66,2.1
+matplotlib,Visualisation,64,2.0
+MongoDB,Databases,63,2.0
+Julia,Programming,62,1.9
+Hypothesis testing,Statistics,53,1.7
+PostgreSQL,Databases,52,1.6
+Experimental design,Statistics,51,1.6
+Data security,Governance,46,1.4
+Kubernetes,Engineering,45,1.4
+Linear regression,Machine learning,44,1.4
+Snowflake,Cloud,39,1.2
+Support vector machines,Machine learning,39,1.2
+Data governance,Governance,38,1.2
+D3.js,Visualisation,38,1.2
+Probability,Statistics,38,1.2
+VBA,Programming,37,1.2
+Regression analysis,Statistics,32,1.0
+MySQL,Databases,32,1.0
+API development,Engineering,25,0.8
+Airflow,Engineering,25,0.8
+Recommender systems,Machine learning,24,0.7
+Sentiment analysis,NLP,24,0.7
+Azure ML,Cloud,24,0.7
+Shell scripting,Programming,23,0.7
+Elasticsearch,Databases,21,0.7
+Data storytelling,Professional,16,0.5
+Django,Engineering,15,0.5
+Jenkins,Engineering,15,0.5
+MLflow,Engineering,14,0.4
+Causal inference,Statistics,13,0.4
+Kubeflow,Engineering,13,0.4
+Flask,Engineering,11,0.3
+spaCy,NLP,10,0.3
+dbt,Engineering,10,0.3
+Looker,Visualisation,9,0.3
+Topic modelling,NLP,9,0.3
+Data privacy,Governance,8,0.2
+Named entity recognition,NLP,7,0.2
+Go,Programming,7,0.2
+Cassandra,Databases,6,0.2
+BERT,NLP,6,0.2
+Redis,Databases,6,0.2
+seaborn,Visualisation,6,0.2
+NLTK,NLP,5,0.2
+LightGBM,Machine learning,5,0.2
+Vertex AI,Cloud,5,0.2
+OpenCV,Computer vision,5,0.2
+Oracle,Databases,5,0.2
+Hyperparameter tuning,Machine learning,4,0.1
+Terraform,Engineering,4,0.1
+Dask,Data wrangling,3,0.1
+Responsible AI,Governance,2,0.1
+Word embeddings,NLP,2,0.1
+Hive,Data wrangling,2,0.1
+Transformers,NLP,1,0.0
+FastAPI,Engineering,1,0.0
+Polars,Data wrangling,0,0.0
+CatBoost,Machine learning,0,0.0
+RAG,NLP,0,0.0
+Prompt engineering,NLP,0,0.0
+Hugging Face,NLP,0,0.0
+Large language models,NLP,0,0.0
+LangChain,NLP,0,0.0
+Vector databases,NLP,0,0.0
+Streamlit,Engineering,0,0.0
+Generative AI,NLP,0,0.0

@@ -1,17 +1,17 @@
-# n_ads=3204 ; Seek Australia Data Scientist ads 2019-2022 ; from Role B handoff (block 5), 23 Sep 2026
+# n_ads=3204 ; Seek Australia Data Scientist ads 2019-2022 ; skills_seed_v2.csv (B's 133 aliases + 5 generic rows), technical categories only ; 25 Sep 2026
 skill,pct_ads
-Python,83
-SQL,57
-Statistics,56
-Spark,26
-Data visualisation,25
-AWS,22
-Optimisation,20
-Tableau,19
-Hadoop,17
-Natural language processing,17
-Deep learning,16
-SAS,15
-Power BI,15
-Scala,15
-Time series forecasting,13
+Python,82.8
+Machine learning,72.2
+SQL,56.8
+Statistics,56.1
+Predictive modelling,30.1
+Spark,25.6
+Data visualisation,25.3
+Cloud platforms,25.1
+Artificial intelligence,22.5
+AWS,21.7
+Optimisation,19.5
+Tableau,18.9
+Hadoop,17.4
+Natural language processing,17.0
+Deep learning,16.1
