@@ -44,5 +44,6 @@ and n.
 ## Team
 
 Quan Pham (A: story, production, submission), Van Thong (B: data, EDA),
-Phuong Nhi (C: pipeline, gap chart, subject table), Hoai Thuong (D: evaluation, plan).
+Phuong Nhi (C: pipeline, gap chart, subject table), Hoai Thuong (D: evaluation, plan),
+Akash (E: test-set labelling, ethics section).
 Working notes for Claude Code sessions are in `CLAUDE.md`.

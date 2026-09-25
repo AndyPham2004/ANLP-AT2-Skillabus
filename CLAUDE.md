@@ -17,7 +17,12 @@ they lack and which subject fills each gap. Details and layout in `README.md`.
 
 Quan Pham is the user (role A: story, production, submission). Teammates: Van Thong, Phuong Nhi,
 Hoai Thuong. Role letters confirmed by Quan on 25 Sep: B = Van Thong (data, EDA),
-C = Phuong Nhi (pipeline, gap chart, subject table), D = Hoai Thuong (evaluation, plan).  Full role plan (Vietnamese) in
+C = Phuong Nhi (pipeline, gap chart, subject table), D = Hoai Thuong (evaluation, plan).
+E = Akash (added by the lecturer, joined 26 Sep; surname to confirm): test-set labelling and the
+ethics/limitations section of the report. Deliberately off the critical path: 200 Seek ads tagged
+with skills, 30 skill-subject pairs checked against the Handbook, 30 chat questions with reference
+answers, all due 6 Oct so Hoai Thuong can score in weeks 2-3; if late, the test sets shrink, nothing
+else waits.  Full role plan (Vietnamese) in
 `docs/Ke hoach poster Skills Map.html`.
 
 ## Poster workflow (AT2A)
@@ -71,7 +76,7 @@ Resolved on 25 Sep: pipeline order (already correct in the repo copy); technical
 block 9; block 6 now lists machine learning → 36120, principles of AI → 36121, data models → 94693,
 cloud → 42904 (Student C's keyword matcher re-run over `uts_subjects_2026.csv`; SLO wording checked
 against the Handbook); block 1 ad quote is now verbatim from the ad text in the notebook; references
-cover every source; word count 797 (hard ceiling 800; team target 550 was not reachable with the
+cover every source; word count 798 (hard ceiling 800; team target 550 was not reachable with the
 plan the brief demands); LLM = OpenAI API, GPT-4o-mini; B/C/D name mapping confirmed by Quan;
 source file for Canvas = `AT2A_Poster_Skillabus_A0.pdf` + `AT2A_Poster_Skillabus.html` (brief allows "other files").
 
