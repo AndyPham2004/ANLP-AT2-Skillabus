@@ -71,9 +71,14 @@ Resolved on 25 Sep: pipeline order (already correct in the repo copy); technical
 block 9; block 6 now lists machine learning → 36120, principles of AI → 36121, data models → 94693,
 cloud → 42904 (Student C's keyword matcher re-run over `uts_subjects_2026.csv`; SLO wording checked
 against the Handbook); block 1 ad quote is now verbatim from the ad text in the notebook; references
-cover every source; word count 798 (hard ceiling 800; team target 550 was not reachable with the
+cover every source; word count 797 (hard ceiling 800; team target 550 was not reachable with the
 plan the brief demands); LLM = OpenAI API, GPT-4o-mini; B/C/D name mapping confirmed by Quan;
 source file for Canvas = `AT2A_Poster_Skillabus_A0.pdf` + `AT2A_Poster_Skillabus.html` (brief allows "other files").
+
+Rubric pass (25 Sep, evening): expected-outcome sentence added to block 2; block 8 gained a
+"Subject ranking" row (keyword → embeddings, P@3 on 30 hand-checked pairs) so block 6 is no longer
+unevaluated; block 3 says what the 2,484 resumes are for (parsing test set, the 50 CV–JD pairs);
+column 3 re-spaced (block 8 at 460 mm, block 9 at 650 mm).
 
 Renamed 25 Sep: app = **Skillabus**, poster title = **Syllabus to Seek** (GitHub repo renamed to
 `ANLP-AT2-Skillabus`; the old URL redirects). Layout opened up the same day: section cards removed,
