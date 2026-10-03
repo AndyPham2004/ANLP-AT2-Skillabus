@@ -17,19 +17,18 @@ poster/     AT2A_Poster_Skillabus.html         the poster (single source: layout
             AT2A_Poster_Skillabus_A0.pdf       vector PDF for Canvas, 1189 x 841 mm
             AT2A_Poster_Skillabus_preview.png  quick preview
             figures/uts_logo.png
-src/        export_poster.py                   HTML -> PDF + PNG with headless Chrome
-data/       raw/        not committed; Van Thong's data-eda folder goes in raw/data-eda/
-            processed/  skills_seed_v2.csv (the one dictionary), skill_counts_v2.csv,
-                        top_skills.csv, gap.csv: the numbers behind blocks 5, 6, 7
-            README.md   every source with a link
-docs/       handoffs/   what each teammate delivered for the poster (B, C, D) and their figures
-            Ke hoach poster Skills Map.html    team plan (Vietnamese)
-            claude_design_*.md                 prompts used for the Claude Design layout
-            labels/     hand-made test sets, with column templates
-src/        skillabus/  the pipeline: extract, normalise, match, recommend, rag, evaluate
+src/        export_poster.py   HTML -> PDF + PNG with headless Chrome
+            skillabus/         the pipeline: extract, normalise, match, recommend, rag, evaluate
+data/       raw/               not committed; Van Thong's data-eda folder goes in raw/data-eda/
+            processed/         skills_seed_v2.csv (the one dictionary), skill_counts_v2.csv,
+                               top_skills.csv, gap.csv: the numbers behind poster blocks 5, 6, 7
+            labels/            hand-made test sets, with column templates
+            README.md          every source with a link
 docs/       team_plan.md       AT2B tasks, owners, reviewers, milestones
+            plan/              gantt.html and tasks_by_person.html (open in a browser)
             data_contract.md   the JSON/CSV shapes between pipeline and app
             report/            the technical report, one file per section
+            handoffs/          what each teammate delivered for the poster, with figures
 notebooks/  exploration only, <initials>_<topic>.ipynb
 app/        Streamlit app (AT2B)
 ```
@@ -61,5 +60,4 @@ and n.
 
 Quan Pham (A: story, production, submission), Van Thong (B: data, EDA),
 Phuong Nhi (C: pipeline, gap chart, subject table), Hoai Thuong (D: evaluation, plan),
-Akash (E: test-set labelling, ethics section).
-Working notes for Claude Code sessions are in `CLAUDE.md`.
+Akash (E: test sets, related work, user testing, ethics section).

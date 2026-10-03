@@ -26,3 +26,9 @@ models/
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Quan's own files: poster prompts, design guides, Vietnamese notes, Claude Code notes
+private/
+CLAUDE.md
+.claude/settings.local.json
+!.env.example

@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skillabus Task Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one person at a time; header with role and hand-offs, then a due-ordered checklist of task cards */
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --ink:#0b1a2e; --muted:#5b6678; --line:#dfe3ea;
+  --blue:#1f4e8c; --blue-soft:#d6e2f2; --copper:#c2410c; --copper-soft:#f6dccd; --done:#2f7d4f;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1220; --surface:#111a2b; --ink:#e7ecf4; --muted:#9aa6b8; --line:#243147;
+  --blue:#6f9fe0; --blue-soft:#1d3254; --copper:#f08a4b; --copper-soft:#4a2a18; --done:#5fbf86; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1220; --surface:#111a2b; --ink:#e7ecf4; --muted:#9aa6b8; --line:#243147;
+  --blue:#6f9fe0; --blue-soft:#1d3254; --copper:#f08a4b; --copper-soft:#4a2a18; --done:#5fbf86; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:920px;margin:0 auto;padding-inline:20px;padding-block:28px 56px;display:grid;gap:22px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(26px,4vw,34px);line-height:1.15;margin:6px 0 4px;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:68ch}
+a{color:var(--blue)}
+.people{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:999px;padding:6px 14px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.chip .n{font:500 11px var(--mono);color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] .n{color:var(--bg);opacity:.7}
+.chip:focus-visible,.task input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.who{display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px}
+.who h2{margin:0;font-size:22px}
+.who .role{color:var(--muted);margin:0}
+.flow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.flow div{min-width:0}
+.flow h3{margin:0 0 4px;font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.flow ul{margin:0;padding-left:18px}
+.progress{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+.track{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.fill{height:100%;background:var(--done);width:0;transition:width .2s}
+.tasks{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:start;background:var(--surface);
+  border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:6px;padding:14px 16px}
+.task.crit{border-left-color:var(--copper)}
+.task input{width:18px;height:18px;margin-top:3px;accent-color:var(--done)}
+.task .t{font-weight:600;min-width:0}
+.task .due{font:500 12px var(--mono);white-space:nowrap;color:var(--muted);text-align:right}
+.task .due b{display:block;font-size:14px;color:var(--ink)}
+.task .meta{grid-column:2/4;display:grid;gap:3px;font-size:13.5px;color:var(--muted);min-width:0}
+.task .meta span b{color:var(--ink);font-weight:500}
+.tag{display:inline-block;font:500 11px var(--mono);padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:2px;
+  background:var(--copper-soft);color:var(--ink)}
+.task details{margin-top:4px}
+.task summary{cursor:pointer;color:var(--blue);font-weight:500;width:max-content}
+.task summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.task pre{margin:8px 0 0;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:4px;
+  font:12.5px/1.5 var(--mono);color:var(--ink);overflow-x:auto;white-space:pre}
+.task.is-done{opacity:.6}
+.task.is-done .t{text-decoration:line-through}
+.rules{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.rules ul{margin:6px 0 0;padding-left:18px}
+@media (max-width:620px){.flow{grid-template-columns:1fr}.task{grid-template-columns:auto 1fr}.task .due{grid-column:2;text-align:left}.task .meta{grid-column:2}}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">36118 Applied NLP · AT2B · due 14 Oct 2026</div>
+    <h1>Skillabus: your tasks</h1>
+    <p class="sub">Pick your name. Each card says what to deliver, when, who reviews it and what "done" means.
+      Tick boxes are saved in your own browser only. The source of truth is the
+      <a href="https://github.com/users/AndyPham2004/projects/5" target="_blank" rel="noopener">GitHub project board</a>.</p>
+  </header>
+
+  <div class="people" id="people" role="group" aria-label="Show tasks for"></div>
+  <section class="who" id="who"></section>
+  <ol class="tasks" id="tasks"></ol>
+
+  <div class="rules">
+    <b style="color:var(--ink)">For everyone</b>
+    <ul>
+      <li>One task = one issue = one branch (<code>initials/task</code>) = one pull request. Never push to <code>main</code>.</li>
+      <li>Ask the reviewer on the card. Pull requests touching <code>app/</code> or <code>docs/report/</code> are merged by Quan.</li>
+      <li>No raw data, resumes or API keys in git. Label files follow the templates in <code>data/labels/</code>.</li>
+      <li>Each evening in the group chat: done / next / blocked. Missing a date? Say so 24 hours before.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const DOW={3:"Sat",4:"Sun",5:"Mon",6:"Tue",7:"Wed",8:"Thu",9:"Fri",10:"Sat",11:"Sun",12:"Mon",13:"Tue",14:"Wed"};
+const P={
+ A:{name:"Quan Pham",role:"Product owner: UI and app, fresh 2026 data, the story of the report, submission.",
+    gets:["Pipeline functions from Phuong Nhi (7-9 Oct)","retrieve() from Van Thong (9 Oct)","Related-work table and ethics draft from Akash"],
+    gives:["Data contract to everyone (4 Oct)","2026 ad sample to Van Thong (5 Oct)","Lightcast helper to Phuong Nhi (5 Oct)","App link for user testing (8 and 11 Oct)"]},
+ B:{name:"Van Thong",role:"Data: clean sources, subject profiles, the 2026 trend, retrieval for the chat.",
+    gets:["Subject content from Akash (6 Oct)","2026 ad sample from Quan (5 Oct)"],
+    gives:["Seek ad file to Akash and Hoai Thuong (4 Oct)","subject_profiles.csv to Phuong Nhi (7 Oct)","retrieve() to Quan (9 Oct)"]},
+ C:{name:"Phuong Nhi",role:"Pipeline: extraction, normalisation, matching, subject recommendation, learning path.",
+    gets:["Data contract from Quan (4 Oct)","Lightcast helper from Quan (5 Oct)","subject_profiles.csv from Van Thong (7 Oct)"],
+    gives:["extract() and normalise() (7 Oct)","match(), recommend(), learning path to Quan's app (9 Oct)"]},
+ D:{name:"Hoai Thuong",role:"Evaluation: test-set quality, the four-stage scores, error analysis.",
+    gets:["Seek ad file from Van Thong (4 Oct)","Labelled ads and pairs from Akash (6 Oct)","Pipeline from Phuong Nhi (9 Oct)"],
+    gives:["Agreement score on the labels (5 Oct)","Metrics table and failure examples for the report (11 Oct)"]},
+ E:{name:"Akash",role:"Test sets, subject content, related work, user testing, ethics and limitations.",
+    gets:["Seek ad file from Van Thong (4 Oct)","App link from Quan (8 Oct mock, 11 Oct real)"],
+    gives:["Labelled ads to Hoai Thuong (from 4 Oct)","Subject content to Van Thong (6 Oct)","Related-work table and ethics draft to Quan"]}};
+// [owner, task, reviewer, due, critical, done when, file or place]
+const T=[
+ ["A","Agree the data contract","Phuong Nhi",4,1,"Both of you approve the JSON and CSV shapes; the app is built against them from now on.","docs/data_contract.md"],
+ ["A","Fresh 2026 ads: extend the ATS fetch, add an Indeed sample","Van Thong",5,0,"About 150 Australian data roles from 2026, duplicates removed, with a source column; data/README.md says how they were collected.","data/raw/ (not committed), note in data/README.md"],
+ ["A","UI design: wireframes for the three user flows and the results screen","Hoai Thuong",5,1,"Start screen (three roles), results screen (gap chart, evidence panel, learning path), chat side panel; shared as images in the issue.","GitHub issue"],
+ ["A","Check the Kaggle Glassdoor 2024 AU data-science set","Van Thong",5,0,"A comment in the issue: full descriptions or not, synthetic or not, use or drop.","GitHub issue"],
+ ["A","Lightcast Open Skills API key and lookup helper","Phuong Nhi",5,0,"Key in .env; a function that takes a skill phrase and returns the Lightcast id and label.","src/skillabus/"],
+ ["A","Streamlit app on mock data","Phuong Nhi",8,1,"Every screen clickable, reading a mock gap JSON that follows the contract.","app/"],
+ ["A","Wire the app to the real pipeline; chat panel; feedback buttons","Hoai Thuong",11,1,"Paste an ad and upload a resume, get the real gap result; chat answers with sources; votes are written to feedback.csv.","app/"],
+ ["A","Deploy to Streamlit Community Cloud and make the QR code","Van Thong",11,0,"A working public link and a QR image for the report.","app/, docs/report/"],
+ ["A","Report: introduction, related work and innovation, architecture, conclusion","Phuong Nhi",12,1,"Sections 01, 02, 05 and 08 written; the innovation is stated against named existing systems.","docs/report/"],
+ ["A","Final edit, assembly and submission","all",14,1,"Report PDF and app link on Canvas.","Canvas"],
+ ["B","Clean Seek, resumes, ESCO; share the Seek ad file","Quan",4,1,"Cleaned files on the team drive; Akash and Hoai Thuong have the Seek ad file with its ad_id column.","team drive"],
+ ["B","Build four-layer subject profiles","Phuong Nhi",7,1,"One row per learning objective, assessment, weekly topic and description, for at least the 19 MDSI subjects.","data/processed/subject_profiles.csv"],
+ ["B","Recount skills on the 2026 sample","Quan",7,0,"Same dictionary (skills_seed_v2.csv); a table of 2019-22 vs 2026 percentages, LLMs and generative AI included.","data/processed/skill_counts_2026.csv"],
+ ["B","RAG backend: FAISS index and retrieve()","Quan",9,0,"retrieve(question) returns the top passages with their source; the index builds from a script.","src/skillabus/rag.py"],
+ ["B","Report: data and EDA section","Hoai Thuong",10,0,"Sources, cleaning steps, EDA charts, the 2026 sample and its limits.","docs/report/03_data.md"],
+ ["C","Skill extraction, three tiers","Hoai Thuong",7,1,"extract() works with method dictionary, ner and llm on any ad or resume text, and keeps the source sentence.","src/skillabus/extract.py"],
+ ["C","Normalisation with the emerging-skill fallback","Van Thong",7,1,"Every mention gets vocab esco, lightcast or emerging; generative AI and LLMs come out as emerging, not dropped.","src/skillabus/normalise.py"],
+ ["C","Matching and subject recommendation with evidence","Hoai Thuong",9,1,"Gap result with have/partial/missing and, for each subject, the sentence and layer that justify it.","src/skillabus/match.py, recommend.py"],
+ ["C","Learning path: greedy demand-weighted cover","Quan",9,1,"The 2-3 subjects that close the most demand-weighted gaps, with gaps_closed and demand_covered_pct.","src/skillabus/recommend.py"],
+ ["C","Report: methods section","Quan",11,0,"Each stage: what we used, the baseline it beats, and why we chose it.","docs/report/04_methods.md"],
+ ["D","Label 20 overlap ads for agreement","Quan",5,0,"The same 20 ad_ids as Akash's first batch, labelled independently; Cohen's kappa reported.","data/labels/"],
+ ["D","Build the 50 CV-JD pairs","Phuong Nhi",6,0,"50 resume-ad pairs with a relevance judgement each.","data/labels/cv_jd_pairs.csv"],
+ ["D","Evaluation harness for the four stages","Phuong Nhi",8,1,"One script prints P/R/F1, P@5 + MRR, P@3 and the chat judge score.","src/skillabus/evaluate.py"],
+ ["D","Run the evaluation and the error analysis","Quan",11,1,"Results table, baseline vs final, and 5-10 concrete failure examples with causes.","docs/report/06_evaluation.md"],
+ ["D","Report: evaluation section","Quan",12,0,"Metrics, results, error analysis, what the numbers mean for a student.","docs/report/06_evaluation.md"],
+ ["E","Label 200 Seek ads with skills, in batches of 50","Hoai Thuong",6,0,"Four pull requests of 50 ads; the first by 4 Oct. Columns exactly as the template; unsure labels start with ?.","data/labels/ad_skills.csv"],
+ ["E","Collect assessment details for the 19 MDSI subjects","Van Thong",6,0,"Learning outcomes, description and topics are already in uts_subjects_2026.csv. Add every assessment (name, task, what skill it practises) from the public subject outline, one row each, with the source link.","data/labels/subject_content.csv"],
+ ["E","30 skill-subject pairs checked against the Handbook","Phuong Nhi",6,0,"For each pair: teaches y / partly / n, which layer, and the evidence sentence.","data/labels/skill_subject_pairs.csv"],
+ ["E","30 chat questions with reference answers","Quan",6,0,"Questions a student would ask; answers of 1-3 sentences with their source.","data/labels/chat_questions.csv"],
+ ["E","Related-work table: 6-8 systems or papers","Quan",8,0,"One row each: what it does, what data it uses, what it lacks compared with Skillabus, citation.","docs/report/related_work_table.md"],
+ ["E","Draft the ethics and limitations section","Quan",10,0,"Privacy of resumes, bias in ads, the 2019-22 data age, subject data that misses what is taught in class.","docs/report/07_ethics_limitations.md"],
+ ["E","User test with 5 classmates","Quan",12,0,"Mock app on 9-10 Oct, real app on 12 Oct; notes per person and their feedback votes.","docs/report/user_testing.md"],
+ ["E","References, README user guide, report screenshots","Quan",13,0,"Every source cited in one style; a README section on running the app; screenshots of each screen.","docs/report/, README.md"]];
+
+// Example output per task, same order as T. Numbers marked "e.g." are illustrative, not results.
+const EX=[
+`docs/data_contract.md merged, approved by Quan + Phuong Nhi
+{"skill_label": "machine learning", "status": "missing",
+ "demand_pct": 72.2, "ad_evidence": "Implement and evaluate ..."}`,
+`jobs_au_2026.csv  (data/raw/, not committed)
+ad_id,source,title,company,location,created,description
+ind-0005,indeed,Data Scientist,Commonwealth Bank,Sydney NSW,2026-09-21,"Join a Growth squad ..."
+ats-0112,ats,Machine Learning Engineer,...
+-> ~150 rows, 0 duplicates, no "AI Trainer" spam`,
+`wireframes/01_start.png     three role cards, no paragraphs
+wireframes/02_results.png   "6 of 8 skills missing" -> gap chart -> learning path
+wireframes/03_evidence.png  ad sentence | subject sentence | layer tag
+wireframes/04_chat.png      chat in a side panel`,
+`Issue comment:
+Rows: ...  Description column: yes / no  Median length: ... chars
+Synthetic signs (uniform salaries, repeated text): yes / no
+Decision: USE as the 2024 midpoint / DROP`,
+`>>> lightcast_lookup("generative ai")
+{"id": "KS...", "label": "Generative Artificial Intelligence",
+ "type": "Specialized Skill"}`,
+`streamlit run app/Home.py
+-> pick "Job seeker" -> paste ad -> results drawn from app/mock/gap_example.json
+-> click a skill -> evidence panel opens`,
+`Robert Walters ad + sample resume -> 8 skills, 2 have, 6 missing, in under 60 s
+Chat: "Which subject teaches deep learning?" -> answer + source [94691 Handbook]
+feedback.csv: 2026-10-11T10:02,94691,deep learning,up,y`,
+`App link, e.g. https://skillabus.streamlit.app
+docs/report/figures/qr_app.png`,
+`01_introduction.md  problem, three users, list of contributions
+02_related_work.md  table: LinkedIn | Seek | Lightcast | course planners | Skillabus
+05_system.md        architecture diagram + 3 screenshots
+08_conclusion.md    3 takeaways + future work`,
+`Canvas: AT2B_Report_Skillabus.pdf + app link + repo link`,
+`seek_ds_clean.csv  3,204 rows
+ad_id,title,company,listingDate,city,description
+Group chat: "Seek file is on the drive at <link>, key column ad_id"`,
+`subject_profiles.csv
+subject_code,subject_name,course,layer,text,source_url,collected_by
+36118,Applied Natural Language Processing,C04372,weekly_topic,Large Language Models (LLMs),https://coursehandbook.uts.edu.au/subject/2026/36118,handbook
+36118,Applied Natural Language Processing,C04372,learning_objective,"SLO3: Apply text mining techniques ...",...,handbook
+36118,Applied Natural Language Processing,C04372,assessment,"...",<outline url>,Akash`,
+`skill_counts_2026.csv  (e.g. values)
+skill,pct_2019_22,pct_2026,change
+Large language models,0.0,30.0,+30.0
+Python,82.8,85.0,+2.2`,
+`>>> retrieve("Which subject covers LLMs?", k=3)
+[{"text": "Large Language Models (LLMs)", "source": "36118 weekly_topic", "score": 0.83},
+ ...]`,
+`03_data.md
+- sources table: n, years, licence
+- cleaning steps
+- 2 EDA charts with source and n
+- the 2026 sample and its limits`,
+`>>> extract("Strong Python and SQL capability ...", method="dictionary")
+[{"text": "Python", "method": "dictionary", "sentence": "Strong Python and SQL capability ..."},
+ {"text": "SQL", ...}]`,
+`"machine learning" -> vocab esco       skill_id esco:http://data.europa.eu/esco/skill/...
+"generative AI"    -> vocab lightcast  skill_id lightcast:KS...
+"agentic AI"       -> vocab emerging   skill_id emerging:agentic-ai`,
+`{"skill_label": "deep learning", "status": "missing", ...}
+"recommendations": [{"subject_code": "94691", "score": 0.78,
+  "evidence": [{"layer": "learning_objective", "text": "..."}]}]`,
+`"learning_path": {"subjects": ["36120", "94691"],
+  "gaps_closed": 4, "gaps_total": 6, "demand_covered_pct": 78.0}`,
+`04_methods.md, one block per stage:
+baseline -> final method -> why this one (one paragraph) -> settings`,
+`ad_skills_overlap_HT.csv  20 ads, same ad_ids as Akash's batch 1
+Cohen's kappa (skill present / absent per ad): e.g. 0.74`,
+`cv_jd_pairs.csv
+pair_id,resume_id,ad_id,relevance,notes
+p01,r0412,38259053,2,"both risk / pricing modelling"
+relevance: 0 none, 1 partial, 2 strong`,
+`python -m skillabus.evaluate
+stage        baseline       final
+extraction   F1 ...         F1 ...
+matching     P@5 / MRR ...  ...
+subjects     P@3 ...        ...
+chat         judge 1-5 ...  ...`,
+`Results table filled, plus failure examples, e.g.
+1. "cloud technologies" pulled from "AI technologies" by fuzzy matching
+   cause: char n-grams; fix: ...`,
+`06_evaluation.md: metrics, results table, error analysis,
+what the numbers mean for a student`,
+`ad_skills.csv
+ad_id,skill_label,in_dictionary,evidence_text,annotator
+38259053,Python,y,"experience in Python or R",Akash
+38259053,Pricing models,n,"developing risk based pricing models",Akash
+38269206,?Telecommunications,n,"?telecommunications organisation",Akash`,
+`subject_content.csv
+subject_code,subject_name,course,layer,text,source_url,collected_by
+36118,Applied Natural Language Processing,C04372,assessment,"Group project: build an NLP application and a technical report",<outline url>,Akash`,
+`skill_subject_pairs.csv
+skill_label,subject_code,teaches,layer,evidence_text,source_url,annotator
+Large language models,36118,y,weekly_topic,"Large Language Models (LLMs)",https://coursehandbook.uts.edu.au/subject/2026/36118,Akash`,
+`chat_questions.csv
+question_id,question,reference_answer,source,annotator
+q01,"Which UTS subject teaches LLMs?","36118 Applied NLP has Large Language Models as a topic.","Handbook 36118",Akash`,
+`related_work_table.md
+| System | What it does | Data | What it lacks vs Skillabus | Citation |
+| LinkedIn Skills Match | % match of profile to a job | member profiles | no link to university subjects | ... |`,
+`07_ethics_limitations.md, about 400 words, four headings:
+privacy of resumes | bias in job ads | age of the 2019-22 data | subject data coverage`,
+`user_testing.md
+| # | Who | Task | Finished? | Time | Comment | Votes |
+| 1 | MDSI student | find a subject for deep learning | yes | 45 s | "evidence panel helped" | 3 up, 1 down |`,
+`References in one style (APA 7), e.g.
+European Commission. (2025). ESCO classification v1.2.1 [Data set].
+README: "Run the app" section, 5 steps
+screenshots/01_start.png ... 04_chat.png`];
+
+const KEY="skb-done";
+let done={};try{done=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let sel="A";
+
+const box=document.getElementById("people");
+Object.entries(P).forEach(([id,p])=>{
+  const b=document.createElement("button");b.className="chip";b.id="p-"+id;
+  b.innerHTML=`${p.name}<span class="n">${T.filter(t=>t[0]===id).length}</span>`;
+  b.onclick=()=>{sel=id;try{localStorage.setItem("skb-person",id)}catch(e){}render()};
+  box.appendChild(b)});
+try{const s=localStorage.getItem("skb-person");if(s&&P[s])sel=s}catch(e){}
+
+function render(){
+  box.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c.id==="p-"+sel));
+  const p=P[sel], mine=T.map((t,i)=>[t,i]).filter(([t])=>t[0]===sel).sort((a,b)=>a[0][3]-b[0][3]);
+  const n=mine.filter(([,i])=>done[i]).length;
+  document.getElementById("who").innerHTML=`
+    <div><h2>${p.name}</h2><p class="role">${p.role}</p></div>
+    <div class="flow">
+      <div><h3>You need from others</h3><ul>${p.gets.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><h3>Others need from you</h3><ul>${p.gives.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    </div>
+    <div class="progress"><span>${n} of ${mine.length} done</span><div class="track"><div class="fill" style="width:${mine.length?100*n/mine.length:0}%"></div></div>
+      <span>${mine.filter(([t])=>t[4]).length} on the critical path</span></div>`;
+  document.getElementById("tasks").innerHTML=mine.map(([t,i])=>`
+    <li class="task${t[4]?" crit":""}${done[i]?" is-done":""}">
+      <input type="checkbox" id="t${i}" ${done[i]?"checked":""} aria-label="Mark done: ${esc(t[1])}">
+      <label class="t" for="t${i}">${esc(t[1])}${t[4]?'<span class="tag">critical</span>':""}</label>
+      <div class="due"><b>${DOW[t[3]]} ${t[3]} Oct</b>due</div>
+      <div class="meta">
+        <span><b>Done when:</b> ${esc(t[5])}</span>
+        <span><b>Where:</b> <code>${esc(t[6])}</code> · <b>Review:</b> ${esc(t[2])}</span>
+        <details><summary>Expected output (example)</summary><pre>${esc(EX[i]||"")}</pre></details>
+      </div>
+    </li>`).join("");
+  document.querySelectorAll(".task input").forEach(cb=>cb.onchange=()=>{
+    const i=+cb.id.slice(1);if(cb.checked)done[i]=1;else delete done[i];save();render()});
+}
+render();
+</script>
+</body>
+</html>

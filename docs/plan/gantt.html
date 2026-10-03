@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skillabus AT2B Sprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: poster palette (navy + UTS blue + copper), one Gantt across 3-14 Oct, filter by person */
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --ink:#0b1a2e; --muted:#5b6678; --line:#dfe3ea; --grid:#eef1f5;
+  --blue:#1f4e8c; --blue-soft:#d6e2f2; --copper:#c2410c; --copper-soft:#f6dccd; --today:#c2410c;
+  --weekend:#f0f2f6;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1220; --surface:#111a2b; --ink:#e7ecf4; --muted:#9aa6b8; --line:#243147; --grid:#18233a;
+  --blue:#6f9fe0; --blue-soft:#1d3254; --copper:#f08a4b; --copper-soft:#4a2a18; --today:#f08a4b;
+  --weekend:#0f1828; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1220; --surface:#111a2b; --ink:#e7ecf4; --muted:#9aa6b8; --line:#243147; --grid:#18233a;
+  --blue:#6f9fe0; --blue-soft:#1d3254; --copper:#f08a4b; --copper-soft:#4a2a18; --today:#f08a4b;
+  --weekend:#0f1828; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 48px;display:grid;gap:28px}
+header{display:grid;gap:6px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0;font-weight:700;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:70ch}
+.sub a{color:var(--blue)}
+.stats{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:8px}
+.stat{display:grid}
+.stat b{font-size:24px;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:12px;color:var(--muted)}
+h2{font-size:18px;margin:0 0 12px;font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px}
+.ms{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.m{border-top:3px solid var(--blue);padding-top:8px;display:grid;gap:2px}
+.m.final{border-color:var(--copper)}
+.m .d{font:500 12px var(--mono);color:var(--muted)}
+.m .t{font-weight:600}
+.m .w{font-size:13px;color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+.chip{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-left:auto;flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.scroll{overflow-x:auto}
+.gantt{min-width:880px;display:grid;grid-template-columns:minmax(260px,32%) repeat(12,1fr);font-size:13px}
+.hd{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--line);padding:6px 0;
+  text-align:center;font:500 11px/1.3 var(--mono);color:var(--muted)}
+.hd.we{color:var(--muted);opacity:.75}
+.hd.today{color:var(--today);font-weight:700}
+.grp{grid-column:1/-1;padding:14px 0 4px;font-weight:600;display:flex;gap:8px;align-items:baseline;border-bottom:1px solid var(--line)}
+.grp small{font-weight:400;color:var(--muted);font-size:12px}
+.name{padding:6px 10px 6px 0;border-bottom:1px solid var(--grid);min-width:0}
+.name .rv{display:block;font-size:11.5px;color:var(--muted)}
+.cell{border-bottom:1px solid var(--grid);border-left:1px solid var(--grid);position:relative}
+.cell.we{background:var(--weekend)}
+.cell.today::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--today);opacity:.5}
+.bar{grid-row:auto;align-self:center;height:20px;border-radius:4px;background:var(--blue-soft);
+  border:1px solid var(--blue);margin:0 2px;position:relative;z-index:1;display:flex;align-items:center;
+  justify-content:flex-end;padding:0 6px;font:500 11px var(--mono);color:var(--ink);white-space:nowrap}
+.bar.crit{background:var(--copper-soft);border-color:var(--copper)}
+.hidden{display:none}
+.note{font-size:13px;color:var(--muted);margin:12px 0 0}
+@media (max-width:560px){.legend{margin-left:0}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">36118 Applied NLP · AT2B · Streamlit app + technical report</div>
+    <h1>Skillabus sprint, 3 to 14 October</h1>
+    <p class="sub">Who does what, when it is due, and who reviews it. Every bar is a GitHub issue on the
+      <a href="https://github.com/users/AndyPham2004/projects/5" target="_blank" rel="noopener">project board</a>.
+      Rules: <a href="https://github.com/AndyPham2004/ANLP-AT2-Skillabus/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">CONTRIBUTING.md</a>.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <section class="panel">
+    <h2>Milestones</h2>
+    <div class="ms" id="ms"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Timeline</h2>
+    <div class="filters" id="filters" role="group" aria-label="Show tasks for">
+      <div class="legend"><span><i style="background:var(--copper-soft);border:1px solid var(--copper)"></i>Critical path</span>
+        <span><i style="background:var(--blue-soft);border:1px solid var(--blue)"></i>Other task</span>
+        <span><i style="background:var(--today)"></i>Today</span></div>
+    </div>
+    <div class="scroll"><div class="gantt" id="gantt"></div></div>
+    <p class="note">Bars run from the planned start to the due date (end of day). If a test set is late, it shrinks; nothing else waits for it.
+      Late? Say so 24 hours before, in the issue, with the <code>blocked</code> label.</p>
+  </section>
+</div>
+
+<script>
+const DAYS=[3,4,5,6,7,8,9,10,11,12,13,14];
+const DOW=["Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed"];
+const TODAY=(()=>{const d=new Date();return (d.getFullYear()===2026&&d.getMonth()===9)?d.getDate():null})();
+const PEOPLE=[
+ {id:"A",name:"Quan Pham",role:"Product, UI, fresh data, story, submission"},
+ {id:"B",name:"Van Thong",role:"Data"},
+ {id:"C",name:"Phuong Nhi",role:"Pipeline"},
+ {id:"D",name:"Hoai Thuong",role:"Evaluation"},
+ {id:"E",name:"Akash",role:"Test sets, subject content, related work, user testing, ethics"}];
+// [owner, task, reviewer, start, due, critical]
+const T=[
+ ["A","Agree the data contract","Phuong Nhi",3,4,1],
+ ["A","Fresh 2026 ads (ATS + Indeed, ~150 AU data roles)","Van Thong",3,5,0],
+ ["A","UI design: wireframes, three flows + results","Hoai Thuong",3,5,1],
+ ["A","Check Kaggle Glassdoor 2024 AU set","Van Thong",4,5,0],
+ ["A","Lightcast API key + lookup helper","Phuong Nhi",5,5,0],
+ ["A","Streamlit app on mock data","Phuong Nhi",6,8,1],
+ ["A","Wire real pipeline; chat panel; feedback buttons","Hoai Thuong",9,11,1],
+ ["A","Deploy + QR code","Van Thong",11,11,0],
+ ["A","Report: intro, related work, architecture, conclusion","Phuong Nhi",10,12,1],
+ ["A","Final edit and submission","all",13,14,1],
+ ["B","Clean Seek, resumes, ESCO; share Seek file","Quan",3,4,1],
+ ["B","Four-layer subject profiles","Phuong Nhi",6,7,1],
+ ["B","Recount skills on 2026 sample (trend)","Quan",6,7,0],
+ ["B","RAG backend: FAISS + retrieve()","Quan",8,9,0],
+ ["B","Report: data and EDA","Hoai Thuong",9,10,0],
+ ["C","Extraction: dictionary → spaCy NER → GPT-4o-mini","Hoai Thuong",4,7,1],
+ ["C","Normalisation + emerging-skill fallback","Van Thong",5,7,1],
+ ["C","Matching + subject recommendation with evidence","Hoai Thuong",8,9,1],
+ ["C","Learning path: demand-weighted cover","Quan",8,9,1],
+ ["C","Report: methods + why each method","Quan",10,11,0],
+ ["D","Label 20 overlap ads (Cohen's kappa)","Quan",4,5,0],
+ ["D","Build 50 CV-JD pairs","Phuong Nhi",5,6,0],
+ ["D","Evaluation harness, four stages","Phuong Nhi",6,8,1],
+ ["D","Run evaluation + error analysis","Quan",10,11,1],
+ ["D","Report: evaluation","Quan",11,12,0],
+ ["E","Label 200 Seek ads, batches of 50 (first 4 Oct)","Hoai Thuong",3,6,0],
+ ["E","Collect content for 19 MDSI subjects","Van Thong",3,6,0],
+ ["E","30 skill-subject pairs vs Handbook","Phuong Nhi",4,6,0],
+ ["E","30 chat questions + reference answers","Quan",5,6,0],
+ ["E","Related-work table, 6-8 systems","Quan",7,8,0],
+ ["E","Draft ethics and limitations","Quan",9,10,0],
+ ["E","User test with 5 classmates","Quan",9,12,0],
+ ["E","References, README guide, screenshots","Quan",13,13,0]];
+const MS=[[4,"M0 Contract","Data contract merged; first 50 labelled ads"],
+ [6,"M1 Inputs","All test sets and subject content in"],
+ [7,"M2 Pipeline","Ad + resume in, gap JSON out"],
+ [8,"M3 App on mock data","Every screen clickable"],
+ [11,"M4 Real data + evaluation","Deployed link; metrics filled"],
+ [12,"M5 Report draft","Every section written"],
+ [14,"M6 Submit","Report and app link on Canvas"]];
+
+const $=s=>document.querySelector(s);
+const left=TODAY?Math.max(0,14-TODAY):null;
+$("#stats").innerHTML=[
+ [T.length,"tasks"],[T.filter(t=>t[5]).length,"on the critical path"],[PEOPLE.length,"people"],
+ [left===null?"14 Oct":left+(left===1?" day":" days"),left===null?"due date":"to submission"]]
+ .map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+$("#ms").innerHTML=MS.map(([d,t,w],i)=>`<div class="m${i===MS.length-1?" final":""}"><span class="d">${DOW[d-3]} ${d} Oct</span><span class="t">${t}</span><span class="w">${w}</span></div>`).join("");
+
+const f=$("#filters"), legend=f.querySelector(".legend");
+let sel="all";
+[["all","Everyone"],...PEOPLE.map(p=>[p.id,p.name])].forEach(([id,label])=>{
+  const b=document.createElement("button");b.className="chip";b.id="f-"+id;b.textContent=label;
+  b.setAttribute("aria-pressed",id==="all");b.onclick=()=>{sel=id;
+    f.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b));render();
+    try{localStorage.setItem("skb-filter",id)}catch(e){}};
+  f.insertBefore(b,legend)});
+try{const s=localStorage.getItem("skb-filter");if(s&&document.getElementById("f-"+s))document.getElementById("f-"+s).click()}catch(e){}
+
+function render(){
+  const g=$("#gantt");let h=`<div class="hd" style="text-align:left">Task · reviewer</div>`;
+  DAYS.forEach((d,i)=>{const we=DOW[i]==="Sat"||DOW[i]==="Sun";
+    h+=`<div class="hd${we?" we":""}${d===TODAY?" today":""}">${DOW[i]}<br>${d}</div>`});
+  let row=2;
+  PEOPLE.filter(p=>sel==="all"||p.id===sel).forEach(p=>{
+    h+=`<div class="grp" style="grid-row:${row}">${p.name}<small>${p.role}</small></div>`;row++;
+    T.filter(t=>t[0]===p.id).forEach(([o,task,rv,s,e,c])=>{
+      h+=`<div class="name" style="grid-row:${row}">${task}<span class="rv">Review: ${rv} · due ${e} Oct</span></div>`;
+      DAYS.forEach((d,i)=>{const we=DOW[i]==="Sat"||DOW[i]==="Sun";
+        h+=`<div class="cell${we?" we":""}${d===TODAY?" today":""}" style="grid-row:${row};grid-column:${i+2}"></div>`});
+      h+=`<div class="bar${c?" crit":""}" style="grid-row:${row};grid-column:${s-1}/${e}" title="${task} · ${s}-${e} Oct · review ${rv}">${e} Oct</div>`;
+      row++})});
+  g.innerHTML=h}
+render();
+</script>
+
+</body>
+</html>

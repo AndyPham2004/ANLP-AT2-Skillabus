@@ -77,7 +77,7 @@ serves one of them:
 | Label 200 Seek ads with skills, in batches of 50 (first batch 4 Oct) | 6 Oct | Hoai Thuong |
 | 30 skill-subject pairs checked against the Handbook | 6 Oct | Phuong Nhi |
 | 30 chat questions with reference answers | 6 Oct | Quan |
-| Collect subject content (description, assessments, weekly topics) for the 19 MDSI subjects | 6 Oct | Van Thong |
+| Collect assessment details for the 19 MDSI subjects (outcomes, description, topics already in `uts_subjects_2026.csv`) | 6 Oct | Van Thong |
 | Related-work table: 6-8 systems or papers, what each does and lacks | 8 Oct | Quan |
 | Draft ethics and limitations section (add the subject-data limitation) | 10 Oct | Quan |
 | User test with 5 classmates: mock app 9-10 Oct, real app 12 Oct; notes and feedback votes | 12 Oct | Quan |
