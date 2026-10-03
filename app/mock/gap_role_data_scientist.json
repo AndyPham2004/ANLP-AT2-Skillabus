@@ -153,6 +153,7 @@
       "resume_evidence": null
     }
   ],
+  "soft_skills": [],
   "recommendations": [
     {
       "subject_code": "32513",
@@ -273,6 +274,88 @@
         }
       ],
       "score": 0.65
+    },
+    {
+      "subject_code": "94693",
+      "subject_name": "Big Data Engineering",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/94693",
+      "covers": [
+        "Spark",
+        "Hadoop"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Spark",
+          "layer": "learning_objective",
+          "text": "SLO1: Participate in the development of data engineering projects using popular tools (Snowflake, Databricks, PostgreSQL, Spark, Airflow, Kafka etc..) and languages including Python and SQL."
+        },
+        {
+          "skill_label": "Hadoop",
+          "layer": "weekly_topic",
+          "text": "Hadoop"
+        }
+      ],
+      "score": 0.42
+    },
+    {
+      "subject_code": "36121",
+      "subject_name": "Artificial Intelligence Principles and Applications",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36121",
+      "covers": [
+        "Artificial intelligence",
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO1: Understand general problem-solving approaches in AI."
+        },
+        {
+          "skill_label": "Deep learning",
+          "layer": "learning_objective",
+          "text": "SLO4: Work with deep neural networks, multilayer networks, and decision trees."
+        }
+      ],
+      "score": 0.41
+    },
+    {
+      "subject_code": "32558",
+      "subject_name": "Business Intelligence",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32558",
+      "covers": [
+        "Statistics"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Statistics",
+          "layer": "weekly_topic",
+          "text": "An overview of business intelligence, analytics, and data science Taxonomy of data, statistical modelling for business analytics, and data visualisation Theories, techniques, and considerations for capturing organisational intelligence Aligning business intelligence with business strategy Techniques for implementing business intelligence systems Future trends, privacy, and managerial considerations in analytics"
+        }
+      ],
+      "score": 0.38
+    },
+    {
+      "subject_code": "36118",
+      "subject_name": "Applied Natural Language Processing",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36118",
+      "covers": [
+        "Natural language processing",
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Natural language processing",
+          "layer": "learning_objective",
+          "text": "SLO1: Understand core concepts of Natural Language Processing (NLP) and computational linguistics including its limitations (CILO 2.2, 2.3)"
+        },
+        {
+          "skill_label": "Deep learning",
+          "layer": "weekly_topic",
+          "text": "Advanced NLP and Deep Learning"
+        }
+      ],
+      "score": 0.33
     }
   ],
   "learning_path": {

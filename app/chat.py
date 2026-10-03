@@ -1,0 +1,83 @@
+"""Chat about subjects and skills, grounded in the subject profiles.
+
+Retrieval: skillabus.rag.retrieve() when Van Thong's FAISS index exists, otherwise TF-IDF
+over the same subject text. Answer: GPT-4o-mini when OPENAI_API_KEY is set, otherwise the
+retrieved passages themselves. Resumes are never sent to the model.
+"""
+
+from __future__ import annotations
+
+import os
+from functools import lru_cache
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+import backend  # noqa: F401  (puts src/ on the path)
+import baseline
+
+MODEL = "gpt-4o-mini"
+LAYER_NAME = {"learning_objective": "learning objective", "assessment": "assessment",
+              "weekly_topic": "topic", "description": "description"}
+
+
+@lru_cache(maxsize=1)
+def _index():
+    lay = baseline.resources().layers
+    docs = (lay.subject_code + " " + lay.subject_name + ": " + lay.text).tolist()
+    vec = TfidfVectorizer(stop_words="english", ngram_range=(1, 2), sublinear_tf=True)
+    return lay, vec, vec.fit_transform(docs)
+
+
+def retrieve(question: str, k: int = 5) -> list[dict]:
+    try:
+        from skillabus.rag import retrieve as rag_retrieve
+        return rag_retrieve(question, k=k)
+    except Exception:
+        pass
+    lay, vec, mat = _index()
+    sims = cosine_similarity(vec.transform([question]), mat).ravel()
+    out = []
+    for i in sims.argsort()[::-1][:k]:
+        if sims[i] <= 0:
+            break
+        r = lay.iloc[i]
+        out.append({"text": r.text, "score": float(sims[i]),
+                    "source": f"{r.subject_code} {r.subject_name} ({LAYER_NAME.get(r.layer, r.layer)})",
+                    "url": r.source_url})
+    return out
+
+
+def has_llm() -> bool:
+    return bool(os.getenv("OPENAI_API_KEY"))
+
+
+def answer(question: str, gap: dict | None) -> tuple[str, list[dict]]:
+    """Answer and the passages it rests on."""
+    passages = retrieve(question)
+    if not passages:
+        return ("I couldn't find anything about that in the UTS Handbook text I have. "
+                "Try naming a skill or a subject code."), []
+    if not has_llm():
+        lines = [f"- **{p['source']}**: {p['text']}" for p in passages[:3]]
+        return "Here's what the Handbook says:\n\n" + "\n".join(lines), passages
+
+    from openai import OpenAI
+
+    gaps = ""
+    if gap:
+        missing = [s["skill_label"] for s in gap["skills"] if s["status"] != "have"]
+        gaps = f"The student's skill gaps for their target role: {', '.join(missing) or 'none'}.\n"
+    context = "\n".join(f"[{i + 1}] {p['source']}: {p['text']}" for i, p in enumerate(passages))
+    resp = OpenAI().chat.completions.create(
+        model=MODEL,
+        temperature=0.2,
+        messages=[
+            {"role": "system", "content": (
+                "You help UTS data science students choose subjects. Answer only from the numbered "
+                "Handbook passages. Cite them like [1]. If the passages do not answer the question, "
+                "say so. Two to four sentences. Suggestions, not advice.")},
+            {"role": "user", "content": f"{gaps}Passages:\n{context}\n\nQuestion: {question}"},
+        ],
+    )
+    return resp.choices[0].message.content, passages
