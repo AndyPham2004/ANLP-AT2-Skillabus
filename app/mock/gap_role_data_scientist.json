@@ -238,22 +238,6 @@
       "score": 0.74
     },
     {
-      "subject_code": "36120",
-      "subject_name": "Advanced Machine Learning Application",
-      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36120",
-      "covers": [
-        "Machine learning"
-      ],
-      "evidence": [
-        {
-          "skill_label": "Machine learning",
-          "layer": "learning_objective",
-          "text": "SLO1: Implement and evaluate advanced machine learning techniques to real-world problems"
-        }
-      ],
-      "score": 0.74
-    },
-    {
       "subject_code": "36103",
       "subject_name": "Statistical Thinking for Data Science",
       "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36103",
@@ -274,6 +258,22 @@
         }
       ],
       "score": 0.65
+    },
+    {
+      "subject_code": "42050",
+      "subject_name": "SAS Predictive Business Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42050",
+      "covers": [
+        "Predictive modelling"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "learning_objective",
+          "text": "SLO1: Explore and transform business data into analytic-ready features for predictive modelling. (D.1)"
+        }
+      ],
+      "score": 0.26
     },
     {
       "subject_code": "94693",
@@ -298,6 +298,22 @@
       "score": 0.42
     },
     {
+      "subject_code": "32557",
+      "subject_name": "Enabling Enterprise Information Systems",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32557",
+      "covers": [
+        "Cloud platforms"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Cloud platforms",
+          "layer": "learning_objective",
+          "text": "SLO3: Apply a deep understanding of the strategic use of information systems, identifying business processes and utilising mobile, cloud, and social computing technologies to address business challenges. (D.1)"
+        }
+      ],
+      "score": 0.22
+    },
+    {
       "subject_code": "36121",
       "subject_name": "Artificial Intelligence Principles and Applications",
       "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36121",
@@ -320,20 +336,42 @@
       "score": 0.41
     },
     {
-      "subject_code": "32558",
-      "subject_name": "Business Intelligence",
-      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32558",
+      "subject_code": "21946",
+      "subject_name": "Supply Chain Management Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/21946",
       "covers": [
-        "Statistics"
+        "Optimisation"
       ],
       "evidence": [
         {
-          "skill_label": "Statistics",
-          "layer": "weekly_topic",
-          "text": "An overview of business intelligence, analytics, and data science Taxonomy of data, statistical modelling for business analytics, and data visualisation Theories, techniques, and considerations for capturing organisational intelligence Aligning business intelligence with business strategy Techniques for implementing business intelligence systems Future trends, privacy, and managerial considerations in analytics"
+          "skill_label": "Optimisation",
+          "layer": "learning_objective",
+          "text": "SLO2: Analyse supply chain strategies and performance parameters to improve customer satisfaction through cost and service optimisation"
         }
       ],
-      "score": 0.38
+      "score": 0.17
+    },
+    {
+      "subject_code": "22804",
+      "subject_name": "Business Analytics Foundations",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/22804",
+      "covers": [
+        "Predictive modelling",
+        "Tableau"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "description",
+          "text": "In this subject, you will develop core competencies in business analytics, learning how to transform raw data into actionable insights that support effective decision-making.Â You will gain hands-on experience with industry-standard tools, including Excel, Python, and Tableau, while developing skills in data visualisation, statistical analysis, predictive modelling, and introductory machine learning techniques."
+        },
+        {
+          "skill_label": "Tableau",
+          "layer": "description",
+          "text": "In this subject, you will develop core competencies in business analytics, learning how to transform raw data into actionable insights that support effective decision-making.Â You will gain hands-on experience with industry-standard tools, including Excel, Python, and Tableau, while developing skills in data visualisation, statistical analysis, predictive modelling, and introductory machine learning techniques."
+        }
+      ],
+      "score": 0.21
     },
     {
       "subject_code": "36118",
@@ -356,6 +394,124 @@
         }
       ],
       "score": 0.33
+    },
+    {
+      "subject_code": "42172",
+      "subject_name": "Introduction to Artificial Intelligence",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42172",
+      "covers": [
+        "Artificial intelligence",
+        "Natural language processing"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO1: Describe key ideas and applications of common AI techniques to people in the same discipline. (D.1)"
+        },
+        {
+          "skill_label": "Natural language processing",
+          "layer": "weekly_topic",
+          "text": "Natural language processing"
+        }
+      ],
+      "score": 0.32
+    },
+    {
+      "subject_code": "36120",
+      "subject_name": "Advanced Machine Learning Application",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36120",
+      "covers": [
+        "Machine learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Implement and evaluate advanced machine learning techniques to real-world problems"
+        }
+      ],
+      "score": 0.74
+    },
+    {
+      "subject_code": "32558",
+      "subject_name": "Business Intelligence",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32558",
+      "covers": [
+        "Statistics"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Statistics",
+          "layer": "weekly_topic",
+          "text": "An overview of business intelligence, analytics, and data science Taxonomy of data, statistical modelling for business analytics, and data visualisation Theories, techniques, and considerations for capturing organisational intelligence Aligning business intelligence with business strategy Techniques for implementing business intelligence systems Future trends, privacy, and managerial considerations in analytics"
+        }
+      ],
+      "score": 0.38
+    },
+    {
+      "subject_code": "42904",
+      "subject_name": "Cloud Computing and Software as a Service",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42904",
+      "covers": [
+        "Cloud platforms"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Cloud platforms",
+          "layer": "learning_objective",
+          "text": "SLO1: Articulate the need for cloud computing, elements of cloud computing for e-business, e-government, e-banking and e-learning. (B.1)"
+        }
+      ],
+      "score": 0.22
+    },
+    {
+      "subject_code": "94691",
+      "subject_name": "Deep Learning",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/94691",
+      "covers": [
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Deep learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Gain a solid understanding of the fundamentals, underlying mathematical concepts, and applications of neural networks."
+        }
+      ],
+      "score": 0.17
+    },
+    {
+      "subject_code": "37003",
+      "subject_name": "Application of Numerical and Computational Approaches A",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/37003",
+      "covers": [
+        "Optimisation"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Optimisation",
+          "layer": "learning_objective",
+          "text": "SLO3: Implement solutions for quantitative problems in finance using key computational techniques, including optimisation and neural networks"
+        }
+      ],
+      "score": 0.17
+    },
+    {
+      "subject_code": "42850",
+      "subject_name": "Natural Language Processing Algorithms",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42850",
+      "covers": [
+        "Natural language processing"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Natural language processing",
+          "layer": "learning_objective",
+          "text": "SLO1: Identify NLP applications in business and social contexts. (B.1)"
+        }
+      ],
+      "score": 0.15
     }
   ],
   "learning_path": {

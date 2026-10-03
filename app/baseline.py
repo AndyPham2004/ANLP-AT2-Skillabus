@@ -160,9 +160,15 @@ def recommend(gaps: list[dict], exclude: set[str]) -> tuple[list[dict], dict]:
         "demand_covered_pct": round(
             100 * sum(s["demand_pct"] for s in gaps if s["skill_label"] in closed) / raw_total, 1),
     }
-    shown = sorted((r for r in recs if r["subject_code"] in path), key=lambda r: path.index(r["subject_code"]))
-    shown += [r for r in recs if r["subject_code"] not in path][: max(0, MAX_SUBJECTS - len(shown))]
-    return shown, learning_path
+    # Shown: the path first, then each gap's two strongest subjects (so a 0%-demand skill like
+    # LLMs still gets its evidence), then the best of the rest up to MAX_SUBJECTS.
+    order = list(path)
+    for s in gaps:
+        best_two = [r["subject_code"] for r in recs if s["skill_label"] in r["covers"]][:2]
+        order += [c for c in best_two if c not in order]
+    order += [r["subject_code"] for r in recs if r["subject_code"] not in order]
+    by_code = {r["subject_code"]: r for r in recs}
+    return [by_code[c] for c in order[: max(MAX_SUBJECTS, len(path) + 2 * len(gaps))]], learning_path
 
 
 def analyse(resume_text: str, ad_text: str | None = None, taken: list[str] | None = None,
