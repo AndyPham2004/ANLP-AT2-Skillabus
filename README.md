@@ -25,8 +25,24 @@ data/       raw/        not committed; Van Thong's data-eda folder goes in raw/d
 docs/       handoffs/   what each teammate delivered for the poster (B, C, D) and their figures
             Ke hoach poster Skills Map.html    team plan (Vietnamese)
             claude_design_*.md                 prompts used for the Claude Design layout
-notebooks/  EDA and matching notebooks (AT2B)
-app/        Streamlit app (AT2B, from 28 Sep)
+            labels/     hand-made test sets, with column templates
+src/        skillabus/  the pipeline: extract, normalise, match, recommend, rag, evaluate
+docs/       team_plan.md       AT2B tasks, owners, reviewers, milestones
+            data_contract.md   the JSON/CSV shapes between pipeline and app
+            report/            the technical report, one file per section
+notebooks/  exploration only, <initials>_<topic>.ipynb
+app/        Streamlit app (AT2B)
+```
+
+## Working on AT2B
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) once (branch per task, pull request, reviewer, no raw
+data or keys in git), then pick your issue on the project board. Setup:
+
+```powershell
+py -3.12 -m venv .venv; .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env   # then paste the OpenAI key
 ```
 
 ## Rebuild the poster

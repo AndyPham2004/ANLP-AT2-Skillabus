@@ -1,0 +1,1 @@
+"""Skillabus pipeline: extract -> normalise -> match -> recommend. Shapes in docs/data_contract.md."""

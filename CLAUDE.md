@@ -113,6 +113,17 @@ project type), so the repo copy is now ahead of it; Van Thong should confirm the
 the PromptCloud Seek dataset for the report; the "22%" bar for principles of AI is 22.5% rounded
 half-to-even, as in Student C's chart.
 
+## AT2B (from 3 Oct 2026)
+
+Poster marked: 27/35 problem/innovation, 30/35 technical. Marker wants the innovation stated, richer
+subject data than Handbook learning objectives (36118 does teach LLMs), method justification,
+emerging-skill handling, validation of subject recommendations, error analysis. Plan, owners and
+milestones: `docs/team_plan.md`; app/pipeline shapes: `docs/data_contract.md`; team rules:
+`CONTRIBUTING.md`. Quan owns UI/app, fresh 2026 data, report intro/innovation, submission.
+Van Thong already has 2026 AU ads in `data/raw/data-eda/data/raw/jobs_au_ats_2026.csv` (234, full
+text) and `jobs_au_adzuna_2026.csv` (50, truncated to 500 chars); several Kaggle "2026" sets were
+rejected as synthetic (see `DATASETS.md` there).
+
 ## Conventions
 
 - Poster rules the team agreed: under 800 words, body text 24 pt or more, two fonts, two or three

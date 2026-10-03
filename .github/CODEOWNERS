@@ -1,0 +1,5 @@
+# Default reviewer for anything not listed below. Add teammates' GitHub usernames when they join.
+*                 @AndyPham2004
+/app/             @AndyPham2004
+/docs/report/     @AndyPham2004
+/docs/data_contract.md @AndyPham2004
