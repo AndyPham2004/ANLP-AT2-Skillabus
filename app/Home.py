@@ -103,7 +103,7 @@ def save_vote(subject_code: str, skill: str, vote: str, taken: bool) -> None:
 
 def gap_chart(skills: list[dict]) -> alt.Chart:
     df = pd.DataFrame(skills)
-    df["label"] = df.skill_label + df.emerging.map({True: "  ✦ new", False: ""})
+    df["label"] = df.skill_label + df.emerging.map({True: "  ✦", False: ""})
     df["pct_text"] = df.demand_pct.map(lambda v: f"{v:.0f}%")
     order = df.sort_values("demand_pct", ascending=False).label.tolist()
     y = alt.Y("label:N", sort=order, title=None,
@@ -256,8 +256,13 @@ elif ss.step == "results":
         st.altair_chart(gap_chart(skills), use_container_width=True)
         cap = "Bar = share of 3,204 Seek Australia Data Scientist ads (2019-22) naming the skill."
         if any(s["emerging"] for s in skills):
-            cap += (" ✦ new: LLMs and generative AI are 0% in these ads because they predate ChatGPT; "
+            cap += " ✦ = no ESCO concept yet, kept as an emerging skill."
+        if any(s["skill_label"] in ("Large language models", "Generative AI") for s in skills):
+            cap += (" LLMs and generative AI are 0% in these ads because the ads predate ChatGPT; "
                     "15.8% of 247 US Data Scientist ads in 2023-24 ask for LLMs.")
+        if any(s.get("found_by") == "llm" for s in skills):
+            cap += (" Skills outside our dictionary were found by GPT-4o-mini; their bars are 0% "
+                    "because the dictionary never counted them.")
         if res.get("soft_skills"):
             cap += f" The ad also asks for: {', '.join(lc(s) for s in res['soft_skills'])}."
         st.caption(cap)
@@ -304,8 +309,8 @@ elif ss.step == "results":
                 st.markdown(f"**Your resume says** <div class='quote subject'>{s['resume_evidence']}</div>",
                             unsafe_allow_html=True)
             if s["emerging"]:
-                st.markdown("<span class='pill new'>✦ new skill</span> <span class='muted'>not yet a concept "
-                            "in ESCO; tracked as an emerging skill</span>", unsafe_allow_html=True)
+                st.markdown("<span class='pill new'>✦ outside ESCO</span> <span class='muted'>no ESCO concept "
+                            "yet; kept and tracked as an emerging skill</span>", unsafe_allow_html=True)
         with ev_sub:
             st.markdown("**The subject says** <span class='muted'>· does it really teach this? Your vote helps us check.</span>", unsafe_allow_html=True)
             hits = [(r, e) for r in res["recommendations"] for e in r["evidence"] if e["skill_label"] == pick]

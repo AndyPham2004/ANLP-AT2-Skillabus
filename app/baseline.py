@@ -96,6 +96,11 @@ def resources() -> Resources:
     return Resources(regex, category, demand, esco, layers, role)
 
 
+def skill_regex(skill: str) -> re.Pattern:
+    """The dictionary pattern for a skill, or a plain whole-phrase pattern for one found outside it (LLM tier)."""
+    return resources().regex.get(skill) or alias_regex([skill], False)
+
+
 def find_skills(text: str) -> list[str]:
     """Dictionary skills named in a text, most in-demand first."""
     res = resources()
@@ -107,7 +112,7 @@ def evidence_for(skill: str, exclude: set[str]) -> list[dict]:
     """Best piece of evidence per subject for one skill, strongest subjects first."""
     res = resources()
     lay = res.layers
-    hits = lay[lay.text.str.contains(res.regex[skill], regex=True) & ~lay.subject_code.isin(exclude)]
+    hits = lay[lay.text.str.contains(skill_regex(skill), regex=True) & ~lay.subject_code.isin(exclude)]
     best: dict[str, dict] = {}
     for _, h in hits.iterrows():
         score = LAYER_WEIGHT.get(h.layer, 0.5) + (0.2 if MDSI in h.course else 0.0)

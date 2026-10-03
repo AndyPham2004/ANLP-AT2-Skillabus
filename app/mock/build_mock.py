@@ -24,6 +24,9 @@ from baseline import fix_text, split_sentences  # noqa: E402
 
 MOCK = ROOT / "app" / "mock"
 RAW = ROOT / "data/raw/data-eda"
+# Links checked by hand and found wrong. ESCO "SPARK" is a Java web micro-framework, not Apache
+# Spark; ESCO has no Apache Spark concept, so Spark stays a dictionary (seed) skill.
+WRONG_ESCO_LINKS = {"Spark"}
 
 
 def split_topics(s: str) -> list[str]:
@@ -56,7 +59,9 @@ def subject_layers() -> pd.DataFrame:
 
 def main() -> None:
     # Van Thong's dictionary-to-ESCO links, small enough to commit so the app has them on the cloud.
-    shutil.copy(RAW / "config/skill_to_esco.csv", ROOT / "data/processed/skill_to_esco.csv")
+    links = pd.read_csv(RAW / "config/skill_to_esco.csv", dtype=str)
+    links = links[~links.canonical.isin(WRONG_ESCO_LINKS)]
+    links.to_csv(ROOT / "data/processed/skill_to_esco.csv", index=False)
     layers = subject_layers()
     layers.to_csv(MOCK / "subject_layers.csv", index=False)
     baseline.resources.cache_clear()

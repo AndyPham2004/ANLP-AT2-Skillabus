@@ -20,7 +20,11 @@ and Phuong Nhi**.
 | Field | Values |
 |---|---|
 | `skill_id` | `esco:<uri>`, `lightcast:<id>`, `emerging:<slug>` when neither vocabulary has it, or `seed:<slug>` for a dictionary skill (`skills_seed_v2.csv`) not yet linked to ESCO |
-| `vocab` | `esco`, `lightcast`, `emerging` |
+| `vocab` | `esco`, `seed` (a dictionary skill ESCO words differently), `lightcast`, `emerging` |
+| `canonical` | The dictionary name (`skills_seed_v2.csv`) when the phrase is one of its aliases, else `null`; used for demand lookups |
+| `how` | Which normalisation step matched: `dictionary`, `esco_exact`, `esco_embed`, `lightcast`, `emerging` |
+| `similarity` | Cosine to the ESCO label for `esco_embed`, else `null` |
+| `kind` | LLM tier only: `hard` or `soft` |
 | `method` | `dictionary`, `ner`, `llm` |
 | `sentence` | The full sentence the skill came from; this is the evidence shown in the app |
 
@@ -67,7 +71,8 @@ and Phuong Nhi**.
 | `mode` | The ad id for a single ad, or `role-<slug>` when the target is a role (top skills over all ads) |
 | `status` | `have`, `partial`, `missing` |
 | `ad_evidence` | The ad sentence naming the skill; in role mode, a demand sentence ("Asked for in 72% of ...") |
-| `emerging` | `true` for skills the 2019-22 corpus predates (LLMs, generative AI); the app flags them |
+| `emerging` | `true` when the skill has no ESCO concept (vocab `lightcast` or `emerging`, e.g. LLMs, generative AI, agentic AI); the app flags them with ✦ |
+| `found_by` | Optional: `llm` when only the GPT-4o-mini tier found the skill |
 | `score` | Subject score scaled so the best subject is 1.0 |
 | `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3 |
 | `demand_pct` | Share of the 3,204 Seek ads 2019-22 that mention the skill (`skill_counts_v2.csv`) |
