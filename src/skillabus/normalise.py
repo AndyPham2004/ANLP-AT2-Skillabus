@@ -1,4 +1,4 @@
-"""Map raw skill mentions to ESCO, then Lightcast, else tag as emerging. Owner: Phuong Nhi."""
+"""Map raw skill mentions to ESCO, then Lightcast, else tag as emerging. Owner: Quan."""
 
 
 def normalise(mentions: list[dict]) -> list[dict]:

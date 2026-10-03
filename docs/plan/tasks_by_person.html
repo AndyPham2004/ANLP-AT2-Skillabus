@@ -97,17 +97,17 @@ a{color:var(--blue)}
 <script>
 const DOW={3:"Sat",4:"Sun",5:"Mon",6:"Tue",7:"Wed",8:"Thu",9:"Fri",10:"Sat",11:"Sun",12:"Mon",13:"Tue",14:"Wed"};
 const P={
- A:{name:"Quan Pham",role:"Product owner: UI and app, fresh 2026 data, the story of the report, submission.",
-    gets:["Pipeline functions from Phuong Nhi (7-9 Oct)","retrieve() from Van Thong (9 Oct)","Related-work table and ethics draft from Akash"],
-    gives:["Data contract to everyone (4 Oct)","2026 ad sample to Van Thong (5 Oct)","Lightcast helper to Phuong Nhi (5 Oct)","App link for user testing (8 and 11 Oct)"]},
- B:{name:"Van Thong",role:"Data: clean sources, subject profiles, the 2026 trend, retrieval for the chat.",
-    gets:["Subject content from Akash (6 Oct)","2026 ad sample from Quan (5 Oct)"],
-    gives:["Seek ad file to Akash and Hoai Thuong (4 Oct)","subject_profiles.csv to Phuong Nhi (7 Oct)","retrieve() to Quan (9 Oct)"]},
- C:{name:"Phuong Nhi",role:"Pipeline: extraction, normalisation, matching, subject recommendation, learning path.",
-    gets:["Data contract from Quan (4 Oct)","Lightcast helper from Quan (5 Oct)","subject_profiles.csv from Van Thong (7 Oct)"],
-    gives:["extract() and normalise() (7 Oct)","match(), recommend(), learning path to Quan's app (9 Oct)"]},
+ A:{name:"Quan Pham",role:"Tech lead: UI and app, the API-backed pipeline stages (GPT-4o-mini extraction, Lightcast normalisation, chat), review of every pull request, submission.",
+    gets:["Dictionary/NER extraction from Phuong Nhi (7 Oct)","match(), recommend(), learning path from Phuong Nhi (9 Oct)","retrieve() from Van Thong (9 Oct)","Related-work table and ethics draft from Akash"],
+    gives:["Data contract to everyone (4 Oct)","LLM extraction and normalise() to Phuong Nhi (7 Oct)","A review on every pull request","App link for user testing (8 and 11 Oct)"]},
+ B:{name:"Van Thong",role:"Data: clean sources, fresh 2026 ads, subject profiles, the 2026 trend, retrieval for the chat.",
+    gets:["Assessment details from Akash (6 Oct)"],
+    gives:["Seek ad file to Akash and Hoai Thuong (4 Oct)","2026 sample and trend table to Quan (7 Oct)","subject_profiles.csv to Phuong Nhi (7 Oct)","retrieve() to Quan (9 Oct)"]},
+ C:{name:"Phuong Nhi",role:"Pipeline: dictionary and spaCy extraction, matching, subject recommendation, learning path.",
+    gets:["Data contract from Quan (4 Oct)","LLM extraction and normalise() from Quan (7 Oct)","subject_profiles.csv from Van Thong (7 Oct)"],
+    gives:["extract() tiers 1-2 to Quan (7 Oct)","match(), recommend(), learning path to Quan's app (9 Oct)"]},
  D:{name:"Hoai Thuong",role:"Evaluation: test-set quality, the four-stage scores, error analysis.",
-    gets:["Seek ad file from Van Thong (4 Oct)","Labelled ads and pairs from Akash (6 Oct)","Pipeline from Phuong Nhi (9 Oct)"],
+    gets:["Seek ad file from Van Thong (4 Oct)","Labelled ads and pairs from Akash (6 Oct)","Pipeline from Quan and Phuong Nhi (9 Oct)"],
     gives:["Agreement score on the labels (5 Oct)","Metrics table and failure examples for the report (11 Oct)"]},
  E:{name:"Akash",role:"Test sets, subject content, related work, user testing, ethics and limitations.",
     gets:["Seek ad file from Van Thong (4 Oct)","App link from Quan (8 Oct mock, 11 Oct real)"],
@@ -115,10 +115,10 @@ const P={
 // [owner, task, reviewer, due, critical, done when, file or place]
 const T=[
  ["A","Agree the data contract","Phuong Nhi",4,1,"Both of you approve the JSON and CSV shapes; the app is built against them from now on.","docs/data_contract.md"],
- ["A","Fresh 2026 ads: extend the ATS fetch, add an Indeed sample","Van Thong",5,0,"About 150 Australian data roles from 2026, duplicates removed, with a source column; data/README.md says how they were collected.","data/raw/ (not committed), note in data/README.md"],
+ ["B","Fresh 2026 ads: extend the ATS fetch, add an Indeed sample","Quan",6,0,"About 150 Australian data roles from 2026, duplicates removed, with a source column; data/README.md says how they were collected.","data/raw/ (not committed), note in data/README.md"],
  ["A","UI design: wireframes for the three user flows and the results screen","Hoai Thuong",5,1,"Start screen (three roles), results screen (gap chart, evidence panel, learning path), chat side panel; shared as images in the issue.","GitHub issue"],
- ["A","Check the Kaggle Glassdoor 2024 AU data-science set","Van Thong",5,0,"A comment in the issue: full descriptions or not, synthetic or not, use or drop.","GitHub issue"],
- ["A","Lightcast Open Skills API key and lookup helper","Phuong Nhi",5,0,"Key in .env; a function that takes a skill phrase and returns the Lightcast id and label.","src/skillabus/"],
+ ["B","Check the Kaggle Glassdoor 2024 AU data-science set","Quan",6,0,"A comment in the issue: full descriptions or not, synthetic or not, use or drop.","GitHub issue"],
+ ["A","Normalisation to ESCO with the Lightcast fallback","Phuong Nhi",7,1,"Every mention gets vocab esco, lightcast or emerging, using the Lightcast API when ESCO has no concept; generative AI and LLMs are kept, not dropped.","src/skillabus/normalise.py"],
  ["A","Streamlit app on mock data","Phuong Nhi",8,1,"Every screen clickable, reading a mock gap JSON that follows the contract.","app/"],
  ["A","Wire the app to the real pipeline; chat panel; feedback buttons","Hoai Thuong",11,1,"Paste an ad and upload a resume, get the real gap result; chat answers with sources; votes are written to feedback.csv.","app/"],
  ["A","Deploy to Streamlit Community Cloud and make the QR code","Van Thong",11,0,"A working public link and a QR image for the report.","app/, docs/report/"],
@@ -129,9 +129,9 @@ const T=[
  ["B","Recount skills on the 2026 sample","Quan",7,0,"Same dictionary (skills_seed_v2.csv); a table of 2019-22 vs 2026 percentages, LLMs and generative AI included.","data/processed/skill_counts_2026.csv"],
  ["B","RAG backend: FAISS index and retrieve()","Quan",9,0,"retrieve(question) returns the top passages with their source; the index builds from a script.","src/skillabus/rag.py"],
  ["B","Report: data and EDA section","Hoai Thuong",10,0,"Sources, cleaning steps, EDA charts, the 2026 sample and its limits.","docs/report/03_data.md"],
- ["C","Skill extraction, three tiers","Hoai Thuong",7,1,"extract() works with method dictionary, ner and llm on any ad or resume text, and keeps the source sentence.","src/skillabus/extract.py"],
- ["C","Normalisation with the emerging-skill fallback","Van Thong",7,1,"Every mention gets vocab esco, lightcast or emerging; generative AI and LLMs come out as emerging, not dropped.","src/skillabus/normalise.py"],
- ["C","Matching and subject recommendation with evidence","Hoai Thuong",9,1,"Gap result with have/partial/missing and, for each subject, the sentence and layer that justify it.","src/skillabus/match.py, recommend.py"],
+ ["C","Skill extraction tiers 1-2: dictionary and spaCy NER","Quan",7,1,"extract() works with method dictionary and ner on any ad or resume text, and keeps the source sentence.","src/skillabus/extract.py"],
+ ["A","Skill extraction tier 3: GPT-4o-mini","Phuong Nhi",7,1,"extract(text, method=\"llm\") calls the OpenAI API with a fixed prompt and JSON output, returns the same shape as tiers 1-2, caches responses, masks names and emails first.","src/skillabus/extract.py"],
+ ["C","Matching and subject recommendation with evidence","Quan",9,1,"Gap result with have/partial/missing and, for each subject, the sentence and layer that justify it.","src/skillabus/match.py, recommend.py"],
  ["C","Learning path: greedy demand-weighted cover","Quan",9,1,"The 2-3 subjects that close the most demand-weighted gaps, with gaps_closed and demand_covered_pct.","src/skillabus/recommend.py"],
  ["C","Report: methods section","Quan",11,0,"Each stage: what we used, the baseline it beats, and why we chose it.","docs/report/04_methods.md"],
  ["D","Label 20 overlap ads for agreement","Quan",5,0,"The same 20 ad_ids as Akash's first batch, labelled independently; Cohen's kappa reported.","data/labels/"],
@@ -166,9 +166,10 @@ wireframes/04_chat.png      chat in a side panel`,
 Rows: ...  Description column: yes / no  Median length: ... chars
 Synthetic signs (uniform salaries, repeated text): yes / no
 Decision: USE as the 2024 midpoint / DROP`,
-`>>> lightcast_lookup("generative ai")
-{"id": "KS...", "label": "Generative Artificial Intelligence",
- "type": "Specialized Skill"}`,
+`>>> normalise([{"text": "GenAI", ...}, {"text": "ML", ...}])
+[{"text": "GenAI", "vocab": "lightcast", "skill_id": "lightcast:KS...",
+  "skill_label": "Generative Artificial Intelligence", ...},
+ {"text": "ML", "vocab": "esco", "skill_label": "machine learning", ...}]`,
 `streamlit run app/Home.py
 -> pick "Job seeker" -> paste ad -> results drawn from app/mock/gap_example.json
 -> click a skill -> evidence panel opens`,
@@ -205,9 +206,10 @@ Python,82.8,85.0,+2.2`,
 `>>> extract("Strong Python and SQL capability ...", method="dictionary")
 [{"text": "Python", "method": "dictionary", "sentence": "Strong Python and SQL capability ..."},
  {"text": "SQL", ...}]`,
-`"machine learning" -> vocab esco       skill_id esco:http://data.europa.eu/esco/skill/...
-"generative AI"    -> vocab lightcast  skill_id lightcast:KS...
-"agentic AI"       -> vocab emerging   skill_id emerging:agentic-ai`,
+`>>> extract("Experience developing agentic AI, generative AI or LLM applications", method="llm")
+[{"text": "agentic AI", "method": "llm", "sentence": "Experience developing agentic AI ..."},
+ {"text": "generative AI", "method": "llm", ...},
+ {"text": "LLM applications", "method": "llm", ...}]`,
 `{"skill_label": "deep learning", "status": "missing", ...}
 "recommendations": [{"subject_code": "94691", "score": 0.78,
   "evidence": [{"layer": "learning_objective", "text": "..."}]}]`,

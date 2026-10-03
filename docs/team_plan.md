@@ -2,7 +2,8 @@
 
 Due **14 Oct 2026**. Plan agreed 3 Oct 2026. Every task is a GitHub issue with the same title;
 the issue is where questions, decisions and links go. Every task has a reviewer: nothing is merged
-or counted as done until someone other than the author has checked it.
+or counted as done until someone other than the author has checked it. Quan, as tech lead, also approves every
+pull request into `main` (GitHub enforces this) and integrates each stage into the app: a stage is done when it runs in the app.
 
 ## What changes after the poster feedback
 
@@ -30,14 +31,13 @@ serves one of them:
 
 ## Who does what
 
-### Quan Pham (A): product, UI, fresh data, story, submission
+### Quan Pham (A): tech lead: UI and app, the API-backed pipeline stages, final review, submission
 | Task | Due | Reviewer |
 |---|---|---|
 | Agree the data contract (`docs/data_contract.md`) with Phuong Nhi | 4 Oct | Phuong Nhi |
-| Fresh 2026 ads: extend Van Thong's ATS fetch, add an Indeed sample, target 150 AU data roles | 5 Oct | Van Thong |
-| Check the Kaggle Glassdoor 2024 AU data-science set (full descriptions? synthetic?) | 5 Oct | Van Thong |
-| Lightcast Open Skills free API key and lookup helper | 5 Oct | Phuong Nhi |
 | UI design: wireframes for the three user flows and the results screen | 5 Oct | Hoai Thuong |
+| Skill extraction tier 3: GPT-4o-mini (OpenAI API), same output as tiers 1-2 | 7 Oct | Phuong Nhi |
+| Normalisation to ESCO with the emerging-skill fallback (Lightcast API, then "emerging") | 7 Oct | Phuong Nhi |
 | Streamlit app on mock data (upload, gap chart, evidence panel, learning path) | 8 Oct | Phuong Nhi |
 | Wire the app to the real pipeline; chat panel; feedback buttons | 11 Oct | Hoai Thuong |
 | Deploy (Streamlit Community Cloud) and QR code | 11 Oct | Van Thong |
@@ -48,6 +48,8 @@ serves one of them:
 | Task | Due | Reviewer |
 |---|---|---|
 | Clean Seek, resumes, ESCO; share the Seek ad file with Akash for labelling | 4 Oct | Quan |
+| Fresh 2026 ads: extend the ATS fetch, add an Indeed sample, target 150 AU data roles | 6 Oct | Quan |
+| Check the Kaggle Glassdoor 2024 AU data-science set (full descriptions? synthetic?) | 6 Oct | Quan |
 | Build four-layer subject profiles from the collected subject content | 7 Oct | Phuong Nhi |
 | Recount skills on the 2026 sample with `skills_seed_v2.csv` (trend 2019-22 vs 2026) | 7 Oct | Quan |
 | RAG backend: FAISS index over subject profiles and ads, `retrieve()` function | 9 Oct | Quan |
@@ -56,9 +58,8 @@ serves one of them:
 ### Phuong Nhi (C): pipeline
 | Task | Due | Reviewer |
 |---|---|---|
-| Skill extraction, three tiers: dictionary → spaCy NER → GPT-4o-mini | 7 Oct | Hoai Thuong |
-| Normalisation to ESCO with the emerging-skill fallback (Lightcast, then "emerging") | 7 Oct | Van Thong |
-| Matching (TF-IDF → embeddings) and subject recommendation with evidence | 9 Oct | Hoai Thuong |
+| Skill extraction tiers 1-2: dictionary → spaCy NER | 7 Oct | Quan |
+| Matching (TF-IDF → embeddings) and subject recommendation with evidence | 9 Oct | Quan |
 | Learning path: greedy demand-weighted cover over the gaps | 9 Oct | Quan |
 | Report: methods section, with the reason for each method choice | 11 Oct | Quan |
 

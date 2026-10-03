@@ -9,7 +9,7 @@ Tasks and dates: `docs/team_plan.md`. Data formats: `docs/data_contract.md`.
 2. Branch from an up-to-date `main`, named `<initials>/<short-task>`:
    `qp/app-skeleton`, `vt/subject-profiles`, `pn/extraction`, `ht/eval-harness`, `ak/ad-labels-batch1`.
 3. Open a pull request early (draft is fine). Write `Closes #<issue>` in the description.
-4. Ask the reviewer named in the plan. **Never push straight to `main`.**
+4. Ask the reviewer named in the plan. Quan also approves every pull request into `main` (GitHub requires it). **Never push straight to `main`.**
 5. After approval: the author merges, except for `app/` and `docs/report/`, which Quan merges.
 
 ```bash
@@ -25,7 +25,7 @@ gh pr create --fill --draft
 | Folder | What | Owner |
 |---|---|---|
 | `app/` | Streamlit app | Quan |
-| `src/skillabus/` | Reusable pipeline code (extract, normalise, match, recommend, rag, evaluate) | Phuong Nhi, Van Thong, Hoai Thuong |
+| `src/skillabus/` | Reusable pipeline code (extract, normalise, match, recommend, rag, evaluate) | Quan (LLM extraction, normalise), Phuong Nhi, Van Thong, Hoai Thuong |
 | `notebooks/` | Exploration only, named `<initials>_<topic>.ipynb` | anyone |
 | `data/processed/` | Small derived CSVs the app reads | Van Thong |
 | `data/labels/` | Hand-made test sets, one file per set, templates included | Akash, Hoai Thuong |
