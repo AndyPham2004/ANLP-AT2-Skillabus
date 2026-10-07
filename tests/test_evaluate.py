@@ -53,6 +53,16 @@ class Extraction(unittest.TestCase):
         self.assertEqual(got, {"ad1": {"python"}})
         self.assertEqual(ev.mentions_to_sets(mentions)["ad1"], {"python (computer programming)", "deep learning"})
 
+    def test_mentions_use_canonical_then_text(self):
+        # extract() output (tiers 1-2): `canonical` is the dictionary name, or None for an off-dictionary candidate
+        mentions = {
+            "ad1": [
+                {"text": "Python3", "canonical": "Python", "method": "ner"},
+                {"text": "Prompt Engineering", "canonical": None, "method": "ner"},
+            ]
+        }
+        self.assertEqual(ev.mentions_to_sets(mentions), {"ad1": {"python", "prompt engineering"}})
+
     def test_errors_list_both_kinds(self):
         errs = ev.extraction_errors({"a": {"x"}}, {"a": {"y"}})
         self.assertEqual({(e["skill"], e["error"]) for e in errs}, {("x", "false_negative"), ("y", "false_positive")})

@@ -97,6 +97,8 @@ def mentions_to_sets(
 ) -> dict[str, set[str]]:
     """Skill mentions (data contract section 1) -> {ad_id: {skill}}.
 
+    The label of a mention is its `canonical` (what extract() returns: the dictionary name, or None for a
+    candidate outside the dictionary), else `skill_label` (after normalise()), else the raw `text`.
     method: keep only mentions with this `method` ('dictionary', 'ner', 'llm'), to compare the tiers.
     label_map: rename predicted labels into the gold vocabulary. normalise() returns ESCO labels
     ('Python (computer programming)') while the gold set uses dictionary names ('python'); map one
@@ -109,7 +111,7 @@ def mentions_to_sets(
         for m in mentions:
             if method and m.get("method") != method:
                 continue
-            label = norm(m.get("skill_label") or m.get("text", ""))
+            label = norm(m.get("canonical") or m.get("skill_label") or m.get("text", ""))
             labels.add(label_map.get(label, label))
         out[ad_id] = labels
     return out
