@@ -1,0 +1,99 @@
+================================================================================
+ CLEANED DATA  --  Skillabus (36118 AT2B)          Van Thong, 9 Oct 2026
+ Five files, 44 MB. Every one is rebuilt by a script in data-eda/src/.
+================================================================================
+
+ WHO NEEDS WHAT
+
+   Akash        seek_label_sample_200.csv       label all 200, batches of 50
+   Hoai Thuong  seek_label_sample_200.csv       label the 20 with double_label = y
+                resumes_us_2021_clean.csv       pick the 50 CV-JD pairs from here
+   Phuong Nhi   jobs_au_seek_datascientist_2019-2022_clean.csv   run extraction on this
+   Quan         esco_label_lookup.csv           normalise(): surface form -> ESCO URI
+
+ !! resumes_us_2021_clean.csv stays on the team drive. NEVER commit it. !!
+
+
+--------------------------------------------------------------------------------
+seek_label_sample_200.csv                       200 ads     src/make_label_sample.py
+--------------------------------------------------------------------------------
+ batch          1-4, fifty ads each
+ double_label   y on the first 20 (all in batch 1). Both Akash and Hoai Thuong
+                label these, so Cohen's kappa is on ads you both saw.
+ ad_id          the key. Copy it exactly into data/labels/ad_skills.csv.
+ Drawn with a fixed seed (36118): re-running gives the same 200 ads.
+ If anyone already started labelling other ads, keep those and tell the group.
+
+
+--------------------------------------------------------------------------------
+jobs_au_seek_datascientist_2019-2022_clean.csv  3,204 ads   src/clean_seek.py
+--------------------------------------------------------------------------------
+ The primary corpus with the ad text repaired. ad_id and title are unchanged.
+
+ What was wrong: the Kaggle dataset stripped HTML without putting spaces back,
+ so 80% of ads had words welded together - "...Power BI and TableauSuperior
+ analytical skills...". An extractor with word boundaries misses those.
+
+ What was done: the dataset carries two renderings of every ad (mobile and
+ desktop). A glued word is split only where the OTHER rendering of the same ad
+ shows a break. 13,181 joins split; 11,574 left alone, which are mostly real
+ words (PhD, TensorFlow, NoSQL, PySpark, JavaScript) that must not be split.
+ Bullets are one per line, so sentence splitting works.
+
+ Effect on skill counts: Python 82.8% -> 84.5%, Communication 28.3 -> 30.0,
+ no skill goes down, top 15 identical, rank correlation 0.9997 with the old text.
+ The poster and data/processed/ still use the old text. LABELS MUST BE MADE ON
+ THIS FILE, and extraction for evaluation must run on this file too, so the
+ extractor and the labeller see the same words.
+
+
+--------------------------------------------------------------------------------
+resumes_us_2021_clean.csv                       2,481 resumes   src/clean_resumes.py
+--------------------------------------------------------------------------------
+ resume_id, category, resume_text, n_data_skills
+
+ Masked: emails (19 resumes), phone numbers incl. international (61),
+ URLs (100), and the "Summary <Name> is a ..." opening (4).
+ Employer names were already "Company Name" in the source.
+
+ NAME MASKING IS PARTIAL. A regex cannot find names in general. The app must
+ mask names with spaCy NER before any LLM call, as the ethics section promises.
+
+ THERE IS NO DATA-SCIENCE CATEGORY among the 24 (IT, chef, advocate, ...).
+ n_data_skills = how many of python, sql, machine learning, statistics, data
+ analysis, tableau/power bi the resume mentions:
+     >= 2   125 resumes
+     >= 3    37 resumes
+     >= 4    11 resumes
+ For CV-JD pairs against Data Scientist ads, draw from n_data_skills >= 2.
+ Using a chef resume against a data ad tests nothing.
+
+
+--------------------------------------------------------------------------------
+esco_skills_clean.csv                           13,960 concepts   src/clean_esco.py
+esco_label_lookup.csv                           100,886 rows
+--------------------------------------------------------------------------------
+ skills_clean   one row per ESCO skill; alt_labels pipe-separated (the source
+                file uses newlines inside a cell, which most tools mangle)
+ label_lookup   label (lowercase), concept_uri, preferred_label,
+                label_type (preferred / alt / hidden), ambiguous (True/False)
+
+ Ambiguity: 716 labels (0.7%) point at more than one concept. The one that
+ matters for us: "sql" -> both "SQL" and "database management systems".
+ Lookup alone cannot settle those; that is the honest answer to the marker's
+ "how are ambiguous skills handled?".
+
+ Gaps: "data visualisation" is NOT an ESCO label; "tableau" maps to the
+ generic "data visualisation software". Only 36% of our dictionary maps.
+
+ Size: the lookup is 14.3 MB, over the repo's 5 MB limit. For the deployed
+ app, filter it to the labels our dictionary can produce before committing.
+
+
+--------------------------------------------------------------------------------
+ REBUILD EVERYTHING (from data-eda/)
+--------------------------------------------------------------------------------
+   python src/clean_seek.py
+   python src/clean_resumes.py
+   python src/clean_esco.py
+   python src/make_label_sample.py      (needs the clean Seek file first)

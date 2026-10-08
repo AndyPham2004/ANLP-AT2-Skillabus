@@ -1,16 +1,18 @@
 # Data sources
 
-Data code lives in `data-eda/` (owner: Van Thong). The data itself is never committed:
-`data-eda/data/` is gitignored, and both halves of it are on the team drive.
+Data code lives in `data-eda/` (owner: Van Thong). The cleaned data is committed; the raw
+downloads and the resumes are not.
 
 | Folder | What | Size | Where |
 |---|---|---|---|
-| `data-eda/data/raw/` | the downloads, untouched | 655 MB | team drive: TEAM-DRIVE-LINK |
-| `data-eda/data/clean/` | cleaned files, built by scripts; **use these** | 44 MB | team drive: TEAM-DRIVE-LINK |
+| `data-eda/data/clean/` | cleaned Seek ads, the 200-ad label sample, ESCO skills and label lookup; **use these** | 31 MB | **in this repo** |
+| `data-eda/data/clean/resumes_us_2021_clean.csv` | cleaned resumes; names only partly masked | 15 MB | team drive only, gitignored: TEAM-DRIVE-LINK |
+| `data-eda/data/raw/` | the downloads, untouched; only needed to rebuild `clean/` | 655 MB | team drive or Kaggle: TEAM-DRIVE-LINK |
 
-Unzip both into `data-eda/data/` and every script in `data-eda/src/` runs with its default
-paths. Start with `data-eda/data/clean/README.txt`; `data-eda/HOW_TO_USE_DATA.txt` says which
-file answers which question.
+Start with `data-eda/data/clean/README.txt`; `data-eda/HOW_TO_USE_DATA.txt` says which file
+answers which question. Three clean files are over the 5 MB limit in CONTRIBUTING.md
+(Seek 9.7 MB, ESCO skills 6.7 MB, ESCO lookup 14.3 MB); keeping them in the repo means
+everyone labels and evaluates on byte-identical files.
 
 | Source | What we use | Period | Role | Link |
 |---|---|---|---|---|
