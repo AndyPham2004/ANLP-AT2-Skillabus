@@ -11,7 +11,7 @@
    Phuong Nhi   jobs_au_seek_datascientist_2019-2022_clean.csv   run extraction on this
    Quan         esco_label_lookup.csv           normalise(): surface form -> ESCO URI
 
- !! resumes_us_2021_clean.csv stays on the team drive. NEVER commit it. !!
+ Resumes are de-identified (names, emails, phones, URLs masked), not anonymous.
 
 
 --------------------------------------------------------------------------------
@@ -53,11 +53,18 @@ resumes_us_2021_clean.csv                       2,481 resumes   src/clean_resume
  resume_id, category, resume_text, n_data_skills
 
  Masked: emails (19 resumes), phone numbers incl. international (61),
- URLs (100), and the "Summary <Name> is a ..." opening (4).
+ URLs (100), and person names (1,069 spans in 535 resumes) -> [NAME].
  Employer names were already "Company Name" in the source.
 
- NAME MASKING IS PARTIAL. A regex cannot find names in general. The app must
- mask names with spaCy NER before any LLM call, as the ethics section promises.
+ How names were found: spaCy NER tags 16,451 "PERSON" spans, but most are
+ resume words ("Developed", "Dean") or skills ("Java", "Oracle", "MS Word").
+ A span is masked only if it is two or more capitalised words, starts with a
+ known first name, appears in at most two resumes, and is not a skill or an
+ O*NET tool name. Skill counts are unchanged after masking (Java 301 -> 301,
+ Oracle 577 -> 577, Spring Boot 2 -> 2). About half the masked spans are real
+ names; the rest are harmless phrases ("Dean List").
+ STILL NOT ANONYMOUS: a name in capitals or a lone first name can survive. The
+ app must still mask with spaCy before any LLM call (ethics section).
 
  THERE IS NO DATA-SCIENCE CATEGORY among the 24 (IT, chef, advocate, ...).
  n_data_skills = how many of python, sql, machine learning, statistics, data

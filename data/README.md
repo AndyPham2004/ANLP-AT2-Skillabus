@@ -1,17 +1,16 @@
 # Data sources
 
 Data code lives in `data-eda/` (owner: Van Thong). The cleaned data is committed; the raw
-downloads and the resumes are not.
+downloads are not.
 
 | Folder | What | Size | Where |
 |---|---|---|---|
-| `data-eda/data/clean/` | cleaned Seek ads, the 200-ad label sample, ESCO skills and label lookup; **use these** | 31 MB | **in this repo** |
-| `data-eda/data/clean/resumes_us_2021_clean.csv` | cleaned resumes; names only partly masked | 15 MB | team drive only, gitignored: TEAM-DRIVE-LINK |
-| `data-eda/data/raw/` | the downloads, untouched; only needed to rebuild `clean/` | 655 MB | team drive or Kaggle: TEAM-DRIVE-LINK |
+| `data-eda/data/clean/` | cleaned Seek ads, the 200-ad label sample, de-identified resumes, ESCO skills and label lookup; **use these** | 46 MB | **in this repo** |
+| `data-eda/data/raw/` | the downloads, untouched; only needed to rebuild `clean/` | 655 MB | not in git: re-download from the Kaggle links below, or ask Van Thong for the zip |
 
 Start with `data-eda/data/clean/README.txt`; `data-eda/HOW_TO_USE_DATA.txt` says which file
-answers which question. Three clean files are over the 5 MB limit in CONTRIBUTING.md
-(Seek 9.7 MB, ESCO skills 6.7 MB, ESCO lookup 14.3 MB); keeping them in the repo means
+answers which question. Four clean files are over the 5 MB limit in CONTRIBUTING.md
+(Seek 9.7 MB, resumes 14.8 MB, ESCO skills 6.7 MB, ESCO lookup 14.3 MB); keeping them in the repo means
 everyone labels and evaluates on byte-identical files.
 
 | Source | What we use | Period | Role | Link |
@@ -34,7 +33,9 @@ Notes for anyone citing these:
 - **Label and evaluate on `data-eda/data/clean/`**, not `raw/`. The raw Seek text has words
   welded together where HTML was stripped (`TableauSuperior`); the clean file repairs that,
   so the labeller and the extractor see the same words.
-- Resumes stay on the drive. Emails, phones and URLs are masked; names only partly.
+- Resumes are de-identified, not anonymous: emails, phones, URLs and 1,071 person names are
+  masked, but a name in capitals or a lone first name can survive. Mask again with spaCy
+  before sending any resume text to an LLM.
 
 Rebuild the cleaned files from `data-eda/`:
 

@@ -102,7 +102,7 @@ Raw files are never edited; the cleaned copies are rebuilt by scripts. Full note
 |---|---|---|---|
 | `jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 | `clean_seek.py` | 13,181 glued words split where the desktop rendering shows a break; Python 82.8% → 84.5%, ranking unchanged (ρ = 0.9997) |
 | `seek_label_sample_200.csv` | 200 | `make_label_sample.py` | seeded sample for labelling; 4 batches of 50, 20 marked for double labelling |
-| `resumes_us_2021_clean.csv` | 2,481 | `clean_resumes.py` | emails, phones, URLs masked; HTML copy dropped; `n_data_skills` added. **Name masking partial. Never commit** |
+| `resumes_us_2021_clean.csv` | 2,481 | `clean_resumes.py` | emails, phones, URLs and names masked (names: spaCy NER with filters that protect skills, 1,069 spans in 535 resumes); HTML copy dropped; `n_data_skills` added. **De-identified, not anonymous** |
 | `esco_skills_clean.csv` | 13,960 | `clean_esco.py` | alt labels pipe-separated instead of newline-in-cell |
 | `esco_label_lookup.csv` | 100,886 | `clean_esco.py` | one row per (label, concept); 716 labels ambiguous, including `sql` |
 
