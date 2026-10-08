@@ -32,3 +32,6 @@ private/
 CLAUDE.md
 .claude/settings.local.json
 !.env.example
+
+# Van Thong's data folder: raw and cleaned data live on the team drive, never in git
+data-eda/data/
