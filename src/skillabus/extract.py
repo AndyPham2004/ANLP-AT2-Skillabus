@@ -393,4 +393,8 @@ def extract(text: str, method: str = "dictionary") -> list[dict]:
         return _extract_dictionary(text)
     if method == "ner":
         return _extract_ner(text)
-    raise NotImplementedError("Tier 3 (GPT-4o-mini) is Quan's task; plug it in here.")
+    try:  # tier 3 lives in llm_extract.py (Quan)
+        from .llm_extract import extract_llm
+    except ImportError as error:
+        raise NotImplementedError("Tier 3 (GPT-4o-mini) is in llm_extract.py, not on this branch yet.") from error
+    return extract_llm(text)

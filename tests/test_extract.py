@@ -48,8 +48,6 @@ def test_empty_text_and_bad_method():
     assert extract("   \n", "ner") == []
     with pytest.raises(ValueError):
         extract(AD, "regex")
-    with pytest.raises(NotImplementedError):
-        extract(AD, "llm")
 
 
 # ------------------------------------------------------------------ tier 1 dictionary
