@@ -173,7 +173,8 @@ def normalise(mentions: list[dict]) -> list[dict]:
 
     for i, m in enumerate(mentions):
         text = m["text"].strip()
-        canon = alias_to_canon.get(key(text))
+        # Keep the canonical extract() found: tier 2 matches forms the alias list lacks ("REST APIs").
+        canon = m.get("canonical") or alias_to_canon.get(key(text))
         res = {**m, "canonical": canon, "similarity": None}
         if canon and canon in links:
             uri, label = links[canon]
