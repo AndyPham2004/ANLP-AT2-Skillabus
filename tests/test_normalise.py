@@ -45,3 +45,9 @@ def test_unknown_phrase_is_kept_as_emerging():
 def test_every_mention_comes_back_with_the_contract_fields():
     for r in norm("SQL", "stakeholder management", "agentic AI").values():
         assert {"skill_id", "skill_label", "vocab", "method", "sentence", "how"} <= set(r)
+
+
+def test_canonical_from_extract_is_kept():
+    # Tier 2 matches "REST APIs" to API development although the alias list lacks the plural.
+    r = normalise([{"text": "REST APIs", "canonical": "API development", "method": "ner", "sentence": "x"}])[0]
+    assert r["canonical"] == "API development" and r["vocab"] != "emerging"
