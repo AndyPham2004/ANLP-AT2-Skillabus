@@ -67,7 +67,11 @@ def embed_documents(documents: list[list[str]]) -> np.ndarray:
     averaging sentence vectors uses all of it.
     """
     flat = [s for sentences in documents for s in sentences]
-    vectors = embed(flat) if flat else np.zeros((0, 1), dtype="float32")
+    if not flat:  # no documents, or all empty (a scanned PDF): zero vectors of the model's width
+        model = _embedder()  # get_embedding_dimension in sentence-transformers 5, the old name before
+        dim = getattr(model, "get_embedding_dimension", None) or model.get_sentence_embedding_dimension
+        return np.zeros((len(documents), dim()), dtype="float32")
+    vectors = embed(flat)
     out, i = [], 0
     for sentences in documents:
         if not sentences:

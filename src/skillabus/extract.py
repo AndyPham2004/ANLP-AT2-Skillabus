@@ -237,9 +237,9 @@ def _fold_plurals(doc) -> None:
 @lru_cache(maxsize=1)
 def _plural_matcher():
     """PhraseMatcher over the non-strict aliases, compared with the plural-folded text."""
+    nlp = _nlp()  # first, so a missing spaCy raises the RuntimeError with the install hint
     from spacy.matcher import PhraseMatcher
 
-    nlp = _nlp()
     loose, _, _, _ = _matchers()
     matcher = PhraseMatcher(nlp.vocab, attr="NORM")
     for alias in loose:
@@ -323,9 +323,9 @@ def _overlaps(span, taken) -> bool:
 
 
 def _extract_ner(text: str) -> list[dict]:
+    nlp = _nlp()  # first, so a missing spaCy raises the RuntimeError with the install hint
     from spacy.util import filter_spans
 
-    nlp = _nlp()
     sentences = split_sentences(text)
     mentions = []
 
