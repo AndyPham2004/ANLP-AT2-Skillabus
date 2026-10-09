@@ -21,7 +21,8 @@ everyone labels and evaluates on byte-identical files.
 | O*NET 31.0 | 8,753 tool names | 2026 | tools ESCO lacks | [onet](https://www.onetcenter.org/database.html) |
 | UTS Handbook 2026 | 70 subjects, 6 courses (19 MDSI) | 2026 | subject profiles | [handbook](https://coursehandbook.uts.edu.au) |
 | Resume Dataset (Kaggle, snehaanbhawal) | 2,481 resumes; 125 with 2+ data skills | 2021 | resume parsing and CV–JD test pairs | [kaggle](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) |
-| Job-board APIs (Greenhouse, Lever, SmartRecruiters) | 234 ads, 22 Australian data roles | Sept 2026 | the 2026 sample | public APIs |
+| Job-board APIs (Greenhouse, Lever, SmartRecruiters) + Adzuna API | 55 Australian data roles: 22 full text, 33 cut at 500 characters by Adzuna | Sept 2026 | the 2026 sample | public APIs |
+| LinkedIn data-science postings (Kaggle, asaniczka) | 124 Australian data roles, full text | Jan 2024 | Australian middle point for the 2019–22 → 2026 trend | [kaggle](https://www.kaggle.com/datasets/asaniczka/data-science-job-postings-and-skills) |
 
 Notes for anyone citing these:
 
@@ -33,6 +34,12 @@ Notes for anyone citing these:
 - **Label and evaluate on `data-eda/data/clean/`**, not `raw/`. The raw Seek text has words
   welded together where HTML was stripped (`TableauSuperior`); the clean file repairs that,
   so the labeller and the extractor see the same words.
+- **The 2026 sample is small: 22 full-text roles, not the ~150 planned.** Indeed was dropped
+  because its terms forbid scraping and it has no public search API. Adzuna's API cuts every
+  description at 500 characters, so its 33 roles count as roles but not for skill shares.
+  The January 2024 LinkedIn rows are kept as their own period, not merged into 2026. All of
+  it is in `data-eda/data/clean/jobs_au_recent_2024-2026_clean.csv`
+  (`python src/build_recent_sample.py`).
 - Resumes are de-identified, not anonymous: emails, phones, URLs and 1,071 person names are
   masked, but a name in capitals or a lone first name can survive. Mask again with spaCy
   before sending any resume text to an LLM.

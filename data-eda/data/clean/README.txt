@@ -48,6 +48,19 @@ jobs_au_seek_datascientist_2019-2022_clean.csv  3,204 ads   src/clean_seek.py
 
 
 --------------------------------------------------------------------------------
+jobs_au_recent_2024-2026_clean.csv              179 roles   src/build_recent_sample.py
+--------------------------------------------------------------------------------
+ Recent Australian data roles, one row per role, same title filter for all.
+   period 2026-09  22 full text (job-board APIs) + 33 Adzuna (text cut at 500
+                   characters: full_text = False)
+   period 2024-01  124 full text (LinkedIn, Kaggle asaniczka, ODC-By)
+ For skill shares use full_text == True only, and never pool the two periods.
+ The 2026 full-text sample is 22 roles from 11 tech employers: report a
+ direction, not a precise percentage. The title filter keeps AI-titled
+ engineering roles ("AI Video Lead"), which raises LLM mentions in 2026.
+
+
+--------------------------------------------------------------------------------
 resumes_us_2021_clean.csv                       2,481 resumes   src/clean_resumes.py
 --------------------------------------------------------------------------------
  resume_id, category, resume_text, n_data_skills
@@ -104,3 +117,4 @@ esco_label_lookup.csv                           100,886 rows
    python src/clean_resumes.py
    python src/clean_esco.py
    python src/make_label_sample.py      (needs the clean Seek file first)
+   python src/build_recent_sample.py

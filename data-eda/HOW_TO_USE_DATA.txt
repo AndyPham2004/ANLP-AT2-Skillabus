@@ -16,7 +16,7 @@
    Check a finding holds ................. jobs_us_linkedin_2023-2024.csv
    A sample student profile .............. resumes_us_2021.csv
    Name real employers / market size ..... jobs_au_adzuna_2026.csv
-   Current-era (2026) ad language ........ jobs_au_ats_2026.csv
+   Current-era (2024 / 2026) ads ......... clean/jobs_au_recent_2024-2026_clean.csv
    Sanity-check our extractor ............ jobs_au_seek_datascience_2019-2022_authorflags.csv
 
 
