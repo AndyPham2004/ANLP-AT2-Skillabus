@@ -24,8 +24,11 @@ def llm_enabled() -> bool:
     return bool(os.getenv("OPENAI_API_KEY"))
 
 
-def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken: list[str]) -> dict:
-    """Add the hard skills only the LLM tier finds in the ad, then recompute subjects and path."""
+def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken: list[str], rank=None) -> dict:
+    """Add the hard skills only the LLM tier finds in the ad, then recompute subjects and path.
+
+    rank(gaps) -> (recommendations, learning_path); the baseline ranker when not given.
+    """
     from skillabus.llm_extract import extract_llm
     from skillabus.normalise import normalise
 
@@ -58,7 +61,7 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
         return result
     skills = result["skills"] + extra
     gaps = [s for s in skills if s["status"] != "have"]
-    recs, path = baseline.recommend(gaps, set(taken))
+    recs, path = rank(gaps) if rank else baseline.recommend(gaps, set(taken))
     return {**result, "skills": skills, "recommendations": recs, "learning_path": path}
 
 
@@ -66,24 +69,32 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str]) -> tuple[di
     """Return (gap result, engine name)."""
     try:
         from skillabus.extract import extract
-        from skillabus.match import match
+        from skillabus.match import match, soft_skills
         from skillabus.normalise import normalise
         from skillabus.recommend import recommend
 
         if ad_text is None:
             raise NotImplementedError("role mode runs on the baseline until the pipeline supports it")
+
+        def rank(gaps):  # subjects already taken are never recommended
+            rec = recommend(gaps, exclude=set(taken))
+            return rec["recommendations"], rec["learning_path"]
+
         ad_skills = normalise(extract(ad_text))
         resume_skills = normalise(extract(resume_text)) if resume_text else []
         skills = match(ad_skills, resume_skills)
-        rec = recommend([s for s in skills if s["status"] != "have"])
-        return {"ad_id": "pasted-ad", "mode": "pasted-ad", "skills": skills, "soft_skills": [], **rec}, "pipeline"
+        recs, path = rank([s for s in skills if s["status"] != "have"])
+        result = {"ad_id": "pasted-ad", "mode": "pasted-ad", "skills": skills,
+                  "soft_skills": soft_skills(ad_skills), "recommendations": recs, "learning_path": path}
+        engine = "pipeline"
     except Exception as e:  # not built yet, or a half-finished stage: the demo must still run
         result = baseline.analyse(resume_text, ad_text, taken=taken)
-        engine = "baseline" if isinstance(e, NotImplementedError) else f"baseline (pipeline error: {e})"
+        engine = "baseline" if isinstance(e, (NotImplementedError, ImportError)) else f"baseline (pipeline error: {e})"
+        rank = None
 
     if ad_text and llm_enabled():
         try:
-            result = augment_with_llm(result, resume_text, ad_text, taken)
+            result = augment_with_llm(result, resume_text, ad_text, taken, rank)
             engine += " + GPT-4o-mini"
         except Exception as e:
             engine += f" (LLM tier skipped: {e})"
