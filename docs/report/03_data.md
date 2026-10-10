@@ -102,7 +102,9 @@ Four skills dominate: Python (84%), machine learning (73%), SQL (57%) and statis
 After them only predictive modelling passes 30%, and 24 technical skills appear in at least
 10% of ads. A typical ad names eight technical skills (interquartile range 5–11), and 32% ask
 for all of Python, SQL and statistics. Communication appears in 30% of ads, more often than
-any technical skill outside the top five.
+any technical skill outside the top five. The app's demand figures
+(`data/processed/skill_counts_v2.csv`) are the poster's counts on the uncleaned text; they are
+within 1.7 points of Figure 3.1 and rank skills the same way (rank correlation 0.9996).
 
 ## 3.6 Can the counts be trusted?
 
