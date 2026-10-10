@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+import skillabus.recommend as recommend_module
 import skillabus.similarity as similarity_module
 from skillabus.extract import extract
 from skillabus.match import match
@@ -151,10 +152,11 @@ def test_a_zero_demand_skill_still_gets_a_subject():
     assert result["learning_path"]["subjects"] and result["learning_path"]["demand_covered_pct"] == 100.0
 
 
-def test_weight_uses_the_2026_share_when_it_is_higher():
-    assert _weight(gap("Large language models", 0.0)) == 1.0
-    assert _weight(gap("Large language models", 0.0, 30.0)) == 31.0
-    assert _weight(gap("Hadoop", 17.4, 5.0)) == 18.4
+def test_weight_uses_the_low_end_of_the_2026_interval(monkeypatch):
+    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Large language models": 18.0, "Hadoop": 1.0})
+    assert _weight(gap("Large language models", 0.0, 36.4)) == 19.0     # 2026 lower bound, not 36.4
+    assert _weight(gap("Hadoop", 17.4, 4.5)) == 18.4                    # 2019-22 is higher
+    assert _weight(gap("Python", 82.8)) == 83.8                         # no 2026 row
 
 
 # ------------------------------------------------- real embedding model, when installed

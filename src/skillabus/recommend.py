@@ -26,6 +26,7 @@ from pathlib import Path
 import numpy as np
 
 from .extract import _dictionary_hits, load_dictionary
+from .match import demand_2026_low
 from .similarity import best_method, similarity
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -162,9 +163,11 @@ def subject_evidence(labels: list[str], profiles_csv: str | None = None, method:
 # ------------------------------------------------------------------------- recommend
 
 def _weight(gap: dict) -> float:
-    """Market demand behind a gap. The 2026 share when it exists and is higher (LLMs are 0% in
-    2019-22); +1 so a skill at 0% still counts for something."""
-    return max(gap.get("demand_pct") or 0.0, gap.get("demand_pct_2026") or 0.0) + 1.0
+    """Market demand behind a gap: the 2019-22 share, or the 2026 share when that is clearly
+    higher (LLMs are 0% in 2019-22). The 2026 sample is only 22 ads, so it counts by the lower
+    end of its 95% interval, not its point value. +1 so a skill at 0% still counts for something."""
+    low_2026 = demand_2026_low().get(gap["skill_label"], 0.0)
+    return max(gap.get("demand_pct") or 0.0, low_2026) + 1.0
 
 
 def _code_number(code: str) -> int:
