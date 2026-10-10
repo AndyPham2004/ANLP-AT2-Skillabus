@@ -62,10 +62,10 @@ Small CSVs, committed. They are the record of what the poster shows; the bars in
 - `data/processed/gap.csv` — block 5: columns `skill,pct_ads,covered` (`covered` = 1 if the sample resume has the skill)
 
 - `data/processed/skill_counts_2026.csv` — every v2 dictionary skill in three periods, same
-  method: `pct_2019_22` (3,204 Seek ads, clean text), `pct_2024_01` (124 Australian LinkedIn data
+  method: `pct_2019_22` (3,204 Seek listings, clean text, counted per listing as on the poster), `pct_2024_01` (124 Australian LinkedIn data
   roles), `n_2026` / `pct_2026` (22 full-text 2026 roles) with a 95% Wilson interval. `match.py`
   reads `pct_2026` as `demand_pct_2026`. Built by `python data-eda/src/recount_recent.py`.
-  **Read with care:** 2026 is 22 ads from a few tech employers, AI-titled roles included, so
+  **Read with care:** 2026 is 22 ads from 8 employers (12 from Canva), AI-titled roles included, so
   per-skill 2026 shares carry intervals of ±20 points. The one robust signal is direction: any
   LLM-era skill 0% → 2.4% → 50% (11 of 22), and the rise holds within non-AI-titled roles
   (0.9% → 30%, n = 10). Show 2026 as "n of 22", not as a bare percentage.

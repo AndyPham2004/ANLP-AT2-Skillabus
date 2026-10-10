@@ -64,8 +64,8 @@ jobs_au_recent_2024-2026_clean.csv              179 roles   src/build_recent_sam
                    characters: full_text = False)
    period 2024-01  124 full text (LinkedIn, Kaggle asaniczka, ODC-By)
  For skill shares use full_text == True only, and never pool the two periods.
- The 2026 full-text sample is 22 roles from 11 tech employers: report a
- direction, not a precise percentage. The title filter keeps AI-titled
+ The 2026 full-text sample is 22 roles from 8 employers, 12 of them from
+ Canva: report a direction, not a precise percentage. The title filter keeps AI-titled
  engineering roles ("AI Video Lead"), which raises LLM mentions in 2026.
 
 
