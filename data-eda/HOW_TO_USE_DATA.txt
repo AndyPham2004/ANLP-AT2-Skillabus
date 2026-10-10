@@ -207,7 +207,7 @@ ETHICS Process in memory, do not commit resumes to the repo, and mask personal
     is why. FIXED in data/clean/jobs_au_seek_datascientist_2019-2022_clean.csv
     (src/clean_seek.py): a join is split only where the desktop rendering of
     the same ad shows a break, so "JavaScript" is never split. On the clean
-    text Python is 84.5%, ranking unchanged (rho 0.9997). The poster and
+    text Python is 84.5%, ranking unchanged (rho 0.9996). The poster and
     data/processed/ still use the old text.
 
  1. THE AUSTRALIAN ADS ARE 2019-2022.

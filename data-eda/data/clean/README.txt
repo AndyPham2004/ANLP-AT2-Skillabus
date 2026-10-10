@@ -50,7 +50,7 @@ jobs_au_seek_datascientist_2019-2022_clean.csv  3,204 ads   src/clean_seek.py
  Bullets are one per line, so sentence splitting works.
 
  Effect on skill counts: Python 82.8% -> 84.5%, Communication 28.3 -> 30.0,
- no skill goes down, top 15 identical, rank correlation 0.9997 with the old text.
+ no skill goes down, top 15 identical, rank correlation 0.9996 with the old text.
  The poster and data/processed/ still use the old text. LABELS MUST BE MADE ON
  THIS FILE, and extraction for evaluation must run on this file too, so the
  extractor and the labeller see the same words.
