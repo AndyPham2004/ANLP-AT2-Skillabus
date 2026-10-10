@@ -48,6 +48,23 @@ def key(s: str) -> str:
     return re.sub(r"[^a-z0-9+#]+", " ", s).strip()
 
 
+# Filler around a skill name in ads and resumes: "problem-solving skills", "strong SQL",
+# "hypothesis testing basics", "knowledge of statistics".
+_FILLER = re.compile(r"^(?:strong|solid|good|basic|advanced|knowledge of|experience (?:with|in))\s+|"
+                     r"\s+(?:skills?|basics|experience|knowledge|techniques?|capabilit(?:y|ies)|applications?)$")
+
+
+def keys(s: str) -> list[str]:
+    """The comparison key, then the key without filler words; used to look a mention up."""
+    k = key(s)
+    stripped = _FILLER.sub("", k).strip()
+    return [k, stripped] if stripped and stripped != k else [k]
+
+
+def lookup(table: dict, s: str):
+    return next((table[k] for k in keys(s) if k in table), None)
+
+
 # ---------------------------------------------------------------- 1. dictionary
 @lru_cache(maxsize=1)
 def _dictionary() -> tuple[dict, dict]:
@@ -174,14 +191,14 @@ def normalise(mentions: list[dict]) -> list[dict]:
     for i, m in enumerate(mentions):
         text = m["text"].strip()
         # Keep the canonical extract() found: tier 2 matches forms the alias list lacks ("REST APIs").
-        canon = m.get("canonical") or alias_to_canon.get(key(text))
+        canon = m.get("canonical") or lookup(alias_to_canon, text)
         res = {**m, "canonical": canon, "similarity": None}
         if canon and canon in links:
             uri, label = links[canon]
             out[i] = {**res, "skill_id": f"esco:{uri}", "skill_label": label, "vocab": "esco", "how": "dictionary"}
             continue
         if canon not in NOT_IN_ESCO:
-            hit = exact.get(key(text)) or (exact.get(key(canon)) if canon else None)
+            hit = lookup(exact, text) or (exact.get(key(canon)) if canon else None)
             if hit and hit[0] not in BLOCKED_ESCO:
                 out[i] = {**res, "skill_id": f"esco:{hit[0]}", "skill_label": hit[1], "vocab": "esco",
                           "how": "esco_exact"}
