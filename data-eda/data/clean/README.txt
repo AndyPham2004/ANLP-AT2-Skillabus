@@ -22,6 +22,9 @@ seek_label_sample_200.csv                       200 ads     src/make_label_sampl
                 label these, so Cohen's kappa is on ads you both saw.
  ad_id          the key. Copy it exactly into data/labels/ad_skills.csv.
  Drawn with a fixed seed (36118): re-running gives the same 200 ads.
+ No two ads share the same text. The 9 Oct version had 4 re-listings drawn
+ twice; on 10 Oct those 4 were swapped for unused ads, in place. The other 196
+ rows, the batches and the 20 double-label rows did not change.
  If anyone already started labelling other ads, keep those and tell the group.
 
 
@@ -29,6 +32,12 @@ seek_label_sample_200.csv                       200 ads     src/make_label_sampl
 jobs_au_seek_datascientist_2019-2022_clean.csv  3,204 ads   src/clean_seek.py
 --------------------------------------------------------------------------------
  The primary corpus with the ad text repaired. ad_id and title are unchanged.
+
+ Re-listings: 697 ads repeat another ad's text exactly (same employer, posted
+ again on a later date or in another city), so there are 2,507 unique ads among
+ the 3,204 listings. All counts are per listing, as on the poster. Counting
+ unique ads instead changes no skill by more than 2.1 points (rank correlation
+ 0.998), so the ranking does not depend on the choice.
 
  What was wrong: the Kaggle dataset stripped HTML without putting spaces back,
  so 80% of ads had words welded together - "...Power BI and TableauSuperior
