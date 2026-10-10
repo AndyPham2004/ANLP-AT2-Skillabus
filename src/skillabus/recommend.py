@@ -26,7 +26,7 @@ from pathlib import Path
 import numpy as np
 
 from .extract import _dictionary_hits, load_dictionary
-from .match import demand_2026_low
+from .match import demand_2026_low, skill_query
 from .similarity import best_method, similarity
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -88,10 +88,7 @@ def _aliases() -> dict[str, tuple[str, ...]]:
     return {skill["canonical"]: skill["aliases"] for skill in load_dictionary()}
 
 
-def _query(label: str) -> str:
-    """The text a skill is compared by: its name plus its dictionary aliases."""
-    parts = dict.fromkeys([label, *_aliases().get(label, ())])
-    return ", ".join(parts)
+_query = skill_query   # the text a skill is compared by: its name plus its dictionary aliases
 
 
 def _phrase(label: str) -> re.Pattern:
