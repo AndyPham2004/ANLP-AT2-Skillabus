@@ -493,7 +493,7 @@ lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "amb
 # | 10 | ESCO reaches little of the modern stack | 36% of our dictionary maps; 716 ambiguous labels incl. "sql" | normalise() needs the emerging tag and a tie-break for ambiguous labels |
 #
 # **Limitations to state in the report:** the main corpus is 2019-22 (Feb 2019 to
-# Jan 2022), Data Scientist titles only, and 22% re-listings; the 2026 sample is 22 ads from a few tech employers;
+# Jan 2022), Data Scientist titles only, and 22% re-listings; the 2026 sample is 22 ads from 8 employers, 12 of them Canva;
 # resumes are US 2021 and de-identified rather than anonymous; subject profiles come
 # from the public handbook and lack assessment detail; ESCO coverage of the modern
 # stack is low.
