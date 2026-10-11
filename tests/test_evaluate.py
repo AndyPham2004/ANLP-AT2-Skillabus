@@ -17,6 +17,18 @@ def _write(path, text):
         f.write(text)
 
 
+class PhraseEvidenceTests(unittest.TestCase):
+    def test_gold_phrase_inside_ranked_sentence_counts(self):
+        ranked = ["Built XGBoost models for churn.", "Led a team of four."]
+        gold = {"xgboost models"}
+        self.assertEqual(ev.hit_at_k(ranked, gold, 5), 1.0)
+        self.assertEqual(ev.reciprocal_rank(ranked, gold), 1.0)
+        self.assertAlmostEqual(ev.precision_at_k(ranked, gold, 5), 0.2)
+
+    def test_phrase_not_in_any_sentence_scores_zero(self):
+        self.assertEqual(ev.hit_at_k(["Led a team of four."], {"xgboost"}, 5), 0.0)
+
+
 class Extraction(unittest.TestCase):
     def test_prf_hand_example(self):
         gold = {"ad1": {"python", "sql", "tableau"}}

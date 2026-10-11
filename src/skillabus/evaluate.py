@@ -141,21 +141,31 @@ def extraction_errors(gold: Mapping[str, set[str]], pred: Mapping[str, set[str]]
 # --------------------------------------------------------------------------- stage 2: matching
 
 
+def is_relevant(item: str, relevant: set) -> bool:
+    """True when `item` (a ranked resume sentence) is a gold evidence item.
+
+    Annotators copy a short phrase from the resume, while the ranker returns whole sentences, so a gold
+    phrase counts when it sits inside the sentence (after the same case / whitespace normalisation).
+    """
+    text = norm(item) if isinstance(item, str) else item
+    return text in relevant or any(isinstance(g, str) and g and g in text for g in relevant)
+
+
 def precision_at_k(ranked: Sequence, relevant: set, k: int = 5) -> float:
     """Standard P@k: relevant items in the top k, divided by k.
 
     With one gold sentence per skill this cannot exceed 1/k (0.2 at k=5). Report hit_at_k next to it.
     """
-    return sum(1 for x in list(ranked)[:k] if x in relevant) / k
+    return sum(1 for x in list(ranked)[:k] if is_relevant(x, relevant)) / k
 
 
 def hit_at_k(ranked: Sequence, relevant: set, k: int = 5) -> float:
-    return float(any(x in relevant for x in list(ranked)[:k]))
+    return float(any(is_relevant(x, relevant) for x in list(ranked)[:k]))
 
 
 def reciprocal_rank(ranked: Sequence, relevant: set) -> float:
     for i, x in enumerate(ranked, start=1):
-        if x in relevant:
+        if is_relevant(x, relevant):
             return 1.0 / i
     return 0.0
 
