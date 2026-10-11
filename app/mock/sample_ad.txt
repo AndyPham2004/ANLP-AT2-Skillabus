@@ -1,0 +1,33 @@
+Data Scientist - Python, SQL
+Robert Walters Australia
+Sydney CBD, Hybrid Working Arrangements
+Source: robertwalters.com.au, Job Reference PLAIZ0-9596BEC2
+
+Overview
+Join a team of industry experts where you will play a pivotal role in advancing the
+firm's financial security measures. You will leverage your strong Python and SQL
+skills, along with your deep understanding of the latest trends in deep learning and
+generative AI, to build and deploy innovative AI solutions.
+
+Key Responsibilities
+- Develop and implement predictive models and machine learning algorithms to solve
+  complex business problems.
+- Analyze large datasets to uncover insights and trends that drive strategic
+  decision-making.
+- Stay current with advancements in deep learning, generative AI, and other AI
+  technologies, and apply this knowledge to enhance our AI capabilities.
+- Collaborate with cross-functional teams to integrate AI solutions into existing
+  systems and processes.
+- Continuously improve data science methodologies and processes to ensure
+  high-quality outcomes.
+
+Key Requirements
+- 3-5+ years of experience in data science, with a strong track record of delivering
+  successful AI solutions.
+- Strong programming experience with Python and SQL.
+- In-depth knowledge of deep learning, Generative AI, and other advanced AI
+  technologies; LLM, GenAI etc.
+- Experience in building and deploying AI models and solutions.
+- Strong analytical and problem-solving skills.
+
+Location: Sydney CBD. Workplace Type: Hybrid. Experience Level: Associate.

@@ -1,0 +1,218 @@
+{
+  "ad_id": "rw-2026-09-23",
+  "mode": "rw-2026-09-23",
+  "skills": [
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d",
+      "skill_label": "Python",
+      "status": "have",
+      "demand_pct": 82.8,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "You will leverage your strong Python and SQL skills, along with your deep understanding of the latest trends in deep learning and generative AI, to build and deploy innovative AI solutions.",
+      "resume_evidence": "Python: pandas and matplotlib for data cleaning, exploration, and visualisation"
+    },
+    {
+      "skill_id": "seed:machine-learning",
+      "skill_label": "Machine learning",
+      "status": "missing",
+      "demand_pct": 72.2,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Develop and implement predictive models and machine learning algorithms to solve complex business problems.",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/598de5b0-5b58-4ea7-8058-a4bc4d18c742",
+      "skill_label": "SQL",
+      "status": "have",
+      "demand_pct": 56.8,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "You will leverage your strong Python and SQL skills, along with your deep understanding of the latest trends in deep learning and generative AI, to build and deploy innovative AI solutions.",
+      "resume_evidence": "SQL: writing queries, joins, and aggregations across relational databases"
+    },
+    {
+      "skill_id": "seed:predictive-modelling",
+      "skill_label": "Predictive modelling",
+      "status": "missing",
+      "demand_pct": 30.1,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Develop and implement predictive models and machine learning algorithms to solve complex business problems.",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "seed:artificial-intelligence",
+      "skill_label": "Artificial intelligence",
+      "status": "missing",
+      "demand_pct": 22.5,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "You will leverage your strong Python and SQL skills, along with your deep understanding of the latest trends in deep learning and generative AI, to build and deploy innovative AI solutions.",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/ecc4552a-92c5-4222-b18d-faf5ac841080",
+      "skill_label": "Deep learning",
+      "status": "missing",
+      "demand_pct": 16.1,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "You will leverage your strong Python and SQL skills, along with your deep understanding of the latest trends in deep learning and generative AI, to build and deploy innovative AI solutions.",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "seed:large-language-models",
+      "skill_label": "Large language models",
+      "status": "missing",
+      "demand_pct": 0.0,
+      "demand_pct_2026": null,
+      "emerging": true,
+      "ad_evidence": "In-depth knowledge of deep learning, Generative AI, and other advanced AI technologies; LLM, GenAI etc.",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "seed:generative-ai",
+      "skill_label": "Generative AI",
+      "status": "missing",
+      "demand_pct": 0.0,
+      "demand_pct_2026": null,
+      "emerging": true,
+      "ad_evidence": "You will leverage your strong Python and SQL skills, along with your deep understanding of the latest trends in deep learning and generative AI, to build and deploy innovative AI solutions.",
+      "resume_evidence": null
+    }
+  ],
+  "recommendations": [
+    {
+      "subject_code": "36106",
+      "subject_name": "Machine Learning Algorithms and Applications",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36106",
+      "covers": [
+        "Machine learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO2: Interpret, synthesise and communicate insights extracted from machine learning algorithms in a context-appropriate manner."
+        }
+      ],
+      "score": 1.0
+    },
+    {
+      "subject_code": "32130",
+      "subject_name": "Fundamentals of Data Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32130",
+      "covers": [
+        "Predictive modelling",
+        "Artificial intelligence",
+        "Generative AI"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "learning_objective",
+          "text": "SLO3: Use appropriate data analytics methods to describe and implement descriptive and predictive analytics solutions. (D.1)"
+        },
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO4: Communicate data analytics methods and insights effectively in oral and written forms, demonstrating responsible and critical collaboration with AI tools. (E.1)"
+        },
+        {
+          "skill_label": "Generative AI",
+          "layer": "weekly_topic",
+          "text": "Introduction to use generative AI in the data pipeline, understanding relevant data privacy, ethics, and governance."
+        }
+      ],
+      "score": 0.63
+    },
+    {
+      "subject_code": "36118",
+      "subject_name": "Applied Natural Language Processing",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36118",
+      "covers": [
+        "Deep learning",
+        "Large language models"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Deep learning",
+          "layer": "weekly_topic",
+          "text": "Advanced NLP and Deep Learning"
+        },
+        {
+          "skill_label": "Large language models",
+          "layer": "weekly_topic",
+          "text": "Large Language Models (LLMs)"
+        }
+      ],
+      "score": 0.21
+    },
+    {
+      "subject_code": "36120",
+      "subject_name": "Advanced Machine Learning Application",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36120",
+      "covers": [
+        "Machine learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Implement and evaluate advanced machine learning techniques to real-world problems"
+        }
+      ],
+      "score": 1.0
+    },
+    {
+      "subject_code": "32513",
+      "subject_name": "Advanced Data Analytics Algorithms",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32513",
+      "covers": [
+        "Machine learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Describe the scope, limitations and application of several advanced machine learning methods. (D.1)"
+        }
+      ],
+      "score": 0.83
+    },
+    {
+      "subject_code": "36121",
+      "subject_name": "Artificial Intelligence Principles and Applications",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36121",
+      "covers": [
+        "Artificial intelligence",
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO1: Understand general problem-solving approaches in AI."
+        },
+        {
+          "skill_label": "Deep learning",
+          "layer": "learning_objective",
+          "text": "SLO4: Work with deep neural networks, multilayer networks, and decision trees."
+        }
+      ],
+      "score": 0.55
+    }
+  ],
+  "learning_path": {
+    "subjects": [
+      "36106",
+      "32130",
+      "36118"
+    ],
+    "gaps_closed": 6,
+    "gaps_total": 6,
+    "demand_covered_pct": 100.0
+  }
+}
