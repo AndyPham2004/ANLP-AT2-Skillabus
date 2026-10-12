@@ -37,3 +37,17 @@ def test_mixed_rule_keeps_item_types_and_ids():
 
 def test_no_rule_gives_empty_rule_and_no_items():
     assert parse_requisites(NONE) == {"rule": "", "items": []}
+
+
+COREQ = """<html><body>Requisite rule: (((1 OR 1a)) OR (2 AND 3)) Item Type Details
+1 Admission requisite Admission into MAJ08994 36cp Digital Finance Major
+1a corequisite Must have completed at least 24 credit points in 24.0000000000 Credit Points spk(s): MAJ08984 - 36cp Finance Major MBA
+2 Academic corequisite 25741 Capital Markets
+3 Admission requisite Admission into STM92125 24cp Financial Technology
+Note: See also</body></html>"""
+
+
+def test_corequisites_are_items_of_their_own_type():
+    out = parse_requisites(COREQ)
+    assert [(i["item"], i["type"], i["code"]) for i in out["items"]] == [
+        ("1", "admission", ""), ("1a", "corequisite", ""), ("2", "corequisite", "25741"), ("3", "admission", "")]

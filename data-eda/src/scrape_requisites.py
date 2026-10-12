@@ -9,7 +9,8 @@ page on studentforms.uts.edu.au, which lists the actual rule, e.g. for 36118:
     3 Academic requisite 36106 Machine Learning Algorithms and Applications
 
 Item types: Academic (a subject code, or a credit-point condition), Admission (into a
-course), Other. The rule is a boolean expression over item ids (1, 1a, 2 ...).
+course), Other, and corequisite ("1d corequisite ..." or "2 Academic corequisite 25741 ...": may be
+taken in the same session). The rule is a boolean expression over item ids (1, 1a, 2 ...).
 
 Usage (from the repo root):
     python data-eda/src/scrape_requisites.py                # all subjects in uts_subjects_2026.csv
@@ -41,8 +42,10 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (UTS 36118 student project)"}
 
 RULE = re.compile(r"Requisite rule:\s*(.+?)\s*Item\s+Type\s+Details")
 # "1a Academic requisite 36100 Data Science ..." up to the next item id or "Note:"
-ITEM = re.compile(r"(?:(?<=\s)|^)(\d+[a-z]?)\s+(Academic|Admission|Other)\s+requisite\s+(.+?)(?=\s+\d+[a-z]?\s+(?:Academic|Admission|Other)\s+requisite\s|\s*Note:|$)",
-                  re.S)
+ITEM = re.compile(
+    r"(?:(?<=\s)|^)(\d+[a-z]?)\s+(?:(Academic|Admission|Other)\s+)?(requisite|corequisite)\s+(.+?)"
+    r"(?=\s+\d+[a-z]?\s+(?:(?:Academic|Admission|Other)\s+)?(?:requisite|corequisite)\s|\s*Note:|$)",
+    re.S)
 CODE = re.compile(r"^(\d{5})\b")
 PREREQ_COLUMNS = ["subject_code", "rule", "item", "type", "requisite_code", "requisite_text", "source_url"]
 
@@ -65,10 +68,12 @@ def parse_requisites(html: str) -> dict:
     body = text[m.end():]
     body = body[:body.find("Note:")] if "Note:" in body else body
     items = []
-    for item, kind, detail in ITEM.findall(body):
+    for item, kind, keyword, detail in ITEM.findall(body):
         detail = detail.strip()
         code = CODE.match(detail)
-        items.append({"item": item, "type": kind.lower(), "code": code.group(1) if code else "", "text": detail})
+        # "corequisite" (bare, or "Academic corequisite") may be taken in the same session: its own type
+        kind = "corequisite" if keyword == "corequisite" else (kind or "other").lower()
+        items.append({"item": item, "type": kind, "code": code.group(1) if code else "", "text": detail})
     return {"rule": rule, "items": items}
 
 
