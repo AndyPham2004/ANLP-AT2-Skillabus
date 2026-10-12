@@ -20,7 +20,7 @@ runs without spaCy or an API key. The table says what the numbers below cover.
 The test sets are much smaller than planned (200 ads, 50 pairs). Five of the 50 selected pairs have no scored skills, because
 their ads name only soft skills, which `match()` leaves out. Every figure below is therefore a small-sample estimate.
 
-**[Hoai Thuong: add one paragraph here on how the labels were made and who made them, as you decide to declare it.]**
+The test sets were labelled following the rules in data/labels/README.md. The 20 overlap ads are also labelled separately by a second annotator (Akash) so that inter-annotator agreement can be measured with Cohen’s kappa.
 
 ## 6.2 Extraction
 
