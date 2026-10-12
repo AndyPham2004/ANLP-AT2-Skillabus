@@ -123,8 +123,9 @@ def test_learning_path_for_the_poster_ad():
     result = recommend(poster_gaps(), PROFILES, method="keyword")
     path = result["learning_path"]
     assert path["subjects"][0] == "36106"                    # machine learning: the largest gap
+    assert "43023" in path["subjects"]                       # artificial intelligence and LLMs together
     assert path["gaps_closed"] == 5 and path["gaps_total"] == 6
-    assert 95 < path["demand_covered_pct"] < 100             # one 0% skill left: not 100
+    assert 85 < path["demand_covered_pct"] < 100             # deep learning (16% of ads) is left open
 
 
 def test_greedy_takes_the_largest_uncovered_demand_first():
@@ -156,6 +157,8 @@ def test_weight_uses_the_low_end_of_the_2026_interval(monkeypatch):
     monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Large language models": 18.0, "Hadoop": 1.0})
     assert _weight(gap("Large language models", 0.0, 36.4)) == 19.0     # 2026 lower bound, not 36.4
     assert _weight(gap("Hadoop", 17.4, 4.5)) == 18.4                    # 2019-22 is higher
+    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Artificial intelligence": 72.2})
+    assert _weight(gap("Artificial intelligence", 22.5, 90.9)) == 23.5  # asked for before 2023: 2019-22 stays
     assert _weight(gap("Python", 82.8)) == 83.8                         # no 2026 row
 
 

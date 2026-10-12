@@ -142,7 +142,10 @@ def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool =
         vocab = first.get("vocab")
         emerging = vocab in ("emerging", "lightcast") if vocab else (canonical is None or canonical in EMERGING_SEED)
 
-        same = key if key in resume else resume_ids.get(first.get("skill_id"))
+        # A shared skill_id counts only for a skill outside the dictionary: several dictionary skills
+        # share one broad ESCO concept (PyTorch and matplotlib, Tableau and Power BI), so a resume
+        # naming one must not count as having the other.
+        same = key if key in resume else (None if canonical else resume_ids.get(first.get("skill_id")))
         related = None if same else (_related(canonical, resume) if canonical else None)
         skill = {
             "skill_id": skill_id,
