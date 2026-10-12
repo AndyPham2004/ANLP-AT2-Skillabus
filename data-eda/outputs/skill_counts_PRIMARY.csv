@@ -1,0 +1,125 @@
+skill,category,n_ads,pct_ads,total_ads_in_sample
+Python,Programming,2654,82.8,3204
+SQL,Programming,1821,56.8,3204
+Statistics,Statistics,1796,56.1,3204
+Communication,Professional,907,28.3,3204
+Spark,Data wrangling,819,25.6,3204
+Data visualisation,Visualisation,810,25.3,3204
+Teamwork,Professional,772,24.1,3204
+AWS,Cloud,694,21.7,3204
+Problem solving,Professional,639,19.9,3204
+Optimisation,Statistics,625,19.5,3204
+Leadership,Professional,625,19.5,3204
+Tableau,Visualisation,605,18.9,3204
+Stakeholder management,Professional,583,18.2,3204
+Hadoop,Data wrangling,556,17.4,3204
+Natural language processing,NLP,545,17.0,3204
+Deep learning,Deep learning,517,16.1,3204
+Agile,Professional,499,15.6,3204
+SAS,Programming,488,15.2,3204
+Power BI,Visualisation,487,15.2,3204
+Scala,Programming,485,15.1,3204
+Time series forecasting,Machine learning,413,12.9,3204
+Azure,Cloud,400,12.5,3204
+R,Programming,375,11.7,3204
+ETL,Engineering,323,10.1,3204
+Git,Engineering,322,10.0,3204
+Java,Programming,321,10.0,3204
+Excel,Visualisation,289,9.0,3204
+Google Cloud,Cloud,276,8.6,3204
+Documentation,Professional,254,7.9,3204
+Clustering,Machine learning,250,7.8,3204
+Random forest,Machine learning,244,7.6,3204
+C++,Programming,240,7.5,3204
+TensorFlow,Deep learning,232,7.2,3204
+Data cleaning,Data wrangling,225,7.0,3204
+Project management,Professional,210,6.6,3204
+Data modelling,Databases,210,6.6,3204
+Business acumen,Professional,192,6.0,3204
+Requirements gathering,Professional,192,6.0,3204
+Redshift,Cloud,185,5.8,3204
+MATLAB,Programming,169,5.3,3204
+Econometrics,Statistics,165,5.1,3204
+XGBoost,Machine learning,155,4.8,3204
+Presentation skills,Professional,141,4.4,3204
+SQL Server,Databases,130,4.1,3204
+Data warehousing,Databases,130,4.1,3204
+Databricks,Data wrangling,128,4.0,3204
+scikit-learn,Machine learning,125,3.9,3204
+NoSQL,Databases,123,3.8,3204
+Data quality,Governance,121,3.8,3204
+pandas,Data wrangling,121,3.8,3204
+Feature engineering,Machine learning,119,3.7,3204
+Qlik,Visualisation,117,3.7,3204
+A/B testing,Statistics,116,3.6,3204
+Bayesian methods,Statistics,114,3.6,3204
+JavaScript,Programming,113,3.5,3204
+MLOps,Engineering,111,3.5,3204
+Keras,Deep learning,104,3.2,3204
+Computer vision,Computer vision,100,3.1,3204
+NumPy,Data wrangling,100,3.1,3204
+PyTorch,Deep learning,96,3.0,3204
+Docker,Engineering,87,2.7,3204
+Logistic regression,Machine learning,86,2.7,3204
+C#,Programming,83,2.6,3204
+Plotly,Visualisation,82,2.6,3204
+Gradient boosting,Machine learning,81,2.5,3204
+SageMaker,Cloud,79,2.5,3204
+Anomaly detection,Machine learning,79,2.5,3204
+CI/CD,Engineering,76,2.4,3204
+BigQuery,Cloud,66,2.1,3204
+matplotlib,Visualisation,64,2.0,3204
+MongoDB,Databases,63,2.0,3204
+Julia,Programming,62,1.9,3204
+Hypothesis testing,Statistics,53,1.7,3204
+PostgreSQL,Databases,52,1.6,3204
+Experimental design,Statistics,51,1.6,3204
+Data security,Governance,46,1.4,3204
+Kubernetes,Engineering,45,1.4,3204
+Linear regression,Machine learning,44,1.4,3204
+Support vector machines,Machine learning,39,1.2,3204
+Snowflake,Cloud,39,1.2,3204
+Probability,Statistics,38,1.2,3204
+Data governance,Governance,38,1.2,3204
+D3.js,Visualisation,38,1.2,3204
+VBA,Programming,37,1.2,3204
+Regression analysis,Statistics,32,1.0,3204
+MySQL,Databases,32,1.0,3204
+Airflow,Engineering,25,0.8,3204
+API development,Engineering,25,0.8,3204
+Recommender systems,Machine learning,24,0.7,3204
+Sentiment analysis,NLP,24,0.7,3204
+Azure ML,Cloud,24,0.7,3204
+Shell scripting,Programming,23,0.7,3204
+Elasticsearch,Databases,21,0.7,3204
+Data storytelling,Professional,16,0.5,3204
+Django,Engineering,15,0.5,3204
+Jenkins,Engineering,15,0.5,3204
+MLflow,Engineering,14,0.4,3204
+Causal inference,Statistics,13,0.4,3204
+Kubeflow,Engineering,13,0.4,3204
+Flask,Engineering,11,0.3,3204
+dbt,Engineering,10,0.3,3204
+spaCy,NLP,10,0.3,3204
+Looker,Visualisation,9,0.3,3204
+Topic modelling,NLP,9,0.3,3204
+Data privacy,Governance,8,0.2,3204
+Named entity recognition,NLP,7,0.2,3204
+Go,Programming,7,0.2,3204
+BERT,NLP,6,0.2,3204
+Cassandra,Databases,6,0.2,3204
+Redis,Databases,6,0.2,3204
+seaborn,Visualisation,6,0.2,3204
+Vertex AI,Cloud,5,0.2,3204
+Oracle,Databases,5,0.2,3204
+LightGBM,Machine learning,5,0.2,3204
+NLTK,NLP,5,0.2,3204
+OpenCV,Computer vision,5,0.2,3204
+Terraform,Engineering,4,0.1,3204
+Hyperparameter tuning,Machine learning,4,0.1,3204
+Dask,Data wrangling,3,0.1,3204
+Hive,Data wrangling,2,0.1,3204
+Word embeddings,NLP,2,0.1,3204
+Responsible AI,Governance,2,0.1,3204
+FastAPI,Engineering,1,0.0,3204
+Transformers,NLP,1,0.0,3204
