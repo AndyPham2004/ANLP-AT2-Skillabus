@@ -83,6 +83,10 @@
       "resume_evidence": null
     }
   ],
+  "soft_skills": [
+    "Teamwork",
+    "Problem solving"
+  ],
   "recommendations": [
     {
       "subject_code": "36106",
@@ -203,6 +207,70 @@
         }
       ],
       "score": 0.55
+    },
+    {
+      "subject_code": "42050",
+      "subject_name": "SAS Predictive Business Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42050",
+      "covers": [
+        "Predictive modelling"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "learning_objective",
+          "text": "SLO1: Explore and transform business data into analytic-ready features for predictive modelling. (D.1)"
+        }
+      ],
+      "score": 0.35
+    },
+    {
+      "subject_code": "42172",
+      "subject_name": "Introduction to Artificial Intelligence",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42172",
+      "covers": [
+        "Artificial intelligence"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO1: Describe key ideas and applications of common AI techniques to people in the same discipline. (D.1)"
+        }
+      ],
+      "score": 0.27
+    },
+    {
+      "subject_code": "94691",
+      "subject_name": "Deep Learning",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/94691",
+      "covers": [
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Deep learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Gain a solid understanding of the fundamentals, underlying mathematical concepts, and applications of neural networks."
+        }
+      ],
+      "score": 0.23
+    },
+    {
+      "subject_code": "22804",
+      "subject_name": "Business Analytics Foundations",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/22804",
+      "covers": [
+        "Predictive modelling"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "description",
+          "text": "In this subject, you will develop core competencies in business analytics, learning how to transform raw data into actionable insights that support effective decision-making.Â You will gain hands-on experience with industry-standard tools, including Excel, Python, and Tableau, while developing skills in data visualisation, statistical analysis, predictive modelling, and introductory machine learning techniques."
+        }
+      ],
+      "score": 0.18
     }
   ],
   "learning_path": {

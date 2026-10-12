@@ -32,3 +32,6 @@ private/
 CLAUDE.md
 .claude/settings.local.json
 !.env.example
+
+# Votes written by the app during testing
+data/processed/feedback.csv
