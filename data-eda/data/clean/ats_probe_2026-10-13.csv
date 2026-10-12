@@ -1,7 +1,7 @@
 company,platform,slug,status,total,au,data_au,ds_au
 Canva,smartrecruiters,canva,ok,38,38,4,4
 SEEK,smartrecruiters,seek,ok,15,15,3,0
-Judo Bank,smartrecruiters,judobank,ok,18,17,0,0
+Judo Bank,smartrecruiters,judobank,ok,19,19,0,0
 Eucalyptus,greenhouse,eucalyptus,ok,104,25,2,1
 Culture Amp,greenhouse,cultureamp,ok,35,16,4,2
 hipages Group,greenhouse,hipagesgroup,ok,4,4,0,0
@@ -9,27 +9,13 @@ Prospa,greenhouse,prospa,ok,8,8,0,0
 Athena Home Loans,greenhouse,athena,ok,4,0,0,0
 Octopus Deploy,greenhouse,octopusdeploy,ok,3,1,0,0
 Mable,lever,mable,ok,11,11,0,0
-Deputy,lever,deputy,ok,7,5,1,0
+Deputy,lever,deputy,ok,8,6,1,0
 Immutable,lever,immutable,ok,3,2,0,0
-Atlassian,greenhouse,atlassian,missing,0,0,0,0
-Atlassian,lever,atlassian,missing,0,0,0,0
-Atlassian,smartrecruiters,atlassian,empty,0,0,0,0
-Atlassian,ashby,atlassian,missing,0,0,0,0
-REA Group,greenhouse,reagroup,missing,0,0,0,0
-REA Group,lever,reagroup,missing,0,0,0,0
-REA Group,smartrecruiters,reagroup,empty,0,0,0,0
-REA Group,ashby,reagroup,missing,0,0,0,0
-REA Group,workable,reagroup,missing,0,0,0,0
 carsales,greenhouse,carsales,missing,0,0,0,0
 carsales,lever,carsales,missing,0,0,0,0
 carsales,smartrecruiters,carsales,ok,35,35,1,1
 carsales,ashby,carsales,missing,0,0,0,0
 carsales,workable,carsales,empty,0,0,0,0
-Domain,greenhouse,domain,missing,0,0,0,0
-Domain,lever,domain,missing,0,0,0,0
-Domain,smartrecruiters,domaingroup,empty,0,0,0,0
-Domain,ashby,domain,missing,0,0,0,0
-Domain,workable,domain,empty,0,0,0,0
 Xero,greenhouse,xero,missing,0,0,0,0
 Xero,lever,xero,missing,0,0,0,0
 Xero,smartrecruiters,xero,empty,0,0,0,0
@@ -40,22 +26,14 @@ Airwallex,lever,airwallex,missing,0,0,0,0
 Airwallex,smartrecruiters,airwallex,empty,0,0,0,0
 Airwallex,ashby,airwallex,ok,519,39,4,0
 Airwallex,workable,airwallex,empty,0,0,0,0
-Block,greenhouse,block,ok,231,41,2,2
+Block,greenhouse,block,ok,231,33,0,0
 Block,lever,block,missing,0,0,0,0
 Block,ashby,block,missing,0,0,0,0
-Afterpay,greenhouse,afterpay,missing,0,0,0,0
-Afterpay,lever,afterpay,missing,0,0,0,0
-Afterpay,ashby,afterpay,missing,0,0,0,0
 Zip,greenhouse,zip,missing,0,0,0,0
 Zip,lever,zip,missing,0,0,0,0
 Zip,smartrecruiters,zipco,empty,0,0,0,0
 Zip,ashby,zip,ok,121,4,0,0
 Zip,workable,zipco,missing,0,0,0,0
-Tyro,greenhouse,tyro,missing,0,0,0,0
-Tyro,lever,tyro,missing,0,0,0,0
-Tyro,smartrecruiters,tyro,empty,0,0,0,0
-Tyro,ashby,tyro,missing,0,0,0,0
-Tyro,workable,tyro,empty,0,0,0,0
 Up,greenhouse,up,missing,0,0,0,0
 Up,lever,up,missing,0,0,0,0
 Up,ashby,up,ok,1,1,0,0
@@ -69,26 +47,6 @@ Rokt,lever,rokt,missing,0,0,0,0
 Rokt,smartrecruiters,rokt,empty,0,0,0,0
 Rokt,ashby,rokt,missing,0,0,0,0
 Rokt,workable,rokt,ok,12,3,0,0
-SafetyCulture,greenhouse,safetyculture,missing,0,0,0,0
-SafetyCulture,lever,safetyculture,missing,0,0,0,0
-SafetyCulture,smartrecruiters,safetyculture,empty,0,0,0,0
-SafetyCulture,ashby,safetyculture,missing,0,0,0,0
-SafetyCulture,workable,safetyculture,empty,0,0,0,0
-Linktree,greenhouse,linktree,missing,0,0,0,0
-Linktree,lever,linktree,missing,0,0,0,0
-Linktree,smartrecruiters,linktree,empty,0,0,0,0
-Linktree,ashby,linktree,missing,0,0,0,0
-Linktree,workable,linktree,empty,0,0,0,0
-Employment Hero,greenhouse,employmenthero,missing,0,0,0,0
-Employment Hero,lever,employmenthero,missing,0,0,0,0
-Employment Hero,smartrecruiters,employmenthero,empty,0,0,0,0
-Employment Hero,ashby,employmenthero,missing,0,0,0,0
-Employment Hero,workable,employmenthero,empty,0,0,0,0
-Go1,greenhouse,go1,missing,0,0,0,0
-Go1,lever,go1,missing,0,0,0,0
-Go1,smartrecruiters,go1,empty,0,0,0,0
-Go1,ashby,go1,missing,0,0,0,0
-Go1,workable,go1,empty,0,0,0,0
 Nearmap,greenhouse,nearmap,missing,0,0,0,0
 Nearmap,lever,nearmap,missing,0,0,0,0
 Nearmap,smartrecruiters,nearmap,ok,16,16,1,0
@@ -99,36 +57,6 @@ Propeller Aero,lever,propeller,missing,0,0,0,0
 Propeller Aero,smartrecruiters,propeller,empty,0,0,0,0
 Propeller Aero,ashby,propeller,missing,0,0,0,0
 Propeller Aero,workable,propeller,ok,27,8,0,0
-Harrison.ai,greenhouse,harrisonai,missing,0,0,0,0
-Harrison.ai,lever,harrisonai,missing,0,0,0,0
-Harrison.ai,smartrecruiters,harrisonai,empty,0,0,0,0
-Harrison.ai,ashby,harrisonai,missing,0,0,0,0
-Harrison.ai,workable,harrisonai,missing,0,0,0,0
-Annalise.ai,greenhouse,annalise,missing,0,0,0,0
-Annalise.ai,lever,annalise,empty,0,0,0,0
-Annalise.ai,smartrecruiters,annalise,empty,0,0,0,0
-Annalise.ai,ashby,annalise,missing,0,0,0,0
-Annalise.ai,workable,annalise,missing,0,0,0,0
-Displayr,greenhouse,displayr,missing,0,0,0,0
-Displayr,lever,displayr,missing,0,0,0,0
-Displayr,smartrecruiters,displayr,empty,0,0,0,0
-Displayr,ashby,displayr,missing,0,0,0,0
-Displayr,workable,displayr,empty,0,0,0,0
-Pet Circle,greenhouse,petcircle,missing,0,0,0,0
-Pet Circle,lever,petcircle,missing,0,0,0,0
-Pet Circle,smartrecruiters,petcircle,empty,0,0,0,0
-Pet Circle,ashby,petcircle,missing,0,0,0,0
-Pet Circle,workable,petcircle,empty,0,0,0,0
-Cover Genius,greenhouse,covergenius,missing,0,0,0,0
-Cover Genius,lever,covergenius,missing,0,0,0,0
-Cover Genius,smartrecruiters,covergenius,empty,0,0,0,0
-Cover Genius,ashby,covergenius,missing,0,0,0,0
-Cover Genius,workable,covergenius,missing,0,0,0,0
-Shippit,greenhouse,shippit,missing,0,0,0,0
-Shippit,lever,shippit,missing,0,0,0,0
-Shippit,smartrecruiters,shippit,empty,0,0,0,0
-Shippit,ashby,shippit,missing,0,0,0,0
-Shippit,workable,shippit,empty,0,0,0,0
 Buildkite,greenhouse,buildkite,ok,8,1,0,0
 Buildkite,lever,buildkite,missing,0,0,0,0
 Buildkite,smartrecruiters,buildkite,empty,0,0,0,0
@@ -144,41 +72,11 @@ SiteMinder,lever,siteminder,missing,0,0,0,0
 SiteMinder,smartrecruiters,siteminder,ok,3,3,0,0
 SiteMinder,ashby,siteminder,ok,30,1,0,0
 SiteMinder,workable,siteminder,empty,0,0,0,0
-Ansarada,greenhouse,ansarada,missing,0,0,0,0
-Ansarada,lever,ansarada,missing,0,0,0,0
-Ansarada,smartrecruiters,ansarada,empty,0,0,0,0
-Ansarada,ashby,ansarada,missing,0,0,0,0
-Ansarada,workable,ansarada,missing,0,0,0,0
 Bugcrowd,greenhouse,bugcrowd,ok,7,0,0,0
 Bugcrowd,lever,bugcrowd,missing,0,0,0,0
 Bugcrowd,smartrecruiters,bugcrowd,empty,0,0,0,0
 Bugcrowd,ashby,bugcrowd,missing,0,0,0,0
 Bugcrowd,workable,bugcrowd,empty,0,0,0,0
-Lendi Group,greenhouse,lendi,missing,0,0,0,0
-Lendi Group,lever,lendi,missing,0,0,0,0
-Lendi Group,smartrecruiters,lendi,empty,0,0,0,0
-Lendi Group,ashby,lendi,missing,0,0,0,0
-Lendi Group,workable,lendi,missing,0,0,0,0
-Finder,greenhouse,finder,missing,0,0,0,0
-Finder,lever,finder,missing,0,0,0,0
-Finder,smartrecruiters,finder,empty,0,0,0,0
-Finder,ashby,finder,missing,0,0,0,0
-Finder,workable,finder,empty,0,0,0,0
-Hnry,greenhouse,hnry,missing,0,0,0,0
-Hnry,lever,hnry,missing,0,0,0,0
-Hnry,smartrecruiters,hnry,empty,0,0,0,0
-Hnry,ashby,hnry,missing,0,0,0,0
-Hnry,workable,hnry,empty,0,0,0,0
-Zeller,greenhouse,zeller,missing,0,0,0,0
-Zeller,lever,zeller,missing,0,0,0,0
-Zeller,smartrecruiters,zeller,empty,0,0,0,0
-Zeller,ashby,zeller,missing,0,0,0,0
-Zeller,workable,zeller,missing,0,0,0,0
-Swyftx,greenhouse,swyftx,missing,0,0,0,0
-Swyftx,lever,swyftx,missing,0,0,0,0
-Swyftx,smartrecruiters,swyftx,empty,0,0,0,0
-Swyftx,ashby,swyftx,missing,0,0,0,0
-Swyftx,workable,swyftx,missing,0,0,0,0
 CoinJar,greenhouse,coinjar,missing,0,0,0,0
 CoinJar,lever,coinjar,missing,0,0,0,0
 CoinJar,smartrecruiters,coinjar,ok,2,2,0,0
@@ -189,26 +87,11 @@ Hatch,lever,hatch,missing,0,0,0,0
 Hatch,smartrecruiters,hatch,empty,0,0,0,0
 Hatch,ashby,hatch,ok,8,0,0,0
 Hatch,workable,hatch,empty,0,0,0,0
-Stake,greenhouse,stake,missing,0,0,0,0
-Stake,lever,stake,missing,0,0,0,0
-Stake,smartrecruiters,stake,empty,0,0,0,0
-Stake,ashby,stake,missing,0,0,0,0
-Stake,workable,stake,empty,0,0,0,0
 Spaceship,greenhouse,spaceship,ok,1,1,0,0
 Spaceship,lever,spaceship,missing,0,0,0,0
 Spaceship,smartrecruiters,spaceship,empty,0,0,0,0
 Spaceship,ashby,spaceship,missing,0,0,0,0
 Spaceship,workable,spaceship,missing,0,0,0,0
-Honey Insurance,greenhouse,honeyinsurance,missing,0,0,0,0
-Honey Insurance,lever,honeyinsurance,missing,0,0,0,0
-Honey Insurance,smartrecruiters,honeyinsurance,empty,0,0,0,0
-Honey Insurance,ashby,honeyinsurance,missing,0,0,0,0
-Honey Insurance,workable,honeyinsurance,missing,0,0,0,0
-Open Insurance,greenhouse,open,missing,0,0,0,0
-Open Insurance,lever,open,missing,0,0,0,0
-Open Insurance,smartrecruiters,open,empty,0,0,0,0
-Open Insurance,ashby,open,missing,0,0,0,0
-Open Insurance,workable,open,empty,0,0,0,0
 Amber Electric,greenhouse,amber,missing,0,0,0,0
 Amber Electric,lever,amber,missing,0,0,0,0
 Amber Electric,smartrecruiters,amber,empty,0,0,0,0
@@ -224,206 +107,51 @@ Vow,lever,vow,missing,0,0,0,0
 Vow,smartrecruiters,vow,empty,0,0,0,0
 Vow,ashby,vow,ok,1,1,0,0
 Vow,workable,vow,empty,0,0,0,0
-Hivery,greenhouse,hivery,missing,0,0,0,0
-Hivery,lever,hivery,missing,0,0,0,0
-Hivery,smartrecruiters,hivery,empty,0,0,0,0
-Hivery,ashby,hivery,missing,0,0,0,0
-Hivery,workable,hivery,missing,0,0,0,0
 Relevance AI,greenhouse,relevanceai,missing,0,0,0,0
 Relevance AI,lever,relevanceai,missing,0,0,0,0
 Relevance AI,smartrecruiters,relevanceai,empty,0,0,0,0
 Relevance AI,ashby,relevanceai,ok,1,1,1,0
 Relevance AI,workable,relevanceai,missing,0,0,0,0
-Leonardo.ai,greenhouse,leonardoai,missing,0,0,0,0
-Leonardo.ai,lever,leonardoai,missing,0,0,0,0
-Leonardo.ai,smartrecruiters,leonardoai,empty,0,0,0,0
-Leonardo.ai,ashby,leonardoai,missing,0,0,0,0
-Leonardo.ai,workable,leonardoai,missing,0,0,0,0
-Fleet Space,greenhouse,fleetspace,missing,0,0,0,0
-Fleet Space,lever,fleetspace,missing,0,0,0,0
-Fleet Space,smartrecruiters,fleetspace,empty,0,0,0,0
-Fleet Space,ashby,fleetspace,missing,0,0,0,0
-Fleet Space,workable,fleetspace,missing,0,0,0,0
-Q-CTRL,greenhouse,qctrl,missing,0,0,0,0
-Q-CTRL,lever,qctrl,missing,0,0,0,0
-Q-CTRL,smartrecruiters,qctrl,empty,0,0,0,0
-Q-CTRL,ashby,qctrl,missing,0,0,0,0
-Q-CTRL,workable,qctrl,missing,0,0,0,0
-Morse Micro,greenhouse,morsemicro,missing,0,0,0,0
-Morse Micro,lever,morsemicro,missing,0,0,0,0
-Morse Micro,smartrecruiters,morsemicro,empty,0,0,0,0
-Morse Micro,ashby,morsemicro,missing,0,0,0,0
-Morse Micro,workable,morsemicro,missing,0,0,0,0
 Sonder,greenhouse,sonder,missing,0,0,0,0
 Sonder,lever,sonder,missing,0,0,0,0
 Sonder,smartrecruiters,sonder,empty,0,0,0,0
 Sonder,ashby,sonder,ok,4,0,0,0
 Sonder,workable,sonder,empty,0,0,0,0
-Envato,greenhouse,envato,missing,0,0,0,0
-Envato,lever,envato,missing,0,0,0,0
-Envato,smartrecruiters,envato,empty,0,0,0,0
-Envato,ashby,envato,missing,0,0,0,0
-Envato,workable,envato,missing,0,0,0,0
 Kogan,greenhouse,kogan,missing,0,0,0,0
 Kogan,lever,kogan,ok,22,22,2,1
 Kogan,smartrecruiters,kogan,empty,0,0,0,0
 Kogan,ashby,kogan,missing,0,0,0,0
 Kogan,workable,kogan,empty,0,0,0,0
-Koala,greenhouse,koala,missing,0,0,0,0
-Koala,lever,koala,missing,0,0,0,0
-Koala,smartrecruiters,koala,empty,0,0,0,0
-Koala,ashby,koala,missing,0,0,0,0
-Koala,workable,koala,empty,0,0,0,0
 Who Gives A Crap,greenhouse,whogivesacrap,ok,8,5,0,0
 Who Gives A Crap,lever,whogivesacrap,missing,0,0,0,0
 Who Gives A Crap,smartrecruiters,whogivesacrap,empty,0,0,0,0
 Who Gives A Crap,ashby,whogivesacrap,missing,0,0,0,0
 Who Gives A Crap,workable,whogivesacrap,missing,0,0,0,0
-Mr Yum,greenhouse,mryum,missing,0,0,0,0
-Mr Yum,lever,mryum,missing,0,0,0,0
-Mr Yum,smartrecruiters,mryum,empty,0,0,0,0
-Mr Yum,ashby,mryum,missing,0,0,0,0
-Mr Yum,workable,mryum,missing,0,0,0,0
 Prezzee,greenhouse,prezzee,ok,9,9,2,2
-Prezzee,lever,prezzee,error,0,0,0,0
+Prezzee,lever,prezzee,missing,0,0,0,0
 Prezzee,smartrecruiters,prezzee,empty,0,0,0,0
 Prezzee,ashby,prezzee,missing,0,0,0,0
 Prezzee,workable,prezzee,empty,0,0,0,0
-Vinomofo,greenhouse,vinomofo,missing,0,0,0,0
-Vinomofo,lever,vinomofo,missing,0,0,0,0
-Vinomofo,smartrecruiters,vinomofo,empty,0,0,0,0
-Vinomofo,ashby,vinomofo,missing,0,0,0,0
-Vinomofo,workable,vinomofo,missing,0,0,0,0
-Catch,greenhouse,catch,missing,0,0,0,0
-Catch,lever,catch,missing,0,0,0,0
-Catch,smartrecruiters,catch,empty,0,0,0,0
-Catch,ashby,catch,empty,0,0,0,0
-Catch,workable,catch,empty,0,0,0,0
-Temple & Webster,greenhouse,templeandwebster,missing,0,0,0,0
-Temple & Webster,lever,templeandwebster,missing,0,0,0,0
-Temple & Webster,smartrecruiters,templeandwebster,empty,0,0,0,0
-Temple & Webster,ashby,templeandwebster,missing,0,0,0,0
-Temple & Webster,workable,templeandwebster,missing,0,0,0,0
-Adore Beauty,greenhouse,adorebeauty,missing,0,0,0,0
-Adore Beauty,lever,adorebeauty,missing,0,0,0,0
-Adore Beauty,smartrecruiters,adorebeauty,empty,0,0,0,0
-Adore Beauty,ashby,adorebeauty,missing,0,0,0,0
-Adore Beauty,workable,adorebeauty,missing,0,0,0,0
-Baraja,greenhouse,baraja,missing,0,0,0,0
-Baraja,lever,baraja,missing,0,0,0,0
-Baraja,smartrecruiters,baraja,empty,0,0,0,0
-Baraja,ashby,baraja,missing,0,0,0,0
-Baraja,workable,baraja,missing,0,0,0,0
-Lumachain,greenhouse,lumachain,missing,0,0,0,0
-Lumachain,lever,lumachain,missing,0,0,0,0
-Lumachain,smartrecruiters,lumachain,empty,0,0,0,0
-Lumachain,ashby,lumachain,missing,0,0,0,0
-Lumachain,workable,lumachain,missing,0,0,0,0
-Pendula,greenhouse,pendula,missing,0,0,0,0
-Pendula,lever,pendula,missing,0,0,0,0
-Pendula,smartrecruiters,pendula,empty,0,0,0,0
-Pendula,ashby,pendula,missing,0,0,0,0
-Pendula,workable,pendula,empty,0,0,0,0
-Humanforce,greenhouse,humanforce,missing,0,0,0,0
-Humanforce,lever,humanforce,missing,0,0,0,0
-Humanforce,smartrecruiters,humanforce,empty,0,0,0,0
-Humanforce,ashby,humanforce,missing,0,0,0,0
-Humanforce,workable,humanforce,empty,0,0,0,0
-Tanda,greenhouse,tanda,missing,0,0,0,0
-Tanda,lever,tanda,missing,0,0,0,0
-Tanda,smartrecruiters,tanda,empty,0,0,0,0
-Tanda,ashby,tanda,missing,0,0,0,0
-Tanda,workable,tanda,empty,0,0,0,0
 Fathom,greenhouse,fathom,missing,0,0,0,0
 Fathom,lever,fathom,missing,0,0,0,0
 Fathom,smartrecruiters,fathom,empty,0,0,0,0
 Fathom,ashby,fathom,ok,1,0,0,0
 Fathom,workable,fathom,empty,0,0,0,0
-Spriggy,greenhouse,spriggy,missing,0,0,0,0
-Spriggy,lever,spriggy,missing,0,0,0,0
-Spriggy,smartrecruiters,spriggy,empty,0,0,0,0
-Spriggy,ashby,spriggy,missing,0,0,0,0
-Spriggy,workable,spriggy,empty,0,0,0,0
-Cashrewards,greenhouse,cashrewards,missing,0,0,0,0
-Cashrewards,lever,cashrewards,missing,0,0,0,0
-Cashrewards,smartrecruiters,cashrewards,empty,0,0,0,0
-Cashrewards,ashby,cashrewards,missing,0,0,0,0
-Cashrewards,workable,cashrewards,missing,0,0,0,0
-Mozo,greenhouse,mozo,missing,0,0,0,0
-Mozo,lever,mozo,missing,0,0,0,0
-Mozo,smartrecruiters,mozo,empty,0,0,0,0
-Mozo,ashby,mozo,missing,0,0,0,0
-Mozo,workable,mozo,missing,0,0,0,0
-Flare,greenhouse,flare,missing,0,0,0,0
-Flare,lever,flare,empty,0,0,0,0
-Flare,smartrecruiters,flare,empty,0,0,0,0
-Flare,ashby,flare,missing,0,0,0,0
-Flare,workable,flare,empty,0,0,0,0
 Freelancer,greenhouse,freelancer,missing,0,0,0,0
 Freelancer,lever,freelancer,missing,0,0,0,0
 Freelancer,smartrecruiters,freelancer,empty,0,0,0,0
 Freelancer,ashby,freelancer,missing,0,0,0,0
 Freelancer,workable,freelancer,ok,23,7,0,0
-Airtasker,greenhouse,airtasker,missing,0,0,0,0
-Airtasker,lever,airtasker,empty,0,0,0,0
-Airtasker,smartrecruiters,airtasker,empty,0,0,0,0
-Airtasker,ashby,airtasker,empty,0,0,0,0
-Airtasker,workable,airtasker,empty,0,0,0,0
-Oneflare,greenhouse,oneflare,missing,0,0,0,0
-Oneflare,lever,oneflare,missing,0,0,0,0
-Oneflare,smartrecruiters,oneflare,empty,0,0,0,0
-Oneflare,ashby,oneflare,missing,0,0,0,0
-Oneflare,workable,oneflare,missing,0,0,0,0
 Redbubble,greenhouse,redbubble,missing,0,0,0,0
 Redbubble,lever,redbubble,missing,0,0,0,0
 Redbubble,smartrecruiters,redbubble,ok,1,1,0,0
 Redbubble,ashby,redbubble,missing,0,0,0,0
 Redbubble,workable,redbubble,empty,0,0,0,0
-Mad Paws,greenhouse,madpaws,missing,0,0,0,0
-Mad Paws,lever,madpaws,missing,0,0,0,0
-Mad Paws,smartrecruiters,madpaws,empty,0,0,0,0
-Mad Paws,ashby,madpaws,missing,0,0,0,0
-Mad Paws,workable,madpaws,missing,0,0,0,0
-Cluey Learning,greenhouse,cluey,missing,0,0,0,0
-Cluey Learning,lever,cluey,missing,0,0,0,0
-Cluey Learning,smartrecruiters,cluey,empty,0,0,0,0
-Cluey Learning,ashby,cluey,missing,0,0,0,0
-Cluey Learning,workable,cluey,missing,0,0,0,0
-Education Perfect,greenhouse,educationperfect,missing,0,0,0,0
-Education Perfect,lever,educationperfect,missing,0,0,0,0
-Education Perfect,smartrecruiters,educationperfect,empty,0,0,0,0
-Education Perfect,ashby,educationperfect,missing,0,0,0,0
-Education Perfect,workable,educationperfect,missing,0,0,0,0
-Edrolo,greenhouse,edrolo,missing,0,0,0,0
-Edrolo,lever,edrolo,missing,0,0,0,0
-Edrolo,smartrecruiters,edrolo,empty,0,0,0,0
-Edrolo,ashby,edrolo,missing,0,0,0,0
-Edrolo,workable,edrolo,missing,0,0,0,0
-Atomi,greenhouse,atomi,missing,0,0,0,0
-Atomi,lever,atomi,empty,0,0,0,0
-Atomi,smartrecruiters,atomi,empty,0,0,0,0
-Atomi,ashby,atomi,missing,0,0,0,0
-Atomi,workable,atomi,missing,0,0,0,0
-Compass Education,greenhouse,compass,missing,0,0,0,0
-Compass Education,lever,compass,missing,0,0,0,0
-Compass Education,smartrecruiters,compass,empty,0,0,0,0
-Compass Education,ashby,compass,missing,0,0,0,0
-Compass Education,workable,compass,empty,0,0,0,0
-ReadyTech,greenhouse,readytech,missing,0,0,0,0
-ReadyTech,lever,readytech,missing,0,0,0,0
-ReadyTech,smartrecruiters,readytech,empty,0,0,0,0
-ReadyTech,ashby,readytech,missing,0,0,0,0
-ReadyTech,workable,readytech,missing,0,0,0,0
 Bigtincan,greenhouse,bigtincan,missing,0,0,0,0
 Bigtincan,lever,bigtincan,missing,0,0,0,0
 Bigtincan,smartrecruiters,bigtincan,ok,1,1,0,0
 Bigtincan,ashby,bigtincan,missing,0,0,0,0
 Bigtincan,workable,bigtincan,empty,0,0,0,0
-Nuix,greenhouse,nuix,missing,0,0,0,0
-Nuix,lever,nuix,missing,0,0,0,0
-Nuix,smartrecruiters,nuix,empty,0,0,0,0
-Nuix,ashby,nuix,missing,0,0,0,0
-Nuix,workable,nuix,empty,0,0,0,0
 Appen,greenhouse,appen,missing,0,0,0,0
 Appen,lever,appen,ok,57,0,0,0
 Appen,smartrecruiters,appen,ok,2,2,0,0
@@ -434,42 +162,17 @@ Megaport,lever,megaport,ok,54,17,1,1
 Megaport,smartrecruiters,megaport,empty,0,0,0,0
 Megaport,ashby,megaport,missing,0,0,0,0
 Megaport,workable,megaport,empty,0,0,0,0
-Superloop,greenhouse,superloop,missing,0,0,0,0
-Superloop,lever,superloop,missing,0,0,0,0
-Superloop,smartrecruiters,superloop,empty,0,0,0,0
-Superloop,ashby,superloop,missing,0,0,0,0
-Superloop,workable,superloop,missing,0,0,0,0
-Aussie Broadband,greenhouse,aussiebroadband,missing,0,0,0,0
-Aussie Broadband,lever,aussiebroadband,missing,0,0,0,0
-Aussie Broadband,smartrecruiters,aussiebroadband,empty,0,0,0,0
-Aussie Broadband,ashby,aussiebroadband,missing,0,0,0,0
-Aussie Broadband,workable,aussiebroadband,missing,0,0,0,0
 Life360,greenhouse,life360,ok,14,0,0,0
 Life360,lever,life360,missing,0,0,0,0
 Life360,smartrecruiters,life360,empty,0,0,0,0
 Life360,ashby,life360,missing,0,0,0,0
 Life360,workable,life360,empty,0,0,0,0
-Mantel Group,greenhouse,mantelgroup,missing,0,0,0,0
-Mantel Group,lever,mantelgroup,missing,0,0,0,0
-Mantel Group,smartrecruiters,mantelgroup,empty,0,0,0,0
-Mantel Group,ashby,mantelgroup,missing,0,0,0,0
-Mantel Group,workable,mantelgroup,missing,0,0,0,0
-Servian,greenhouse,servian,missing,0,0,0,0
-Servian,lever,servian,empty,0,0,0,0
-Servian,smartrecruiters,servian,empty,0,0,0,0
-Servian,ashby,servian,missing,0,0,0,0
-Servian,workable,servian,empty,0,0,0,0
-Quantium,greenhouse,quantium,ok,34,26,9,6
+Quantium,greenhouse,quantium,ok,36,28,9,6
 Quantium,lever,quantium,missing,0,0,0,0
 Quantium,smartrecruiters,quantium,empty,0,0,0,0
 Quantium,ashby,quantium,missing,0,0,0,0
 Quantium,workable,quantium,missing,0,0,0,0
-Eliiza,greenhouse,eliiza,missing,0,0,0,0
-Eliiza,lever,eliiza,missing,0,0,0,0
-Eliiza,smartrecruiters,eliiza,empty,0,0,0,0
-Eliiza,ashby,eliiza,missing,0,0,0,0
-Eliiza,workable,eliiza,missing,0,0,0,0
-Thoughtworks,greenhouse,thoughtworks,ok,36,0,0,0
+Thoughtworks,greenhouse,thoughtworks,ok,36,2,1,0
 Thoughtworks,lever,thoughtworks,missing,0,0,0,0
 Thoughtworks,smartrecruiters,thoughtworks,empty,0,0,0,0
 Thoughtworks,ashby,thoughtworks,missing,0,0,0,0
@@ -479,87 +182,17 @@ Versent,lever,versent,missing,0,0,0,0
 Versent,smartrecruiters,versent,ok,2,2,0,0
 Versent,ashby,versent,missing,0,0,0,0
 Versent,workable,versent,empty,0,0,0,0
-Cevo,greenhouse,cevo,missing,0,0,0,0
-Cevo,lever,cevo,missing,0,0,0,0
-Cevo,smartrecruiters,cevo,empty,0,0,0,0
-Cevo,ashby,cevo,missing,0,0,0,0
-Cevo,workable,cevo,empty,0,0,0,0
 Lyka,greenhouse,lyka,missing,0,0,0,0
 Lyka,lever,lyka,missing,0,0,0,0
 Lyka,smartrecruiters,lyka,empty,0,0,0,0
 Lyka,ashby,lyka,missing,0,0,0,0
 Lyka,workable,lyka,ok,21,21,2,0
-Pilot,greenhouse,pilot,missing,0,0,0,0
-Pilot,lever,pilot,missing,0,0,0,0
-Pilot,smartrecruiters,pilot,empty,0,0,0,0
-Pilot,ashby,pilot,missing,0,0,0,0
-Pilot,workable,pilot,empty,0,0,0,0
-Mosh,greenhouse,mosh,missing,0,0,0,0
-Mosh,lever,mosh,missing,0,0,0,0
-Mosh,smartrecruiters,mosh,empty,0,0,0,0
-Mosh,ashby,mosh,missing,0,0,0,0
-Mosh,workable,mosh,missing,0,0,0,0
-Kic,greenhouse,kic,missing,0,0,0,0
-Kic,lever,kic,missing,0,0,0,0
-Kic,smartrecruiters,kic,empty,0,0,0,0
-Kic,ashby,kic,missing,0,0,0,0
-Kic,workable,kic,missing,0,0,0,0
-Sendle,greenhouse,sendle,missing,0,0,0,0
-Sendle,lever,sendle,missing,0,0,0,0
-Sendle,smartrecruiters,sendle,empty,0,0,0,0
-Sendle,ashby,sendle,missing,0,0,0,0
-Sendle,workable,sendle,missing,0,0,0,0
-Tiliter,greenhouse,tiliter,missing,0,0,0,0
-Tiliter,lever,tiliter,missing,0,0,0,0
-Tiliter,smartrecruiters,tiliter,empty,0,0,0,0
-Tiliter,ashby,tiliter,missing,0,0,0,0
-Tiliter,workable,tiliter,missing,0,0,0,0
-Zookal,greenhouse,zookal,missing,0,0,0,0
-Zookal,lever,zookal,missing,0,0,0,0
-Zookal,smartrecruiters,zookal,empty,0,0,0,0
-Zookal,ashby,zookal,missing,0,0,0,0
-Zookal,workable,zookal,missing,0,0,0,0
-WiseTech Global,greenhouse,wisetech,missing,0,0,0,0
-WiseTech Global,lever,wisetech,missing,0,0,0,0
-WiseTech Global,smartrecruiters,wisetech,empty,0,0,0,0
-WiseTech Global,ashby,wisetech,missing,0,0,0,0
-WiseTech Global,workable,wisetech,missing,0,0,0,0
-TechnologyOne,greenhouse,technologyone,missing,0,0,0,0
-TechnologyOne,lever,technologyone,missing,0,0,0,0
-TechnologyOne,smartrecruiters,technologyone,empty,0,0,0,0
-TechnologyOne,ashby,technologyone,missing,0,0,0,0
-TechnologyOne,workable,technologyone,empty,0,0,0,0
-Altium,greenhouse,altium,empty,0,0,0,0
-Altium,lever,altium,missing,0,0,0,0
-Altium,smartrecruiters,altium,empty,0,0,0,0
-Altium,ashby,altium,missing,0,0,0,0
-Altium,workable,altium,empty,0,0,0,0
-Bravura Solutions,greenhouse,bravura,missing,0,0,0,0
-Bravura Solutions,lever,bravura,missing,0,0,0,0
-Bravura Solutions,smartrecruiters,bravura,empty,0,0,0,0
-Bravura Solutions,ashby,bravura,missing,0,0,0,0
-Bravura Solutions,workable,bravura,missing,0,0,0,0
-Iress,greenhouse,iress,missing,0,0,0,0
-Iress,lever,iress,missing,0,0,0,0
-Iress,smartrecruiters,iress,empty,0,0,0,0
-Iress,ashby,iress,missing,0,0,0,0
-Iress,workable,iress,missing,0,0,0,0
-Computershare,greenhouse,computershare,missing,0,0,0,0
-Computershare,lever,computershare,missing,0,0,0,0
-Computershare,smartrecruiters,computershare,empty,0,0,0,0
-Computershare,ashby,computershare,missing,0,0,0,0
-Computershare,workable,computershare,empty,0,0,0,0
 PEXA,greenhouse,pexa,missing,0,0,0,0
 PEXA,lever,pexa,ok,8,4,0,0
 PEXA,smartrecruiters,pexa,ok,3,3,0,0
 PEXA,ashby,pexa,missing,0,0,0,0
 PEXA,workable,pexa,missing,0,0,0,0
-Link Group,greenhouse,linkgroup,missing,0,0,0,0
-Link Group,lever,linkgroup,missing,0,0,0,0
-Link Group,smartrecruiters,linkgroup,empty,0,0,0,0
-Link Group,ashby,linkgroup,missing,0,0,0,0
-Link Group,workable,linkgroup,missing,0,0,0,0
-Stripe,greenhouse,stripe,ok,722,30,2,2
+Stripe,greenhouse,stripe,ok,722,12,0,0
 Stripe,lever,stripe,missing,0,0,0,0
 Stripe,ashby,stripe,missing,0,0,0,0
 Datadog,greenhouse,datadog,ok,433,12,0,0
@@ -571,7 +204,7 @@ Databricks,ashby,databricks,missing,0,0,0,0
 Cloudflare,greenhouse,cloudflare,ok,435,0,0,0
 Cloudflare,lever,cloudflare,missing,0,0,0,0
 Cloudflare,ashby,cloudflare,missing,0,0,0,0
-Twilio,greenhouse,twilio,ok,145,2,0,0
+Twilio,greenhouse,twilio,ok,146,2,0,0
 Twilio,lever,twilio,missing,0,0,0,0
 Twilio,ashby,twilio,missing,0,0,0,0
 MongoDB,greenhouse,mongodb,ok,395,10,0,0
@@ -580,9 +213,6 @@ MongoDB,ashby,mongodb,missing,0,0,0,0
 Elastic,greenhouse,elastic,ok,403,5,0,0
 Elastic,lever,elastic,missing,0,0,0,0
 Elastic,ashby,elastic,missing,0,0,0,0
-HashiCorp,greenhouse,hashicorp,missing,0,0,0,0
-HashiCorp,lever,hashicorp,missing,0,0,0,0
-HashiCorp,ashby,hashicorp,missing,0,0,0,0
 GitLab,greenhouse,gitlab,ok,221,6,0,0
 GitLab,lever,gitlab,missing,0,0,0,0
 GitLab,ashby,gitlab,missing,0,0,0,0
@@ -592,36 +222,24 @@ Dropbox,ashby,dropbox,missing,0,0,0,0
 Figma,greenhouse,figma,ok,151,3,0,0
 Figma,lever,figma,missing,0,0,0,0
 Figma,ashby,figma,empty,0,0,0,0
-Airbnb,greenhouse,airbnb,ok,161,3,0,0
+Airbnb,greenhouse,airbnb,ok,161,2,0,0
 Airbnb,lever,airbnb,missing,0,0,0,0
 Airbnb,ashby,airbnb,missing,0,0,0,0
-DoorDash,greenhouse,doordash,missing,0,0,0,0
-DoorDash,lever,doordash,missing,0,0,0,0
-DoorDash,ashby,doordash,missing,0,0,0,0
 Squarespace,greenhouse,squarespace,ok,33,0,0,0
 Squarespace,lever,squarespace,missing,0,0,0,0
 Squarespace,ashby,squarespace,missing,0,0,0,0
-Zendesk,greenhouse,zendesk,missing,0,0,0,0
-Zendesk,lever,zendesk,missing,0,0,0,0
-Zendesk,ashby,zendesk,missing,0,0,0,0
 Snowflake,greenhouse,snowflake,missing,0,0,0,0
 Snowflake,lever,snowflake,missing,0,0,0,0
-Snowflake,ashby,snowflake,ok,356,40,5,2
-Okta,greenhouse,okta,ok,377,13,1,0
+Snowflake,ashby,snowflake,ok,359,8,0,0
+Okta,greenhouse,okta,ok,380,13,1,0
 Okta,lever,okta,missing,0,0,0,0
 Okta,ashby,okta,missing,0,0,0,0
 Wise,greenhouse,wise,ok,20,0,0,0
 Wise,lever,wise,missing,0,0,0,0
 Wise,ashby,wise,missing,0,0,0,0
-Revolut,greenhouse,revolut,missing,0,0,0,0
-Revolut,lever,revolut,missing,0,0,0,0
-Revolut,ashby,revolut,missing,0,0,0,0
-Deliveroo,greenhouse,deliveroo,ok,204,0,0,0
+Deliveroo,greenhouse,deliveroo,ok,205,0,0,0
 Deliveroo,lever,deliveroo,missing,0,0,0,0
 Deliveroo,ashby,deliveroo,ok,9,0,0,0
-Shopify,greenhouse,shopify,missing,0,0,0,0
-Shopify,lever,shopify,missing,0,0,0,0
-Shopify,ashby,shopify,missing,0,0,0,0
 Intercom,greenhouse,intercom,ok,105,8,0,0
 Intercom,lever,intercom,missing,0,0,0,0
 Intercom,ashby,intercom,missing,0,0,0,0
@@ -631,18 +249,18 @@ Miro,ashby,miro,ok,24,0,0,0
 Notion,greenhouse,notion,missing,0,0,0,0
 Notion,lever,notion,missing,0,0,0,0
 Notion,ashby,notion,ok,130,1,0,0
-Anthropic,greenhouse,anthropic,ok,646,190,17,10
+Anthropic,greenhouse,anthropic,ok,646,9,1,0
 Anthropic,lever,anthropic,missing,0,0,0,0
 Anthropic,ashby,anthropic,missing,0,0,0,0
 OpenAI,greenhouse,openai,missing,0,0,0,0
 OpenAI,lever,openai,missing,0,0,0,0
 OpenAI,ashby,openai,ok,809,9,1,0
-Scale AI,greenhouse,scaleai,ok,184,8,5,4
+Scale AI,greenhouse,scaleai,ok,184,0,0,0
 Scale AI,lever,scaleai,missing,0,0,0,0
 Scale AI,ashby,scaleai,missing,0,0,0,0
 Cohere,greenhouse,cohere,missing,0,0,0,0
 Cohere,lever,cohere,missing,0,0,0,0
-Cohere,ashby,cohere,ok,119,0,0,0
+Cohere,ashby,cohere,ok,118,0,0,0
 Snyk,greenhouse,snyk,missing,0,0,0,0
 Snyk,lever,snyk,missing,0,0,0,0
 Snyk,ashby,snyk,ok,22,0,0,0
@@ -652,9 +270,6 @@ Sumo Logic,ashby,sumologic,missing,0,0,0,0
 PagerDuty,greenhouse,pagerduty,ok,51,0,0,0
 PagerDuty,lever,pagerduty,missing,0,0,0,0
 PagerDuty,ashby,pagerduty,missing,0,0,0,0
-Confluent,greenhouse,confluent,missing,0,0,0,0
-Confluent,lever,confluent,missing,0,0,0,0
-Confluent,ashby,confluent,empty,0,0,0,0
 Grafana Labs,greenhouse,grafanalabs,ok,104,1,0,0
 Grafana Labs,lever,grafanalabs,missing,0,0,0,0
 Grafana Labs,ashby,grafanalabs,missing,0,0,0,0
@@ -669,193 +284,39 @@ Algolia,lever,algolia,missing,0,0,0,0
 Algolia,ashby,algolia,missing,0,0,0,0
 Plaid,greenhouse,plaid,missing,0,0,0,0
 Plaid,lever,plaid,missing,0,0,0,0
-Plaid,ashby,plaid,ok,120,0,0,0
+Plaid,ashby,plaid,ok,121,0,0,0
 Brex,greenhouse,brex,ok,273,0,0,0
 Brex,lever,brex,missing,0,0,0,0
 Brex,ashby,brex,missing,0,0,0,0
 Ramp,greenhouse,ramp,missing,0,0,0,0
 Ramp,lever,ramp,missing,0,0,0,0
 Ramp,ashby,ramp,ok,164,0,0,0
-Gusto,greenhouse,gusto,ok,97,3,0,0
+Gusto,greenhouse,gusto,ok,99,0,0,0
 Gusto,lever,gusto,missing,0,0,0,0
 Gusto,ashby,gusto,missing,0,0,0,0
-Carta,greenhouse,carta,ok,72,17,0,0
+Carta,greenhouse,carta,ok,72,4,0,0
 Carta,lever,carta,missing,0,0,0,0
 Carta,ashby,carta,missing,0,0,0,0
 Faire,greenhouse,faire,ok,81,0,0,0
 Faire,lever,faire,missing,0,0,0,0
 Faire,ashby,faire,missing,0,0,0,0
-Canva (Lever),lever,canva,missing,0,0,0,0
-Adobe,greenhouse,adobe,missing,0,0,0,0
-Adobe,lever,adobe,missing,0,0,0,0
-Adobe,ashby,adobe,missing,0,0,0,0
-Autodesk,greenhouse,autodesk,missing,0,0,0,0
-Autodesk,lever,autodesk,missing,0,0,0,0
-Autodesk,ashby,autodesk,missing,0,0,0,0
-Salesforce,greenhouse,salesforce,missing,0,0,0,0
-Salesforce,lever,salesforce,missing,0,0,0,0
-Salesforce,ashby,salesforce,missing,0,0,0,0
-ServiceNow,greenhouse,servicenow,missing,0,0,0,0
-ServiceNow,lever,servicenow,missing,0,0,0,0
-ServiceNow,ashby,servicenow,missing,0,0,0,0
-Workday,greenhouse,workday,missing,0,0,0,0
-Workday,lever,workday,missing,0,0,0,0
-Workday,ashby,workday,missing,0,0,0,0
-Uber,greenhouse,uber,missing,0,0,0,0
-Uber,lever,uber,missing,0,0,0,0
-Uber,ashby,uber,missing,0,0,0,0
 Lightspeed,greenhouse,lightspeed,missing,0,0,0,0
 Lightspeed,lever,lightspeed,missing,0,0,0,0
 Lightspeed,smartrecruiters,lightspeed,empty,0,0,0,0
-Lightspeed,ashby,lightspeed,ok,7,0,0,0
+Lightspeed,ashby,lightspeed,ok,5,0,0,0
 Lightspeed,workable,lightspeed,empty,0,0,0,0
-Ento,greenhouse,ento,missing,0,0,0,0
-Ento,lever,ento,missing,0,0,0,0
-Ento,smartrecruiters,ento,empty,0,0,0,0
-Ento,ashby,ento,missing,0,0,0,0
-Ento,workable,ento,empty,0,0,0,0
-Bluefin Resources,greenhouse,bluefinresources,missing,0,0,0,0
-Bluefin Resources,lever,bluefinresources,missing,0,0,0,0
-Bluefin Resources,smartrecruiters,bluefinresources,empty,0,0,0,0
-Bluefin Resources,ashby,bluefinresources,missing,0,0,0,0
-Bluefin Resources,workable,bluefinresources,missing,0,0,0,0
 Talent International,greenhouse,talent,ok,2,0,0,0
 Talent International,lever,talent,missing,0,0,0,0
 Talent International,smartrecruiters,talent,empty,0,0,0,0
 Talent International,ashby,talent,missing,0,0,0,0
 Talent International,workable,talent,empty,0,0,0,0
-Peoplebank,greenhouse,peoplebank,missing,0,0,0,0
-Peoplebank,lever,peoplebank,missing,0,0,0,0
-Peoplebank,smartrecruiters,peoplebank,empty,0,0,0,0
-Peoplebank,ashby,peoplebank,missing,0,0,0,0
-Peoplebank,workable,peoplebank,empty,0,0,0,0
-Infosys,greenhouse,infosys,missing,0,0,0,0
-Infosys,lever,infosys,missing,0,0,0,0
-Infosys,smartrecruiters,infosys,empty,0,0,0,0
-Infosys,ashby,infosys,missing,0,0,0,0
-Infosys,workable,infosys,empty,0,0,0,0
-Woolworths Group,greenhouse,woolworths,missing,0,0,0,0
-Woolworths Group,lever,woolworths,missing,0,0,0,0
-Woolworths Group,smartrecruiters,woolworths,empty,0,0,0,0
-Woolworths Group,ashby,woolworths,missing,0,0,0,0
-Woolworths Group,workable,woolworths,empty,0,0,0,0
-Coles Group,greenhouse,coles,missing,0,0,0,0
-Coles Group,lever,coles,missing,0,0,0,0
-Coles Group,smartrecruiters,coles,empty,0,0,0,0
-Coles Group,ashby,coles,missing,0,0,0,0
-Coles Group,workable,coles,empty,0,0,0,0
-Bunnings,greenhouse,bunnings,missing,0,0,0,0
-Bunnings,lever,bunnings,missing,0,0,0,0
-Bunnings,smartrecruiters,bunnings,empty,0,0,0,0
-Bunnings,ashby,bunnings,missing,0,0,0,0
-Bunnings,workable,bunnings,empty,0,0,0,0
-Qantas,greenhouse,qantas,missing,0,0,0,0
-Qantas,lever,qantas,missing,0,0,0,0
-Qantas,smartrecruiters,qantas,empty,0,0,0,0
-Qantas,ashby,qantas,missing,0,0,0,0
-Qantas,workable,qantas,missing,0,0,0,0
-Endeavour Group,greenhouse,endeavourgroup,missing,0,0,0,0
-Endeavour Group,lever,endeavourgroup,missing,0,0,0,0
-Endeavour Group,smartrecruiters,endeavourgroup,empty,0,0,0,0
-Endeavour Group,ashby,endeavourgroup,missing,0,0,0,0
-Endeavour Group,workable,endeavourgroup,missing,0,0,0,0
-Australia Post,greenhouse,australiapost,missing,0,0,0,0
-Australia Post,lever,australiapost,missing,0,0,0,0
-Australia Post,smartrecruiters,australiapost,empty,0,0,0,0
-Australia Post,ashby,australiapost,missing,0,0,0,0
-Australia Post,workable,australiapost,missing,0,0,0,0
-Optus,greenhouse,optus,missing,0,0,0,0
-Optus,lever,optus,missing,0,0,0,0
-Optus,smartrecruiters,optus,empty,0,0,0,0
-Optus,ashby,optus,missing,0,0,0,0
-Optus,workable,optus,empty,0,0,0,0
-TPG Telecom,greenhouse,tpgtelecom,missing,0,0,0,0
-TPG Telecom,lever,tpgtelecom,missing,0,0,0,0
-TPG Telecom,smartrecruiters,tpgtelecom,empty,0,0,0,0
-TPG Telecom,ashby,tpgtelecom,missing,0,0,0,0
-TPG Telecom,workable,tpgtelecom,missing,0,0,0,0
-Medibank,greenhouse,medibank,missing,0,0,0,0
-Medibank,lever,medibank,missing,0,0,0,0
-Medibank,smartrecruiters,medibank,empty,0,0,0,0
-Medibank,ashby,medibank,missing,0,0,0,0
-Medibank,workable,medibank,missing,0,0,0,0
-nib,greenhouse,nib,missing,0,0,0,0
-nib,lever,nib,missing,0,0,0,0
-nib,smartrecruiters,nib,empty,0,0,0,0
-nib,ashby,nib,missing,0,0,0,0
-nib,workable,nib,empty,0,0,0,0
 Bupa,greenhouse,bupa,missing,0,0,0,0
 Bupa,lever,bupa,missing,0,0,0,0
 Bupa,smartrecruiters,bupa,empty,0,0,0,0
 Bupa,ashby,bupa,missing,0,0,0,0
 Bupa,workable,bupa,ok,15,0,0,0
-IAG,greenhouse,iag,missing,0,0,0,0
-IAG,lever,iag,missing,0,0,0,0
-IAG,smartrecruiters,iag,empty,0,0,0,0
-IAG,ashby,iag,missing,0,0,0,0
-IAG,workable,iag,empty,0,0,0,0
-Suncorp,greenhouse,suncorp,missing,0,0,0,0
-Suncorp,lever,suncorp,missing,0,0,0,0
-Suncorp,smartrecruiters,suncorp,empty,0,0,0,0
-Suncorp,ashby,suncorp,missing,0,0,0,0
-Suncorp,workable,suncorp,empty,0,0,0,0
-AGL,greenhouse,agl,missing,0,0,0,0
-AGL,lever,agl,missing,0,0,0,0
-AGL,smartrecruiters,agl,empty,0,0,0,0
-AGL,ashby,agl,missing,0,0,0,0
-AGL,workable,agl,empty,0,0,0,0
-Origin Energy,greenhouse,originenergy,missing,0,0,0,0
-Origin Energy,lever,originenergy,missing,0,0,0,0
-Origin Energy,smartrecruiters,originenergy,empty,0,0,0,0
-Origin Energy,ashby,originenergy,missing,0,0,0,0
-Origin Energy,workable,originenergy,missing,0,0,0,0
-AEMO,greenhouse,aemo,missing,0,0,0,0
-AEMO,lever,aemo,missing,0,0,0,0
-AEMO,smartrecruiters,aemo,empty,0,0,0,0
-AEMO,ashby,aemo,missing,0,0,0,0
-AEMO,workable,aemo,missing,0,0,0,0
-Macquarie Group,greenhouse,macquarie,missing,0,0,0,0
-Macquarie Group,lever,macquarie,missing,0,0,0,0
-Macquarie Group,smartrecruiters,macquarie,empty,0,0,0,0
-Macquarie Group,ashby,macquarie,missing,0,0,0,0
-Macquarie Group,workable,macquarie,empty,0,0,0,0
-ANZ,greenhouse,anz,missing,0,0,0,0
-ANZ,lever,anz,missing,0,0,0,0
-ANZ,smartrecruiters,anz,empty,0,0,0,0
-ANZ,ashby,anz,missing,0,0,0,0
-ANZ,workable,anz,empty,0,0,0,0
-NAB,greenhouse,nab,missing,0,0,0,0
-NAB,lever,nab,missing,0,0,0,0
-NAB,smartrecruiters,nab,empty,0,0,0,0
-NAB,ashby,nab,missing,0,0,0,0
-NAB,workable,nab,empty,0,0,0,0
-Westpac,greenhouse,westpac,missing,0,0,0,0
-Westpac,lever,westpac,missing,0,0,0,0
-Westpac,smartrecruiters,westpac,empty,0,0,0,0
-Westpac,ashby,westpac,missing,0,0,0,0
-Westpac,workable,westpac,empty,0,0,0,0
-CommBank,greenhouse,commbank,missing,0,0,0,0
-CommBank,lever,commbank,missing,0,0,0,0
-CommBank,smartrecruiters,commbank,empty,0,0,0,0
-CommBank,ashby,commbank,missing,0,0,0,0
-CommBank,workable,commbank,missing,0,0,0,0
-Bendigo and Adelaide Bank,greenhouse,bendigobank,missing,0,0,0,0
-Bendigo and Adelaide Bank,lever,bendigobank,missing,0,0,0,0
-Bendigo and Adelaide Bank,smartrecruiters,bendigobank,empty,0,0,0,0
-Bendigo and Adelaide Bank,ashby,bendigobank,missing,0,0,0,0
-Bendigo and Adelaide Bank,workable,bendigobank,missing,0,0,0,0
-ING Australia,greenhouse,ing,missing,0,0,0,0
-ING Australia,lever,ing,missing,0,0,0,0
-ING Australia,smartrecruiters,ing,empty,0,0,0,0
-ING Australia,ashby,ing,missing,0,0,0,0
-ING Australia,workable,ing,empty,0,0,0,0
 Latitude Financial,greenhouse,latitude,ok,37,0,0,0
 Latitude Financial,lever,latitude,missing,0,0,0,0
 Latitude Financial,smartrecruiters,latitude,empty,0,0,0,0
 Latitude Financial,ashby,latitude,missing,0,0,0,0
 Latitude Financial,workable,latitude,empty,0,0,0,0
-Humm Group,greenhouse,hummgroup,missing,0,0,0,0
-Humm Group,lever,hummgroup,missing,0,0,0,0
-Humm Group,smartrecruiters,hummgroup,empty,0,0,0,0
-Humm Group,ashby,hummgroup,missing,0,0,0,0
-Humm Group,workable,hummgroup,missing,0,0,0,0
