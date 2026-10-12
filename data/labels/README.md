@@ -20,8 +20,11 @@ Labelling rules for `ad_skills.csv`:
 Labelling rules for `cv_jd_pairs.csv` (owner: Hoai Thuong, reviewer: Phuong Nhi):
 - 50 pairs. Take 10 resumes from the data/IT categories and pair each with 5 ads: 2 good fits, 2 partial fits, 1 poor fit, so all three statuses occur.
 - Per pair, label the ad skills that are in `skills_seed_v2.csv` (about 8 per ad). The ad skills come from `ad_skills.csv`, so label those ads first.
-- `have` = the resume clearly shows the skill. `partial` = a related or weaker skill is shown (for example the resume says "statistics", the ad asks for "A/B testing"). `missing` = nothing in the resume supports it.
-- `resume_evidence_text` is one short phrase or sentence copied from a single sentence of the resume, enough to see why. Never join two sentences: the score counts a hit when your words sit inside the sentence the system returns. Never copy names, emails, phone numbers, addresses or employers. Replace them with `[removed]`.
+- `skill_label` is the `canonical` name in `skills_seed_v2.csv`, spelled exactly.
+- Skip skills in the Professional category (communication, teamwork, ...); `match()` reports them separately and does not give them a status.
+- `have` = the resume clearly shows the skill. `missing` = nothing in the resume supports it.
+  - `partial` = the ad asks for a broad skill and the resume shows only a specific tool or method within it, e.g. ad "machine learning", resume "scikit-learn". Broad skills: machine learning, deep learning, natural language processing, cloud platforms, statistics, data visualisation, computer vision. A substitute tool (ad "Tableau", resume "Power BI") is `missing`. This is what `match()` does, so the gold labels and the system use one definition.
+- `resume_evidence_text` is one short phrase or sentence copied from a single sentence of the resume, enough to see why. Never join two sentences: the score counts a hit when your words sit inside the sentence the system returns. Pick a phrase that contains no personal details (names, emails, phone numbers, addresses, employers), so it never needs `[removed]`.
 - Never commit resume files. Only `resume_id` and the short evidence snippets go in the CSV.
 - Unsure? Write `?` at the start of `resume_evidence_text`; we review those together.
 - This file is the gold standard for matching: P@5 and MRR rank the resume sentences for each ad skill and check whether the gold evidence sentence comes first. `partial` rows count as relevant (`matching_gold(..., include_partial=False)` gives the stricter have-only score; report both).
