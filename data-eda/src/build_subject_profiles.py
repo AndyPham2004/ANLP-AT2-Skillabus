@@ -158,6 +158,7 @@ def load_assessments(paths: list[Path] | Path) -> pd.DataFrame:
         if missing:
             raise SystemExit(f"{path} is missing columns {missing}; see data/labels/README.md")
         df = df[df["layer"].astype(str).str.strip().str.lower() == "assessment"].copy()
+        df["text"] = df["text"].map(clean)          # the handbook's encoding damage reaches these rows too
         log.info("read %d assessment rows from %s", len(df), path.name)
         for col in COLUMNS:
             if col not in df.columns:
@@ -235,7 +236,7 @@ def main() -> None:
             "re-run src/scrape_handbook.py or ask Van Thong for it, or pass --subjects."
         )
 
-    subjects = pd.read_csv(args.subjects)
+    subjects = pd.read_csv(args.subjects, dtype=str)   # keep leading zeros: 090043 is not 90043
     if args.courses:
         pattern = "|".join(re.escape(c) for c in args.courses)
         subjects = subjects[subjects["courses"].fillna("").str.contains(pattern)]

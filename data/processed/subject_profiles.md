@@ -5,102 +5,114 @@ and `retrieve()` indexes for the chat. Shape is `docs/data_contract.md` section 
 
 | | |
 |---|---|
-| Rows | 1,039 |
-| Subjects | 70, of which 19 are MDSI (`C04372`) with 242 rows |
+| Rows | 6,848 |
+| Subjects | 360, in 44 UTS courses; 19 are MDSI (`C04372`), 276 rows |
 | Built by | `python data-eda/src/build_subject_profiles.py` |
-| Source | `data-eda/data/raw/uts_subjects_2026.csv` (not committed), UTS Handbook 2026, collected 25 Sep 2026 |
-| Owner | Van Thong |
-| Built | 8 Oct 2026 |
+| Source | `data-eda/data/raw/uts_subjects_2026.csv` (not committed), UTS Handbook 2026, scraped 13 Oct 2026; assessment tasks from the handbook's per-offering data route (`data-eda/src/scrape_assessments.py`) |
+| Owner | Van Thong (data); the 13 Oct rebuild by Quan's session |
+| Built | 13 Oct 2026 (first build 8 Oct, 70 subjects, 1,039 rows; every one of those rows is still here) |
 
 ## Rows per layer
 
 | Layer | Rows | Subjects | From |
 |---|---|---|---|
-| `learning_objective` | 289 | 67 | `learning_outcomes`, split on `SLO<n>:`, trailing `(CILO ...)` removed |
-| `assessment` | **0** | 0 | **not collected yet** — see below |
-| `weekly_topic` | 444 | 58 | `topics`, split on `\|`, `•`, `;` |
-| `description` | 306 | 70 | `description`, one sentence per row |
+| `learning_objective` | 1,519 | 354 | `learning_outcomes`, split on `SLO<n>:`, trailing `(CILO ...)` removed |
+| `assessment` | 1,015 | 326 | `selected_assessment` of the first two offerings: "name (type, weight%, group/individual). description" |
+| `weekly_topic` | 2,761 | 327 | `topics`, split on `\|`, `•`, `;` |
+| `description` | 1,553 | 360 | `description`, one sentence per row |
+
+## Courses
+
+Masters: C04372 MDSI, C04370 Executive MDSI, C04379/C04380/C04467 Business Analytics, C04295/C04296
+Information Technology, C04373 Quantitative Finance, C04443 Artificial Intelligence, C04256 AI (Online),
+C04430/C04431 Cybersecurity, C04434/C04435 Technology Management, C04450 Technology Innovation, C04265
+Science (Extension), C04277 Engineering (Extension). Graduate diplomas: C06113 IT, C06124 Data Science
+and Innovation, C06147 AI. Graduate certificates: C11142, C11247 IT, C11191 AI, C11274 Data Science and
+Innovation, C11280/C11385 Business Analytics, C11308 Quantitative Finance, C11329 Health Analytics,
+C11339 AI Management, C11340 Cybersecurity Management, C11350 Data Visualisation and Storytelling, C11376
+Applied AI for Finance. Bachelors: C10148/C10143 Information Technology, C10474 AI, C10476 Computing
+Science, C10471 Cybersecurity, C10457 Mathematical Sciences, C10395 Information Systems, C10229 Games
+Development, C10242 Science, C10347 Advanced Science; honours C09019 IT, C09119 Computing Science,
+C09129 Mathematical Sciences, C09168 Science, C09066 Engineering.
+
+Course codes were found by probing every handbook course page in C04000-C04500, C06000-C06300,
+C09000-C09200, C10000-C10600 and C11000-C11400 (250 courses exist; the data/IT/AI/maths/analytics
+ones above were scraped). Double degrees (with Law, Business, International Studies) share their
+subjects with the single degree and were not scraped separately. **Bachelor subjects (C10/C09) are
+for prospective students and for the "does UTS teach this anywhere?" question; MDSI students usually
+cannot enrol in them**, so the app tags them.
 
 ## Read it like this
 
 ```python
-profiles = pd.read_csv("data/processed/subject_profiles.csv")       # no comment= needed
-mdsi = profiles[profiles.course.str.contains("C04372", na=False)]   # contains, not ==
+profiles = pd.read_csv("data/processed/subject_profiles.csv", dtype=str)   # dtype=str: 090043 is a code
+mdsi = profiles[profiles.course.str.contains("C04372", na=False)]          # contains, not ==
 ```
 
-Two traps:
+Three traps:
 
-1. **`course` is pipe-separated** (`"C04380|C04379"`) because a subject can belong to
-   several courses, and the contract's "one row per piece of subject text" rule forbids
-   repeating the same sentence once per course. Use `.str.contains()`, never `==`.
-2. **This file has no `#` comment line, on purpose.** `skills_seed_v2.csv` has one, and
-   because that file also contains a literal `C#`, reading it with
-   `pandas.read_csv(..., comment="#")` silently truncates the C# row to `C` with no
-   aliases. Provenance lives here instead so the CSV stays a plain CSV.
+1. **`course` is pipe-separated** (`"C04372|C04379|C11274|C06124"`) because a subject can belong to
+   several courses. Use `.str.contains()`, never `==`.
+2. **This file has no `#` comment line, on purpose.** `skills_seed_v2.csv` has one, and because that
+   file also contains a literal `C#`, reading it with `pandas.read_csv(..., comment="#")` silently
+   truncates the C# row. Provenance lives here instead so the CSV stays a plain CSV.
+3. **Read with `dtype=str`.** Six-digit codes with a leading zero (`090043`) become integers otherwise
+   and no longer match `prerequisites.csv` or `offerings.csv`.
 
-## The assessment layer is empty
+## Companion files (13 Oct 2026)
 
-It is hand-collected, not scrapable: the assessment table is on
-`coursehandbook.uts.edu.au`, whose `robots.txt` is `User-agent: * / Disallow: /`, so it
-is out of bounds for an automated fetch. A person reading the pages in a browser is
-fine, which is why the team plan assigns it to Akash (due 6 Oct) as a manual task.
+| File | Rows | What |
+|---|---|---|
+| `prerequisites.csv` | 2,278 (360 subjects, 290 with a rule) | One row per item of the access-conditions rule: `rule` ("(1 AND 2 AND 3)"), `item`, `type` (academic, admission, other, corequisite), `requisite_code`, `requisite_text`. 36118 needs 36100, 36103, 36106; 43023 needs 42172 or 41040, which MDSI does not offer. From `data-eda/src/scrape_requisites.py`. |
+| `offerings.csv` | 510 (330 subjects) | `teaching_period` × `mode` per subject (94691 Autumn only, 36120 Spring only). 30 subjects have no offering listed for 2026. |
+| `assessments_scraped.csv` | 1,015 (326 subjects) | The assessment layer before merging; `collected_by = "script (handbook)"`. |
 
-To add it: put the rows in `data/labels/subject_content.csv` with `layer = assessment`,
-following `data/labels/subject_content_TEMPLATE.csv`, then re-run the script. It merges
-them in automatically — no code change.
+## The assessment layer
 
-Until then matching runs on three layers, and the report has to say so.
+Until 13 Oct it was empty: the subject page shows no assessment until an availability is chosen.
+Choosing one makes the browser fetch `/_next/data/<buildId>/subject/2026/<code>.json?offering=...`,
+which answers without cookies and carries `selected_assessment` (name, type, weight, group or
+individual; sometimes a description). The task names are concrete where the handbook prose is not:
+94693 Big Data Engineering has "Data lake with Snowflake", "Data processing with Spark", "Data
+pipelines with Airflow"; 94691 Deep Learning has "Building Neural Network Architectures".
+
+34 subjects have no task list in the handbook, among them MDSI's 36124, 36125 and 94689 (research
+and special subjects). Hand-collected rows can still be added through `data/labels/subject_content.csv`
+(`layer = assessment`); the build merges both files.
 
 ## Known gaps in the source data
 
-These are holes in the handbook collection, not bugs in the build. All of them are in
-the script's output every run.
-
 | Gap | Subjects |
 |---|---|
-| No learning objectives | 36124, 36125, 94689 |
-| No topic list | 36106, 36124, 36125, 36126, 36127, 43030, 49016, 94689, 94691, 94692, 94699, 95563 |
-| Topic list arrived with no delimiters, kept whole | 32040, 32558, 36104, 42050, 42904, 43024 |
+| No learning objectives | 35002, 36124, 36125, 40011, 40012, 94689 |
+| No topic list (33) | includes MDSI 36106, 36126, 36127, 94689, 94691, 94692, 94699 |
+| Topic list arrived with no delimiters, kept whole (24) | includes 32040, 36104, 42050, 42904, 43024 |
+| No 2026 offering listed (30) | see `offerings.csv` |
 
 Worth knowing:
 
-- **36124, 36125 and 94689 have description text only.** Two of them are MDSI electives
-  (Applied and Advanced Data Science for Innovation), so they will rank low against any
-  skill purely because there is less text to match. That is a retrieval artefact, and
-  the evaluation should not read it as "these subjects teach less".
-- **36106 Machine Learning Algorithms and Applications has no topic list** — an MDSI
-  core subject, and the obvious match for the biggest gap on the poster (machine
-  learning, 72% of ads). It still has five learning objectives, so it is matchable.
-- The six no-delimiter subjects lost their `<li>` markup during collection. Splitting on
-  capital letters would shred phrases like "Natural Language Processing", so the whole
-  string is kept as one row. They are longer than a good evidence snippet.
+- **36124, 36125 and 94689 have description text only.** Two are MDSI electives (Applied and
+  Advanced Data Science for Innovation): they rank low against any skill purely because there is
+  less text to match, a retrieval artefact, not "these subjects teach less".
+- **36106 Machine Learning Algorithms and Applications has no topic list** but now has five
+  learning objectives and three assessment tasks ("Regression models", "Building and Interpreting a
+  classification model", "End-end Data Science Project"), so it is matchable.
+- The handbook caps out at roughly 200-250 words per subject even with four layers; the teaching
+  materials themselves (slides, notebooks) are the only richer source (ideas doc 4.3 item 1).
 
 ## Cleaning applied
 
-- **Encoding repaired.** The handbook was served UTF-8 and read as a single-byte codec,
-  so 40 punctuation marks across 13 subjects arrived as `â\x80\x99` and friends. The
-  usual whole-string round-trip does not fix it (part of the damage is no longer valid
-  UTF-8), so the script replaces each known sequence. Zero remain.
-- **CILO codes stripped** from learning objectives: `(CILO 2.2, 2.3)` is course-level
-  mapping, not subject content, and it pollutes an embedding.
-- **Sentences run together are split.** Some handbook prose has no space after the full
-  stop (`solutions.This simulates`), so the splitter does not require whitespace.
-- **Prose that leaked into the topics field** (a delimited topic over 200 characters) is
-  sentence-split, so the evidence panel has something quotable.
-- Duplicate `(subject_code, layer, text)` rows dropped: 0 found.
+- **Encoding repaired.** The handbook serves UTF-8 that was read as a single-byte codec somewhere
+  upstream, so punctuation arrives as `â\x80\x99` and friends, in descriptions and in assessment
+  descriptions alike. The script replaces each known sequence; zero remain.
+- **CILO codes stripped** from learning objectives; **run-together sentences split**; **prose that
+  leaked into the topics field** sentence-split; duplicate `(subject_code, layer, text)` rows dropped.
 
 ## What this changes on the poster
 
-Block 6 says *"generative AI, LLMs — no learning objective in any of the 70 subjects.
-36118 Applied NLP mentions LLMs only in its description."* With four layers that is
-wrong in one direction and right in another:
-
-- **36118 has "Large Language Models (LLMs)" as a weekly topic**, not just a description
-  mention. 43023 has it as a weekly topic too. This is the marker's own point: the
-  handbook learning objectives miss what the subject actually teaches.
-- **But the gap survives, and sharpens.** Across all 70 subjects and all three layers:
-  prompt engineering, RAG and transformers/BERT/GPT return **zero hits**. Generative AI
-  appears once, inside a 32130 topic entry, in a non-MDSI subject.
-
-So the honest claim for the report is narrower and stronger than the poster's: UTS
-teaches *about* LLMs, and does not yet teach the LLM toolchain the 2026 ads ask for.
+Block 6 said *"generative AI, LLMs: no learning objective in any of the 70 subjects"*. With four
+layers over 360 subjects: 36118 and 43023 carry "Large Language Models" as a weekly topic, 32130
+teaches generative AI in the data pipeline, and the assessment layer names the tools (Snowflake,
+Spark, Airflow, neural network architectures). The gap that survives is narrower: prompt
+engineering, RAG and the transformer toolchain still return no hits in any handbook text. UTS
+teaches *about* LLMs; it does not yet teach the LLM toolchain the 2026 ads ask for.
