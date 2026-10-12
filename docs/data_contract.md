@@ -19,7 +19,7 @@ and Phuong Nhi**.
 
 | Field | Values |
 |---|---|
-| `skill_id` | `esco:<uri>`, `lightcast:<id>`, or `emerging:<slug>` when neither vocabulary has it |
+| `skill_id` | `esco:<uri>`, `lightcast:<id>`, `emerging:<slug>` when neither vocabulary has it, or `seed:<slug>` for a dictionary skill (`skills_seed_v2.csv`) not yet linked to ESCO |
 | `vocab` | `esco`, `lightcast`, `emerging` |
 | `method` | `dictionary`, `ner`, `llm` |
 | `sentence` | The full sentence the skill came from; this is the evidence shown in the app |
@@ -64,14 +64,21 @@ and Phuong Nhi**.
 
 | Field | Values |
 |---|---|
+| `mode` | The ad id for a single ad, or `role-<slug>` when the target is a role (top skills over all ads) |
 | `status` | `have`, `partial`, `missing` |
+| `ad_evidence` | The ad sentence naming the skill; in role mode, a demand sentence ("Asked for in 72% of ...") |
+| `emerging` | `true` for skills the 2019-22 corpus predates (LLMs, generative AI); the app flags them |
+| `score` | Subject score scaled so the best subject is 1.0 |
+| `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3 |
 | `demand_pct` | Share of the 3,204 Seek ads 2019-22 that mention the skill (`skill_counts_v2.csv`) |
 | `demand_pct_2026` | Same over the 2026 sample; `null` until that sample exists |
 | `layer` | `learning_objective`, `assessment`, `weekly_topic`, `description` (strongest first) |
 
 ## 3. Subject profiles: `data/processed/subject_profiles.csv`
 
-One row per piece of subject text.
+One row per piece of subject text. Until Van Thong's file lands, `app/mock/subject_layers.csv`
+has the same columns built from the Handbook alone (learning objectives, topics, description;
+no assessments yet), by `app/mock/build_mock.py`.
 
 | Column | Example |
 |---|---|

@@ -1,5 +1,8 @@
 # Raw datasets: re-download, see data/README.md
 data/raw/
+# Van Thong's data folder: cleaned data is committed, raw downloads are not
+data-eda/data/*
+!data-eda/data/clean/
 *.zip
 *.parquet
 *.csv.gz
@@ -32,3 +35,6 @@ private/
 CLAUDE.md
 .claude/settings.local.json
 !.env.example
+
+# Votes written by the app during testing
+data/processed/feedback.csv
