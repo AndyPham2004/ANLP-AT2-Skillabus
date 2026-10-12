@@ -15,8 +15,8 @@ substitutes scored lower than unrelated pairs (Tableau~Power BI 0.30, AWS~Azure 
 Airflow~MLflow 0.54, machine learning~artificial intelligence 0.70), so no threshold works.
 
 Also here: soft_skills() for the skills left out of the gap list, role_profile() so a role
-can be matched like an ad, and score_matrix() to rank ads for a resume (TF-IDF vs
-embeddings vs our skill overlap), which is what the matching evaluation needs.
+can be matched like an ad, rank_evidence() to rank the resume sentences for one skill (the
+P@5 / MRR evaluation on the CV-JD pairs), and score_matrix() to rank ads for a resume.
 """
 
 from __future__ import annotations
@@ -26,8 +26,8 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
-from .extract import load_dictionary
-from .similarity import embed_documents, tfidf_similarity
+from .extract import _dictionary_hits, load_dictionary, split_sentences
+from .similarity import embed_documents, similarity, tfidf_similarity
 
 ROOT = Path(__file__).resolve().parents[2]
 COUNTS_CSV = ROOT / "data" / "processed" / "skill_counts_v2.csv"
@@ -86,6 +86,16 @@ def demand_2026_low() -> dict[str, float]:
         return {}
     return {row["skill"]: float(row["pct_2026_low"]) for row in _rows(COUNTS_2026_CSV)
             if row.get("pct_2026_low") not in (None, "", "nan")}
+
+
+@lru_cache(maxsize=1)
+def _aliases() -> dict[str, tuple[str, ...]]:
+    return {skill["canonical"]: skill["aliases"] for skill in load_dictionary()}
+
+
+def skill_query(label: str) -> str:
+    """The text a skill is compared by: its name plus its dictionary aliases."""
+    return ", ".join(dict.fromkeys([label, *_aliases().get(label, ())]))
 
 
 def slug(text: str) -> str:
@@ -181,6 +191,45 @@ def role_profile(top_n: int = 15) -> list[dict]:
             "sentence": f"Asked for in {pct:.0f}% of {N_ADS:,} Seek Data Scientist ads (2019-22).",
         })
     return mentions
+
+
+# ------------------------------------------------------ ranking resume evidence for a skill
+
+RANK_METHODS = ("skills", "tfidf", "embed")
+
+
+def rank_evidence(skill_label: str, resume_text: str, method: str = "skills") -> list[str]:
+    """The resume's sentences, best evidence for `skill_label` first. For P@5 and MRR on the CV-JD pairs.
+
+    "tfidf"   cosine of the skill (name + aliases) and each sentence, TF-IDF (baseline)
+    "embed"   the same with sentence embeddings
+    "skills"  what match() uses: sentences that name the skill first, then sentences that name a
+              part of an umbrella skill (scikit-learn for machine learning), then the rest by TF-IDF
+    Ties keep the order of the resume.
+    """
+    if method not in RANK_METHODS:
+        raise ValueError(f"method must be one of {RANK_METHODS}, got {method!r}")
+    sentences = list(dict.fromkeys(split_sentences(resume_text or "")))
+    if not sentences:
+        return []
+    sims = similarity([skill_query(skill_label)], sentences, "tfidf" if method == "skills" else method)[0]
+    if method == "skills":
+        category = _category().get(skill_label)
+        is_umbrella = category is not None and UMBRELLA.get(skill_label) == category
+        phrase = re.compile(rf"(?<![A-Za-z0-9]){re.escape(skill_label)}(?![A-Za-z0-9])", re.IGNORECASE)
+
+        def tier(sentence: str) -> int:
+            named = {canonical for _, _, canonical in _dictionary_hits(sentence)}
+            if skill_label in named or (skill_label not in _category() and phrase.search(sentence)):
+                return 2
+            if is_umbrella and any(_category().get(k) == category for k in named):
+                return 1
+            return 0
+        tiers = [tier(s) for s in sentences]
+        order = sorted(range(len(sentences)), key=lambda i: (-tiers[i], -sims[i], i))
+    else:
+        order = sorted(range(len(sentences)), key=lambda i: (-sims[i], i))
+    return [sentences[i] for i in order]
 
 
 # ----------------------------------------------------------- ranking ads for a resume

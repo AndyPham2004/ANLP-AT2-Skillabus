@@ -2,10 +2,13 @@
 import csv
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from skillabus.extract import extract
-from skillabus.match import match, role_profile, score_matrix, skill_overlap, soft_skills
+import skillabus.similarity as similarity_module
+from skillabus.match import (match, rank_evidence, role_profile, score_matrix, skill_overlap,
+                             skill_query, soft_skills)
 from skillabus.similarity import embeddings_available, similarity
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -155,6 +158,42 @@ def test_embeddings_see_meaning_not_words():
 @needs_model
 def test_score_matrix_with_embeddings_has_the_right_shape():
     assert score_matrix([RESUME], [AD, "Chef wanted for a busy kitchen."], "embed").shape == (1, 2)
+
+
+# ---------------------------------------------------------- evidence ranking (P@5 / MRR)
+
+def test_rank_evidence_puts_the_sentence_naming_the_skill_first():
+    ranked = rank_evidence("SQL", RESUME)
+    assert ranked[0].startswith("SQL: writing queries")
+    assert len(ranked) == len(set(ranked)) == 19          # every resume sentence, once
+
+
+def test_rank_evidence_puts_a_part_of_an_umbrella_skill_next():
+    resume = "Built weekly dashboards.\nTrained churn models with scikit-learn.\nMentored two analysts."
+    assert rank_evidence("Machine learning", resume, "skills")[0] == "Trained churn models with scikit-learn."
+
+
+def test_rank_evidence_baselines_return_every_sentence():
+    resume = "Built weekly dashboards.\nWrote SQL queries for finance.\nMentored two analysts."
+    for method in ("tfidf", "skills"):
+        ranked = rank_evidence("SQL", resume, method)
+        assert sorted(ranked) == sorted(["Built weekly dashboards.", "Wrote SQL queries for finance.", "Mentored two analysts."])
+        assert ranked[0] == "Wrote SQL queries for finance."
+
+
+def test_rank_evidence_with_embeddings_ranks_by_meaning(monkeypatch):
+    def fake_embed(texts):
+        return np.array([[1.0, 0.0] if ("neural" in t.lower() or "deep learning" in t.lower()) else [0.0, 1.0] for t in texts])
+    monkeypatch.setattr(similarity_module, "embed", fake_embed)
+    resume = "Managed vendor contracts.\nDesigned convolutional neural nets for X-rays."
+    assert rank_evidence("Deep learning", resume, "embed")[0] == "Designed convolutional neural nets for X-rays."
+
+
+def test_rank_evidence_edge_cases():
+    assert rank_evidence("SQL", "") == []
+    with pytest.raises(ValueError):
+        rank_evidence("SQL", RESUME, "bm25")
+    assert skill_query("Python") == "Python, python"
 
 
 def test_dictionary_skills_sharing_an_esco_concept_are_not_the_same_skill():
