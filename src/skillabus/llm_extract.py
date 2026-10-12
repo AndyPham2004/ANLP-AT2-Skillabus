@@ -21,18 +21,37 @@ from pathlib import Path
 from .text import mask_pii, sentence_with, text_units
 
 MODEL = os.getenv("SKILLABUS_LLM_MODEL", "gpt-4o-mini")
-PROMPT_VERSION = "v1"
+PROMPT_VERSION = "v3"
 MAX_CHARS = 12_000
 CACHE_DIR = Path(__file__).resolve().parents[2] / "data" / "cache" / "llm_extract"
 
-SYSTEM = """You extract skills from job ads and resumes for a skills-gap tool.
+# v1 (4 Oct) split resumes into fragments ("joins", "charts", "writing queries") and kept vague
+# phrases ("AI solutions"). v2 (10 Oct) merged too much: listed techniques ("supervised learning,
+# classification, forecasting") vanished into "machine learning". v3 keeps every named technique,
+# tool and library and drops only tasks and vague phrases. Checked on the Robert Walters ad, the
+# sample resume and a CBA Sept 2026 ad; tune further on the labelled ads.
+SYSTEM = """You extract skills from job ads and resumes for a skills-gap tool that compares the two.
 Return JSON: {"skills": [{"text": "...", "kind": "hard" | "soft"}]}.
+
+A skill is something a course could teach and an employer could ask for: a programming language,
+tool, platform, library, method, technique, area of knowledge (statistics, deep learning,
+generative AI, LLMs) or a soft skill (communication, stakeholder management, problem solving).
+
 Rules:
-- "text" is the skill exactly as written in the document, copied character for character
-  (e.g. "PySpark", "predictive models", "LLM", "stakeholder management").
-- Include tools, languages, methods, domains of knowledge and soft skills.
-- Exclude job titles, company names, degrees, years of experience, benefits, locations.
-- One entry per distinct skill; no duplicates; no explanations."""
+- Return every named language, tool, library, platform, method and technique, including those
+  listed under a broader skill. "Experience with supervised learning, classification or
+  forecasting" gives supervised learning, classification and forecasting. "Python: pandas and
+  matplotlib for data cleaning" gives Python, pandas, matplotlib and data cleaning.
+  "Data visualisation: dashboards in Power BI" gives data visualisation and Power BI.
+- Leave out tasks and activities that are not skills in themselves ("writing queries", "joins",
+  "building dashboards", "presenting findings"), vague phrases ("AI solutions", "charts",
+  "methodologies", "insights"), job titles, company names, degrees, years of experience,
+  benefits and locations.
+- "text" must be copied exactly from the document, character for character, so it can be found
+  again ("PySpark", "predictive models", "LLM", "hypothesis testing"). Copy the shortest span that
+  names the skill, without words like "skills", "experience", "knowledge of" or "strong".
+- Every distinct skill once; if an abbreviation and its full form both appear, return one.
+  No explanations."""
 
 
 def _cache_path(text: str) -> Path:

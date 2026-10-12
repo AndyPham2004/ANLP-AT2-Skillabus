@@ -172,7 +172,7 @@ if ss.step == "start":
         with col, st.container(border=True):
             st.markdown(f"**{name}**")
             st.markdown(f"<div class='role-q'>{question}</div>", unsafe_allow_html=True)
-            st.button("Start", key=f"role_{key}", type="primary", use_container_width=True,
+            st.button("Start", key=f"role_{key}", type="primary", width="stretch",
                       on_click=go, args=("input",), kwargs={"role": key})
     st.markdown(
         "<p class='muted'>Built on 3,204 Seek Australia Data Scientist ads (2019-22), the ESCO skills "
@@ -186,6 +186,12 @@ elif ss.step == "input":
     st.markdown(f"### {name}: {question}")
     sample_cv = (MOCK / "sample_resume.txt").read_text(encoding="utf-8")
     ad_text, taken = None, []
+    # Streamlit forgets a widget's value once it is off screen, so inputs are kept in *_keep
+    # and restored when the user comes back from the results.
+    if "ad_box" not in ss:
+        ss.ad_box = ss.get("ad_keep", "")
+    if "taken_box" not in ss:
+        ss.taken_box = ss.get("taken_keep", [])
 
     left, right = st.columns(2, gap="large")
     with left:
@@ -195,6 +201,7 @@ elif ss.step == "input":
                 ss.ad_box = (MOCK / "sample_ad.txt").read_text(encoding="utf-8")
             ad_text = st.text_area("Paste the full ad", key="ad_box", height=320,
                                    placeholder="Paste the job title, responsibilities and requirements here.")
+            ss.ad_keep = ad_text
         else:
             st.markdown("**Your target role**")
             st.selectbox("Role", ["Data Scientist"], help="More roles once the 2026 ads are in.")
@@ -203,13 +210,21 @@ elif ss.step == "input":
                 options = backend.subjects()
                 label = {c: f"{c} {n}" for c, n in options}
                 taken = st.multiselect("Subjects you have taken (they count as skills you have)",
-                                       [c for c, _ in options], format_func=lambda c: label[c])
+                                       [c for c, _ in options], format_func=lambda c: label[c], key="taken_box")
+                ss.taken_keep = taken
     with right:
         st.markdown("**Your resume**")
         upload = st.file_uploader("PDF or text file", type=["pdf", "txt", "md"])
-        use_sample = st.checkbox("Use the sample resume (synthetic early-career MDSI student)", value=upload is None)
+        if upload:
+            ss.resume_keep = (upload.name, read_resume(upload))
+        kept = ss.get("resume_keep")
+        use_kept = False
+        if kept and not upload:
+            use_kept = st.checkbox(f"Use {kept[0]} (uploaded earlier)", value=True)
+        use_sample = st.checkbox("Use the sample resume (synthetic early-career MDSI student)",
+                                 value=not (upload or use_kept), disabled=bool(upload or use_kept))
         st.caption("Your resume stays in memory for this session and is never stored.")
-    resume = read_resume(upload) if upload else (sample_cv if use_sample else "")
+    resume = kept[1] if (upload or use_kept) else (sample_cv if use_sample else "")
 
     ready = bool(resume or taken) and (ss.role != "job" or bool((ad_text or "").strip()))
     if st.button("Show my gaps", type="primary", disabled=not ready):
@@ -234,7 +249,7 @@ elif ss.step == "results":
     with top_l:
         st.button("← Change inputs", on_click=go, args=("input",))
     with top_r:
-        st.button("Start over", on_click=go, args=("start",), kwargs={"messages": []}, use_container_width=True)
+        st.button("Start over", on_click=go, args=("start",), kwargs={"messages": []}, width="stretch")
 
     if not skills:
         st.warning("I couldn't find any technical skills in that ad. Is it the full text?")
@@ -253,7 +268,7 @@ elif ss.step == "results":
     chart_col, path_col = st.columns([3, 2], gap="large")
     with chart_col:
         st.markdown("#### How often employers ask for each skill")
-        st.altair_chart(gap_chart(skills), use_container_width=True)
+        st.altair_chart(gap_chart(skills), width="stretch")
         cap = "Bar = share of 3,204 Seek Australia Data Scientist ads (2019-22) naming the skill."
         if any(s["emerging"] for s in skills):
             cap += " ✦ = no ESCO concept yet, kept as an emerging skill."

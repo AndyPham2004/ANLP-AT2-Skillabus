@@ -171,20 +171,20 @@
       "score": 1.0
     },
     {
-      "subject_code": "32513",
-      "subject_name": "Advanced Data Analytics Algorithms",
-      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32513",
+      "subject_code": "42050",
+      "subject_name": "SAS Predictive Business Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42050",
       "covers": [
-        "Machine learning"
+        "Predictive modelling"
       ],
       "evidence": [
         {
-          "skill_label": "Machine learning",
+          "skill_label": "Predictive modelling",
           "layer": "learning_objective",
-          "text": "SLO1: Describe the scope, limitations and application of several advanced machine learning methods. (D.1)"
+          "text": "SLO1: Explore and transform business data into analytic-ready features for predictive modelling. (D.1)"
         }
       ],
-      "score": 0.83
+      "score": 0.35
     },
     {
       "subject_code": "36121",
@@ -209,20 +209,52 @@
       "score": 0.55
     },
     {
-      "subject_code": "42050",
-      "subject_name": "SAS Predictive Business Analytics",
-      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42050",
+      "subject_code": "94691",
+      "subject_name": "Deep Learning",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/94691",
       "covers": [
-        "Predictive modelling"
+        "Deep learning"
       ],
       "evidence": [
         {
-          "skill_label": "Predictive modelling",
+          "skill_label": "Deep learning",
           "layer": "learning_objective",
-          "text": "SLO1: Explore and transform business data into analytic-ready features for predictive modelling. (D.1)"
+          "text": "SLO1: Gain a solid understanding of the fundamentals, underlying mathematical concepts, and applications of neural networks."
         }
       ],
-      "score": 0.35
+      "score": 0.23
+    },
+    {
+      "subject_code": "43023",
+      "subject_name": "Emerging Topics in Artificial Intelligence",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/43023",
+      "covers": [
+        "Large language models"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Large language models",
+          "layer": "weekly_topic",
+          "text": "Natural Language Processing & Large Language Models"
+        }
+      ],
+      "score": 0.01
+    },
+    {
+      "subject_code": "32513",
+      "subject_name": "Advanced Data Analytics Algorithms",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32513",
+      "covers": [
+        "Machine learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Describe the scope, limitations and application of several advanced machine learning methods. (D.1)"
+        }
+      ],
+      "score": 0.83
     },
     {
       "subject_code": "42172",
@@ -239,22 +271,6 @@
         }
       ],
       "score": 0.27
-    },
-    {
-      "subject_code": "94691",
-      "subject_name": "Deep Learning",
-      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/94691",
-      "covers": [
-        "Deep learning"
-      ],
-      "evidence": [
-        {
-          "skill_label": "Deep learning",
-          "layer": "learning_objective",
-          "text": "SLO1: Gain a solid understanding of the fundamentals, underlying mathematical concepts, and applications of neural networks."
-        }
-      ],
-      "score": 0.23
     },
     {
       "subject_code": "22804",
