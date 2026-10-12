@@ -89,7 +89,8 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str]) -> tuple[di
         engine = "pipeline"
     except Exception as e:  # not built yet, or a half-finished stage: the demo must still run
         result = baseline.analyse(resume_text, ad_text, taken=taken)
-        engine = "baseline" if isinstance(e, (NotImplementedError, ImportError)) else f"baseline (pipeline error: {e})"
+        # Every stage is built now, so an ImportError means a missing library on this machine: show it.
+        engine = "baseline" if isinstance(e, NotImplementedError) else f"baseline (pipeline error: {e})"
         rank = None
 
     if ad_text and llm_enabled():
