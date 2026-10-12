@@ -38,3 +38,6 @@ CLAUDE.md
 
 # Votes written by the app during testing
 data/processed/feedback.csv
+
+# LLM and Lightcast response caches
+data/cache/

@@ -53,7 +53,7 @@
       "resume_evidence": null
     },
     {
-      "skill_id": "esco:http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f",
+      "skill_id": "seed:spark",
       "skill_label": "Spark",
       "status": "missing",
       "demand_pct": 25.6,
