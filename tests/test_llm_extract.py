@@ -84,3 +84,13 @@ def test_whole_word_sentence_match():
 
 def test_mask_pii_leaves_skills_alone():
     assert mask_pii("Python, SQL, C++ and 3-5 years") == "Python, SQL, C++ and 3-5 years"
+
+
+def test_mask_pii_keeps_ranges_and_short_numbers():
+    text = "Seek ads 2019-2022, salary 120000-140000, 3-5 years, ref 2026/10"
+    assert mask_pii(text) == text
+
+
+def test_mask_pii_masks_australian_phone_formats():
+    for phone in ("0412 345 678", "+61 2 9123 4567", "(02) 9123 4567", "0412-345-678"):
+        assert mask_pii(f"Call {phone} today") == "Call [PHONE] today", phone

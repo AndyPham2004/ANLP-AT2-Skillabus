@@ -51,3 +51,8 @@ def test_canonical_from_extract_is_kept():
     # Tier 2 matches "REST APIs" to API development although the alias list lacks the plural.
     r = normalise([{"text": "REST APIs", "canonical": "API development", "method": "ner", "sentence": "x"}])[0]
     assert r["canonical"] == "API development" and r["vocab"] != "emerging"
+
+
+def test_csharp_row_survives_reading_the_seed():
+    r = norm("C#")["C#"]
+    assert r["canonical"] == "C#"

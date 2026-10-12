@@ -8,6 +8,7 @@ Everything it reads is committed, so it also runs on Streamlit Cloud.
 
 from __future__ import annotations
 
+import io
 import re
 from dataclasses import dataclass
 from functools import lru_cache
@@ -77,22 +78,28 @@ class Resources:
     role_skills: tuple
 
 
+def _read_noted(path, **kwargs) -> pd.DataFrame:
+    """read_csv without the leading "# ..." note lines; comment="#" would also cut "C#" to "C"."""
+    lines = Path(path).read_text(encoding="utf-8").splitlines(keepends=True)
+    return pd.read_csv(io.StringIO("".join(l for l in lines if not l.startswith("#"))), **kwargs)
+
+
 @lru_cache(maxsize=1)
 def resources() -> Resources:
-    seed = pd.read_csv(SEED_CSV, comment="#", dtype=str)
+    seed = _read_noted(SEED_CSV, dtype=str)
     regex, category = {}, {}
     for _, r in seed.iterrows():
         aliases = [r.canonical] + [a for a in str(r.aliases).split("|") if a and a != "nan"]
         regex[r.canonical] = alias_regex(aliases, r.strict == "1")
         category[r.canonical] = r.category
-    counts = pd.read_csv(COUNTS_CSV, comment="#")
+    counts = _read_noted(COUNTS_CSV)
     demand = dict(zip(counts.skill, counts.pct_ads.astype(float)))
     esco = {}
     if ESCO_CSV.exists():
         e = pd.read_csv(ESCO_CSV, dtype=str).dropna(subset=["esco_uri"])
         esco = {r.canonical: f"esco:{r.esco_uri}" for _, r in e.iterrows()}
     layers = pd.read_csv(next(p for p in PROFILES if p.exists()), dtype=str).fillna("")
-    role = tuple(pd.read_csv(TOP_CSV, comment="#").skill)
+    role = tuple(_read_noted(TOP_CSV).skill)
     return Resources(regex, category, demand, esco, layers, role)
 
 

@@ -26,11 +26,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from .text import slug
+from .text import read_csv_skipping_notes, slug
 
 ROOT = Path(__file__).resolve().parents[2]
 SEED_CSV = ROOT / "data/processed/skills_seed_v2.csv"
 ESCO_LINKS_CSV = ROOT / "data/processed/skill_to_esco.csv"
+# Van Thong's cleaned ESCO file is in git (data-eda/, PR #44); the raw download is only on his machine.
+ESCO_CLEAN_CSV = ROOT / "data-eda/data/clean/esco_skills_clean.csv"
 ESCO_SKILLS_CSV = ROOT / "data/raw/data-eda/data/raw/taxonomy_esco_v1.2.1/skills_en.csv"
 INDEX_DIR = ROOT / "models" / "esco"
 LIGHTCAST_CACHE = ROOT / "data" / "cache" / "lightcast"
@@ -68,7 +70,7 @@ def lookup(table: dict, s: str):
 # ---------------------------------------------------------------- 1. dictionary
 @lru_cache(maxsize=1)
 def _dictionary() -> tuple[dict, dict]:
-    seed = pd.read_csv(SEED_CSV, comment="#", dtype=str)
+    seed = read_csv_skipping_notes(SEED_CSV, dtype=str)
     alias_to_canon = {}
     for _, r in seed.iterrows():
         for a in [r.canonical] + [a for a in str(r.aliases).split("|") if a and a != "nan"]:
@@ -83,19 +85,28 @@ def _dictionary() -> tuple[dict, dict]:
 # ---------------------------------------------------------------- 2-3. ESCO
 @lru_cache(maxsize=1)
 def _esco_labels() -> tuple[dict, list[tuple[str, str]]]:
-    """(label key -> (uri, preferred label), [(uri, preferred label)]). Empty if the raw file is absent."""
+    """(label key -> (uri, preferred label), [(uri, preferred label)]). Empty if no ESCO file is present.
+
+    Reads the clean file (alt labels joined by "|"), else the raw download (joined by newlines).
+    """
     cache = INDEX_DIR / "labels.pkl"
     if cache.exists():
         return pickle.loads(cache.read_bytes())
-    if not ESCO_SKILLS_CSV.exists():
+    if ESCO_CLEAN_CSV.exists():
+        e = pd.read_csv(ESCO_CLEAN_CSV, usecols=["concept_uri", "preferred_label", "alt_labels"], dtype=str)
+        sep = "|"
+    elif ESCO_SKILLS_CSV.exists():
+        e = pd.read_csv(ESCO_SKILLS_CSV, usecols=["conceptUri", "preferredLabel", "altLabels"], dtype=str)
+        e.columns = ["concept_uri", "preferred_label", "alt_labels"]
+        sep = "\n"
+    else:
         return {}, []
-    e = pd.read_csv(ESCO_SKILLS_CSV, usecols=["conceptUri", "preferredLabel", "altLabels"], dtype=str)
     exact, pref = {}, []
     for _, r in e.iterrows():
-        pref.append((r.conceptUri, r.preferredLabel))
-        exact.setdefault(key(r.preferredLabel), (r.conceptUri, r.preferredLabel))
-        for alt in str(r.altLabels).split("\n") if isinstance(r.altLabels, str) else []:
-            exact.setdefault(key(alt), (r.conceptUri, r.preferredLabel))
+        pref.append((r.concept_uri, r.preferred_label))
+        exact.setdefault(key(r.preferred_label), (r.concept_uri, r.preferred_label))
+        for alt in str(r.alt_labels).split(sep) if isinstance(r.alt_labels, str) else []:
+            exact.setdefault(key(alt), (r.concept_uri, r.preferred_label))
     INDEX_DIR.mkdir(parents=True, exist_ok=True)
     cache.write_bytes(pickle.dumps((exact, pref)))
     return exact, pref
