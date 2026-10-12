@@ -18,6 +18,13 @@ def test_counts_split_by_country_and_title():
     assert count_roles(rows) == {"total": 5, "au": 4, "data_au": 3, "ds_au": 2}
 
 
+def test_us_state_codes_are_not_australia():
+    rows = [row("Data Scientist", "Seattle, WA"), row("Data Scientist", "San Antonio, TX | Remote"),
+            row("Data Scientist", "Perth, Western Australia"), row("Data Scientist", "Melbourne, VIC"),
+            row("Data Scientist", "Remote - AU")]
+    assert count_roles(rows)["au"] == 3
+
+
 def test_empty_board_is_reachable_but_empty():
     assert classify(200, []) == "empty"
     assert classify(200, [row("x", "y")]) == "ok"

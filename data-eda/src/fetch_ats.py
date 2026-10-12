@@ -168,9 +168,12 @@ def fetch_smartrecruiters(session, slug, company, insecure, au_only=True, delay=
     return rows
 
 
+# Cities and the unambiguous state codes only. "WA", "SA", "NT" and "ACT" matched Seattle, WA and
+# San Antonio in global boards (Anthropic's board counted 190 "Australian" ads on 13 Oct 2026);
+# Perth, Adelaide, Darwin and Canberra cover those states instead.
 AU_PATTERN = re.compile(
-    r"austral|sydney|melbourne|brisbane|perth|adelaide|canberra|hobart|darwin"
-    r"|nsw|vic|qld|\bwa\b|\bsa\b|\bact\b|\bnt\b|\btas\b", re.I
+    r"austral|sydney|melbourne|brisbane|perth|adelaide|canberra|hobart|darwin|gold coast|newcastle"
+    r"|wollongong|geelong|townsville|cairns|\bnsw\b|\bvic\b|\bqld\b|\btas\b|\bau\b", re.I
 )
 
 
