@@ -21,11 +21,11 @@ flowchart LR
     SEED[(138-skill dictionary<br/>skills_seed_v2.csv)]
     ESCO[(ESCO v1.2.1<br/>13,960 skills)]
     DEM[(Demand %<br/>3,204 Seek ads)]
-    SUB[(Subject profiles<br/>70 subjects × 4 layers)]
+    SUB[(Subject profiles<br/>70 subjects, 1,039 rows<br/>3 layers, assessment pending)]
   end
   subgraph App [Streamlit]
     UI[Gap chart · shortest path<br/>evidence panel · votes]
-    CHAT[Chat<br/>retrieve → GPT-4o-mini]
+    CHAT[Chat, RAG<br/>retrieve: FAISS or TF-IDF<br/>→ GPT-4o-mini]
   end
   AD --> EX
   CV --> EX
@@ -45,6 +45,10 @@ if one is not built yet or fails, falls back to a dictionary-and-keyword baselin
 the same JSON (`docs/data_contract.md`). The page states which engine produced the result, so a
 demo never breaks and a reader always knows which method they are looking at.
 
+The deployed app (Streamlit Community Cloud) installs without PyTorch, so subject evidence and chat
+retrieval run their TF-IDF paths there; the embedding paths are used in the local evaluation
+(sections 4 and 6).
+
 ## 5.2 Design choices
 
 | Choice | Reason |
@@ -53,9 +57,9 @@ demo never breaks and a reader always knows which method they are looking at.
 | Generative AI and LLMs skip the ESCO steps of normalisation | ESCO v1.2.1 has no concept for them; an embedding would force them onto a loosely related concept. They are kept and flagged ✦ instead |
 | Hand-checked blocklist of wrong ESCO concepts | ESCO "SPARK" is a Java web framework, not Apache Spark; our dictionary's link to it was wrong (section 6) |
 | Learning path: greedy set cover weighted by `demand + 1` | Picks subjects by employer demand, not keyword hits; the +1 keeps 0%-demand skills (LLMs in 2019-22 ads) in play |
-| Each gap keeps its two strongest subjects in the result | A low-demand gap still shows its evidence |
+| A subject covers a gap only when it is at least 60% as strong as the best subject for that gap (at most five); every gap shows its strongest subject | One passing mention does not count next to a subject that teaches the skill, and a low-demand gap still shows its evidence (section 4.4) |
 | Thumbs up/down per subject-skill pair, with "I've taken it" | Turns users into validators of the subject mapping (section 6) |
-| Resumes stay in memory; emails, phones and URLs are masked before any LLM call; resumes never reach the chat | Privacy (section 7) |
+| Resumes stay in memory; emails, phones and URLs are masked before any LLM call; resumes never reach the chat | Privacy (section 7). Person names are not masked yet |
 | Responses cached by hash of model + prompt + text | Repeatable evaluation at near-zero cost |
 
 ## 5.3 Screens

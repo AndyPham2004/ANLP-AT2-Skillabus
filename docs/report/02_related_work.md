@@ -28,5 +28,5 @@ grounds the chat in Handbook text instead of the model's memory.
   alignment technology* [press release, 3 June 2025]. https://lightcast.io/resources/blog/skillabi-press-release-june-3-2025
 - Lightcast. *Skillabi*. https://lightcast.io/solutions/software/skillabi
 - *UniSkill: A Dataset for Matching University Curricula to Professional Competencies* (2026).
-  LREC 2026. https://aclanthology.org/2026.lrec-1.31/ (arXiv 2603.03134) **[verify authors]**
+  Musazade, Mezei and Zhang. LREC 2026. https://aclanthology.org/2026.lrec-1.31/ (arXiv 2603.03134)
 - Lewis, P. et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. NeurIPS.

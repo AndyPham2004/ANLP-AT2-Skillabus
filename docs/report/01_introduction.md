@@ -15,7 +15,8 @@ vocabulary again.
 The gap is measurable. Matching our 138-skill dictionary to the ESCO taxonomy by exact label
 covers only 36% of it, and for 54% we found no ESCO concept at all.
 And the market moves faster than either: none of 3,204 Seek Australia Data Scientist ads from
-2019-22 mentions large language models, while 15.8% of 247 US Data Scientist ads from 2023-24 do.
+2019-22 mentions large language models, while 39 of 247 (15.8%) US LinkedIn ads titled Data Scientist
+from 2023-24 do (the Data Scientist titles among the 1,355 data roles in the arshkon dataset, section 3).
 
 ## 1.2 Who it is for
 
@@ -51,7 +52,8 @@ Skillabus closes that loop for the individual student. Its contributions:
    ESCO exact, ESCO embedding, Lightcast, emerging) that keeps skills ESCO lacks instead of
    dropping or mislabelling them.
 2. **Evidence by layer.** A subject is recommended only with the sentence that justifies it, labelled
-   by where it came from: learning objective, assessment, weekly topic or description. This answers
+   by where it came from: learning objective, weekly topic or description (an assessment layer is
+   built in but still empty, section 7). This answers
    the main weakness of Handbook-only matching: our poster reported that no learning objective in
    the 70 subjects covers LLMs or generative AI and that 36118 mentions LLMs only in its
    description. Yet 36118 and 43023 list LLMs as topics, and 32130 teaches generative AI "in the
