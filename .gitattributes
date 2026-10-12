@@ -1,0 +1,3 @@
+# Ad text contains line breaks inside quoted CSV fields. Without this, Windows checkouts
+# rewrite them to CRLF and teammates end up with different bytes for the same ad.
+data-eda/data/clean/*.csv -text

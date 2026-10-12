@@ -1,0 +1,258 @@
+================================================================================
+ HOW TO USE THE DATA  --  MDSI Skills Map (36118 AT2)
+ Written for teammates. Every count was read off the file, not a description page.
+ Folder: data-eda/data/raw/     Manifest with provenance: DATASETS.md
+================================================================================
+
+ CLEANED VERSIONS (9 Oct): data-eda/data/clean/ - read its README.txt first.
+ Labelling, resumes and ESCO lookups should come from there, not from raw/.
+
+ QUICK ANSWER: WHICH FILE DO I WANT?
+
+   Skill frequencies for Australia ....... jobs_au_seek_datascientist_2019-2022.csv
+   Match subjects to skills .............. uts_subjects_2026.csv
+   Standardise a skill name .............. taxonomy_esco_v1.2.1/skills_en.csv
+   Tool names ESCO is missing ............ taxonomy_onet_v31/software_skills.csv
+   Check a finding holds ................. jobs_us_linkedin_2023-2024.csv
+   A sample student profile .............. resumes_us_2021.csv
+   Name real employers / market size ..... jobs_au_adzuna_2026.csv
+   Current-era (2026) ad language ........ jobs_au_ats_2026.csv
+   Sanity-check our extractor ............ jobs_au_seek_datascience_2019-2022_authorflags.csv
+
+
+================================================================================
+ 1. JOB ADS  --  AUSTRALIAN
+================================================================================
+
+--------------------------------------------------------------------------------
+jobs_au_seek_datascientist_2019-2022.csv          3,204 rows        *** PRIMARY ***
+--------------------------------------------------------------------------------
+WHAT   Seek Australia ads whose title contains "Data Scientist". Full ad text,
+       median ~2,800 characters. From the Kaggle dataset
+       nomilk/data-science-job-listings-australia-20192020 (file
+       listings2019_2022.csv) - NOT PromptCloud, whatever the poster says.
+       A published dataset: we did NOT scrape Seek ourselves.
+COLS   ad_id, title, advertiser, company, listingDate, state, city,
+       salary_string, description, source
+USE    The block 5 chart. Any statement about what the Australian market wants.
+       python src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id
+AVOID  Do not claim it is current. See the 2019-2022 warning in section 5.
+
+--------------------------------------------------------------------------------
+jobs_au_seek_datascience_2019-2022.csv            3,895 rows
+--------------------------------------------------------------------------------
+WHAT   Same source, wider net: analysts, engineers, BI, analytics - not only
+       "Data Scientist". Superset of the file above.
+USE    When you want the broader data profession rather than one job title.
+       Use ONE of these two in any given chart, never both - they overlap.
+
+--------------------------------------------------------------------------------
+jobs_au_seek_datascience_2019-2022_authorflags.csv 3,902 rows
+--------------------------------------------------------------------------------
+WHAT   The same Kaggle source with 52 columns, including 25 binary tool flags
+       (Python, R, SQL, SAS, Tableau, Spark, Hadoop, Scala, Java, Matlab...)
+       that the DATASET AUTHOR extracted, not us. Joins to the primary file on
+       ad_id == jobId: all 3,204 match.
+USE    Our only external check on the extractor, and it costs no labelling.
+       Run src/validate_against_authorflags.py. Median Cohen's kappa 0.637
+       over 14 tools; 8 of 14 at 0.60 or better.
+AVOID  Do NOT treat these flags as ground truth. For 3,348 of their 3,734 extra
+       positives the term does not appear in the ad text at all - their SAS
+       fires on 42% of ads, their R on 70%. Report agreement, not accuracy.
+
+--------------------------------------------------------------------------------
+jobs_au_ats_2026.csv                                234 rows
+--------------------------------------------------------------------------------
+WHAT   Current (Sept 2026) Australian ads pulled live from company job boards:
+       Greenhouse, Lever and SmartRecruiters public APIs. Full text, median
+       ~6,200 chars. 11 employers incl. Canva, SEEK, Culture Amp, Judo Bank.
+       Only about 27 are data roles.
+USE    Evidence of CURRENT language - the only corpus we have that contains
+       LLM-era vocabulary. Good for a quoted example or a single sentence.
+       Refresh any time:  python src/fetch_ats.py --australia-only
+AVOID  Do not chart it. n=27 invites a question you cannot answer.
+
+--------------------------------------------------------------------------------
+jobs_au_adzuna_2026.csv                              50 rows
+--------------------------------------------------------------------------------
+WHAT   Adzuna API, Australian listings, Sept 2026.
+!!!!   DESCRIPTIONS ARE TRUNCATED AT EXACTLY 500 CHARACTERS. Verified: every
+       row is 500 chars, standard deviation 0.0, 100% end in an ellipsis.
+       Adzuna's own docs say they return only a snippet.
+USE    Employer names, locations, job titles, market size. Adzuna reported 387
+       total matches for "data scientist" in Sydney - a citable market figure.
+AVOID  NEVER count skills from this file. The truncation biases every count
+       toward whatever an ad happens to mention in its opening lines.
+
+================================================================================
+ 2. JOB ADS  --  INTERNATIONAL
+================================================================================
+
+--------------------------------------------------------------------------------
+jobs_us_linkedin_2023-2024.csv                  123,849 rows  (517 MB)
+--------------------------------------------------------------------------------
+WHAT   LinkedIn postings 2023-24, full text, 31 columns. 99.9% United States -
+       only 131 Australian rows, so it cannot represent Australia.
+       1,355 rows are data roles; 247 have the exact title "Data Scientist".
+COLS   job_id, company_name, title, description, location, max_salary,
+       med_salary, min_salary, formatted_experience_level, skills_desc, ...
+USE    The cross-market check. Because it has full text we can run OUR extractor
+       on it, which makes it genuinely comparable to the Seek data. Result:
+       Spearman rank correlation 0.819 over 100 shared technical skills.
+       It also dates the LLM gap: large language models 0.0% in the 2019-22
+       Australian ads, 15.8% here.
+AVOID  Do not present it as Australian. Do not filter it to Australia - 131 rows
+       across all industries leaves almost no data roles.
+TRAP   skills_desc is populated in only 12 of the 1,355 data roles. Ignore it.
+
+--------------------------------------------------------------------------------
+linkedin_mappings/skills.csv                         35 rows  (679 bytes)
+--------------------------------------------------------------------------------
+!!!!   THIS IS NOT A SKILLS TAXONOMY. It is 35 broad job FUNCTIONS: IT, SALE,
+       MNFC, ENG, MRKT. There is not one technical skill in it.
+       It is kept only as evidence for the poster. Skills come from extracting
+       the description column.
+
+
+================================================================================
+ 3. SKILLS TAXONOMIES
+================================================================================
+
+--------------------------------------------------------------------------------
+taxonomy_esco_v1.2.1/          19 files    skills_en.csv = 13,960 skills
+--------------------------------------------------------------------------------
+WHAT   The EU standard skills classification. THE FILE YOU WANT is skills_en.csv.
+COLS   conceptUri, skillType (skill/competence | knowledge), reuseLevel,
+       preferredLabel, altLabels, description
+KEY    altLabels is populated for 99.9% of rows and is NEWLINE-separated, not
+       comma. It is what makes the whole idea work: the concept
+       "Python (computer programming)" carries the plain alt-label "Python",
+       which is how academic phrasing and industry phrasing meet.
+USE    NORMALISATION, not extraction. Extract with config/skills_seed.csv (tuned
+       to how ads actually write), then map onto ESCO for a stable identifier.
+       python src/map_to_esco.py --show-unmapped
+AVOID  Do not string-match ESCO labels against raw ad text. They are verbose and
+       formal ("use Python (computer programming)") in a way job ads never are.
+KNOWN  Only 36% of our 133-skill dictionary maps by exact label. 73 skills (55%)
+       have NO ESCO concept: Docker, Kubernetes, XGBoost, Snowflake, Tableau and
+       the whole LLM stack. That is a finding, not a bug - the standard students
+       are measured against has not caught up with the market.
+OTHER  occupations_en.csv (3,043) and occupationSkillRelations_en.csv (126,051)
+       link jobs to skills. Not needed for the poster; useful for Part B.
+
+--------------------------------------------------------------------------------
+taxonomy_onet_v31/             3 files     software_skills.csv = 8,753 tools
+--------------------------------------------------------------------------------
+WHAT   US Dept of Labor occupational database, CC-BY 4.0, no registration.
+COLS   O*NET-SOC Code, Title, Workplace Example, Element Name, Hot Technology,
+       In Demand.  "Workplace Example" holds the actual tool name.
+USE    Fills exactly the hole ESCO leaves. Has Apache Spark, Hadoop, Airflow and
+       8,750 other tools. 176 are flagged "Hot Technology".
+       Pair them: ESCO for skill concepts, O*NET for tool vocabulary.
+
+================================================================================
+ 4. COURSE AND PROFILE DATA
+================================================================================
+
+--------------------------------------------------------------------------------
+uts_subjects_2026.csv                                70 rows
+--------------------------------------------------------------------------------
+WHAT   UTS subjects across 6 postgraduate courses, 13 faculties, scraped from
+       the handbook with learning outcomes intact.
+COLS   subject_code, subject_name, credit_points, faculty, n_outcomes,
+       learning_outcomes, description, topics, teaching_strategies, requisites,
+       handbook_url, curriculum_group, courses
+USE    learning_outcomes is the field to match against job ads. It reads e.g.
+       "SLO3: Apply text mining techniques on unstructured data sets using
+       advanced NLP programming packages". topics is a good second field.
+       curriculum_group = Core / Electives / Innovation Labs / Options.
+       courses = which degrees list it, pipe-separated (C04372 = MDSI).
+WATCH  - DEDUPE ON subject_code. Ten subjects sit in two courses at once.
+       - 3 of 70 have n_outcomes = 0 (2cp placeholders). Exclude them from
+         matching rather than treating them as skill-free.
+       - Recommend from Electives, not Core - Core is compulsory, so suggesting
+         it is useless advice.
+       - MDSI reserves 24cp of FREE electives, which is why the 51 non-MDSI
+         subjects matter: they are what the app can actually recommend into it.
+KEY    Worked example of the product: AWS is in 22% of Australian Data Scientist
+       ads. NO MDSI subject mentions AWS or cloud. Master of AI has two - 42049
+       Architecting on AWS, 42904 Cloud Computing and SaaS - both open to an
+       MDSI student, neither visible from their own course page.
+REFRESH  python src/scrape_handbook.py --course C04372 C04380 C04295 C04373 C04379 C04443 --year 2026
+         Pass --year 2026, NOT "current" - "current" now resolves to 2027.
+
+--------------------------------------------------------------------------------
+resumes_us_2021.csv                               2,484 rows
+--------------------------------------------------------------------------------
+WHAT   Resumes across 24 job categories.
+COLS   ID, Resume_str (plain text - use this), Resume_html, Category
+USE    Use Resume_str. Filter Category to the data/IT ones. You only need ONE
+       resume to demo the gap chart; the rest is background.
+ETHICS Process in memory, do not commit resumes to the repo, and mask personal
+       details before sending any text to an external API.
+
+
+================================================================================
+ 5. THINGS THAT WILL EMBARRASS US IF WE GET THEM WRONG
+================================================================================
+
+ 0. EVERY PERCENTAGE IN THIS FOLDER IS A SLIGHT UNDER-COUNT.
+    80.4% of the Seek ads (2,577 of 3,204) have HTML stripped without
+    whitespace put back, so real mentions are welded to the next word:
+    "...Power BI and TableauSuperior analytical skills...". Our word
+    boundaries correctly refuse those, so we miss them. Measured against the
+    author's own flags: 365 mentions across 11 tools, worth about +3pp on
+    Python (82.8 -> ~85.8) and SQL (56.8 -> ~59.9). Ranking is unaffected.
+    If anyone asks why our Python figure is lower than a published one, this
+    is why. FIXED in data/clean/jobs_au_seek_datascientist_2019-2022_clean.csv
+    (src/clean_seek.py): a join is split only where the desktop rendering of
+    the same ad shows a break, so "JavaScript" is never split. On the clean
+    text Python is 84.5%, ranking unchanged (rho 0.9997). The poster and
+    data/processed/ still use the old text.
+
+ 1. THE AUSTRALIAN ADS ARE 2019-2022.
+    No LLM, RAG, prompt engineering or LangChain appears, because those tools
+    barely existed. We can PROVE this is the window and not the market: those
+    skills are 0.0% in the 2019-22 Australian ads and 15.8% in the 2023-24 US
+    ads. Put the number in the caption. Stated as a measured result it reads as
+    rigour; discovered by a marker it reads as an oversight.
+
+ 2. NEVER SAY WE SCRAPED SEEK OR LINKEDIN.
+    Both forbid it in their terms. Seek ads come from a published Kaggle
+    dataset; LinkedIn ads likewise. The ONLY live scraping we do is the UTS
+    handbook and public ATS job-board APIs, which are built to be consumed.
+
+ 3. GEOGRAPHY AND TIME MOVE TOGETHER between the Seek and LinkedIn corpora
+    (AU 2019-22 vs US 2023-24), so no single difference can be blamed on one or
+    the other. The LLM result survives this because those tools did not exist
+    commercially before 2022.
+
+ 4. EVERY NUMBER ON THE POSTER NEEDS n AND A SOURCE, and must come from a file
+    on disk. The team plan's example figures ("Python 71%, SQL 64%") were
+    placeholders. The real numbers are Python 83%, SQL 57%, n = 3,204.
+
+ 5. R AND Go ARE UNDER-COUNTED BY DESIGN in config/skills_seed.csv. A bare "R"
+    matches "R&D" and a bare "Go" matches the verb, so we only catch explicit
+    forms (R programming, RStudio, golang). R's true share is higher than we
+    report. Disclose it or improve the pattern - do not quietly publish it.
+
+
+================================================================================
+ 6. SCRIPTS
+================================================================================
+
+   src/extract_skills.py    ads -> skill counts + an (ad, skill) long table
+   src/chart_top15.py       the block 5 chart, 300 dpi, A0 column at 1:1
+   src/chart_sources.py     the block 3 source cards
+   src/map_to_esco.py       our dictionary -> ESCO concept URIs
+   src/scrape_handbook.py   UTS subjects + learning outcomes
+   src/fetch_ats.py         live Australian ads, full text
+   src/fetch_adzuna.py      Australian ads, TRUNCATED text
+   src/source_counts.py     row counts for every file in data/raw
+
+   config/skills_seed.csv   133 skills with aliases. MEANT TO BE EDITED - add
+                            anything the ads say that it misses.
+   config/skill_to_esco.csv the mapping, produced by map_to_esco.py
+
+   pip install -r requirements.txt
+================================================================================
