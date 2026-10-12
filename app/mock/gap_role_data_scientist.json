@@ -1,0 +1,527 @@
+{
+  "ad_id": "role-data-scientist",
+  "mode": "role-data-scientist",
+  "skills": [
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d",
+      "skill_label": "Python",
+      "status": "have",
+      "demand_pct": 82.8,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 83% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": "Python: pandas and matplotlib for data cleaning, exploration, and visualisation"
+    },
+    {
+      "skill_id": "seed:machine-learning",
+      "skill_label": "Machine learning",
+      "status": "missing",
+      "demand_pct": 72.2,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 72% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/598de5b0-5b58-4ea7-8058-a4bc4d18c742",
+      "skill_label": "SQL",
+      "status": "have",
+      "demand_pct": 56.8,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 57% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": "SQL: writing queries, joins, and aggregations across relational databases"
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/7ee4c2ea-b349-4bd2-81a3-ec31475d4833",
+      "skill_label": "Statistics",
+      "status": "partial",
+      "demand_pct": 56.1,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 56% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": "Statistics: descriptive statistics, hypothesis testing basics"
+    },
+    {
+      "skill_id": "seed:predictive-modelling",
+      "skill_label": "Predictive modelling",
+      "status": "missing",
+      "demand_pct": 30.1,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 30% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "seed:spark",
+      "skill_label": "Spark",
+      "status": "missing",
+      "demand_pct": 25.6,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 26% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "seed:data-visualisation",
+      "skill_label": "Data visualisation",
+      "status": "have",
+      "demand_pct": 25.3,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 25% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": "Comfortable working with structured business data, building dashboards, and communicating findings to non-technical stakeholders."
+    },
+    {
+      "skill_id": "seed:cloud-platforms",
+      "skill_label": "Cloud platforms",
+      "status": "missing",
+      "demand_pct": 25.1,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 25% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "seed:artificial-intelligence",
+      "skill_label": "Artificial intelligence",
+      "status": "missing",
+      "demand_pct": 22.5,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 22% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/bd14968e-e409-45af-b362-3495ed7b10e0",
+      "skill_label": "AWS",
+      "status": "missing",
+      "demand_pct": 21.7,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 22% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/726abd5a-d23c-44b9-abb0-f22bbe95f1d3",
+      "skill_label": "Optimisation",
+      "status": "missing",
+      "demand_pct": 19.5,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 20% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+      "skill_label": "Tableau",
+      "status": "missing",
+      "demand_pct": 18.9,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 19% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/e46291c7-52b9-4174-bd59-178884861038",
+      "skill_label": "Hadoop",
+      "status": "missing",
+      "demand_pct": 17.4,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 17% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/fff0e2cd-d0bd-4b02-9daf-158b79d9688a",
+      "skill_label": "Natural language processing",
+      "status": "missing",
+      "demand_pct": 17.0,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 17% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    },
+    {
+      "skill_id": "esco:http://data.europa.eu/esco/skill/ecc4552a-92c5-4222-b18d-faf5ac841080",
+      "skill_label": "Deep learning",
+      "status": "missing",
+      "demand_pct": 16.1,
+      "demand_pct_2026": null,
+      "emerging": false,
+      "ad_evidence": "Asked for in 16% of 3,204 Seek Data Scientist ads (2019-22).",
+      "resume_evidence": null
+    }
+  ],
+  "soft_skills": [],
+  "recommendations": [
+    {
+      "subject_code": "32513",
+      "subject_name": "Advanced Data Analytics Algorithms",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32513",
+      "covers": [
+        "Machine learning",
+        "Statistics"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Describe the scope, limitations and application of several advanced machine learning methods. (D.1)"
+        },
+        {
+          "skill_label": "Statistics",
+          "layer": "weekly_topic",
+          "text": "Machine learning and relationship to statistics and artificial intelligence"
+        }
+      ],
+      "score": 1.0
+    },
+    {
+      "subject_code": "32130",
+      "subject_name": "Fundamentals of Data Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32130",
+      "covers": [
+        "Predictive modelling",
+        "Artificial intelligence"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "learning_objective",
+          "text": "SLO3: Use appropriate data analytics methods to describe and implement descriptive and predictive analytics solutions. (D.1)"
+        },
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO4: Communicate data analytics methods and insights effectively in oral and written forms, demonstrating responsible and critical collaboration with AI tools. (E.1)"
+        }
+      ],
+      "score": 0.46
+    },
+    {
+      "subject_code": "42049",
+      "subject_name": "Architecting on Amazon Web Services",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42049",
+      "covers": [
+        "Cloud platforms",
+        "AWS"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Cloud platforms",
+          "layer": "weekly_topic",
+          "text": "Cloud and AWS Service Review"
+        },
+        {
+          "skill_label": "AWS",
+          "layer": "learning_objective",
+          "text": "SLO1: Identity and express where and how AWS services can be used to solve a business problem. (B.1)"
+        }
+      ],
+      "score": 0.37
+    },
+    {
+      "subject_code": "36106",
+      "subject_name": "Machine Learning Algorithms and Applications",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36106",
+      "covers": [
+        "Machine learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO2: Interpret, synthesise and communicate insights extracted from machine learning algorithms in a context-appropriate manner."
+        }
+      ],
+      "score": 0.74
+    },
+    {
+      "subject_code": "36103",
+      "subject_name": "Statistical Thinking for Data Science",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36103",
+      "covers": [
+        "Statistics",
+        "Optimisation"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Statistics",
+          "layer": "weekly_topic",
+          "text": "Module 1: Understanding the Data and Statistics"
+        },
+        {
+          "skill_label": "Optimisation",
+          "layer": "weekly_topic",
+          "text": "Conceptualising and executing a data science project Module 3: Estimation and Optimisation Methods"
+        }
+      ],
+      "score": 0.65
+    },
+    {
+      "subject_code": "42050",
+      "subject_name": "SAS Predictive Business Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42050",
+      "covers": [
+        "Predictive modelling"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "learning_objective",
+          "text": "SLO1: Explore and transform business data into analytic-ready features for predictive modelling. (D.1)"
+        }
+      ],
+      "score": 0.26
+    },
+    {
+      "subject_code": "94693",
+      "subject_name": "Big Data Engineering",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/94693",
+      "covers": [
+        "Spark",
+        "Hadoop"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Spark",
+          "layer": "learning_objective",
+          "text": "SLO1: Participate in the development of data engineering projects using popular tools (Snowflake, Databricks, PostgreSQL, Spark, Airflow, Kafka etc..) and languages including Python and SQL."
+        },
+        {
+          "skill_label": "Hadoop",
+          "layer": "weekly_topic",
+          "text": "Hadoop"
+        }
+      ],
+      "score": 0.42
+    },
+    {
+      "subject_code": "32557",
+      "subject_name": "Enabling Enterprise Information Systems",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32557",
+      "covers": [
+        "Cloud platforms"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Cloud platforms",
+          "layer": "learning_objective",
+          "text": "SLO3: Apply a deep understanding of the strategic use of information systems, identifying business processes and utilising mobile, cloud, and social computing technologies to address business challenges. (D.1)"
+        }
+      ],
+      "score": 0.22
+    },
+    {
+      "subject_code": "36121",
+      "subject_name": "Artificial Intelligence Principles and Applications",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36121",
+      "covers": [
+        "Artificial intelligence",
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO1: Understand general problem-solving approaches in AI."
+        },
+        {
+          "skill_label": "Deep learning",
+          "layer": "learning_objective",
+          "text": "SLO4: Work with deep neural networks, multilayer networks, and decision trees."
+        }
+      ],
+      "score": 0.41
+    },
+    {
+      "subject_code": "21946",
+      "subject_name": "Supply Chain Management Analytics",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/21946",
+      "covers": [
+        "Optimisation"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Optimisation",
+          "layer": "learning_objective",
+          "text": "SLO2: Analyse supply chain strategies and performance parameters to improve customer satisfaction through cost and service optimisation"
+        }
+      ],
+      "score": 0.17
+    },
+    {
+      "subject_code": "22804",
+      "subject_name": "Business Analytics Foundations",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/22804",
+      "covers": [
+        "Predictive modelling",
+        "Tableau"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Predictive modelling",
+          "layer": "description",
+          "text": "In this subject, you will develop core competencies in business analytics, learning how to transform raw data into actionable insights that support effective decision-making.Â You will gain hands-on experience with industry-standard tools, including Excel, Python, and Tableau, while developing skills in data visualisation, statistical analysis, predictive modelling, and introductory machine learning techniques."
+        },
+        {
+          "skill_label": "Tableau",
+          "layer": "description",
+          "text": "In this subject, you will develop core competencies in business analytics, learning how to transform raw data into actionable insights that support effective decision-making.Â You will gain hands-on experience with industry-standard tools, including Excel, Python, and Tableau, while developing skills in data visualisation, statistical analysis, predictive modelling, and introductory machine learning techniques."
+        }
+      ],
+      "score": 0.21
+    },
+    {
+      "subject_code": "36118",
+      "subject_name": "Applied Natural Language Processing",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36118",
+      "covers": [
+        "Natural language processing",
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Natural language processing",
+          "layer": "learning_objective",
+          "text": "SLO1: Understand core concepts of Natural Language Processing (NLP) and computational linguistics including its limitations (CILO 2.2, 2.3)"
+        },
+        {
+          "skill_label": "Deep learning",
+          "layer": "weekly_topic",
+          "text": "Advanced NLP and Deep Learning"
+        }
+      ],
+      "score": 0.33
+    },
+    {
+      "subject_code": "42172",
+      "subject_name": "Introduction to Artificial Intelligence",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42172",
+      "covers": [
+        "Artificial intelligence",
+        "Natural language processing"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Artificial intelligence",
+          "layer": "learning_objective",
+          "text": "SLO1: Describe key ideas and applications of common AI techniques to people in the same discipline. (D.1)"
+        },
+        {
+          "skill_label": "Natural language processing",
+          "layer": "weekly_topic",
+          "text": "Natural language processing"
+        }
+      ],
+      "score": 0.32
+    },
+    {
+      "subject_code": "36120",
+      "subject_name": "Advanced Machine Learning Application",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/36120",
+      "covers": [
+        "Machine learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Machine learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Implement and evaluate advanced machine learning techniques to real-world problems"
+        }
+      ],
+      "score": 0.74
+    },
+    {
+      "subject_code": "32558",
+      "subject_name": "Business Intelligence",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/32558",
+      "covers": [
+        "Statistics"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Statistics",
+          "layer": "weekly_topic",
+          "text": "An overview of business intelligence, analytics, and data science Taxonomy of data, statistical modelling for business analytics, and data visualisation Theories, techniques, and considerations for capturing organisational intelligence Aligning business intelligence with business strategy Techniques for implementing business intelligence systems Future trends, privacy, and managerial considerations in analytics"
+        }
+      ],
+      "score": 0.38
+    },
+    {
+      "subject_code": "42904",
+      "subject_name": "Cloud Computing and Software as a Service",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42904",
+      "covers": [
+        "Cloud platforms"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Cloud platforms",
+          "layer": "learning_objective",
+          "text": "SLO1: Articulate the need for cloud computing, elements of cloud computing for e-business, e-government, e-banking and e-learning. (B.1)"
+        }
+      ],
+      "score": 0.22
+    },
+    {
+      "subject_code": "94691",
+      "subject_name": "Deep Learning",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/94691",
+      "covers": [
+        "Deep learning"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Deep learning",
+          "layer": "learning_objective",
+          "text": "SLO1: Gain a solid understanding of the fundamentals, underlying mathematical concepts, and applications of neural networks."
+        }
+      ],
+      "score": 0.17
+    },
+    {
+      "subject_code": "37003",
+      "subject_name": "Application of Numerical and Computational Approaches A",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/37003",
+      "covers": [
+        "Optimisation"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Optimisation",
+          "layer": "learning_objective",
+          "text": "SLO3: Implement solutions for quantitative problems in finance using key computational techniques, including optimisation and neural networks"
+        }
+      ],
+      "score": 0.17
+    },
+    {
+      "subject_code": "42850",
+      "subject_name": "Natural Language Processing Algorithms",
+      "source_url": "https://coursehandbook.uts.edu.au/subject/2026/42850",
+      "covers": [
+        "Natural language processing"
+      ],
+      "evidence": [
+        {
+          "skill_label": "Natural language processing",
+          "layer": "learning_objective",
+          "text": "SLO1: Identify NLP applications in business and social contexts. (B.1)"
+        }
+      ],
+      "score": 0.15
+    }
+  ],
+  "learning_path": {
+    "subjects": [
+      "32513",
+      "32130",
+      "42049"
+    ],
+    "gaps_closed": 6,
+    "gaps_total": 12,
+    "demand_covered_pct": 66.5
+  }
+}
