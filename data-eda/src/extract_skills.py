@@ -37,7 +37,11 @@ log = logging.getLogger("extract_skills")
 
 def build_patterns(seed_path):
     """Compile one regex per skill from its pipe-separated literal aliases."""
-    seed = pd.read_csv(seed_path)
+    # data/processed/skills_seed_v2.csv opens with a "# ..." provenance line. Skip that
+    # line only: comment="#" would also cut the C# row down to "C".
+    with open(seed_path, encoding="utf-8") as f:
+        has_comment = f.readline().startswith("#")
+    seed = pd.read_csv(seed_path, skiprows=1 if has_comment else 0)
     required = {"canonical", "category", "strict", "aliases"}
     missing = required - set(seed.columns)
     if missing:
