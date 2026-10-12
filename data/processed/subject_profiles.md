@@ -5,7 +5,7 @@ and `retrieve()` indexes for the chat. Shape is `docs/data_contract.md` section 
 
 | | |
 |---|---|
-| Rows | 6,848 |
+| Rows | 6,853 |
 | Subjects | 360, in 44 UTS courses; 19 are MDSI (`C04372`), 276 rows |
 | Built by | `python data-eda/src/build_subject_profiles.py` |
 | Source | `data-eda/data/raw/uts_subjects_2026.csv` (not committed), UTS Handbook 2026, scraped 13 Oct 2026; assessment tasks from the handbook's per-offering data route (`data-eda/src/scrape_assessments.py`) |
@@ -16,9 +16,9 @@ and `retrieve()` indexes for the chat. Shape is `docs/data_contract.md` section 
 
 | Layer | Rows | Subjects | From |
 |---|---|---|---|
-| `learning_objective` | 1,519 | 354 | `learning_outcomes`, split on `SLO<n>:`, trailing `(CILO ...)` removed |
-| `assessment` | 1,015 | 326 | `selected_assessment` of the first two offerings: "name (type, weight%, group/individual). description" |
-| `weekly_topic` | 2,761 | 327 | `topics`, split on `\|`, `•`, `;` |
+| `learning_objective` | 1,516 | 354 | `learning_outcomes`, split on `SLO<n>:`, trailing `(CILO ...)` removed, "TBC" placeholders dropped |
+| `assessment` | 1,015 | 326 | `selected_assessment` of the first two offerings: "name (type, weight%, group/individual). description", with the subject's AI-use policy sentences removed (see below) |
+| `weekly_topic` | 2,769 | 327 | `topics`, split on `\|`, `•`, `;`, or on "(1) ... (2) ..." numbering |
 | `description` | 1,553 | 360 | `description`, one sentence per row |
 
 ## Courses
@@ -63,7 +63,7 @@ Three traps:
 
 | File | Rows | What |
 |---|---|---|
-| `prerequisites.csv` | 2,278 (360 subjects, 290 with a rule) | One row per item of the access-conditions rule: `rule` ("(1 AND 2 AND 3)"), `item`, `type` (academic, admission, other, corequisite), `requisite_code`, `requisite_text`. 36118 needs 36100, 36103, 36106; 43023 needs 42172 or 41040, which MDSI does not offer. From `data-eda/src/scrape_requisites.py`. |
+| `prerequisites.csv` | 3,494 (360 subjects; 290 with a requisite rule; 172 with anti-requisites) | One row per item of the access-conditions rule: `kind` (requisite / antirequisite), `rule` ("(1 AND 2 AND 3)"), `item`, `type` (academic, admission, other, corequisite), `requisite_code`, `requisite_text`, `evop_found` (n for 47 subjects the access-conditions site has no record of: an empty rule there is unverified). 36118 needs 36100, 36103, 36106; 43023 needs 42172 or 41040, which MDSI does not offer; 139 academic items point at codes outside the 360. From `data-eda/src/scrape_requisites.py`. |
 | `offerings.csv` | 510 (330 subjects) | `teaching_period` × `mode` per subject (94691 Autumn only, 36120 Spring only). 30 subjects have no offering listed for 2026. |
 | `assessments_scraped.csv` | 1,015 (326 subjects) | The assessment layer before merging; `collected_by = "script (handbook)"`. |
 
@@ -80,13 +80,20 @@ pipelines with Airflow"; 94691 Deep Learning has "Building Neural Network Archit
 and special subjects). Hand-collected rows can still be added through `data/labels/subject_content.csv`
 (`layer = assessment`); the build merges both files.
 
+**AI-use policy is not content.** 30 task descriptions mention generative AI, and 29 of them state
+the subject's policy ("students may use generative AI tools for grammar checking", "No GenAI"), so by
+keyword 32547 UNIX Systems Programming "taught" generative AI. `build_subject_profiles.drop_ai_policy`
+removes a sentence when it names AI tools and uses policy wording (permit, allow, must not, may use,
+guidelines, usage ...). The one sentence kept, in 32130, asks students to use GenAI in the task.
+Checked 13 Oct by an independent pass over all 30 rows.
+
 ## Known gaps in the source data
 
 | Gap | Subjects |
 |---|---|
 | No learning objectives | 35002, 36124, 36125, 40011, 40012, 94689 |
 | No topic list (33) | includes MDSI 36106, 36126, 36127, 94689, 94691, 94692, 94699 |
-| Topic list arrived with no delimiters, kept whole (24) | includes 32040, 36104, 42050, 42904, 43024 |
+| Topic list arrived with no delimiters, kept whole (23) | includes 32040, 36104, 42050, 43024 (42904's "(1) ... (9)" list is split) |
 | No 2026 offering listed (30) | see `offerings.csv` |
 
 Worth knowing:
@@ -104,7 +111,11 @@ Worth knowing:
 
 - **Encoding repaired.** The handbook serves UTF-8 that was read as a single-byte codec somewhere
   upstream, so punctuation arrives as `â\x80\x99` and friends, in descriptions and in assessment
-  descriptions alike. The script replaces each known sequence; zero remain.
+  descriptions alike. The script replaces each known sequence (quotes, dashes, hyphens, zero-width
+  and no-break spaces); an independent check on 13 Oct found zero left. Assessment descriptions
+  also arrive HTML-escaped (`&#39;`); they are unescaped.
+- **Rows keep the handbook's order** within a layer (SLO1 first, task 1 first); the file is sorted
+  by subject and layer only.
 - **CILO codes stripped** from learning objectives; **run-together sentences split**; **prose that
   leaked into the topics field** sentence-split; duplicate `(subject_code, layer, text)` rows dropped.
 
