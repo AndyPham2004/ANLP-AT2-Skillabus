@@ -37,6 +37,7 @@ ROOT = Path(__file__).resolve().parents[1]          # data-eda/
 REPO = ROOT.parent                                  # the Skillabus repo
 DEFAULT_SUBJECTS = ROOT / "data" / "raw" / "uts_subjects_2026.csv"
 DEFAULT_ASSESSMENTS = REPO / "data" / "labels" / "subject_content.csv"
+DEFAULT_SCRAPED_ASSESSMENTS = REPO / "data" / "processed" / "assessments_scraped.csv"
 DEFAULT_OUT = REPO / "data" / "processed" / "subject_profiles.csv"
 
 COLUMNS = ["subject_code", "subject_name", "course", "layer", "text", "source_url", "collected_by"]
@@ -145,21 +146,27 @@ def split_description(raw: str) -> list[str]:
     return out
 
 
-def load_assessments(path: Path) -> pd.DataFrame:
-    """Read the hand-collected subject content, keeping only assessment rows."""
-    if not path.exists():
-        log.warning("no assessment file at %s - the assessment layer will be empty", path)
+def load_assessments(paths: list[Path] | Path) -> pd.DataFrame:
+    """Read assessment rows from one or more files (hand-collected and scraped), concatenated."""
+    frames = []
+    for path in ([paths] if isinstance(paths, Path) else paths):
+        if not path.exists():
+            log.warning("no assessment file at %s", path)
+            continue
+        df = pd.read_csv(path, dtype=str).fillna("")
+        missing = [c for c in ("subject_code", "layer", "text") if c not in df.columns]
+        if missing:
+            raise SystemExit(f"{path} is missing columns {missing}; see data/labels/README.md")
+        df = df[df["layer"].astype(str).str.strip().str.lower() == "assessment"].copy()
+        log.info("read %d assessment rows from %s", len(df), path.name)
+        for col in COLUMNS:
+            if col not in df.columns:
+                df[col] = ""
+        frames.append(df[COLUMNS])
+    if not frames:
+        log.warning("the assessment layer will be empty")
         return pd.DataFrame(columns=COLUMNS)
-    df = pd.read_csv(path)
-    missing = [c for c in ("subject_code", "layer", "text") if c not in df.columns]
-    if missing:
-        raise SystemExit(f"{path} is missing columns {missing}; see data/labels/README.md")
-    df = df[df["layer"].astype(str).str.strip().str.lower() == "assessment"].copy()
-    log.info("read %d assessment rows from %s", len(df), path.name)
-    for col in COLUMNS:
-        if col not in df.columns:
-            df[col] = ""
-    return df[COLUMNS]
+    return pd.concat(frames, ignore_index=True)
 
 
 def build(subjects: pd.DataFrame, assessments: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
@@ -212,8 +219,9 @@ def main() -> None:
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--subjects", type=Path, default=DEFAULT_SUBJECTS,
                         help="uts_subjects_2026.csv from the handbook collection")
-    parser.add_argument("--assessments", type=Path, default=DEFAULT_ASSESSMENTS,
-                        help="data/labels/subject_content.csv; assessment rows are merged in")
+    parser.add_argument("--assessments", type=Path, nargs="+",
+                        default=[DEFAULT_ASSESSMENTS, DEFAULT_SCRAPED_ASSESSMENTS],
+                        help="files whose assessment rows are merged in (hand-collected, then scraped)")
     parser.add_argument("--courses", nargs="*", default=None,
                         help="keep only subjects in these course codes, e.g. C04372")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
@@ -255,8 +263,8 @@ def main() -> None:
                      ", ".join(str(c) for c in codes))
     if not len(df[df.layer == "assessment"]):
         log.info("")
-        log.info("No assessment layer yet. It is hand-collected (Akash, team plan 6 Oct);")
-        log.info("drop the rows into data/labels/subject_content.csv and re-run.")
+        log.info("No assessment layer: run data-eda/src/scrape_assessments.py, or drop hand-collected")
+        log.info("rows into data/labels/subject_content.csv, and re-run.")
 
 
 if __name__ == "__main__":
