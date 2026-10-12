@@ -1,0 +1,108 @@
+skill,category,n_ads,pct_ads,total_ads_in_sample
+Python,Programming,124,64.2,193
+SQL,Programming,108,56.0,193
+Statistics,Statistics,72,37.3,193
+Teamwork,Professional,70,36.3,193
+Leadership,Professional,62,32.1,193
+Problem solving,Professional,50,25.9,193
+Power BI,Visualisation,49,25.4,193
+Communication,Professional,49,25.4,193
+Tableau,Visualisation,45,23.3,193
+Agile,Professional,45,23.3,193
+AWS,Cloud,44,22.8,193
+Data visualisation,Visualisation,43,22.3,193
+Azure,Cloud,42,21.8,193
+ETL,Engineering,39,20.2,193
+Excel,Visualisation,36,18.7,193
+Optimisation,Statistics,32,16.6,193
+Google Cloud,Cloud,27,14.0,193
+Documentation,Professional,25,13.0,193
+Stakeholder management,Professional,24,12.4,193
+Data modelling,Databases,23,11.9,193
+Time series forecasting,Machine learning,22,11.4,193
+Natural language processing,NLP,22,11.4,193
+Data warehousing,Databases,22,11.4,193
+CI/CD,Engineering,21,10.9,193
+Java,Programming,21,10.9,193
+Spark,Data wrangling,21,10.9,193
+Data quality,Governance,20,10.4,193
+Git,Engineering,19,9.8,193
+Snowflake,Cloud,19,9.8,193
+Project management,Professional,18,9.3,193
+Deep learning,Deep learning,17,8.8,193
+SQL Server,Databases,17,8.8,193
+R,Programming,16,8.3,193
+Requirements gathering,Professional,16,8.3,193
+Scala,Programming,16,8.3,193
+Business acumen,Professional,15,7.8,193
+Data governance,Governance,13,6.7,193
+Data cleaning,Data wrangling,13,6.7,193
+Presentation skills,Professional,12,6.2,193
+C++,Programming,11,5.7,193
+Databricks,Data wrangling,11,5.7,193
+TensorFlow,Deep learning,11,5.7,193
+Hadoop,Data wrangling,10,5.2,193
+SAS,Programming,10,5.2,193
+Computer vision,Computer vision,10,5.2,193
+JavaScript,Programming,10,5.2,193
+Clustering,Machine learning,9,4.7,193
+Docker,Engineering,9,4.7,193
+BigQuery,Cloud,9,4.7,193
+MySQL,Databases,8,4.1,193
+Kubernetes,Engineering,8,4.1,193
+MLOps,Engineering,7,3.6,193
+Shell scripting,Programming,7,3.6,193
+dbt,Engineering,7,3.6,193
+PyTorch,Deep learning,6,3.1,193
+Redshift,Cloud,6,3.1,193
+Qlik,Visualisation,6,3.1,193
+Looker,Visualisation,6,3.1,193
+scikit-learn,Machine learning,5,2.6,193
+Azure ML,Cloud,5,2.6,193
+Airflow,Engineering,5,2.6,193
+Feature engineering,Machine learning,5,2.6,193
+Econometrics,Statistics,5,2.6,193
+NumPy,Data wrangling,4,2.1,193
+NoSQL,Databases,4,2.1,193
+matplotlib,Visualisation,4,2.1,193
+Keras,Deep learning,4,2.1,193
+A/B testing,Statistics,4,2.1,193
+Bayesian methods,Statistics,4,2.1,193
+C#,Programming,4,2.1,193
+Data security,Governance,4,2.1,193
+Anomaly detection,Machine learning,3,1.6,193
+Data privacy,Governance,3,1.6,193
+Terraform,Engineering,3,1.6,193
+Sentiment analysis,NLP,3,1.6,193
+PostgreSQL,Databases,3,1.6,193
+Jenkins,Engineering,3,1.6,193
+Linear regression,Machine learning,3,1.6,193
+Julia,Programming,3,1.6,193
+Random forest,Machine learning,3,1.6,193
+Support vector machines,Machine learning,3,1.6,193
+Experimental design,Statistics,2,1.0,193
+Hyperparameter tuning,Machine learning,2,1.0,193
+pandas,Data wrangling,2,1.0,193
+XGBoost,Machine learning,2,1.0,193
+VBA,Programming,2,1.0,193
+Hypothesis testing,Statistics,2,1.0,193
+Gradient boosting,Machine learning,2,1.0,193
+D3.js,Visualisation,2,1.0,193
+MATLAB,Programming,2,1.0,193
+Oracle,Databases,2,1.0,193
+Causal inference,Statistics,1,0.5,193
+CatBoost,Machine learning,1,0.5,193
+BERT,NLP,1,0.5,193
+OpenCV,Computer vision,1,0.5,193
+Kubeflow,Engineering,1,0.5,193
+Logistic regression,Machine learning,1,0.5,193
+MongoDB,Databases,1,0.5,193
+NLTK,NLP,1,0.5,193
+Probability,Statistics,1,0.5,193
+Plotly,Visualisation,1,0.5,193
+SageMaker,Cloud,1,0.5,193
+Redis,Databases,1,0.5,193
+Topic modelling,NLP,1,0.5,193
+Vertex AI,Cloud,1,0.5,193
+seaborn,Visualisation,1,0.5,193
+spaCy,NLP,1,0.5,193

@@ -196,19 +196,19 @@ ETHICS Process in memory, do not commit resumes to the repo, and mask personal
  5. THINGS THAT WILL EMBARRASS US IF WE GET THEM WRONG
 ================================================================================
 
- 0. EVERY PERCENTAGE IN THIS FOLDER IS A SLIGHT UNDER-COUNT.
-    80.4% of the Seek ads (2,577 of 3,204) have HTML stripped without
-    whitespace put back, so real mentions are welded to the next word:
-    "...Power BI and TableauSuperior analytical skills...". Our word
-    boundaries correctly refuse those, so we miss them. Measured against the
-    author's own flags: 365 mentions across 11 tools, worth about +3pp on
-    Python (82.8 -> ~85.8) and SQL (56.8 -> ~59.9). Ranking is unaffected.
-    If anyone asks why our Python figure is lower than a published one, this
-    is why. FIXED in data/clean/jobs_au_seek_datascientist_2019-2022_clean.csv
+ 0. COUNTS ON THE RAW SEEK TEXT ARE SLIGHT UNDER-COUNTS - USE THE CLEAN FILE.
+    80.4% of the raw Seek ads (2,577 of 3,204) had HTML stripped without
+    whitespace put back, so real mentions were welded to the next word:
+    "...Power BI and TableauSuperior analytical skills...". Word boundaries
+    correctly refuse those, so counts on the raw text miss them.
+    FIXED in data/clean/jobs_au_seek_datascientist_2019-2022_clean.csv
     (src/clean_seek.py): a join is split only where the desktop rendering of
     the same ad shows a break, so "JavaScript" is never split. On the clean
-    text Python is 84.5%, ranking unchanged (rho 0.9997). The poster and
-    data/processed/ still use the old text.
+    text Python is 84.5% (raw 82.8%) and SQL 57.0% (raw 56.8%); no skill
+    goes down and the ranking is unchanged (rho 0.9996). Some joins cannot
+    be recovered because both renderings are glued, which is why SQL moves
+    less than the 365 mentions measured against the author's flags suggest.
+    The poster and data/processed/skill_counts_v2.csv still use the raw text.
 
  1. THE AUSTRALIAN ADS ARE 2019-2022.
     No LLM, RAG, prompt engineering or LangChain appears, because those tools

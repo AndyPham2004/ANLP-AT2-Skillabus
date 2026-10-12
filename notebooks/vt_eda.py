@@ -1,0 +1,499 @@
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# %% [markdown]
+# # Skillabus: exploratory data analysis
+#
+# 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 10 Oct 2026
+#
+# **Runs on committed files only** (`data-eda/data/clean/`, `data-eda/outputs/`,
+# `data/processed/`), so it works on a fresh clone. Raw downloads are not needed; each
+# section names the script that built its input. Figures for the report are written to
+# `data-eda/outputs/figures/`.
+#
+# Each section answers a question the app depends on:
+#
+# 1. What data do we have, and what is each file for?
+# 2. Is the ad text clean enough to extract skills from?
+# 3. What do Australian employers ask for?
+# 4. Can we trust the extractor?
+# 5. Does the ranking hold on other platforms and in other markets?
+# 6. What changed after 2022?
+# 7. What does the UTS curriculum cover?
+# 8. Are the resumes usable?
+# 9. How far does ESCO reach?
+# 10. What this means for the app
+
+# %%
+import logging
+import math
+import re
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+REPO = Path.cwd().parent if Path.cwd().name == "notebooks" else Path.cwd()
+DE = REPO / "data-eda"
+CLEAN, OUT, PROC = DE / "data" / "clean", DE / "outputs", REPO / "data" / "processed"
+FIG = OUT / "figures"
+FIG.mkdir(parents=True, exist_ok=True)
+sys.path.insert(0, str(DE / "src"))
+logging.getLogger("extract_skills").setLevel(logging.WARNING)
+
+from extract_skills import build_patterns, extract  # noqa: E402
+
+pd.set_option("display.max_colwidth", 80)
+pd.set_option("display.width", 140)
+
+# Team colours: teal = market / covered, copper = gap. Checked for colour-blind
+# separation (OKLab dE 9.6 protan, 15.7 deutan, 27.2 tritan) and contrast on white.
+TEAL, COPPER, INK, MUTED, GRID = "#0F6E68", "#B8541F", "#1B2530", "#5C6974", "#E3E8E6"
+plt.rcParams.update({
+    "font.size": 10, "axes.edgecolor": GRID, "axes.labelcolor": INK,
+    "xtick.color": MUTED, "ytick.color": INK, "axes.spines.top": False,
+    "axes.spines.right": False, "figure.dpi": 110, "savefig.dpi": 200,
+    "savefig.bbox": "tight",
+})
+
+SEED = PROC / "skills_seed_v2.csv"          # the one dictionary the app uses (138 skills)
+patterns = build_patterns(SEED)
+seed = pd.read_csv(SEED, skiprows=1)         # skiprows, not comment="#": the file contains C#
+cat = seed.set_index("canonical").category
+
+
+def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """95% Wilson interval for k of n, in percent."""
+    p = k / n
+    c = (p + z * z / (2 * n)) / (1 + z * z / n)
+    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
+    return 100 * max(0, c - h), 100 * min(1, c + h)
+
+
+def skill_shares(df: pd.DataFrame, text: str = "description", pats=patterns) -> pd.Series:
+    """Percent of ads in df naming each skill."""
+    long = extract(df, text, "ad_id", pats)
+    return (100 * long.groupby("skill").ad_id.nunique() / len(df)).sort_values(ascending=False)
+
+
+def spearman(a: pd.Series, b: pd.Series) -> tuple[float, int]:
+    """Rank correlation over technical skills with a non-zero share (to 0.1%) in both corpora.
+
+    This is the poster's definition, and it reproduces the poster's 0.819. A skill in 1
+    of 3,204 ads rounds to 0.0% and is left out.
+    """
+    a, b = a.round(1), b.round(1)
+    shared = [k for k in a.index.intersection(b.index)
+              if cat.get(k) != "Professional" and a[k] > 0 and b[k] > 0]
+    return float(np.corrcoef(a[shared].rank(), b[shared].rank())[0, 1]), len(shared)
+
+# %% [markdown]
+# ## 1. What data do we have?
+
+# %%
+seek = pd.read_csv(CLEAN / "jobs_au_seek_datascientist_2019-2022_clean.csv", parse_dates=["listingDate"])
+recent = pd.read_csv(CLEAN / "jobs_au_recent_2024-2026_clean.csv")
+resumes = pd.read_csv(CLEAN / "resumes_us_2021_clean.csv")
+esco = pd.read_csv(CLEAN / "esco_skills_clean.csv")
+lookup = pd.read_csv(CLEAN / "esco_label_lookup.csv")
+label_sample = pd.read_csv(CLEAN / "seek_label_sample_200.csv")
+profiles = pd.read_csv(PROC / "subject_profiles.csv")
+
+inventory = pd.DataFrame([
+    ("Seek Data Scientist ads", len(seek), "2019-22", "demand_pct (main demand)", "clean_seek.py"),
+    ("Recent AU data roles", len(recent), "Jan 2024, Sept 2026", "demand_pct_2026, trend", "build_recent_sample.py"),
+    ("Subject profile rows", len(profiles), f"{profiles.subject_code.nunique()} subjects, 2026",
+     "recommend(), chat", "build_subject_profiles.py"),
+    ("Resumes", len(resumes), "2021", "test inputs, CV-JD pairs", "clean_resumes.py"),
+    ("ESCO skill concepts", len(esco), "v1.2.1", "normalise()", "clean_esco.py"),
+    ("ESCO label lookup rows", len(lookup), "v1.2.1", "normalise()", "clean_esco.py"),
+    ("Label sample (ads)", len(label_sample), "2019-22", "extraction test set", "make_label_sample.py"),
+    ("Skill dictionary", len(seed), "v2", "extract() tier 1", "data/processed/"),
+], columns=["data", "rows", "period", "used by", "built by"])
+inventory
+
+# %% [markdown]
+# ### The main corpus: 3,204 Seek Data Scientist ads
+#
+# A published Kaggle dataset (nomilk); we did not scrape Seek. Checks that it is
+# real rather than generated: dates, geography, employers and ad length should
+# look like a labour market.
+
+# %%
+print(f"listing dates: {seek.listingDate.min():%b %Y} to {seek.listingDate.max():%b %Y}")
+print(f"employers: {seek.company.nunique():,}  |  advertisers: {seek.advertiser.nunique():,}")
+top10 = seek.company.value_counts().head(10)
+print(f"top 10 employers hold {100 * top10.sum() / len(seek):.1f}% of ads")
+L = seek.description.str.len()
+print(f"ad length: median {int(L.median()):,} chars, 10th-90th percentile "
+      f"{int(L.quantile(.1)):,}-{int(L.quantile(.9)):,}")
+print(f"exact duplicate descriptions: {seek.description.duplicated().sum()}")
+display(seek.listingDate.dt.year.value_counts().sort_index().rename("ads").to_frame().T)
+display(seek.state.value_counts().head(6).rename("ads").to_frame().T)
+
+# %% [markdown]
+# The ads run Feb 2019 to Jan 2022, with only 90 in 2022, and no employer dominates.
+# Many share their text exactly with another ad. Are those errors or re-listings?
+
+# %%
+dup = seek[seek.description.duplicated(keep=False)].assign(
+    employer=lambda d: d.company.fillna(d.advertiser))   # recruiter ads often leave company blank
+groups = dup.groupby("description").agg(company=("employer", "nunique"), date=("listingDate", "nunique"),
+                                        city=("city", "nunique"))
+print(f"unique ad texts: {seek.description.nunique():,} of {len(seek):,} listings")
+print(f"duplicate groups: {len(groups):,} | same employer in {100 * (groups.company == 1).mean():.0f}% | "
+      f"posted on another date in {100 * (groups.date > 1).mean():.0f}% | in another city in "
+      f"{100 * (groups.city > 1).mean():.0f}%")
+
+# %% [markdown]
+# Every repeat comes from the same employer, re-posted later or in another city:
+# ordinary job-board behaviour, not a data error. Counts below are per listing, as on
+# the poster; section 3 checks that counting unique ads instead changes nothing.
+
+# %% [markdown]
+# ## 2. Is the ad text clean enough?
+#
+# The source dataset stripped HTML without putting spaces back, so list items
+# welded together ("...Power BI and TableauSuperior..."). `clean_seek.py` repairs
+# this using the dataset's second rendering of each ad as evidence: a join is split
+# only where the desktop text shows a break, which leaves real words like
+# JavaScript alone. The joins still left in the clean text should be real words:
+
+# %%
+joins = pd.Series([w for t in seek.description for w in re.findall(r"\b\w*[a-z][A-Z]\w*\b", t)])
+print("most common remaining lower-to-upper joins:")
+print(joins.value_counts().head(15).to_dict())
+
+# %% [markdown]
+# They are product names, not damage. What the repair changed, using the same
+# 133-skill dictionary as the poster so the comparison is like for like:
+
+# %%
+poster = pd.read_csv(OUT / "skill_counts_PRIMARY.csv").set_index("skill").pct_ads   # raw text, Sept
+clean_133 = skill_shares(seek.assign(ad_id=seek.ad_id), pats=build_patterns(DE / "config" / "skills_seed.csv"))
+delta = (clean_133.reindex(poster.index).fillna(0) - poster).round(1)
+rho, n = spearman(poster, clean_133)
+print(f"rank correlation raw vs clean: {rho:.4f} over {n} skills")
+print(f"skills that went down: {(delta < -0.05).sum()}  |  largest rise: {delta.max():.1f} pts ({delta.idxmax()})")
+delta.sort_values(ascending=False).head(6).rename("change, pts").to_frame().T
+
+# %% [markdown]
+# ## 3. What do Australian employers ask for?
+#
+# From here on: the app's v2 dictionary (138 skills) on the clean text.
+
+# %%
+seek_ids = seek.assign(ad_id=seek.ad_id)
+long_seek = extract(seek_ids, "description", "ad_id", patterns)
+share = (100 * long_seek.groupby("skill").ad_id.nunique() / len(seek)).sort_values(ascending=False)
+demand = share.rename("pct").to_frame().assign(category=lambda d: d.index.map(cat))
+tech = demand[demand.category != "Professional"]
+prof = demand[demand.category == "Professional"]
+print("top professional skills:", prof.head(5).pct.round(1).to_dict())
+print(f"technical skills in >=20% of ads: {(tech.pct >= 20).sum()}  |  in >=10%: {(tech.pct >= 10).sum()}  "
+      f"|  in >=1%: {(tech.pct >= 1).sum()} of {len(seed)}")
+tech.head(15).round(1)
+
+# %%
+top = tech.head(15).iloc[::-1]
+fig, ax = plt.subplots(figsize=(7, 5))
+ax.barh(top.index, top.pct, color=TEAL, height=0.68)
+for y, v in enumerate(top.pct):
+    ax.text(v + 1, y, f"{v:.0f}%", va="center", color=INK, fontsize=9)
+ax.set_xlim(0, 100)
+ax.set_xticks([])
+ax.spines["bottom"].set_visible(False)
+ax.tick_params(axis="y", length=0)
+ax.set_title("Technical skills named in Australian Data Scientist ads", loc="left", color=INK, fontsize=12)
+fig.subplots_adjust(bottom=0.06)
+fig.text(0.01, 0.0, f"Seek Australia 2019-22, n = {len(seek):,} ads, clean text, 138-skill dictionary",
+         color=MUTED, fontsize=8)
+fig.savefig(FIG / "fig1_top_skills.png")
+plt.show()
+
+# %%
+uniq = seek_ids.drop_duplicates("description")
+share_u = skill_shares(uniq)
+r_u, n_u = spearman(share, share_u)
+change = (share_u.reindex(share.index).fillna(0) - share).abs()
+print(f"per listing (n = {len(seek):,}) vs per unique ad (n = {len(uniq):,}): rho {r_u:.4f} over {n_u} "
+      f"technical skills, largest change {change.max():.1f} points")
+
+# %% [markdown]
+# How many skills does one ad ask for? This sets how many gaps a typical user sees.
+
+# %%
+tech_per_ad = long_seek[long_seek.category != "Professional"].groupby("ad_id").skill.nunique() \
+    .reindex(seek.ad_id, fill_value=0)
+print(f"technical skills per ad: median {tech_per_ad.median():.0f}, "
+      f"interquartile {tech_per_ad.quantile(.25):.0f}-{tech_per_ad.quantile(.75):.0f}, "
+      f"ads naming none: {(tech_per_ad == 0).sum()}")
+ids = lambda s: set(long_seek[long_seek.skill == s].ad_id)
+core = ids("Python") & ids("SQL") & ids("Statistics")
+print(f"ads asking for Python AND SQL AND statistics: {100 * len(core) / len(seek):.1f}%")
+
+# %% [markdown]
+# ## 4. Can we trust the extractor?
+#
+# The Kaggle dataset ships the author's own flags for 25 tools on the same ads, so
+# we can compare two independent extractors on all 3,204 ads (`validate_against_authorflags.py`).
+# The author's flags are not ground truth, so this reports agreement (Cohen's kappa),
+# not accuracy.
+
+# %%
+agree = pd.read_csv(OUT / "extractor_agreement.csv")
+print(f"median kappa {agree.kappa.median():.3f} over {len(agree)} tools; "
+      f"{(agree.kappa >= 0.6).sum()} at 0.60 or above (substantial)")
+agree[["skill", "ours_pct", "theirs_pct", "agreement_pct", "kappa", "ours_only", "theirs_only"]]
+
+# %% [markdown]
+# Where the two disagree, which side is wrong? `glued_our_miss` = the term is in the
+# ad but welded to the next word (our miss, on the raw text); `absent_their_fp` = the
+# term is not in the ad at all (their flag cannot be right).
+
+# %%
+parts = pd.read_csv(OUT / "extractor_agreement_decomposed.csv")
+print(f"their extra positives with the term absent from the ad: "
+      f"{parts.absent_their_fp.sum():,} of {parts.theirs_only.sum():,}")
+parts
+
+# %% [markdown]
+# Known blind spots of a dictionary, by design: a bare "R" matches "R&D" and a bare
+# "Go" is the verb, so both are only counted in explicit forms and are under-counted.
+
+# %%
+demand.loc[demand.index.isin(["R", "Go", "Artificial intelligence"]), ["pct"]].round(1).T
+
+# %% [markdown]
+# ## 5. Does the ranking hold elsewhere?
+#
+# Same 133-skill dictionary throughout, so each comparison measures the market, not
+# the method. Each comparison changes something different.
+
+# %%
+p133 = build_patterns(DE / "config" / "skills_seed.csv")
+li_us = pd.read_csv(OUT / "skill_counts_linkedin_us.csv").set_index("skill").pct_ads
+gd_au = pd.read_csv(OUT / "skill_counts_glassdoor_au_2022.csv").set_index("skill").pct_ads
+jan24 = recent[(recent.period == "2024-01") & recent.full_text]
+li_au24 = skill_shares(jan24, pats=p133)
+checks = []
+for name, s, n, changes in [
+    ("Glassdoor Australia, 2022", gd_au, int(pd.read_csv(OUT / "skill_counts_glassdoor_au_2022.csv").total_ads_in_sample[0]),
+     "platform only"),
+    ("LinkedIn US, 2023-24 (Data Scientist)", li_us, int(pd.read_csv(OUT / "skill_counts_linkedin_us.csv").total_ads_in_sample[0]),
+     "country and year"),
+    ("LinkedIn Australia, Jan 2024 (data roles)", li_au24, len(jan24), "year and role mix"),
+]:
+    r, k = spearman(poster, s)
+    checks.append((name, n, changes, round(r, 3), k))
+pd.DataFrame(checks, columns=["compared with Seek AU 2019-22", "ads", "what differs", "Spearman rho", "shared skills"])
+
+# %% [markdown]
+# ## 6. What changed after 2022?
+#
+# `data/processed/skill_counts_2026.csv` (`recount_recent.py`): every skill in three
+# periods, same method. Adzuna rows are excluded because the API cuts their text at
+# 500 characters. The 2026 sample is 22 full-text ads, so intervals are wide.
+
+# %%
+c26 = pd.read_csv(PROC / "skill_counts_2026.csv")
+LLM = ["Large language models", "Generative AI", "Prompt engineering", "RAG",
+       "LangChain", "Vector databases", "Hugging Face", "Transformers"]
+c26[c26.skill.isin(LLM)][["skill", "pct_2019_22", "pct_2024_01", "n_2026", "pct_2026",
+                          "pct_2026_low", "pct_2026_high"]].sort_values("n_2026", ascending=False)
+
+# %%
+full = recent[recent.full_text]
+long_recent = extract(full, "description", "ad_id", patterns)
+llm_ids = set(long_recent[long_recent.skill.isin(LLM)].ad_id) | set(long_seek[long_seek.skill.isin(LLM)].ad_id)
+periods = [("2019-22\nSeek", seek_ids), ("Jan 2024\nLinkedIn", full[full.period == "2024-01"]),
+           ("Sept 2026\njob boards", full[full.period == "2026-09"])]
+rows = []
+for label, d in periods:
+    k = d.ad_id.isin(llm_ids).sum()
+    lo, hi = wilson(k, len(d))
+    rows.append((label.replace("\n", " "), len(d), k, 100 * k / len(d), lo, hi))
+trend = pd.DataFrame(rows, columns=["period", "ads", "with LLM-era skill", "pct", "low", "high"])
+trend.round(1)
+
+# %%
+fig, ax = plt.subplots(figsize=(6.5, 3.6))
+x = np.arange(len(trend))
+ax.errorbar(x, trend.pct, yerr=[trend.pct - trend.low, trend.high - trend.pct], fmt="none",
+            ecolor=MUTED, elinewidth=1.5, capsize=4)
+ax.plot(x, trend.pct, "o", color=TEAL, markersize=9)
+for i, r in trend.iterrows():
+    ax.text(i + 0.08, r.pct, f"{r.pct:.0f}%  ({r['with LLM-era skill']} of {r.ads:,})", va="center",
+            color=INK, fontsize=9)
+ax.set_xticks(x, [p[0] for p in periods])
+ax.set_ylim(-3, 80)
+ax.set_xlim(-0.4, 2.9)
+ax.set_ylabel("ads naming an LLM-era skill (%)")
+ax.yaxis.grid(True, color=GRID)
+ax.set_axisbelow(True)
+ax.set_title("LLM-era skills in Australian data ads", loc="left", color=INK, fontsize=12)
+fig.text(0.01, -0.06, "LLMs, generative AI, prompt engineering, RAG, LangChain, vector databases, Hugging Face, "
+         "transformers. Bars: 95% Wilson interval.", color=MUTED, fontsize=8)
+fig.savefig(FIG / "fig2_llm_trend.png")
+plt.show()
+
+# %% [markdown]
+# **Is that just the role mix?** The 2026 sample includes AI-titled engineering roles,
+# which mention LLMs by definition. Splitting by title:
+
+# %%
+full = full.assign(ai_title=full.title.str.contains(r"\bAI\b|machine learning|\bML\b|research scien",
+                                                    case=False))
+split = (full.assign(llm=full.ad_id.isin(llm_ids))
+             .groupby(["period", "ai_title"]).llm.agg(ads="size", with_llm="sum"))
+split["pct"] = (100 * split.with_llm / split.ads).round(1)
+split
+
+# %% [markdown]
+# New tools that are not in our dictionary at all, by period. These are the
+# "emerging" skills the app has to tag rather than look up:
+
+# %%
+NEW_TOOLS = ["LangGraph", "LangSmith", "LlamaIndex", "GraphRAG", "DeepSpeed", "vLLM", "Ollama",
+             "OpenAI", "Anthropic", "Claude", "Gemini", "Bedrock", "ChatGPT", "Copilot"]
+def mentions(d, term):
+    return int(d.description.str.contains(rf"(?<![A-Za-z]){re.escape(term)}(?![A-Za-z])", regex=True).sum())
+new = pd.DataFrame({label.replace("\n", " "): [mentions(d, t) for t in NEW_TOOLS] for label, d in periods},
+                   index=NEW_TOOLS)
+in_dict = set(seed.canonical.str.lower())
+new[new.sum(axis=1) > 0].assign(in_dictionary=lambda d: [t.lower() in in_dict for t in d.index])
+
+# %% [markdown]
+# ## 7. What does the UTS curriculum cover?
+#
+# `data/processed/subject_profiles.csv` (`build_subject_profiles.py`): one row per
+# learning objective, weekly topic or description sentence.
+
+# %%
+profiles["mdsi"] = profiles.course.fillna("").str.contains("C04372")
+layer_table = profiles.pivot_table(index="mdsi", columns="layer", values="text", aggfunc="size", fill_value=0)
+layer_table.index = layer_table.index.map({True: "MDSI (19 subjects)", False: "other courses"})
+display(layer_table)
+mdsi = profiles[profiles.mdsi]
+per_subject = mdsi.pivot_table(index=["subject_code", "subject_name"], columns="layer", values="text",
+                               aggfunc="size", fill_value=0)
+print("MDSI subjects missing a layer:")
+per_subject[(per_subject == 0).any(axis=1)]
+
+# %% [markdown]
+# Coverage of market demand: for each of the 25 most-demanded technical skills, how
+# many subjects name it, and is one of them in MDSI?
+
+# %%
+prof_ids = profiles.reset_index().rename(columns={"index": "ad_id"})
+long_prof = extract(prof_ids, "text", "ad_id", patterns).merge(
+    prof_ids[["ad_id", "subject_code", "mdsi"]], on="ad_id")
+top25 = tech.head(25).copy()
+top25["subjects"] = [long_prof[long_prof.skill == s].subject_code.nunique() for s in top25.index]
+top25["mdsi_subjects"] = [long_prof[(long_prof.skill == s) & long_prof.mdsi].subject_code.nunique()
+                          for s in top25.index]
+print(f"taught by at least one of the 70 subjects: {(top25.subjects > 0).sum()} of 25  |  "
+      f"by an MDSI subject: {(top25.mdsi_subjects > 0).sum()} of 25")
+print("not taught anywhere in the 70:", list(top25[top25.subjects == 0].index))
+top25.round(1)
+
+# %%
+d = top25.iloc[::-1]
+fig, ax = plt.subplots(figsize=(7.2, 7))
+colors = [TEAL if s > 0 else COPPER for s in d.subjects]
+ax.barh(d.index, d.pct, color=colors, height=0.68)
+for y, (v, m, s) in enumerate(zip(d.pct, d.mdsi_subjects, d.subjects)):
+    note = "no UTS subject" if s == 0 else (f"{s} subject{'s' if s > 1 else ''}" + (" incl. MDSI" if m else ""))
+    ax.text(v + 1, y, f"{v:.0f}%  ·  {note}", va="center", color=INK, fontsize=8)
+ax.set_xlim(0, 120)
+ax.set_xticks([])
+ax.spines["bottom"].set_visible(False)
+ax.tick_params(axis="y", length=0)
+ax.legend(handles=[plt.Rectangle((0, 0), 1, 1, color=TEAL), plt.Rectangle((0, 0), 1, 1, color=COPPER)],
+          labels=["taught by a UTS subject", "not taught in the 70 subjects"], frameon=False,
+          loc="lower right", fontsize=8)
+ax.set_title("Market demand against the UTS curriculum", loc="left", color=INK, fontsize=12)
+fig.subplots_adjust(bottom=0.05)
+fig.text(0.01, 0.0, "Bar = share of 3,204 Seek ads 2019-22. Subjects: 70 UTS Handbook 2026 subjects, "
+         "learning objectives, topics and descriptions.", color=MUTED, fontsize=8)
+fig.savefig(FIG / "fig3_subject_coverage.png")
+plt.show()
+
+# %% [markdown]
+# The marker's example: does 36118 teach LLMs, and does any subject teach the LLM
+# toolchain?
+
+# %%
+for term, pat in {"large language models": r"large language model|\bLLMs?\b",
+                  "generative AI": r"generative a\.?i\b",
+                  "prompt engineering": r"prompt engineering",
+                  "RAG": r"retrieval[- ]augmented|\bRAG\b",
+                  "transformers / BERT / GPT": r"\btransformers?\b|\bBERT\b|\bGPT\b"}.items():
+    hit = profiles[profiles.text.str.contains(pat, case=False, regex=True)]
+    where = ", ".join(f"{r.subject_code} ({r.layer})" for r in hit.itertuples()) or "none of the 70 subjects"
+    print(f"{term:26s} {where}")
+
+# %% [markdown]
+# ## 8. Are the resumes usable?
+#
+# `resumes_us_2021_clean.csv` (`clean_resumes.py`): emails, phones, URLs and names
+# masked. There is no data-science category, so `n_data_skills` counts how many of
+# six core data skills each resume names.
+
+# %%
+print(f"resumes: {len(resumes):,} in {resumes.category.nunique()} categories")
+masks = {m: int(resumes.resume_text.str.count(re.escape(m)).sum()) for m in ["[NAME]", "[EMAIL]", "[PHONE]", "[URL]"]}
+print("masked tokens:", masks)
+print(f"length: median {int(resumes.resume_text.str.len().median()):,} chars")
+display(resumes.n_data_skills.value_counts().sort_index().rename("resumes").to_frame().T)
+print("categories of resumes with 2+ data skills:")
+resumes[resumes.n_data_skills >= 2].category.value_counts().head(8).to_frame().T
+
+# %% [markdown]
+# ## 9. How far does ESCO reach?
+
+# %%
+mapping = pd.read_csv(DE / "config" / "skill_to_esco.csv")
+mapped = (mapping.esco_uri.fillna("") != "").sum()
+amb = lookup[lookup.ambiguous]
+print(f"ESCO: {len(esco):,} concepts, {lookup.label.nunique():,} distinct labels")
+print(f"our dictionary mapped by exact label: {mapped} of {len(mapping)} ({mapped / len(mapping):.0%})")
+print(f"labels pointing at more than one concept: {amb.label.nunique():,} "
+      f"({100 * amb.label.nunique() / lookup.label.nunique():.1f}%)")
+probe = ["sql", "python (computer programming)", "machine learning", "deep learning", "tableau",
+         "data visualisation", "large language models", "power bi"]
+lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "ambiguous"]]
+
+# %% [markdown]
+# ## 10. What this means for the app
+#
+# | # | Finding | Evidence | For the app |
+# |---|---|---|---|
+# | 1 | A small core, then a long tail | Python, ML, SQL, statistics lead; few other skills pass 30% | gap charts are dominated by 3-4 skills; rank the tail by demand, not alphabetically |
+# | 1b | 697 listings are re-listings | 2,507 unique texts; per-listing and per-ad rankings agree (section 3) | keep n = 3,204 listings, and say so |
+# | 2 | The extractor agrees with an independent one | median kappa 0.637 over 14 tools on all 3,204 ads | dictionary tier is a defensible baseline |
+# | 3 | The ranking is not a Seek artefact | rank correlation 0.75 with Glassdoor Australia (same years), 0.82 with LinkedIn US; 0.61 with LinkedIn Australia 2024, an engineer-heavy mix | demand_pct can stand for "the Data Scientist market" |
+# | 4 | The 2019-22 corpus predates LLMs | LLM-era skills in 1 of 3,204 ads -> 2.4% (Jan 2024) -> 11 of 22 (2026); holds within non-AI titles | show the trend; flag LLM skills as emerging |
+# | 5 | 2026 is small and tech-heavy | 22 full-text ads; per-skill intervals of +-20 points | show 2026 as "n of 22", never a bare percentage |
+# | 6 | The data supports one role | the corpus is Data Scientist titles only; recent samples are too small to profile other roles | keep the role picker to Data Scientist |
+# | 7 | The curriculum covers most demand | 21 of the top 25 technical skills taught in at least one subject, 13 in MDSI; Scala, Power BI, Azure and Java in none | vendor tools get "no UTS subject" plus a self-study note |
+# | 8 | Subject text is uneven | no assessment layer; 9 MDSI subjects have no topic list | thin subjects rank low for lack of text, not content |
+# | 9 | Few resumes look like data profiles | 125 of 2,481 with 2+ data skills; none in a data category | draw CV-JD pairs from those 125 only |
+# | 10 | ESCO reaches little of the modern stack | 36% of our dictionary maps; 716 ambiguous labels incl. "sql" | normalise() needs the emerging tag and a tie-break for ambiguous labels |
+#
+# **Limitations to state in the report:** the main corpus is 2019-22 (Feb 2019 to
+# Jan 2022), Data Scientist titles only, and 22% re-listings; the 2026 sample is 22 ads from 8 employers, 12 of them Canva;
+# resumes are US 2021 and de-identified rather than anonymous; subject profiles come
+# from the public handbook and lack assessment detail; ESCO coverage of the modern
+# stack is low.

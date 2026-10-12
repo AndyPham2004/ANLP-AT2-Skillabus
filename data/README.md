@@ -8,7 +8,8 @@ downloads are not.
 | `data-eda/data/clean/` | cleaned Seek ads, the 200-ad label sample, de-identified resumes, ESCO skills and label lookup; **use these** | 46 MB | **in this repo** |
 | `data-eda/data/raw/` | the downloads, untouched; only needed to rebuild `clean/` | 655 MB | not in git: re-download from the Kaggle links below, or ask Van Thong for the zip |
 
-Start with `data-eda/data/clean/README.txt`; `data-eda/HOW_TO_USE_DATA.txt` says which file
+Start with `data-eda/data/clean/README.txt`; the EDA notebook is `notebooks/vt_eda.ipynb` (runs on
+committed files only, about 3 minutes; figures in `data-eda/outputs/figures/`); `data-eda/HOW_TO_USE_DATA.txt` says which file
 answers which question. Four clean files are over the 5 MB limit in CONTRIBUTING.md
 (Seek 9.7 MB, resumes 14.8 MB, ESCO skills 6.7 MB, ESCO lookup 14.3 MB); keeping them in the repo means
 everyone labels and evaluates on byte-identical files.
@@ -17,6 +18,7 @@ everyone labels and evaluates on byte-identical files.
 |---|---|---|---|---|
 | Seek Australia, Data Scientist ads (Kaggle, nomilk) | **3,204** full-text ads | 2019–22 | the demand side: every demand % | [kaggle](https://www.kaggle.com/datasets/nomilk/data-science-job-listings-australia-20192020) |
 | LinkedIn Job Postings (Kaggle, arshkon) | 123,849 ads, 99.9% US; 1,355 data roles | 2023–24 | validation only: ranking agrees with Seek at ρ = 0.819 | [kaggle](https://www.kaggle.com/datasets/arshkon/linkedin-job-postings) |
+| Glassdoor Australia (Kaggle, nadzmiagthomas) | 193 data roles, full text | Aug–Dec 2022 | platform check only: rank correlation 0.75 with Seek (technical skills) | [kaggle](https://www.kaggle.com/datasets/nadzmiagthomas/australia-data-science-jobs) |
 | ESCO v1.2.1 | 13,960 skill concepts, 100,886 labels | 2025 | the vocabulary `normalise()` maps to | [esco](https://esco.ec.europa.eu/en/use-esco/download) |
 | O*NET 31.0 | 8,753 tool names | 2026 | tools ESCO lacks | [onet](https://www.onetcenter.org/database.html) |
 | UTS Handbook 2026 | 70 subjects, 6 courses (19 MDSI) | 2026 | subject profiles | [handbook](https://coursehandbook.uts.edu.au) |
