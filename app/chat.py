@@ -8,15 +8,22 @@ retrieved passages themselves. Resumes are never sent to the model.
 from __future__ import annotations
 
 import os
+import re
 from functools import lru_cache
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+import numpy as np
+
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 import backend  # noqa: F401  (puts src/ on the path)
 import baseline
 
 MODEL = "gpt-4o-mini"
+# Words every question and every subject description share ("Which subject teaches ...",
+# "This subject teaches you ..."): left in, they rank 49016's description first for any question.
+STOP_WORDS = sorted(ENGLISH_STOP_WORDS | {"subject", "subjects", "teach", "teaches", "teaching", "taught",
+                                          "course", "courses", "student", "students", "uts"})
 LAYER_NAME = {"learning_objective": "learning objective", "assessment": "assessment",
               "weekly_topic": "topic", "description": "description"}
 
@@ -25,7 +32,7 @@ LAYER_NAME = {"learning_objective": "learning objective", "assessment": "assessm
 def _index():
     lay = baseline.resources().layers
     docs = (lay.subject_code + " " + lay.subject_name + ": " + lay.text).tolist()
-    vec = TfidfVectorizer(stop_words="english", ngram_range=(1, 2), sublinear_tf=True)
+    vec = TfidfVectorizer(stop_words=STOP_WORDS, ngram_range=(1, 2), sublinear_tf=True)
     return lay, vec, vec.fit_transform(docs)
 
 
@@ -37,6 +44,11 @@ def retrieve(question: str, k: int = 5) -> list[dict]:
         pass
     lay, vec, mat = _index()
     sims = cosine_similarity(vec.transform([question]), mat).ravel()
+    # TF-IDF cannot match a subject code; a question naming one ("what does 36118 teach?") searches that subject only.
+    codes = set(re.findall(r"\b\d{5}\b", question)) & set(lay.subject_code.astype(str))
+    if codes:
+        inside = lay.subject_code.astype(str).isin(codes).to_numpy()
+        sims = np.where(inside, sims + 1e-6, 0.0)  # + 1e-6 keeps that subject's rows even with no shared word
     out = []
     for i in sims.argsort()[::-1][:k]:
         if sims[i] <= 0:
