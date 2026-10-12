@@ -101,6 +101,7 @@ Raw files are never edited; the cleaned copies are rebuilt by scripts. Full note
 | File | Rows | Script | What changed |
 |---|---|---|---|
 | `jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 | `clean_seek.py` | 13,181 glued words split where the desktop rendering shows a break; Python 82.8% → 84.5%, ranking unchanged (ρ = 0.9997) |
+| `jobs_au_recent_2024-2026_clean.csv` | 179 | `build_recent_sample.py` | Australian data roles: 2026 job boards (22 full text) + Adzuna (33, text capped at 500) + LinkedIn Jan 2024 (124, Kaggle asaniczka, ODC-By). Periods kept separate |
 | `seek_label_sample_200.csv` | 200 | `make_label_sample.py` | seeded sample for labelling; 4 batches of 50, 20 marked for double labelling |
 | `resumes_us_2021_clean.csv` | 2,481 | `clean_resumes.py` | emails, phones, URLs and names masked (names: spaCy NER with filters that protect skills, 1,069 spans in 535 resumes); HTML copy dropped; `n_data_skills` added. **De-identified, not anonymous** |
 | `esco_skills_clean.csv` | 13,960 | `clean_esco.py` | alt labels pipe-separated instead of newline-in-cell |
