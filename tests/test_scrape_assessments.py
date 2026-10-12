@@ -18,6 +18,12 @@ ITEMS = [
 ]
 
 
+def test_html_entities_in_descriptions_are_unescaped():
+    item = {"number": "1", "name": "Brief", "assessment_type": "Report", "weight": "10", "individual": "Individual",
+            "description": "<p>topic of &#39;oral health&#39; &amp; hygiene</p>"}
+    assert task_text(item) == "Brief (Report, 10%, Individual). topic of 'oral health' & hygiene"
+
+
 def test_task_text_folds_type_weight_group_and_description():
     assert task_text(ITEMS[1]) == "Assessment 2: End-to-end NLP project (Report, 50%, Group, group and individually assessed)"
     assert task_text(ITEMS[2]) == "Assessment 1: Text Analysis (Report, 30%, Individual). Extract skills from job ads."

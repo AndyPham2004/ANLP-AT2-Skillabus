@@ -22,6 +22,7 @@ Writes data/processed/assessments_scraped.csv in the subject_profiles.csv shape
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import logging
 import re
@@ -49,7 +50,7 @@ def task_text(item: dict) -> str:
     bits = [b for b in [(item.get("assessment_type") or "").strip(),
                         f"{item['weight']}%" if item.get("weight") else "",
                         (item.get("individual") or "").strip()] if b]
-    desc = re.sub(r"<[^>]+>", " ", item.get("description") or "").strip()
+    desc = html.unescape(re.sub(r"<[^>]+>", " ", item.get("description") or "")).strip()
     desc = re.sub(r"\s+", " ", desc)
     text = f"{name} ({', '.join(bits)})" if bits else name
     return f"{text}. {desc}" if desc else text

@@ -41,13 +41,19 @@ EVOP = "https://studentforms.uts.edu.au/evop/access/search.cfm?subjectcode={code
 HEADERS = {"User-Agent": "Mozilla/5.0 (UTS 36118 student project)"}
 
 RULE = re.compile(r"Requisite rule:\s*(.+?)\s*Item\s+Type\s+Details")
+# The page also lists anti-requisites ("you cannot take this if you took ..."), same table shape.
+ANTI = re.compile(r"Anti-requisite\(s\).*?rule:\s*(.+?)\s*Item\s+Type\s+Details", re.S)
+NOT_FOUND = "There are no access restrictions enforced for this subject"
 # "1a Academic requisite 36100 Data Science ..." up to the next item id or "Note:"
 ITEM = re.compile(
     r"(?:(?<=\s)|^)(\d+[a-z]?)\s+(?:(Academic|Admission|Other)\s+)?(requisite|corequisite)\s+(.+?)"
     r"(?=\s+\d+[a-z]?\s+(?:(?:Academic|Admission|Other)\s+)?(?:requisite|corequisite)\s|\s*Note:|$)",
     re.S)
 CODE = re.compile(r"^(\d{5,6})\b")   # 36118, and six-digit codes such as 090014
-PREREQ_COLUMNS = ["subject_code", "rule", "item", "type", "requisite_code", "requisite_text", "source_url"]
+PREREQ_COLUMNS = ["subject_code", "kind", "rule", "item", "type", "requisite_code", "requisite_text", "evop_found",
+                  "source_url"]
+# kind: requisite (must hold before enrolling) or antirequisite (cannot be taken together with);
+# evop_found: n when the access-conditions site has no record of the code, so "no rule" is unverified.
 
 log = logging.getLogger("scrape_requisites")
 
@@ -58,14 +64,7 @@ def page_text(html: str) -> str:
     return re.sub(r"\s+", " ", html_lib.unescape(text)).strip()
 
 
-def parse_requisites(html: str) -> dict:
-    """The rule and its items from an access-conditions page; {"rule": "", "items": []} when none."""
-    text = page_text(html)
-    m = RULE.search(text)
-    if not m:
-        return {"rule": "", "items": []}
-    rule = m.group(1).strip()
-    body = text[m.end():]
+def _items(body: str) -> list[dict]:
     body = body[:body.find("Note:")] if "Note:" in body else body
     items = []
     for item, kind, keyword, detail in ITEM.findall(body):
@@ -74,7 +73,30 @@ def parse_requisites(html: str) -> dict:
         # "corequisite" (bare, or "Academic corequisite") may be taken in the same session: its own type
         kind = "corequisite" if keyword == "corequisite" else (kind or "other").lower()
         items.append({"item": item, "type": kind, "code": code.group(1) if code else "", "text": detail})
-    return {"rule": rule, "items": items}
+    return items
+
+
+def parse_requisites(html: str, code: str | None = None) -> dict:
+    """The rule and its items from an access-conditions page.
+
+    Returns rule, items, anti_rule, anti_items and found. `found` is False when the page is the
+    generic "no access restrictions" page without the subject's own heading (EVOP has no record of
+    the code), which must not be read as "confirmed: no prerequisites".
+    """
+    text = page_text(html)
+    found = True if code is None else (f"{code} " in text and NOT_FOUND not in text) or ("Requisite rule" in text)
+    out = {"rule": "", "items": [], "anti_rule": "", "anti_items": [], "found": found}
+    m = RULE.search(text)
+    if m:
+        out["rule"] = m.group(1).strip()
+        after = text[m.end():]
+        cut = after.find("Anti-requisite")
+        out["items"] = _items(after if cut < 0 else after[:cut])
+    a = ANTI.search(text)
+    if a:
+        out["anti_rule"] = a.group(1).strip()
+        out["anti_items"] = _items(text[a.end():])
+    return out
 
 
 def fetch(session: requests.Session, code: str) -> str | None:
@@ -115,15 +137,22 @@ def main() -> None:
         if html is None:
             failed.append(code)
         else:
-            out = parse_requisites(html)
+            out = parse_requisites(html, code)
             url = EVOP.format(code=code)
+            found = "y" if out["found"] else "n"
             if not out["items"]:
-                rows.append({"subject_code": code, "rule": out["rule"], "item": "", "type": "",
-                             "requisite_code": "", "requisite_text": "", "source_url": url})
+                rows.append({"subject_code": code, "kind": "requisite", "rule": out["rule"], "item": "", "type": "",
+                             "requisite_code": "", "requisite_text": "", "evop_found": found, "source_url": url})
             for it in out["items"]:
-                rows.append({"subject_code": code, "rule": out["rule"], "item": it["item"], "type": it["type"],
-                             "requisite_code": it["code"], "requisite_text": it["text"], "source_url": url})
-            log.info("[%d/%d] %s rule=%s items=%d", i, len(codes), code, out["rule"] or "-", len(out["items"]))
+                rows.append({"subject_code": code, "kind": "requisite", "rule": out["rule"], "item": it["item"],
+                             "type": it["type"], "requisite_code": it["code"], "requisite_text": it["text"],
+                             "evop_found": found, "source_url": url})
+            for it in out["anti_items"]:
+                rows.append({"subject_code": code, "kind": "antirequisite", "rule": out["anti_rule"], "item": it["item"],
+                             "type": it["type"], "requisite_code": it["code"], "requisite_text": it["text"],
+                             "evop_found": found, "source_url": url})
+            log.info("[%d/%d] %s rule=%s items=%d anti=%d found=%s", i, len(codes), code, out["rule"] or "-",
+                     len(out["items"]), len(out["anti_items"]), found)
         time.sleep(args.delay)
 
     df = pd.DataFrame(rows, columns=PREREQ_COLUMNS)

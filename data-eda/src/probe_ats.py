@@ -25,11 +25,9 @@ import pandas as pd
 import requests
 
 from build_recent_sample import DATA_TITLE
-from fetch_ats import AU_PATTERN, HEADERS, fetch_greenhouse, fetch_lever, fetch_smartrecruiters, to_text
+from fetch_ats import AU_PATTERN, HEADERS, fetch_ashby, fetch_greenhouse, fetch_lever, fetch_smartrecruiters, fetch_workable, to_text
 
 ROOT = Path(__file__).resolve().parents[1]
-ASHBY = "https://api.ashbyhq.com/posting-api/job-board/{slug}"
-WORKABLE = "https://apply.workable.com/api/v1/widget/accounts/{slug}"
 DS_TITLE = re.compile(r"data scien|applied scien|research scien|machine learning|\bML\b|AI scientist", re.I)
 BARE_AI = re.compile(r"\bAI\b", re.I)
 PLATFORMS = ("greenhouse", "lever", "smartrecruiters", "ashby", "workable")
@@ -60,26 +58,6 @@ def count_roles(rows: list[dict]) -> dict:
             "ds_au": sum(bool(DS_TITLE.search(r.get("title") or "")) for r in au)}
 
 
-def fetch_ashby(session, slug):
-    r = session.get(ASHBY.format(slug=slug), headers=HEADERS, timeout=30)
-    rows = [] if r.status_code != 200 else [
-        {"ad_id": f"as-{j.get('id')}", "source": "ashby", "title": j.get("title", ""), "company": slug,
-         "location": j.get("location", ""), "created": j.get("publishedAt", ""),
-         "description": to_text(j.get("descriptionHtml") or j.get("descriptionPlain")), "redirect_url": j.get("jobUrl", "")}
-        for j in r.json().get("jobs", [])]
-    return r.status_code, rows
-
-
-def fetch_workable(session, slug):
-    r = session.get(WORKABLE.format(slug=slug), params={"details": "true"}, headers=HEADERS, timeout=30)
-    rows = [] if r.status_code != 200 else [
-        {"ad_id": f"wk-{j.get('shortcode')}", "source": "workable", "title": j.get("title", ""), "company": slug,
-         "location": ", ".join(filter(None, [j.get("city"), j.get("state"), j.get("country")])),
-         "created": j.get("published_on", ""), "description": to_text(j.get("description")), "redirect_url": j.get("url", "")}
-        for j in r.json().get("jobs", [])]
-    return r.status_code, rows
-
-
 def probe(session, platform: str, slug: str) -> dict:
     try:
         if platform == "greenhouse":
@@ -97,9 +75,11 @@ def probe(session, platform: str, slug: str) -> dict:
             if code == 200 and (r.json().get("totalFound") or 0) > 0:
                 rows = fetch_smartrecruiters(session, slug, slug, False, au_only=True, delay=0.25)
         elif platform == "ashby":
-            code, rows = fetch_ashby(session, slug)
+            r = session.get(f"https://api.ashbyhq.com/posting-api/job-board/{slug}", headers=HEADERS, timeout=30)
+            code, rows = r.status_code, (fetch_ashby(session, slug, slug, False) if r.status_code == 200 else [])
         else:
-            code, rows = fetch_workable(session, slug)
+            r = session.get(f"https://apply.workable.com/api/v1/widget/accounts/{slug}", headers=HEADERS, timeout=30)
+            code, rows = r.status_code, (fetch_workable(session, slug, slug, False) if r.status_code == 200 else [])
     except (requests.RequestException, ValueError) as exc:
         log.warning("%s/%s -> %s", platform, slug, exc)
         return {"status": "error", "rows": []}

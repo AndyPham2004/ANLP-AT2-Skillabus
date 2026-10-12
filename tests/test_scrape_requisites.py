@@ -36,7 +36,26 @@ def test_mixed_rule_keeps_item_types_and_ids():
 
 
 def test_no_rule_gives_empty_rule_and_no_items():
-    assert parse_requisites(NONE) == {"rule": "", "items": []}
+    out = parse_requisites(NONE, "36100")
+    assert out["rule"] == "" and out["items"] == [] and out["found"] is True
+
+
+def test_generic_not_found_page_is_flagged():
+    page = "<html><body>Access Conditions There are no access restrictions enforced for this subject Note:</body></html>"
+    assert parse_requisites(page, "220700")["found"] is False
+
+
+ANTI = """<html><body>36100 Data Science for Innovation Anti-requisite(s) Anti-requisite rule: (1 AND 2) Item Type Details
+1 Academic requisite 31250 Introduction to Data Analytics
+2 Academic requisite 321130 Fundamentals of Data Analytics
+Note: See also</body></html>"""
+
+
+def test_anti_requisites_are_parsed_separately():
+    out = parse_requisites(ANTI, "36100")
+    assert out["rule"] == "" and out["items"] == []
+    assert out["anti_rule"] == "(1 AND 2)"
+    assert [(i["item"], i["code"]) for i in out["anti_items"]] == [("1", "31250"), ("2", "321130")]
 
 
 COREQ = """<html><body>Requisite rule: (((1 OR 1a)) OR (2 AND 3)) Item Type Details

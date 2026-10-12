@@ -59,7 +59,20 @@ MOJIBAKE = {
     "â\u0080¯": " ",    # narrow no-break space
     "Â ": " ",          # no-break space
     "Â": "",                 # stray, left over from the above
+    "â\u0080\u008b": "",   # zero-width space (13 Oct check: 7 rows)
+    "â\u0080\u0090": "-",  # hyphen U+2010 ("cyber-attack")
+    "â\u0080\u0091": "-",  # non-breaking hyphen U+2011
 }
+
+# Assessment descriptions often carry the subject's AI-use policy ("generative AI tools are not
+# permitted"); a keyword matcher then credits the subject with teaching generative AI. Such
+# sentences are dropped from the assessment layer; the policy is not what the student is graded on.
+AI_WORDS = re.compile(r"generative\s*AI|Gen\s?AI|ChatGPT|\bAI\s+tools?\b|artificial intelligence tools?", re.I)
+POLICY_WORDS = re.compile(r"permit|allow|prohibit|must not|should not|not to be used|acknowledg|declar|disclos|"
+                          r"\buse of\b|\bmay use\b|\bcan use\b|\bno\b|usage|guidelines|boundaries|help from|"
+                          r"academic integrity|cite|citation|reference any", re.I)
+PLACEHOLDER = re.compile(r"^\s*TBC\b", re.I)
+NUMBERED_TOPIC = re.compile(r"\s*\(\d{1,2}\)\s+")
 
 SLO_SPLIT = re.compile(r"\s*SLO\s*\d+\s*:\s*")
 CILO_TAIL = re.compile(r"\s*\(\s*CILOs?[^)]*\)\s*$", re.I)
@@ -89,9 +102,16 @@ def clean(raw) -> str:
 
 
 def split_outcomes(raw: str) -> list[str]:
-    """One string of 'SLO1: ... SLO2: ...' into one entry per outcome."""
+    """One string of 'SLO1: ... SLO2: ...' into one entry per outcome; 'TBC (B.1)' placeholders dropped."""
     parts = [p.strip() for p in SLO_SPLIT.split(clean(raw)) if p.strip()]
-    return [CILO_TAIL.sub("", p).strip() for p in parts]
+    return [CILO_TAIL.sub("", p).strip() for p in parts if not PLACEHOLDER.match(p)]
+
+
+def drop_ai_policy(text: str) -> str:
+    """Remove sentences that state the AI-use policy from an assessment description."""
+    parts = SENTENCE_SPLIT.split(text)
+    kept = [p for p in parts if not (AI_WORDS.search(p) and POLICY_WORDS.search(p))]
+    return " ".join(p.strip() for p in kept if p.strip())
 
 
 def split_topics(raw: str) -> tuple[list[str], bool]:
@@ -118,6 +138,8 @@ def split_topics(raw: str) -> tuple[list[str], bool]:
 
     parts = [p.strip(" .-") for p in TOPIC_SPLIT.split(text)]
     parts = [p for p in parts if len(p) >= MIN_TOPIC_CHARS]
+    if len(parts) == 1 and len(NUMBERED_TOPIC.findall(text)) >= 3:   # "(1) Cloud ... (2) Cloud ..." (42904)
+        parts = [p.strip(" .-") for p in NUMBERED_TOPIC.split(text) if len(p.strip(" .-")) >= MIN_TOPIC_CHARS]
     if len(parts) > 1:
         out: list[str] = []
         for part in parts:
@@ -158,7 +180,8 @@ def load_assessments(paths: list[Path] | Path) -> pd.DataFrame:
         if missing:
             raise SystemExit(f"{path} is missing columns {missing}; see data/labels/README.md")
         df = df[df["layer"].astype(str).str.strip().str.lower() == "assessment"].copy()
-        df["text"] = df["text"].map(clean)          # the handbook's encoding damage reaches these rows too
+        df["text"] = df["text"].map(clean).map(drop_ai_policy)   # encoding damage and AI-use policy sentences
+        df = df[df["text"].str.len() > 0]
         log.info("read %d assessment rows from %s", len(df), path.name)
         for col in COLUMNS:
             if col not in df.columns:
@@ -209,9 +232,9 @@ def build(subjects: pd.DataFrame, assessments: pd.DataFrame) -> tuple[pd.DataFra
     stats["dropped_duplicates"] = before - len(df)
 
     order = {"learning_objective": 0, "assessment": 1, "weekly_topic": 2, "description": 3}
-    df = df.sort_values(
-        ["subject_code", "layer", "text"], key=lambda c: c.map(order) if c.name == "layer" else c
-    ).reset_index(drop=True)
+    # Stable sort on subject and layer only, so SLO1..SLOn and task 1..n keep the handbook's order.
+    df = df.sort_values(["subject_code", "layer"], key=lambda c: c.map(order) if c.name == "layer" else c,
+                        kind="stable").reset_index(drop=True)
     return df, stats
 
 
