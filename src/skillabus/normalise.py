@@ -17,6 +17,7 @@ canonical (dictionary name, for demand lookups), how (which step) and similarity
 from __future__ import annotations
 
 import difflib
+import importlib.util
 import json
 import os
 import pickle
@@ -134,8 +135,12 @@ def _esco_vectors():
 
 
 def esco_nearest(phrases: list[str]) -> list[tuple[str, str, float] | None]:
-    """Nearest ESCO preferred label for each phrase as (uri, label, cosine), or None without the index."""
-    if os.getenv("SKILLABUS_NO_EMBED"):
+    """Nearest ESCO preferred label for each phrase as (uri, label, cosine), or None without the index.
+
+    Skipped where sentence-transformers is not installed: the deployed app leaves PyTorch out
+    (app/requirements.txt), and the other four steps still run there.
+    """
+    if os.getenv("SKILLABUS_NO_EMBED") or importlib.util.find_spec("sentence_transformers") is None:
         return [None] * len(phrases)
     vecs = _esco_vectors()
     if vecs is None or not phrases:
