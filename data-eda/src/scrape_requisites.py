@@ -46,7 +46,7 @@ ITEM = re.compile(
     r"(?:(?<=\s)|^)(\d+[a-z]?)\s+(?:(Academic|Admission|Other)\s+)?(requisite|corequisite)\s+(.+?)"
     r"(?=\s+\d+[a-z]?\s+(?:(?:Academic|Admission|Other)\s+)?(?:requisite|corequisite)\s|\s*Note:|$)",
     re.S)
-CODE = re.compile(r"^(\d{5})\b")
+CODE = re.compile(r"^(\d{5,6})\b")   # 36118, and six-digit codes such as 090014
 PREREQ_COLUMNS = ["subject_code", "rule", "item", "type", "requisite_code", "requisite_text", "source_url"]
 
 log = logging.getLogger("scrape_requisites")
