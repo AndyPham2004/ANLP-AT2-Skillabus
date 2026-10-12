@@ -42,7 +42,9 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (UTS 36118 student project)"}
 
 RULE = re.compile(r"Requisite rule:\s*(.+?)\s*Item\s+Type\s+Details")
 # The page also lists anti-requisites ("you cannot take this if you took ..."), same table shape.
-ANTI = re.compile(r"Anti-requisite\(s\).*?rule:\s*(.+?)\s*Item\s+Type\s+Details", re.S)
+ANTI = re.compile(r"Anti-requisite rule:\s*(.+?)\s*Item\s+(?:Type\s+)?Details", re.S)
+# Some anti-requisite tables have no Type column: "1 31250 Introduction to Data Analytics 2 321130 ..."
+ANTI_ITEM = re.compile(r"(?:(?<=\s)|^)(\d+[a-z]?)\s+(\d{5,6})\s+(.+?)(?=\s+\d+[a-z]?\s+\d{5,6}\s|\s*Note:|$)", re.S)
 NOT_FOUND = "There are no access restrictions enforced for this subject"
 # "1a Academic requisite 36100 Data Science ..." up to the next item id or "Note:"
 ITEM = re.compile(
@@ -95,7 +97,11 @@ def parse_requisites(html: str, code: str | None = None) -> dict:
     a = ANTI.search(text)
     if a:
         out["anti_rule"] = a.group(1).strip()
-        out["anti_items"] = _items(text[a.end():])
+        body = text[a.end():]
+        body = body[:body.find("Note:")] if "Note:" in body else body
+        out["anti_items"] = _items(body) or [
+            {"item": item, "type": "academic", "code": code, "text": f"{code} {name.strip()}"}
+            for item, code, name in ANTI_ITEM.findall(body)]
     return out
 
 

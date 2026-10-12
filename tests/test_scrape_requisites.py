@@ -51,6 +51,19 @@ ANTI = """<html><body>36100 Data Science for Innovation Anti-requisite(s) Anti-r
 Note: See also</body></html>"""
 
 
+ANTI_NO_TYPE = """<html><body>32130 Fundamentals of Data Analytics Anti-requisite(s) Anti-requisite rule: (1 AND 2 AND 3) Item Details
+1 31250 Introduction to Data Analytics 2 321130 Fundamentals of Data Analytics 3 329130 Fundamentals of Data Analytics
+Note: See also</body></html>"""
+
+
+def test_anti_requisite_table_without_type_column():
+    out = parse_requisites(ANTI_NO_TYPE, "32130")
+    assert out["anti_rule"] == "(1 AND 2 AND 3)"
+    assert [(i["item"], i["code"], i["type"]) for i in out["anti_items"]] == [
+        ("1", "31250", "academic"), ("2", "321130", "academic"), ("3", "329130", "academic")]
+    assert out["anti_items"][0]["text"] == "31250 Introduction to Data Analytics"
+
+
 def test_anti_requisites_are_parsed_separately():
     out = parse_requisites(ANTI, "36100")
     assert out["rule"] == "" and out["items"] == []
