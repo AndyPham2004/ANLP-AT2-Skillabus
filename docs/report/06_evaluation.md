@@ -37,7 +37,7 @@ All labelled skills come from the dictionary, so scoring on dictionary skills al
 **Where it fails.** Of the 63 misses, 25 are soft skills (communication, teamwork, stakeholder management), 13 are
 programming skills and 11 are machine-learning skills. Eleven of the 13 programming misses are the bare letter "R". This is
 by design, as section 4.1 explains: the dictionary matches only aliases such as "R programming", never the ambiguous bare
-"R". The 19 false positives are mostly Statistics (7) and Professional skills (4): skills the dictionary found in the ad text but that were not in the labelled list. **[TODO: check these 19 against the ads to see which are label gaps and which are real errors.]** The next two tiers are meant to recover the soft skills
+"R". The 19 false positives split into two kinds. Nine are real errors: the dictionary reads a skill word that the ad does not ask for, such as a degree list ("Statistics, Data Science, Mathematics", six ads), a partner list (Snowflake), a company description (artificial intelligence) and "Dash" read as Plotly. Ten are judgement calls where the extractor found a phrase the labeller did not list: "text mining" as NLP (2), "data pipelines" as ETL (2), leadership (2), and one each of agile, problem solving, cloud and optimisation. Precision of 0.890 is therefore close to 0.95 if the ten judgement calls count as correct. The next two tiers are meant to recover the soft skills
 and the bare "R".
 
 ## 6.3 Matching
