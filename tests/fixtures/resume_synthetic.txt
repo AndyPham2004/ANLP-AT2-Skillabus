@@ -1,0 +1,24 @@
+SAMPLE RESUME (synthetic template, MDSI-style early-career candidate)
+
+Summary
+Master of Data Science and Innovation student with a background in business
+analysis. Comfortable working with structured business data, building dashboards,
+and communicating findings to non-technical stakeholders. Looking to move into a
+data scientist role.
+
+Skills
+- SQL: writing queries, joins, and aggregations across relational databases
+- Python: pandas and matplotlib for data cleaning, exploration, and visualisation
+- Data visualisation: building dashboards and charts in Power BI and Excel
+- Statistics: descriptive statistics, hypothesis testing basics
+- Communication: presenting analysis to business stakeholders
+
+Experience
+Business Intelligence Analyst, retail e-commerce company (2 years)
+- Built recurring sales and fraud-monitoring reports using SQL and Power BI
+- Queried transactional databases to investigate customer support cases
+- Presented findings to operations and payments teams
+
+Education
+Master of Data Science and Innovation (in progress), University of Technology Sydney
+Bachelor's degree, Business/Commerce
