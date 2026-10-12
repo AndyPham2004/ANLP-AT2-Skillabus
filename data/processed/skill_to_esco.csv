@@ -1,0 +1,134 @@
+canonical,category,esco_uri,esco_preferred_label,esco_skill_type,matched_on
+Python,Programming,http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d,Python (computer programming),knowledge,Python
+R,Programming,http://data.europa.eu/esco/skill/51586df8-1c46-4b47-8583-773cb63bf00b,R,knowledge,R
+SQL,Programming,http://data.europa.eu/esco/skill/598de5b0-5b58-4ea7-8058-a4bc4d18c742,SQL,knowledge,SQL
+Java,Programming,http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389,Java (computer programming),knowledge,Java
+Scala,Programming,http://data.europa.eu/esco/skill/ffddfc7c-a9dd-449f-9e96-882dc447c8b6,Scala,knowledge,Scala
+C++,Programming,http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f,C++,knowledge,C++
+C#,Programming,http://data.europa.eu/esco/skill/4c016b68-4116-468c-9dc6-42710c239e4a,C#,knowledge,C#
+JavaScript,Programming,http://data.europa.eu/esco/skill/3cd569a2-4f88-4c1e-9995-8dce8c5e51a7,JavaScript,knowledge,JavaScript
+Julia,Programming,,,,
+MATLAB,Programming,http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,knowledge,MATLAB
+SAS,Programming,,,,
+Go,Programming,,,,
+Shell scripting,Programming,http://data.europa.eu/esco/skill/21d2f96d-35f7-4e3f-9745-c533d2dd6e97,computer programming,knowledge,bash
+VBA,Programming,http://data.europa.eu/esco/skill/13bdd41a-2a18-441f-96db-41252c519413,Visual Basic,knowledge,visual basic
+pandas,Data wrangling,,,,
+NumPy,Data wrangling,http://data.europa.eu/esco/skill/484df271-bb52-49f1-8f50-f19624bf4df2,software components libraries,knowledge,NumPy
+Spark,Data wrangling,http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f,SPARK,knowledge,Spark
+Hadoop,Data wrangling,http://data.europa.eu/esco/skill/e46291c7-52b9-4174-bd59-178884861038,Hadoop,knowledge,Hadoop
+Hive,Data wrangling,,,,
+Databricks,Data wrangling,,,,
+Dask,Data wrangling,,,,
+Polars,Data wrangling,,,,
+Data cleaning,Data wrangling,,,,
+scikit-learn,Machine learning,http://data.europa.eu/esco/skill/484df271-bb52-49f1-8f50-f19624bf4df2,software components libraries,knowledge,scikit-learn
+XGBoost,Machine learning,,,,
+LightGBM,Machine learning,,,,
+CatBoost,Machine learning,,,,
+Random forest,Machine learning,,,,
+Gradient boosting,Machine learning,,,,
+Logistic regression,Machine learning,,,,
+Linear regression,Machine learning,,,,
+Support vector machines,Machine learning,,,,
+Clustering,Machine learning,,,,
+Time series forecasting,Machine learning,,,,
+Feature engineering,Machine learning,,,,
+Hyperparameter tuning,Machine learning,,,,
+Recommender systems,Machine learning,,,,
+Anomaly detection,Machine learning,http://data.europa.eu/esco/skill/541cdc23-1eec-4520-81fc-3392eaf538ed,fraud detection,knowledge,fraud detection
+TensorFlow,Deep learning,http://data.europa.eu/esco/skill/7b0d5000-00da-4864-b776-6de49a87a669,computer vision,knowledge,TensorFlow
+PyTorch,Deep learning,http://data.europa.eu/esco/skill/484df271-bb52-49f1-8f50-f19624bf4df2,software components libraries,knowledge,PyTorch
+Keras,Deep learning,http://data.europa.eu/esco/skill/7b0d5000-00da-4864-b776-6de49a87a669,computer vision,knowledge,Keras
+Deep learning,Deep learning,http://data.europa.eu/esco/skill/ecc4552a-92c5-4222-b18d-faf5ac841080,deep learning,knowledge,Deep learning
+Hugging Face,NLP,,,,
+Transformers,NLP,http://data.europa.eu/esco/skill/f0ab5d57-4be7-411b-afce-b4a76a142302,electrical machines,knowledge,Transformers
+BERT,NLP,,,,
+Large language models,NLP,,,,
+Natural language processing,NLP,http://data.europa.eu/esco/skill/fff0e2cd-d0bd-4b02-9daf-158b79d9688a,natural language processing,knowledge,Natural language processing
+spaCy,NLP,,,,
+NLTK,NLP,,,,
+Sentiment analysis,NLP,,,,
+Named entity recognition,NLP,,,,
+Topic modelling,NLP,,,,
+Word embeddings,NLP,,,,
+RAG,NLP,,,,
+Prompt engineering,NLP,,,,
+LangChain,NLP,,,,
+Vector databases,NLP,,,,
+Computer vision,Computer vision,http://data.europa.eu/esco/skill/7b0d5000-00da-4864-b776-6de49a87a669,computer vision,knowledge,Computer vision
+OpenCV,Computer vision,http://data.europa.eu/esco/skill/21d2f96d-35f7-4e3f-9745-c533d2dd6e97,computer programming,knowledge,OpenCV
+AWS,Cloud,http://data.europa.eu/esco/skill/bd14968e-e409-45af-b362-3495ed7b10e0,cloud technologies,knowledge,AWS
+Azure,Cloud,,,,
+Google Cloud,Cloud,,,,
+SageMaker,Cloud,,,,
+Snowflake,Cloud,,,,
+BigQuery,Cloud,,,,
+Redshift,Cloud,,,,
+Azure ML,Cloud,,,,
+Vertex AI,Cloud,,,,
+PostgreSQL,Databases,http://data.europa.eu/esco/skill/a8d07b5a-c1a1-42c6-9d53-db9c7a2ca996,PostgreSQL,knowledge,PostgreSQL
+MySQL,Databases,http://data.europa.eu/esco/skill/4da171e5-779c-4983-a76f-91c16751e99f,MySQL,knowledge,MySQL
+MongoDB,Databases,,,,
+Oracle,Databases,,,,
+SQL Server,Databases,http://data.europa.eu/esco/skill/c062bab3-3ea0-4291-9220-a2d8fef4bead,SQL Server,knowledge,SQL Server
+NoSQL,Databases,http://data.europa.eu/esco/skill/76ef6ed3-1658-4a1a-9593-204d799c6d0c,NoSQL,knowledge,NoSQL
+Cassandra,Databases,,,,
+Elasticsearch,Databases,,,,
+Redis,Databases,,,,
+Data modelling,Databases,http://data.europa.eu/esco/skill/fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5,data models,knowledge,Data modelling
+Data warehousing,Databases,http://data.europa.eu/esco/skill/3ec2e4d6-7000-4905-bf1a-c5b1679416de,data warehouse,knowledge,data warehouse
+Tableau,Visualisation,http://data.europa.eu/esco/skill/65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1,data visualisation software,knowledge,Tableau
+Power BI,Visualisation,http://data.europa.eu/esco/skill/65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1,data visualisation software,knowledge,Power BI
+Looker,Visualisation,,,,
+Qlik,Visualisation,,,,
+Excel,Visualisation,,,,
+matplotlib,Visualisation,http://data.europa.eu/esco/skill/484df271-bb52-49f1-8f50-f19624bf4df2,software components libraries,knowledge,matplotlib
+seaborn,Visualisation,,,,
+Plotly,Visualisation,,,,
+D3.js,Visualisation,,,,
+Data visualisation,Visualisation,,,,
+Docker,Engineering,,,,
+Kubernetes,Engineering,,,,
+Git,Engineering,http://data.europa.eu/esco/skill/9d2e926f-53d9-41f5-98f3-19dfaa687f3f,tools for software configuration management,knowledge,Git
+CI/CD,Engineering,,,,
+Airflow,Engineering,,,,
+dbt,Engineering,,,,
+MLflow,Engineering,,,,
+Kubeflow,Engineering,,,,
+Terraform,Engineering,,,,
+Jenkins,Engineering,http://data.europa.eu/esco/skill/f47a1998-0beb-43be-9f46-380aa4d183da,Jenkins (tools for software configuration management),knowledge,Jenkins
+ETL,Engineering,http://data.europa.eu/esco/skill/9d0d89be-bffa-4393-b6f6-8d05bea49051,"data extraction, transformation and loading tools",knowledge,ETL
+API development,Engineering,,,,
+FastAPI,Engineering,,,,
+Flask,Engineering,,,,
+Django,Engineering,,,,
+Streamlit,Engineering,,,,
+MLOps,Engineering,,,,
+Statistics,Statistics,http://data.europa.eu/esco/skill/7ee4c2ea-b349-4bd2-81a3-ec31475d4833,statistics,knowledge,Statistics
+Probability,Statistics,,,,
+Hypothesis testing,Statistics,,,,
+Bayesian methods,Statistics,,,,
+A/B testing,Statistics,,,,
+Experimental design,Statistics,,,,
+Causal inference,Statistics,,,,
+Regression analysis,Statistics,,,,
+Optimisation,Statistics,http://data.europa.eu/esco/skill/726abd5a-d23c-44b9-abb0-f22bbe95f1d3,operational research,knowledge,operations research
+Econometrics,Statistics,,,,
+Data governance,Governance,,,,
+Data quality,Governance,,,,
+Data privacy,Governance,http://data.europa.eu/esco/skill/a4346013-a967-4a58-a533-6b32ad1364c5,data protection,knowledge,Data privacy
+Data security,Governance,http://data.europa.eu/esco/skill/86d2e2ea-1ba2-4aa6-b465-8a1f9abc81b8,apply information security policies,skill/competence,Data security
+Responsible AI,Governance,,,,
+Communication,Professional,http://data.europa.eu/esco/skill/15d76317-c71a-4fa2-aadc-2ecc34e627b7,communication,knowledge,Communication
+Stakeholder management,Professional,,,,
+Project management,Professional,http://data.europa.eu/esco/skill/7111b95d-0ce3-441a-9d92-4c75d05c4388,project management,knowledge,Project management
+Agile,Professional,http://data.europa.eu/esco/skill/bec4359e-cb92-468f-a997-8fb28e32fba9,ICT project management methodologies,knowledge,Agile
+Problem solving,Professional,http://data.europa.eu/esco/skill/4707da90-9cfc-46ca-8de0-38a0b7bfb137,think analytically,skill/competence,analytical thinking
+Teamwork,Professional,,,,
+Presentation skills,Professional,http://data.europa.eu/esco/skill/609a8ac1-9d29-4237-9886-596dbbe7ca8a,address an audience,skill/competence,Presentation skills
+Data storytelling,Professional,,,,
+Business acumen,Professional,http://data.europa.eu/esco/skill/bdcf429c-5ccf-4c3d-bb61-4c987573a35e,show entrepreneurial spirit,skill/competence,Business acumen
+Leadership,Professional,http://data.europa.eu/esco/skill/75d8e5d9-bef3-418b-9011-01bff9f27207,lead others,skill/competence,Leadership
+Requirements gathering,Professional,,,,
+Documentation,Professional,,,,

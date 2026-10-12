@@ -44,6 +44,16 @@ pip install -r requirements.txt
 copy .env.example .env   # then paste the OpenAI key
 ```
 
+## Run the app
+
+```powershell
+streamlit run app/Home.py
+```
+
+It works without any key: the analysis falls back to `app/baseline.py` (dictionary + keyword
+match) until the stages in `src/skillabus/` are implemented, and the chat shows Handbook passages
+instead of a written answer until `OPENAI_API_KEY` is set. Screens: `docs/wireframes/`.
+
 ## Rebuild the poster
 
 ```powershell

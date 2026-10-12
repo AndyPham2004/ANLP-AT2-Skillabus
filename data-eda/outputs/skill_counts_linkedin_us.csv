@@ -1,0 +1,120 @@
+skill,category,n_ads,pct_ads,total_ads_in_sample
+Python,Programming,211,85.4,247
+Statistics,Statistics,182,73.7,247
+SQL,Programming,147,59.5,247
+Teamwork,Professional,136,55.1,247
+Communication,Professional,88,35.6,247
+Leadership,Professional,73,29.6,247
+Data visualisation,Visualisation,71,28.7,247
+Natural language processing,NLP,65,26.3,247
+Problem solving,Professional,62,25.1,247
+Spark,Data wrangling,60,24.3,247
+AWS,Cloud,59,23.9,247
+Deep learning,Deep learning,57,23.1,247
+Optimisation,Statistics,54,21.9,247
+PyTorch,Deep learning,46,18.6,247
+Tableau,Visualisation,46,18.6,247
+Clustering,Machine learning,42,17.0,247
+Large language models,NLP,39,15.8,247
+Agile,Professional,38,15.4,247
+SAS,Programming,37,15.0,247
+Google Cloud,Cloud,35,14.2,247
+Time series forecasting,Machine learning,34,13.8,247
+Project management,Professional,33,13.4,247
+A/B testing,Statistics,32,13.0,247
+Scala,Programming,32,13.0,247
+TensorFlow,Deep learning,32,13.0,247
+ETL,Engineering,30,12.1,247
+Power BI,Visualisation,29,11.7,247
+Azure,Cloud,27,10.9,247
+Docker,Engineering,27,10.9,247
+Hadoop,Data wrangling,26,10.5,247
+Documentation,Professional,25,10.1,247
+scikit-learn,Machine learning,23,9.3,247
+Git,Engineering,22,8.9,247
+Java,Programming,22,8.9,247
+NoSQL,Databases,19,7.7,247
+pandas,Data wrangling,19,7.7,247
+Excel,Visualisation,18,7.3,247
+Support vector machines,Machine learning,17,6.9,247
+C++,Programming,17,6.9,247
+Computer vision,Computer vision,16,6.5,247
+Feature engineering,Machine learning,16,6.5,247
+NumPy,Data wrangling,15,6.1,247
+MLOps,Engineering,15,6.1,247
+Data quality,Governance,15,6.1,247
+Business acumen,Professional,15,6.1,247
+Data cleaning,Data wrangling,14,5.7,247
+Kubernetes,Engineering,14,5.7,247
+Data modelling,Databases,14,5.7,247
+Keras,Deep learning,13,5.3,247
+Logistic regression,Machine learning,13,5.3,247
+JavaScript,Programming,13,5.3,247
+Stakeholder management,Professional,13,5.3,247
+Presentation skills,Professional,12,4.9,247
+Causal inference,Statistics,12,4.9,247
+Databricks,Data wrangling,12,4.9,247
+R,Programming,12,4.9,247
+Sentiment analysis,NLP,11,4.5,247
+Bayesian methods,Statistics,11,4.5,247
+CI/CD,Engineering,10,4.0,247
+Probability,Statistics,10,4.0,247
+Requirements gathering,Professional,10,4.0,247
+Jenkins,Engineering,9,3.6,247
+Data warehousing,Databases,9,3.6,247
+BERT,NLP,9,3.6,247
+SageMaker,Cloud,8,3.2,247
+MATLAB,Programming,8,3.2,247
+Linear regression,Machine learning,8,3.2,247
+API development,Engineering,8,3.2,247
+Dask,Data wrangling,8,3.2,247
+Snowflake,Cloud,8,3.2,247
+Random forest,Machine learning,7,2.8,247
+Hypothesis testing,Statistics,7,2.8,247
+PostgreSQL,Databases,7,2.8,247
+BigQuery,Cloud,7,2.8,247
+Anomaly detection,Machine learning,7,2.8,247
+Kubeflow,Engineering,6,2.4,247
+Airflow,Engineering,6,2.4,247
+SQL Server,Databases,6,2.4,247
+matplotlib,Visualisation,6,2.4,247
+Plotly,Visualisation,6,2.4,247
+MySQL,Databases,6,2.4,247
+Econometrics,Statistics,6,2.4,247
+Experimental design,Statistics,6,2.4,247
+Qlik,Visualisation,5,2.0,247
+Azure ML,Cloud,5,2.0,247
+Cassandra,Databases,4,1.6,247
+Data governance,Governance,4,1.6,247
+XGBoost,Machine learning,4,1.6,247
+LangChain,NLP,4,1.6,247
+Julia,Programming,4,1.6,247
+Regression analysis,Statistics,4,1.6,247
+Vector databases,NLP,3,1.2,247
+spaCy,NLP,3,1.2,247
+MongoDB,Databases,3,1.2,247
+Data storytelling,Professional,3,1.2,247
+D3.js,Visualisation,3,1.2,247
+Data security,Governance,3,1.2,247
+seaborn,Visualisation,3,1.2,247
+VBA,Programming,3,1.2,247
+Prompt engineering,NLP,3,1.2,247
+Data privacy,Governance,2,0.8,247
+C#,Programming,2,0.8,247
+Elasticsearch,Databases,2,0.8,247
+Topic modelling,NLP,2,0.8,247
+Flask,Engineering,2,0.8,247
+Gradient boosting,Machine learning,2,0.8,247
+Hugging Face,NLP,2,0.8,247
+NLTK,NLP,2,0.8,247
+Shell scripting,Programming,2,0.8,247
+dbt,Engineering,2,0.8,247
+MLflow,Engineering,2,0.8,247
+Hyperparameter tuning,Machine learning,1,0.4,247
+RAG,NLP,1,0.4,247
+Looker,Visualisation,1,0.4,247
+Named entity recognition,NLP,1,0.4,247
+Redis,Databases,1,0.4,247
+Transformers,NLP,1,0.4,247
+Vertex AI,Cloud,1,0.4,247
+Word embeddings,NLP,1,0.4,247

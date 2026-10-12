@@ -194,3 +194,12 @@ def test_rank_evidence_edge_cases():
     with pytest.raises(ValueError):
         rank_evidence("SQL", RESUME, "bm25")
     assert skill_query("Python") == "Python, python"
+
+
+def test_dictionary_skills_sharing_an_esco_concept_are_not_the_same_skill():
+    # skill_to_esco.csv links PyTorch, matplotlib, NumPy and scikit-learn to one ESCO concept,
+    # and Tableau and Power BI to another; a resume naming one must not "have" the other.
+    shared = dict(skill_id="esco:http://data.europa.eu/esco/skill/shared", vocab="esco")
+    ad = [mention("PyTorch", "PyTorch", **shared), mention("Tableau", "Tableau", **shared)]
+    resume = [mention("matplotlib", "matplotlib", **shared), mention("Power BI", "Power BI", **shared)]
+    assert status(match(ad, resume)) == {"PyTorch": "missing", "Tableau": "missing"}

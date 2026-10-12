@@ -1,0 +1,79 @@
+"""Tests for skillabus.rag.retrieve(). Run: pytest tests/test_rag.py
+
+The embed backend's tests are skipped where sentence-transformers or faiss is not installed
+(as on the deployed app); the tfidf backend runs everywhere.
+"""
+import re
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from skillabus import rag  # noqa: E402
+
+KEYS = {"text", "score", "source", "url", "subject_code", "subject_name", "layer", "method"}
+EMBED = pytest.param("embed", marks=pytest.mark.skipif(
+    not rag.embeddings_available(), reason="sentence-transformers or faiss not installed"))
+METHODS = ["tfidf", EMBED]
+
+
+@pytest.mark.parametrize("method", METHODS)
+def test_result_shape(method):
+    out = rag.retrieve("Which subject teaches deep learning?", k=5, method=method)
+    assert 0 < len(out) <= 5
+    assert all(KEYS <= set(r) for r in out)
+    scores = [r["score"] for r in out]
+    assert scores == sorted(scores, reverse=True)
+    assert {r["method"] for r in out} == {method}
+
+
+def test_source_reads_like_the_chat_fallback():
+    """app/chat.py formats sources as '<code> <name> (<layer>)'; retrieve() must match."""
+    r = rag.retrieve("large language models", k=1, method="tfidf")[0]
+    assert re.fullmatch(r"\d{5} .+ \((learning objective|assessment|topic|description)\)", r["source"])
+    assert r["url"].startswith("https://")
+
+
+@pytest.mark.parametrize("method", METHODS)
+def test_subject_code_in_question_restricts_results(method):
+    out = rag.retrieve("What does 36118 teach?", k=5, method=method)
+    assert out
+    assert {r["subject_code"] for r in out} == {"36118"}
+
+
+@pytest.mark.parametrize("method", METHODS)
+def test_off_topic_question_returns_nothing(method):
+    assert rag.retrieve("best pizza recipe in Naples", k=5, method=method) == []
+
+
+def test_empty_question_or_zero_k():
+    assert rag.retrieve("") == []
+    assert rag.retrieve("deep learning", k=0) == []
+
+
+@pytest.mark.parametrize("method", METHODS)
+def test_sanity_questions_find_the_right_subject(method):
+    table = rag.sanity_check(method)
+    assert table["rank"].notna().sum() >= len(table) - 1, table.to_string()
+
+
+def test_no_duplicate_passages():
+    out = rag.retrieve("machine learning", k=10, method="tfidf")
+    keys = [(r["subject_code"], r["text"]) for r in out]
+    assert len(keys) == len(set(keys))
+
+
+def test_ads_are_opt_in():
+    subjects_only = rag.retrieve("experience with Spark and Hadoop", k=5, method="tfidf")
+    assert all(r["layer"] != "ad" for r in subjects_only)
+    with_ads = rag.retrieve("experience with Spark and Hadoop", k=5, method="tfidf",
+                            sources=("subjects", "ads"))
+    ads = [r for r in with_ads if r["layer"] == "ad"]
+    assert ads and all(r["source"].startswith("Seek ad: ") for r in ads)
+
+
+def test_unknown_method_is_an_error():
+    with pytest.raises(ValueError):
+        rag.retrieve("deep learning", method="bm25")
