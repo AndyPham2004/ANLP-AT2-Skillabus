@@ -1,11 +1,13 @@
 """Run the evaluation on the labelled test sets (task #24). Owner: Hoai Thuong.
 
-    python notebooks/ht_run_evaluation.py [--out data/processed/eval_results.json]
+    python notebooks/ht_run_evaluation.py [--method dictionary|ner|llm] [--out FILE]
 
 Extraction: dictionary tier on the 20 overlap ads vs data/labels/ad_skills.csv.
 Matching:  match() on the CV-JD pairs vs data/labels/cv_jd_pairs.csv (3-state) and
            rank_evidence() for P@5 / Hit@5 / MRR on the have/partial rows.
-The NER and LLM tiers need spaCy and an API key; they are not run here.
+--method picks the extraction tier used for both the extraction scores and the end-to-end matching run.
+"ner" needs spaCy and en_core_web_sm; "llm" needs the OpenAI key (or the cached responses in data/cache/llm_extract).
+Without --out, dictionary writes data/processed/eval_results.json and the other tiers eval_results_<method>.json.
 """
 import argparse, csv, json, sys
 from pathlib import Path
@@ -29,14 +31,16 @@ def table(path, key, field):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--out"); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--out"); ap.add_argument("--method", default="dictionary", choices=["dictionary", "ner", "llm"]); a = ap.parse_args()
+    method = a.method
+    out_path = a.out or str(ROOT / "data/processed" / ("eval_results.json" if method == "dictionary" else f"eval_results_{method}.json"))
     ads, res = table(ADS, "ad_id", "description"), table(RES, "resume_id", "resume_text")
     dic = ev.load_dictionary(str(DICT))
-    out = {}
+    out = {"method": method}
 
     # ---- extraction
     gold = ev.load_ad_skills(str(LAB / "ad_skills.csv"))
-    pred = {ad: {ev.norm(m.get("canonical") or m.get("skill_label") or m["text"]) for m in extract(ads[ad])} for ad in gold}
+    pred = {ad: {ev.norm(m.get("canonical") or m.get("skill_label") or m["text"]) for m in extract(ads[ad], method)} for ad in gold}
     out["extraction_all"] = ev.extraction_scores(gold, pred)
     out["extraction_dictionary_skills"] = ev.extraction_scores(ev.restrict_to(gold, dic), ev.restrict_to(pred, dic))
     out["extraction_errors"] = ev.extraction_errors(ev.restrict_to(gold, dic), ev.restrict_to(pred, dic))
@@ -53,9 +57,9 @@ def main():
         g_status, p_status, cases, detail = {}, {}, [], []
         for pid, rs in by_pair.items():
             ad_id, rid = rs[0]["ad_id"], rs[0]["resume_id"]
-            res_sk = res_cache.setdefault(rid, extract(res[rid]))
+            res_sk = res_cache.setdefault(rid, extract(res[rid], method))
             if setting == "end_to_end":
-                ad_sk = extract(ads[ad_id])
+                ad_sk = extract(ads[ad_id], method)
             else:
                 ad_sk = [{"text": canon[r["skill_label"]], "canonical": canon[r["skill_label"]], "method": "gold",
                           "sentence": canon[r["skill_label"]]} for r in rs]
@@ -74,8 +78,11 @@ def main():
         if setting == "end_to_end":
             out["ad_skill_not_extracted"] = sum(v == "not_extracted" for v in p_status.values())
             out["ranking"] = ev.ranking_scores(cases, k=5)
-    print(json.dumps(out, indent=1, default=str)[:6000])
-    if a.out:
-        Path(a.out).write_text(json.dumps(out, indent=1, default=str), encoding="utf-8")
+    es, ms, mo, rk = out["extraction_all"], out["matching_end_to_end"], out["matching_matching_only"], out["ranking"]
+    print(f"method={method}  extraction P={es['precision']:.3f} R={es['recall']:.3f} F1={es['f1']:.3f}")
+    print(f"matching accuracy end-to-end={ms['accuracy']:.3f} (macro F1 {ms['macro_f1']:.3f}), matching-only={mo['accuracy']:.3f} (macro F1 {mo['macro_f1']:.3f})")
+    print(f"ranking P@5={rk['p_at_k']:.3f} Hit@5={rk['hit_at_k']:.3f} MRR={rk['mrr']:.3f} (n={rk['n']})")
+    Path(out_path).write_text(json.dumps(out, indent=1, default=str), encoding="utf-8")
+    print("wrote", out_path)
 
 main()
