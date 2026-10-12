@@ -60,7 +60,7 @@ def load_ad_skills(path: str, annotator: str | None = None) -> dict[str, set[str
     for r in _rows(path):
         if annotator and r.get("annotator", "").strip().casefold() != annotator.strip().casefold():
             continue
-        label = norm(r.get("skill_label", ""))
+        label = norm(r.get("skill_label", "").lstrip(" ?"))   # a leading '?' only marks an unsure label
         if label and r.get("ad_id", "").strip():
             out[r["ad_id"].strip()].add(label)
     return dict(out)
@@ -126,6 +126,12 @@ def extraction_scores(gold: Mapping[str, set[str]], pred: Mapping[str, set[str]]
         fp += len(p - g)
         fn += len(g - p)
     return {**prf(tp, fp, fn), "n_ads": len(gold)}
+
+
+def restrict_to(sets: Mapping[str, set[str]], universe: Sequence[str]) -> dict[str, set[str]]:
+    """Keep only skills in `universe` (e.g. the dictionary), to report extraction scores on dictionary skills alone."""
+    keep = {norm(u) for u in universe}
+    return {ad: {s for s in skills if s in keep} for ad, skills in sets.items()}
 
 
 def extraction_errors(gold: Mapping[str, set[str]], pred: Mapping[str, set[str]]) -> list[dict]:
@@ -413,6 +419,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     e.add_argument("pred_json")
     e.add_argument("--method", choices=["dictionary", "ner", "llm"])
     e.add_argument("--label-map", help="JSON file {predicted label: gold label}")
+    e.add_argument("--dictionary", help="skills_seed_v2.csv: also report scores on dictionary skills alone")
 
     args = parser.parse_args(argv)
     if args.cmd == "kappa":
@@ -429,7 +436,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             mentions = json.load(f)
         label_map = json.load(open(args.label_map, encoding="utf-8")) if args.label_map else None
         pred = mentions_to_sets(mentions, args.method, label_map)
-        print(_fmt(extraction_scores(load_ad_skills(args.gold_csv), pred)))
+        gold = load_ad_skills(args.gold_csv)
+        print("all skills:\n" + _fmt(extraction_scores(gold, pred)))
+        if args.dictionary:
+            universe = load_dictionary(args.dictionary)
+            print("\ndictionary skills only:\n" + _fmt(extraction_scores(restrict_to(gold, universe), restrict_to(pred, universe))))
     return 0
 
 
