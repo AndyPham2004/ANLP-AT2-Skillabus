@@ -11,7 +11,8 @@ runs without spaCy or an API key. The table says what the numbers below cover.
 | Stage | Test set (as labelled) | Tiers run | Status |
 |---|---|---|---|
 | Extraction | 20 Seek ads, 217 skill labels | Dictionary (tier 1) | Done |
-| Extraction | same | spaCy (tier 2), GPT-4o-mini (tier 3) | **[TODO]** needs spaCy and the cached LLM responses |
+| Extraction | same | spaCy (tier 2) | Done (run by Phuong Nhi, same script, `--method ner`) |
+| Extraction | same | GPT-4o-mini (tier 3) | **[TODO]** needs the cached LLM responses |
 | Matching | 45 CV–JD pairs, 287 skill rows (81 have, 6 partial, 200 missing) | `match()` and `rank_evidence()` | Done |
 | Subjects P@3 | **[TODO]** | | |
 | Chat judge | **[TODO]** | | |
@@ -29,10 +30,14 @@ On the 20 ads, the dictionary tier finds 154 of the 217 labelled skills and adds
 | Tier | Precision | Recall | F1 | TP / FP / FN |
 |---|---|---|---|---|
 | Dictionary | 0.890 | 0.710 | 0.790 | 154 / 19 / 63 |
-| spaCy | **[TODO]** | | | |
+| spaCy, all skills | 0.663 | 0.742 | 0.700 | 161 / 82 / 56 |
+| spaCy, dictionary skills only | 0.890 | 0.742 | 0.809 | 161 / 20 / 56 |
 | GPT-4o-mini | **[TODO]** | | | |
 
-All labelled skills come from the dictionary, so scoring on dictionary skills alone gives the same figures.
+All labelled skills come from the dictionary, so for the dictionary tier scoring on dictionary skills alone gives the same
+figures. For spaCy the dictionary-only row is the fair one: it finds 7 more labelled skills (plural forms) for one more false
+positive. The 62 extra false positives in its all-skills row are off-dictionary candidates ("customer segmentation", tool
+names); the labels hold only dictionary skills, so every candidate counts as wrong, right or not.
 
 **Where it fails.** Of the 63 misses, 25 are soft skills (communication, teamwork, stakeholder management), 13 are
 programming skills and 11 are machine-learning skills. Eleven of the 13 programming misses are the bare letter "R". This is
@@ -79,16 +84,18 @@ A sentence counts as correct when it contains the phrase.
 
 | Metric | Value (k = 5, n = 87) |
 |---|---|
-| P@5 | 0.189 |
-| Hit@5 | 0.885 |
-| MRR | 0.756 |
+| P@5 | 0.200 |
+| Hit@5 | 0.943 |
+| MRR | 0.831 |
 
-Each row has one gold phrase, so P@5 cannot exceed 0.2. Hit@5 says the right sentence is in the top five for 88.5% of
-rows, and MRR of 0.756 says it is usually first or second. The baselines (TF-IDF and embedding ranking) are **[TODO]**.
+Each row has one gold phrase, so P@5 sits near its ceiling of 0.2 and says little; Hit@5 and MRR are the informative figures. Hit@5 says the right sentence is in the top five for 94.3% of rows, and MRR of
+0.831 says it is usually first. The result does not depend on the extraction tier. (With lowercased skill labels the ranker
+lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; the notebook now passes the canonical name.) The baselines (TF-IDF and embedding ranking) are **[TODO]**.
 
 ## 6.5 Limits of these numbers
 
 - 20 ads and 45 pairs are small; the confidence intervals are wide, and results from different tiers will differ by less
   than the noise unless the gap is large.
+- One ad row and one pair row carry the "unsure" mark; `load_ad_skills()` and `load_cv_jd_pairs()` drop the mark, so unsure labels count as gold, which slightly lowers recall.
 - Gold labels come from one annotator. Kappa on the 20 overlap ads (**[TODO]**) will show how far another person agrees.
 - Matching and ranking use the dictionary tier. Tier 2 and tier 3 will change which skills reach `match()`.

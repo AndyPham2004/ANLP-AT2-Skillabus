@@ -68,7 +68,7 @@ def main():
                 k = (pid, r["skill_label"]); g_status[k] = r["gold_status"]
                 p_status[k] = got.get(r["skill_label"], "not_extracted")
                 if setting == "end_to_end" and r["gold_status"] in ("have", "partial") and r["resume_evidence_text"]:
-                    cases.append((rank_evidence(r["skill_label"], res[rid]), {r["resume_evidence_text"]}))
+                    cases.append((rank_evidence(canon[r["skill_label"]], res[rid]), {r["resume_evidence_text"]}))
                 if g_status[k] != p_status[k]:
                     detail.append({"pair": pid, "skill": r["skill_label"], "gold": g_status[k], "pred": p_status[k]})
         st = ev.status_scores(g_status, {k: ("missing" if v == "not_extracted" else v) for k, v in p_status.items()})
