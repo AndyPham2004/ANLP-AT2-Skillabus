@@ -13,7 +13,11 @@ For each gap skill and each subject:
    subject's for that skill, so one passing mention does not count next to a whole subject.
 
 Learning path: greedy weighted cover. Take the subject that covers the most still-uncovered
-demand, repeat, at most three subjects.
+demand, repeat, at most three subjects. Only subjects the student can enrol in count
+(requisites.py): a subject that needs one or two open prerequisites comes with them, as one
+step that uses that many of the three places and is valued per place; a subject the student
+cannot take (43023 needs 42172 or 41040, which an MDSI student cannot enrol in) is left out
+and listed under `learning_path.dropped`. The path is then laid out over sessions.
 """
 
 from __future__ import annotations
@@ -27,6 +31,7 @@ import numpy as np
 
 from .extract import _dictionary_hits, load_dictionary
 from .match import demand_2026_low, skill_query
+from .requisites import Rules, enrolment, load_rules, schedule, sessions_offered
 from .similarity import best_method, similarity
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -179,24 +184,40 @@ def _code_number(code: str) -> int:
 
 
 def learning_path(covers: dict[str, set[str]], weight: dict[str, float], score: dict[str, float],
-                  max_subjects: int = MAX_PATH) -> dict:
+                  max_subjects: int = MAX_PATH, needs=None) -> dict:
     """Greedy weighted cover: the subject closing the most uncovered demand, then the next, ...
 
     covers  subject_code -> the gap skills it covers
     weight  gap skill -> demand weight
     score   subject_code -> overall score, to break ties
+    needs   optional function (subject_code, subjects already in the path) -> the prerequisites
+            still to add before it (a set), or None when the student cannot take it. A subject
+            and its prerequisites are one step; the step's gain is shared over its places, so
+            two places must close at least twice the demand of one.
     """
     uncovered, path = set(weight), []
     while uncovered and len(path) < max_subjects:
-        def gain(code: str) -> float:
-            return sum(weight[k] for k in covers[code] & uncovered)
-        candidates = [code for code in covers if code not in path]
-        # Ties: the higher-scoring subject, then the lower subject code, so the result is stable.
-        best = max(candidates, key=lambda code: (gain(code), score.get(code, 0.0), -_code_number(code)), default=None)
-        if best is None or gain(best) == 0:
+        best, best_key, best_step = None, None, None
+        for code in covers:
+            if code in path:
+                continue
+            extra = needs(code, set(path)) if needs else set()
+            if extra is None:
+                continue
+            step = [*sorted(set(extra) - set(path)), code]
+            if len(path) + len(step) > max_subjects:
+                continue
+            closed = set().union(*(covers.get(c, set()) for c in step)) & uncovered
+            gain = sum(weight[k] for k in closed)
+            # Ties: the higher-scoring subject, then the lower subject code, so the result is stable.
+            key = (gain / len(step), -len(step), score.get(code, 0.0), -_code_number(code))
+            if best_key is None or key > best_key:
+                best, best_key, best_step = code, key, step
+        if best is None or best_key[0] == 0:
             break
-        path.append(best)
-        uncovered -= covers[best]
+        path += best_step
+        for c in best_step:
+            uncovered -= covers.get(c, set())
     closed = set(weight) - uncovered
     total = sum(weight.values())
     return {
@@ -208,26 +229,45 @@ def learning_path(covers: dict[str, set[str]], weight: dict[str, float], score: 
 
 
 def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | None = None,
-              exclude: set[str] | None = None, home_course: str | None = HOME_COURSE) -> dict:
+              exclude: set[str] | None = None, home_course: str | None = HOME_COURSE,
+              rules: Rules | None = None, start: tuple[str, int] | None = None) -> dict:
     """Return `recommendations` and `learning_path` (data contract section 2).
 
     gaps          skills from match() whose status is not "have"
     profiles_csv  subject profiles (data contract section 3); default: the real file, else the mock
     method        "keyword" (names only), "tfidf" or "embed"; default: embed when the model is installed
-    exclude       subject codes the student has already taken
+    exclude       subject codes the student has already taken (they also meet prerequisites)
+    home_course   the student's course: admission conditions naming it are met
+    rules         prerequisites and teaching periods; default: load_rules() (none when the files are missing)
+    start         first session of the plan, e.g. ("Autumn", 2027); default: the next one
     """
+    rules = rules if rules is not None else load_rules()
+    done = set(exclude or ())
     labels = list(dict.fromkeys(g["skill_label"] for g in gaps))
     weight = {g["skill_label"]: _weight(g) for g in gaps}
-    evidence = subject_evidence(labels, profiles_csv, method, exclude, home_course)
+    evidence = subject_evidence(labels, profiles_csv, method, done, home_course)
+    names = {row["subject_code"]: (row["subject_name"], row.get("source_url", "")) for row in load_profiles(profiles_csv)[0]}
+
+    # Who can enrol: decided once against what the student has taken; the path adds to it below.
+    access = {code: enrolment(code, done, rules, home_course)
+              for code in {e["subject_code"] for found in evidence.values() for e in found}}
 
     subjects: dict[str, dict] = {}
+    dropped: dict[str, dict] = {}
     for label in sorted(labels, key=lambda k: -weight[k]):
         found = evidence[label]
         floor = COVER_RATIO * found[0]["strength"] if found else 0.0
         for e in [e for e in found if e["strength"] >= floor][:SUBJECTS_PER_SKILL]:
-            rec = subjects.setdefault(e["subject_code"], {
-                "subject_code": e["subject_code"], "subject_name": e["subject_name"],
-                "source_url": e["source_url"], "score": 0.0, "covers": [], "evidence": []})
+            code = e["subject_code"]
+            if access[code]["status"] == "closed":
+                drop = dropped.setdefault(code, {"subject_code": code, "subject_name": e["subject_name"],
+                                                 "reason": access[code]["reason"], "covers": []})
+                drop["covers"].append(label)
+                continue
+            rec = subjects.setdefault(code, {
+                "subject_code": code, "subject_name": e["subject_name"],
+                "source_url": e["source_url"], "score": 0.0, "covers": [], "evidence": [],
+                "needs": access[code]["needs"], "offered": sessions_offered(code, rules)})
             rec["covers"].append(label)
             rec["evidence"].append({"skill_label": label, "layer": e["layer"], "text": e["text"], "match": e["match"]})
             rec["score"] += e["strength"] * weight[label]
@@ -236,14 +276,28 @@ def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | N
     for rec in subjects.values():
         rec["score"] = round(rec["score"] / top, 2)          # the best subject is 1.0
 
+    def needs(code: str, in_path: set[str]):
+        status = enrolment(code, done | in_path, rules, home_course)
+        return None if status["status"] == "closed" else set(status["needs"])
+
     path = learning_path({code: set(rec["covers"]) for code, rec in subjects.items()}, weight,
-                         {code: rec["score"] for code, rec in subjects.items()})
+                         {code: rec["score"] for code, rec in subjects.items()},
+                         needs=needs if rules.loaded else None)
     chosen = path["subjects"]
+    for code in chosen:                                   # a prerequisite that covers no gap itself
+        if code not in subjects:
+            name, url = names.get(code, (code, ""))
+            subjects[code] = {"subject_code": code, "subject_name": name, "source_url": url, "score": 0.0,
+                              "covers": [], "evidence": [], "needs": [], "offered": sessions_offered(code, rules)}
+    path["plan"] = schedule(chosen, rules, start, done, home_course)
+    path["dropped"] = sorted(dropped.values(), key=lambda d: (-sum(weight[k] for k in d["covers"]), d["subject_code"]))
+
     ranked = sorted(subjects.values(), key=lambda rec: (-rec["score"], rec["subject_code"]))
     shown = [subjects[code] for code in chosen]
     # Every gap that has a subject keeps its strongest one in the list, even past MAX_SUBJECTS.
     for label in sorted(labels, key=lambda k: -weight[k]):
-        if evidence[label] and not any(label in rec["covers"] for rec in shown):
-            shown.append(subjects[evidence[label][0]["subject_code"]])
+        best = next((subjects[e["subject_code"]] for e in evidence[label] if e["subject_code"] in subjects), None)
+        if best and not any(label in rec["covers"] for rec in shown):
+            shown.append(best)
     shown += [rec for rec in ranked if rec not in shown][: max(0, MAX_SUBJECTS - len(shown))]
     return {"recommendations": shown, "learning_path": path}
