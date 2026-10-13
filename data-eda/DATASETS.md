@@ -18,6 +18,7 @@ page. Verified 23 September 2026.
 | File | Rows | Text | Period | Notes |
 |---|---|---|---|---|
 | `jobs_us_linkedin_2023-2024.csv` | 123,849 | full, ~3.4k | 2023–24 | 1,355 data roles. **99.9% US** — only 131 AU rows |
+| `data_jobs_hf/data_jobs.csv` | 785,741 (**12,955 AU**) | **none**: a list of tool names per ad | 2023 | Luke Barousse, [`lukebarousse/data_jobs`](https://huggingface.co/datasets/lukebarousse/data_jobs) on Hugging Face. **Licence: Apache-2.0** (dataset card, checked 14 Oct 2026). Collected from Google Jobs search results; we publish only per-role shares (`data/processed/role_profiles.csv`), no posting. 10 data/IT title classes from the author's BERT classifier. Its tool extractor counts the English word "go" as Go — dropped. Added 14 Oct 2026 for #65 |
 | `linkedin_mappings/skills.csv` | 35 | — | — | **NOT skills** — 35 broad job functions (IT, SALE, MNFC) |
 
 ## Skills taxonomies
