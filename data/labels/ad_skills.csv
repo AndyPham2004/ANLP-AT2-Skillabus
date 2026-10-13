@@ -216,3 +216,322 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 38644875,Artificial intelligence,y,AI,hoaithuongnguyen-uts
 38644875,Hive,y,"Hive, Spark or Map R",hoaithuongnguyen-uts
 38644875,Spark,y,"Hive, Spark or Map R",hoaithuongnguyen-uts
+54948934,Python,y,,tompham9016
+54948934,R,y,,tompham9016
+54948934,SQL,y,,tompham9016
+54948934,SAS,y,,tompham9016
+54948934,Data cleaning,y,,tompham9016
+54948934,Machine learning,y,,tompham9016
+54948934,Predictive modelling,y,,tompham9016
+54948934,Probability,y,,tompham9016
+54948934,Data modelling,y,,tompham9016
+54948934,Statistics,y,,tompham9016
+54948934,Sentiment analysis,y,,tompham9016
+54948934,Clustering,y,,tompham9016
+54948934,data mining,n,,tompham9016
+54948934,Data visualisation,y,,tompham9016
+54948934,semantic analysis,n,,tompham9016
+54948934,Deep learning,y,,tompham9016
+54948934,simulation,n,,tompham9016
+54948934,complex event processing,n,,tompham9016
+54948934,Presentation skills,y,,tompham9016
+54948934,Communication,y,,tompham9016
+54948934,Stakeholder management,y,,tompham9016
+50727502,Machine learning,y,,tompham9016
+50727502,Artificial intelligence,y,,tompham9016
+50727502,Agile,y,,tompham9016
+50727502,Time series forecasting,y,,tompham9016
+50727502,MLOps,y,,tompham9016
+50727502,Cloud platforms,y,,tompham9016
+50727502,Python,y,,tompham9016
+50727502,NumPy,y,,tompham9016
+50727502,scikit-learn,y,,tompham9016
+50727502,SciPy,n,,tompham9016
+50727502,pandas,y,,tompham9016
+50727502,JavaScript,y,,tompham9016
+50727502,R,y,,tompham9016
+50727502,SQL,y,,tompham9016
+50727502,Data visualisation,y,,tompham9016
+50727502,Power BI,y,,tompham9016
+50727502,Tableau,y,,tompham9016
+50727502,Plotly,y,,tompham9016
+50727502,Shiny,n,,tompham9016
+50727502,Spotfire,n,,tompham9016
+50727502,DevOps,n,,tompham9016
+50727502,Interpersonal skills,n,,tompham9016
+50727502,Communication,y,,tompham9016
+50727502,Presentation skills,y,,tompham9016
+50727502,Teamwork,y,,tompham9016
+50727502,Business acumen,y,,tompham9016
+50727502,workflow automation,n,,tompham9016
+50727502,standardisation,n,,tompham9016
+55520483,Business acumen,y,,tompham9016
+55520483,data insights,n,,tompham9016
+55520483,Predictive modelling,y,,tompham9016
+55520483,Data warehousing,y,,tompham9016
+55520483,ETL,y,,tompham9016
+55520483,Leadership,y,,tompham9016
+55520483,R,y,,tompham9016
+55520483,Python,y,,tompham9016
+55520483,Problem solving,y,,tompham9016
+55520483,Work with ambiguity,n,,tompham9016
+53187210,Leadership,y,,tompham9016
+53187210,Problem solving,y,,tompham9016
+53187210,design data driven solution,n,,tompham9016
+53187210,Strong technical skills,n,,tompham9016
+39142341,deliver data science solutions,n,,tompham9016
+39142341,privacy-preserving machine learning,n,,tompham9016
+39142341,Machine learning,y,,tompham9016
+39142341,R,y,,tompham9016
+39142341,Python,y,,tompham9016
+39142341,Scala,y,,tompham9016
+39142341,Data cleaning,y,,tompham9016
+39142341,Communication,y,,tompham9016
+55085339,data science,n,,tompham9016
+55085339,analytics,n,,tompham9016
+55085339,credit risk modelling,n,,tompham9016
+55085339,pricing,n,,tompham9016
+55085339,data interrogation,n,,tompham9016
+55085339,SQL,y,,tompham9016
+55085339,R,y,,tompham9016
+55085339,Python,y,,tompham9016
+55085339,Communication,y,,tompham9016
+55085339,Problem solving,y,,tompham9016
+55085339,Teamwork,y,,tompham9016
+50014854,Leadership,y,,tompham9016
+50014854,Predictive modelling,y,,tompham9016
+50014854,classification,n,,tompham9016
+50014854,segmentation,n,,tompham9016
+50014854,quality control,n,,tompham9016
+50014854,Stakeholder management,y,,tompham9016
+50014854,Machine learning,y,,tompham9016
+50014854,Random forest,y,,tompham9016
+50014854,Gradient boosting,y,,tompham9016
+50014854,XGBoost,y,,tompham9016
+50014854,Linear regression,y,,tompham9016
+50014854,Logistic regression,y,,tompham9016
+50014854,Markov Chains,n,,tompham9016
+50014854,Support vector machines,y,,tompham9016
+50014854,Deep learning,y,,tompham9016
+50014854,Clustering,y,,tompham9016
+50014854,Principal Component Analysis,n,,tompham9016
+50014854,Factor Analysis,n,,tompham9016
+50014854,Decision Trees,n,,tompham9016
+50014854,big data,n,,tompham9016
+50014854,developing class-leading algorithms,n,,tompham9016
+50014854,data manipulation,n,,tompham9016
+50014854,SQL,y,,tompham9016
+50014854,SAS,y,,tompham9016
+50014854,Python,y,,tompham9016
+50014854,R,y,,tompham9016
+50014854,AWS,y,,tompham9016
+50014854,Teradata,n,,tompham9016
+50014854,Hadoop,y,,tompham9016
+50014854,Spark,y,,tompham9016
+52727857,Business acumen,y,,tompham9016
+52727857,implementing analytical solutions,n,,tompham9016
+52727857,Machine learning,y,,tompham9016
+52727857,Statistics,y,,tompham9016
+52727857,data engineering,n,,tompham9016
+52727857,Deep learning,y,,tompham9016
+52727857,identifying trends and innovation,n,,tompham9016
+52727857,Feature engineering,y,,tompham9016
+52727857,model development,n,,tompham9016
+52727857,Python,y,,tompham9016
+52727857,data querying,n,,tompham9016
+52727857,data manipulation,n,,tompham9016
+52727857,NoSQL,y,,tompham9016
+52727857,cloud-based SQL,n,,tompham9016
+52727857,MLOps,y,,tompham9016
+52727857,DevOps,n,,tompham9016
+52727857,Azure,y,,tompham9016
+52727857,AWS,y,,tompham9016
+52727857,Google Cloud,y,,tompham9016
+52727857,Hadoop,y,,tompham9016
+52727857,Spark,y,,tompham9016
+52727857,graph analytics,n,,tompham9016
+38692371,Machine learning,y,,tompham9016
+38692371,graph analytics,n,,tompham9016
+38692371,Data visualisation,y,,tompham9016
+38692371,Natural language processing,y,,tompham9016
+38692371,Predictive modelling,y,,tompham9016
+38692371,Leadership,y,,tompham9016
+38692371,Problem solving,y,,tompham9016
+38692371,MLOps,y,,tompham9016
+38692371,Communication,y,,tompham9016
+38692371,R,y,,tompham9016
+38692371,Python,y,,tompham9016
+38692371,Scala,y,,tompham9016
+38692371,SQL,y,,tompham9016
+38692371,Spark,y,,tompham9016
+52219256,risk management,n,,tompham9016
+52219256,Communication,y,,tompham9016
+52219256,Problem solving,y,,tompham9016
+52219256,Teamwork,y,,tompham9016
+52219256,data analysis,n,,tompham9016
+50449684,Machine learning,y,,tompham9016
+50449684,Optimisation,y,,tompham9016
+50449684,Presentation skills,y,,tompham9016
+50449684,Teamwork,y,,tompham9016
+50449684,SQL,y,,tompham9016
+50449684,Python,y,,tompham9016
+50449684,Google Cloud,y,,tompham9016
+50449684,Tableau,y,,tompham9016
+50449684,Linux,n,,tompham9016
+50449684,Statistics,y,,tompham9016
+50449684,Financial Analysis,n,,tompham9016
+50449684,data engineering,n,,tompham9016
+50449684,Node,n,,tompham9016
+50449684,Shell scripting,y,,tompham9016
+50449684,Hadoop,y,,tompham9016
+50449684,Spark,y,,tompham9016
+50449684,big data,n,,tompham9016
+50449684,Deep learning,y,,tompham9016
+50449684,Problem solving,y,,tompham9016
+39372682,big data,n,,tompham9016
+39372682,Scala,y,,tompham9016
+39372682,Spark,y,,tompham9016
+39372682,Redshift,y,,tompham9016
+39372682,NoSQL,y,,tompham9016
+39372682,MongoDB,y,,tompham9016
+39372682,Machine learning,y,,tompham9016
+39372682,kafka,n,,tompham9016
+39372682,R,y,,tompham9016
+39372682,Python,y,,tompham9016
+39372682,Business acumen,y,,tompham9016
+39372682,Problem solving,y,,tompham9016
+39372682,Deep learning,y,,tompham9016
+39372682,Stakeholder management,y,,tompham9016
+39372682,Communication,y,,tompham9016
+52312136,deliver solutions,n,,tompham9016
+52312136,big data,n,,tompham9016
+52312136,segmentations,n,,tompham9016
+52312136,MLOps,y,,tompham9016
+52312136,CI/CD,y,,tompham9016
+52312136,Python,y,,tompham9016
+52312136,R,y,,tompham9016
+52312136,SQL,y,,tompham9016
+52312136,BigQuery,y,,tompham9016
+52312136,data manipulation,n,,tompham9016
+52312136,Statistics,y,,tompham9016
+52312136,Predictive modelling,y,,tompham9016
+52312136,Machine learning,y,,tompham9016
+52312136,Supervised and Unsupervised,n,,tompham9016
+52312136,Data visualisation,y,,tompham9016
+52312136,Plotly,y,,tompham9016
+52312136,ggplot2,n,,tompham9016
+52312136,matplotlib,y,,tompham9016
+52312136,Excel,y,,tompham9016
+52312136,Powerpoint,n,,tompham9016
+52312136,Tableau,y,,tompham9016
+52312136,Communication,y,,tompham9016
+38744632,recommendation systems,n,,tompham9016
+38744632,Machine learning,y,,tompham9016
+38744632,data mining,n,,tompham9016
+38744632,propensity models,n,,tompham9016
+38744632,Statistics,y,,tompham9016
+38744632,Communication,y,,tompham9016
+38744632,Presentation skills,y,,tompham9016
+38744632,Stakeholder management,y,,tompham9016
+38744632,R,y,,tompham9016
+38744632,Python,y,,tompham9016
+38744632,SQL,y,,tompham9016
+38744632,Scala,y,,tompham9016
+38744632,SparklyR,n,,tompham9016
+38744632,Spark,y,,tompham9016
+38744632,production experience,n,,tompham9016
+38744632,big data,n,,tompham9016
+38744632,Google Cloud,y,,tompham9016
+38744632,AWS,y,,tompham9016
+38744632,Azure,y,,tompham9016
+38744632,Keras,y,,tompham9016
+38744632,TensorFlow,y,,tompham9016
+38744632,SparkMLlib,n,,tompham9016
+38744632,Teamwork,y,,tompham9016
+38680411,R,y,,tompham9016
+38680411,Python,y,,tompham9016
+38680411,Communication,y,,tompham9016
+38680411,PD,n,,tompham9016
+38680411,LGD,n,,tompham9016
+38680411,EAD,n,,tompham9016
+38680411,Business acumen,y,,tompham9016
+38680411,credit scoring,n,,tompham9016
+38680411,behavioural scoring,n,,tompham9016
+38680411,scorecard development,n,,tompham9016
+38680411,credit risk,n,,tompham9016
+38680411,Stakeholder management,y,,tompham9016
+38680411,Presentation skills,y,,tompham9016
+55489506,Predictive modelling,y,,tompham9016
+55489506,Leadership,y,,tompham9016
+55489506,Statistics,y,,tompham9016
+55489506,data collection,n,,tompham9016
+55489506,processing pipelines,n,,tompham9016
+55489506,Machine learning,y,,tompham9016
+55489506,data storage,n,,tompham9016
+55489506,automation,n,,tompham9016
+55489506,software development,n,,tompham9016
+55489506,Python,y,,tompham9016
+55489506,automated valuation models,n,,tompham9016
+55489506,Project management,y,,tompham9016
+55489506,attention to detail,n,,tompham9016
+55489506,meet deadlines,n,,tompham9016
+55489506,manage multiple projects,n,,tompham9016
+50056288,mathematical models,n,,tompham9016
+50056288,Deep learning,y,,tompham9016
+50056288,Optimisation,y,,tompham9016
+50056288,Python,y,,tompham9016
+50056288,MATLAB,y,,tompham9016
+50056288,R,y,,tompham9016
+50056288,C,n,,tompham9016
+50056288,Data modelling,y,,tompham9016
+50056288,Problem solving,y,,tompham9016
+50056288,Machine learning,y,,tompham9016
+50056288,Azure,y,,tompham9016
+53894393,data analysis,n,,tompham9016
+53894393,Problem solving,y,,tompham9016
+53894393,ETL,y,,tompham9016
+53894393,Data governance,y,,tompham9016
+53894393,Data quality,y,,tompham9016
+53894393,automation,n,,tompham9016
+53894393,forensic capability,n,,tompham9016
+53894393,data science,n,,tompham9016
+53894393,data manipulation,n,,tompham9016
+53894393,Data visualisation,y,,tompham9016
+53894393,SAS,y,,tompham9016
+53894393,SQL,y,,tompham9016
+53894393,R,y,,tompham9016
+53894393,Tableau,y,,tompham9016
+53894393,supervised/unsupervised,n,,tompham9016
+53894393,Machine learning,y,,tompham9016
+53894393,interpersonal skills,n,,tompham9016
+53894393,Stakeholder management,y,,tompham9016
+53894393,high level of accuracy,n,,tompham9016
+40386941,data analysis,n,,tompham9016
+40386941,big data,n,,tompham9016
+40386941,ETL,y,,tompham9016
+40386941,data science,n,,tompham9016
+40386941,providing insight,n,,tompham9016
+40386941,validating hypotheses,n,,tompham9016
+40386941,Translating analytical insights,n,,tompham9016
+40386941,Python,y,,tompham9016
+40386941,SQL,y,,tompham9016
+40386941,React,n,,tompham9016
+40386941,Machine learning,y,,tompham9016
+40386941,data manipulation,n,,tompham9016
+40386941,Excel,y,,tompham9016
+40386941,Hadoop,y,,tompham9016
+40386941,Map/Reduce,n,,tompham9016
+40386941,Hive,y,,tompham9016
+38644875,Advanced analytics,n,,tompham9016
+38644875,R,y,,tompham9016
+38644875,Python,y,,tompham9016
+38644875,Scala,y,,tompham9016
+38644875,Machine learning,y,,tompham9016
+38644875,Hive,y,,tompham9016
+38644875,Spark,y,,tompham9016
+38644875,Map R,n,,tompham9016
+38644875,ETL,y,,tompham9016
+38644875,MLOps,y,,tompham9016
+38644875,Statistics,y,,tompham9016
+38644875,Predictive modelling,y,,tompham9016
+38644875,Artificial intelligence,y,,tompham9016
