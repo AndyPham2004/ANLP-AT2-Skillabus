@@ -240,3 +240,16 @@ None: every one of the 54 uncovered skills is named by at least one course.
 - Pages that only render in a browser were read with Playwright (Kaggle Learn blocks urllib with reCAPTCHA, dbt Learn
   and tensorflow.org serve their content by script). juliaacademy.com timed out; learning.qlik.com returned 403.
 - Read with `dtype=str`; the file has no leading `#` line.
+
+## Check, 14 Oct 2026 (#66)
+
+Every `source_url` was requested again (one request per second) and the stored text compared with the live page.
+
+| Check | Result |
+|---|---|
+| Links | **56 of 56 answer HTTP 200.** Four DeepLearning.AI links now redirect to `/courses/...`, OpenCV's to the 4.13.0 docs; both still land on the same course |
+| Module titles on the page, word for word | 33 courses all or most; the rest differ only in formatting (the file joins title and blurb with " — ", the page shows them apart). Comparing words instead of whole strings, every module is on its page except one Kubeflow blurb and the 6 Terraform rows below |
+| Not checkable by script | Kaggle Learn (3 courses) and dbt Learn (1) render their module list in the browser only; check by hand |
+| `cost` | 54 free, 2 Coursera free-to-audit; not re-checked against the providers' pricing |
+
+Fixed in the file: 18 module titles from the XGBoost and LightGBM docs ended in the docs' link icon (U+F0C1), now removed; the 6 Terraform rows had title and blurb glued ("Install TerraformInstall Terraform on ..."), now "Install Terraform — Install Terraform on ...". No other row changed.
