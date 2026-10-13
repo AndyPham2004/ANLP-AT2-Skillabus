@@ -74,8 +74,12 @@ resumes_us_2021_clean.csv                       2,481 resumes   src/clean_resume
 --------------------------------------------------------------------------------
  resume_id, category, resume_text, n_data_skills
 
- Masked: emails (19 resumes), phone numbers incl. international (61),
+ Masked: emails (19 resumes), phone numbers incl. international (62),
  URLs (100), and person names (1,069 spans in 535 resumes) -> [NAME].
+ 14 Oct 2026 (#53): phone numbers with spaces around the dash ("(281) 491 - 3225")
+ and 75 more names: after Dr./Mr./Ms./Mrs./Prof., or before RN, LVN, LPN, CCM,
+ NP, PhD (referees whose first name the name list lacks). 39 resumes changed;
+ n_data_skills unchanged; none of them is in the CV-JD pairs.
  Employer names were already "Company Name" in the source.
 
  How names were found: spaCy NER tags 16,451 "PERSON" spans, but most are
