@@ -32,3 +32,10 @@ def test_ai_policy_sentences_leave_the_assessment_text():
 def test_ai_as_content_is_kept():
     text = "Design a generative AI pipeline for a business briefing. Evaluate the outputs."
     assert drop_ai_policy(text) == text
+
+
+def test_sparkplus_is_not_apache_spark():
+    from build_subject_profiles import clean
+    assert clean("Peer feedback tools such as SPARK Plus will be used") == "Peer feedback tools such as SPARKPlus will be used"
+    assert clean("a Spark+-based peer evaluation; SPARK will be used") == "a SPARKPlus-based peer evaluation; SPARKPlus will be used"
+    assert clean("Snowflake, Databricks, Spark, Airflow") == "Snowflake, Databricks, Spark, Airflow"
