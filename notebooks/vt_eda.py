@@ -13,7 +13,7 @@
 # %% [markdown]
 # # Skillabus: exploratory data analysis
 #
-# 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 10 Oct 2026
+# 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 14 Oct 2026
 #
 # **Runs on committed files only** (`data-eda/data/clean/`, `data-eda/outputs/`,
 # `data/processed/`), so it works on a fresh clone. Raw downloads are not needed; each
@@ -67,7 +67,7 @@ plt.rcParams.update({
     "savefig.bbox": "tight",
 })
 
-SEED = PROC / "skills_seed_v2.csv"          # the one dictionary the app uses (138 skills)
+SEED = PROC / "skills_seed_v2.csv"          # the one dictionary the app uses
 patterns = build_patterns(SEED)
 seed = pd.read_csv(SEED, skiprows=1)         # skiprows, not comment="#": the file contains C#
 cat = seed.set_index("canonical").category
@@ -108,11 +108,11 @@ resumes = pd.read_csv(CLEAN / "resumes_us_2021_clean.csv")
 esco = pd.read_csv(CLEAN / "esco_skills_clean.csv")
 lookup = pd.read_csv(CLEAN / "esco_label_lookup.csv")
 label_sample = pd.read_csv(CLEAN / "seek_label_sample_200.csv")
-profiles = pd.read_csv(PROC / "subject_profiles.csv")
+profiles = pd.read_csv(PROC / "subject_profiles.csv", dtype={"subject_code": str})
 
 inventory = pd.DataFrame([
     ("Seek Data Scientist ads", len(seek), "2019-22", "demand_pct (main demand)", "clean_seek.py"),
-    ("Recent AU data roles", len(recent), "Jan 2024, Sept 2026", "demand_pct_2026, trend", "build_recent_sample.py"),
+    ("Recent AU data roles", len(recent), "Jan 2024, Sept-Oct 2026", "demand_pct_2026, trend", "build_recent_sample.py"),
     ("Subject profile rows", len(profiles), f"{profiles.subject_code.nunique()} subjects, 2026",
      "recommend(), chat", "build_subject_profiles.py"),
     ("Resumes", len(resumes), "2021", "test inputs, CV-JD pairs", "clean_resumes.py"),
@@ -304,21 +304,38 @@ pd.DataFrame(checks, columns=["compared with Seek AU 2019-22", "ads", "what diff
 #
 # `data/processed/skill_counts_2026.csv` (`recount_recent.py`): every skill in three
 # periods, same method. Adzuna rows are excluded because the API cuts their text at
-# 500 characters. The 2026 sample is 22 full-text ads, so intervals are wide.
+# 500 characters. A 2026 job-board ad counts only if it is `in_sample` (posted within 60
+# days of its snapshot, at most 3 per employer and role group; `build_recent_sample.py`).
+# `pct_2026` is the data-scientist titles, like the Seek file; `pct_2026_all` adds the
+# other data roles. Both samples are small, so intervals are wide.
 
 # %%
 c26 = pd.read_csv(PROC / "skill_counts_2026.csv")
 LLM = ["Large language models", "Generative AI", "Prompt engineering", "RAG",
        "LangChain", "Vector databases", "Hugging Face", "Transformers"]
 c26[c26.skill.isin(LLM)][["skill", "pct_2019_22", "pct_2024_01", "n_2026", "pct_2026",
-                          "pct_2026_low", "pct_2026_high"]].sort_values("n_2026", ascending=False)
+                          "pct_2026_low", "pct_2026_high", "pct_2026_all"]].sort_values("n_2026", ascending=False)
+
+# %% [markdown]
+# Skills whose 2019-22 share lies outside the 95% interval of the 2026 data-scientist
+# share (technical skills, at least 3 of the 2026 ads, or a 2019-22 share above 20%):
+
+# %%
+tech26 = c26[c26.category != "Professional"].copy()
+moved = tech26[((tech26.pct_2019_22 < tech26.pct_2026_low) & (tech26.n_2026 >= 3))
+               | ((tech26.pct_2019_22 > tech26.pct_2026_high) & (tech26.pct_2019_22 > 20))]
+moved = moved.assign(direction=np.where(moved.pct_2026 > moved.pct_2019_22, "up", "down"))
+moved[["skill", "direction", "pct_2019_22", "pct_2024_01", "n_2026", "pct_2026", "pct_2026_low",
+       "pct_2026_high", "pct_2026_all"]].sort_values(["direction", "pct_2026"], ascending=[False, False])
 
 # %%
 full = recent[recent.full_text]
+y26 = full[full.period.astype(str).str.startswith("2026") & full.in_sample]
 long_recent = extract(full, "description", "ad_id", patterns)
 llm_ids = set(long_recent[long_recent.skill.isin(LLM)].ad_id) | set(long_seek[long_seek.skill.isin(LLM)].ad_id)
 periods = [("2019-22\nSeek", seek_ids), ("Jan 2024\nLinkedIn", full[full.period == "2024-01"]),
-           ("Sept 2026\njob boards", full[full.period == "2026-09"])]
+           ("2026 job boards\ndata scientists", y26[y26.role_group == "data scientist"]),
+           ("2026 job boards\nall data roles", y26)]
 rows = []
 for label, d in periods:
     k = d.ad_id.isin(llm_ids).sum()
@@ -337,8 +354,8 @@ for i, r in trend.iterrows():
     ax.text(i + 0.08, r.pct, f"{r.pct:.0f}%  ({r['with LLM-era skill']} of {r.ads:,})", va="center",
             color=INK, fontsize=9)
 ax.set_xticks(x, [p[0] for p in periods])
-ax.set_ylim(-3, 80)
-ax.set_xlim(-0.4, 2.9)
+ax.set_ylim(-3, 100)
+ax.set_xlim(-0.4, 3.9)
 ax.set_ylabel("ads naming an LLM-era skill (%)")
 ax.yaxis.grid(True, color=GRID)
 ax.set_axisbelow(True)
@@ -349,11 +366,11 @@ fig.savefig(FIG / "fig2_llm_trend.png")
 plt.show()
 
 # %% [markdown]
-# **Is that just the role mix?** The 2026 sample includes AI-titled engineering roles,
-# which mention LLMs by definition. Splitting by title:
+# **Is that just the role mix?** The 2026 data roles include AI and ML engineers,
+# whose ads mention LLMs by definition. Splitting the in-sample ads by title:
 
 # %%
-full = full.assign(ai_title=full.title.str.contains(r"\bAI\b|machine learning|\bML\b|research scien",
+full = full[full.in_sample].assign(ai_title=full.title.str.contains(r"\bAI\b|machine learning|\bML\b|research scien",
                                                     case=False))
 split = (full.assign(llm=full.ad_id.isin(llm_ids))
              .groupby(["period", "ai_title"]).llm.agg(ads="size", with_llm="sum"))
@@ -382,6 +399,7 @@ new[new.sum(axis=1) > 0].assign(in_dictionary=lambda d: [t.lower() in in_dict fo
 
 # %%
 profiles["mdsi"] = profiles.course.fillna("").str.contains("C04372")
+N_SUB = profiles.subject_code.nunique()
 layer_table = profiles.pivot_table(index="mdsi", columns="layer", values="text", aggfunc="size", fill_value=0)
 layer_table.index = layer_table.index.map({True: "MDSI (19 subjects)", False: "other courses"})
 display(layer_table)
@@ -403,9 +421,9 @@ top25 = tech.head(25).copy()
 top25["subjects"] = [long_prof[long_prof.skill == s].subject_code.nunique() for s in top25.index]
 top25["mdsi_subjects"] = [long_prof[(long_prof.skill == s) & long_prof.mdsi].subject_code.nunique()
                           for s in top25.index]
-print(f"taught by at least one of the 70 subjects: {(top25.subjects > 0).sum()} of 25  |  "
+print(f"taught by at least one of the {N_SUB} subjects: {(top25.subjects > 0).sum()} of 25  |  "
       f"by an MDSI subject: {(top25.mdsi_subjects > 0).sum()} of 25")
-print("not taught anywhere in the 70:", list(top25[top25.subjects == 0].index))
+print(f"not taught anywhere in the {N_SUB}:", list(top25[top25.subjects == 0].index))
 top25.round(1)
 
 # %%
@@ -421,12 +439,12 @@ ax.set_xticks([])
 ax.spines["bottom"].set_visible(False)
 ax.tick_params(axis="y", length=0)
 ax.legend(handles=[plt.Rectangle((0, 0), 1, 1, color=TEAL), plt.Rectangle((0, 0), 1, 1, color=COPPER)],
-          labels=["taught by a UTS subject", "not taught in the 70 subjects"], frameon=False,
+          labels=["taught by a UTS subject", f"not taught in the {N_SUB} subjects"], frameon=False,
           loc="lower right", fontsize=8)
 ax.set_title("Market demand against the UTS curriculum", loc="left", color=INK, fontsize=12)
 fig.subplots_adjust(bottom=0.05)
-fig.text(0.01, 0.0, "Bar = share of 3,204 Seek ads 2019-22. Subjects: 70 UTS Handbook 2026 subjects, "
-         "learning objectives, topics and descriptions.", color=MUTED, fontsize=8)
+fig.text(0.01, 0.0, f"Bar = share of 3,204 Seek ads 2019-22. Subjects: {N_SUB} UTS Handbook 2026 subjects, "
+         "learning objectives, assessments, topics and descriptions.", color=MUTED, fontsize=8)
 fig.savefig(FIG / "fig3_subject_coverage.png")
 plt.show()
 
@@ -441,7 +459,7 @@ for term, pat in {"large language models": r"large language model|\bLLMs?\b",
                   "RAG": r"retrieval[- ]augmented|\bRAG\b",
                   "transformers / BERT / GPT": r"\btransformers?\b|\bBERT\b|\bGPT\b"}.items():
     hit = profiles[profiles.text.str.contains(pat, case=False, regex=True)]
-    where = ", ".join(f"{r.subject_code} ({r.layer})" for r in hit.itertuples()) or "none of the 70 subjects"
+    where = ", ".join(f"{r.subject_code} ({r.layer})" for r in hit.itertuples()) or f"none of the {N_SUB} subjects"
     print(f"{term:26s} {where}")
 
 # %% [markdown]
@@ -484,16 +502,16 @@ lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "amb
 # | 1b | 697 listings are re-listings | 2,507 unique texts; per-listing and per-ad rankings agree (section 3) | keep n = 3,204 listings, and say so |
 # | 2 | The extractor agrees with an independent one | median kappa 0.637 over 14 tools on all 3,204 ads | dictionary tier is a defensible baseline |
 # | 3 | The ranking is not a Seek artefact | rank correlation 0.75 with Glassdoor Australia (same years), 0.82 with LinkedIn US; 0.61 with LinkedIn Australia 2024, an engineer-heavy mix | demand_pct can stand for "the Data Scientist market" |
-# | 4 | The 2019-22 corpus predates LLMs | LLM-era skills in 1 of 3,204 ads -> 2.4% (Jan 2024) -> 11 of 22 (2026); holds within non-AI titles | show the trend; flag LLM skills as emerging |
-# | 5 | 2026 is small and tech-heavy | 22 full-text ads; per-skill intervals of +-20 points | show 2026 as "n of 22", never a bare percentage |
-# | 6 | The data supports one role | the corpus is Data Scientist titles only; recent samples are too small to profile other roles | keep the role picker to Data Scientist |
-# | 7 | The curriculum covers most demand | 21 of the top 25 technical skills taught in at least one subject, 13 in MDSI; Scala, Power BI, Azure and Java in none | vendor tools get "no UTS subject" plus a self-study note |
-# | 8 | Subject text is uneven | no assessment layer; 9 MDSI subjects have no topic list | thin subjects rank low for lack of text, not content |
+# | 4 | The 2019-22 corpus predates LLMs | LLM-era skills in 1 of 3,204 ads -> 2.5% (Jan 2024) -> 7 of 9 data-scientist ads and 9 of 22 data roles (2026); rises within non-AI titles too | show the trend; flag LLM skills as emerging |
+# | 5 | 2026 is small and tech-heavy | 22 ads in the sample (60-day, 3 per employer), 9 of them data scientists; one ad = 11 points | keep 2019-22 as the weight; show 2026 as "n of 9" |
+# | 6 | Other roles need another source | the Seek corpus is Data Scientist titles only; 2023 tool lists (10,925 AU postings) give 6 more roles | role profiles from role_profiles.csv, tools only; Data Scientist keeps Seek |
+# | 7 | The curriculum names most demand | 24 of the top 25 technical skills named by at least one of 360 subjects, 15 in MDSI; Scala in none; Spark, Hadoop only in 94693 | named is not taught in depth; external courses cover the 54 skills no subject names |
+# | 8 | Subject text is uneven | assessment layer for 326 of 360 subjects; 9 MDSI subjects have no topic list, 3 have description only | thin subjects rank low for lack of text, not content |
 # | 9 | Few resumes look like data profiles | 125 of 2,481 with 2+ data skills; none in a data category | draw CV-JD pairs from those 125 only |
 # | 10 | ESCO reaches little of the modern stack | 36% of our dictionary maps; 716 ambiguous labels incl. "sql" | normalise() needs the emerging tag and a tie-break for ambiguous labels |
 #
 # **Limitations to state in the report:** the main corpus is 2019-22 (Feb 2019 to
-# Jan 2022), Data Scientist titles only, and 22% re-listings; the 2026 sample is 22 ads from 8 employers, 12 of them Canva;
+# Jan 2022), Data Scientist titles only, and 22% re-listings; the 2026 sample is 22 ads (9 data scientists from 5 employers);
 # resumes are US 2021 and de-identified rather than anonymous; subject profiles come
-# from the public handbook and lack assessment detail; ESCO coverage of the modern
+# from the public handbook and are uneven; matching is by keyword; ESCO coverage of the modern
 # stack is low.
