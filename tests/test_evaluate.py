@@ -212,3 +212,15 @@ class Files(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EvalRunTables(unittest.TestCase):
+    """--all must say what it could not run instead of failing or leaving a table out silently."""
+
+    def test_skipped_tier_and_missing_files_are_listed(self):
+        from skillabus.eval_run import tables_md
+        text = tables_md({}, {"ner": "RuntimeError: needs spaCy"}, "not run: one annotator", {"Chat judge": "not run: file missing"})
+        self.assertIn("| ner | not run |", text)
+        self.assertIn("RuntimeError: needs spaCy", text)
+        self.assertIn("not run: one annotator", text)
+        self.assertIn("- Chat judge: not run: file missing", text)
