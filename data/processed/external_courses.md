@@ -248,7 +248,7 @@ Every `source_url` was requested again (one request per second) and the stored t
 | Check | Result |
 |---|---|
 | Links | **56 of 56 answer HTTP 200.** Four DeepLearning.AI links now redirect to `/courses/...`, OpenCV's to the 4.13.0 docs; both still land on the same course |
-| Module titles on the page, word for word | 33 courses all or most; the rest differ only in formatting (the file joins title and blurb with " — ", the page shows them apart). Comparing words instead of whole strings, every module is on its page except one Kubeflow blurb and the 6 Terraform rows below |
+| Module titles on the page, word for word | 36 of the 55 courses with a module list match at least half their titles exactly; the rest differ only in formatting (the file joins title and blurb with " — ", the page shows them apart). Comparing words instead of whole strings, every module is on its page except one Kubeflow blurb and the 6 Terraform rows below |
 | Not checkable by script | Kaggle Learn (3 courses) and dbt Learn (1) render their module list in the browser only; check by hand |
 | `cost` | 54 free, 2 Coursera free-to-audit; not re-checked against the providers' pricing |
 
