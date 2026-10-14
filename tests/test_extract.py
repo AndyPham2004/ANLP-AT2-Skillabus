@@ -119,8 +119,9 @@ def test_ner_keeps_every_tier_1_skill_of_the_ad():
 
 
 def test_ner_proposes_skills_outside_the_dictionary():
+    # Alteryx joined the dictionary on 14 Oct (#65), so only the other two are candidates.
     assert candidates("Experience with tools such as Alteryx, Dataiku and KNIME.") == {
-        "Alteryx", "Dataiku", "KNIME"}
+        "Dataiku", "KNIME"}
     assert candidates("Demonstrated experience in customer segmentation and Python.") == {
         "customer segmentation"}
     assert "data science" in candidates(AD)

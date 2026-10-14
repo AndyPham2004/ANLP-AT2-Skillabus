@@ -1,0 +1,288 @@
+pair_id,ad_id,resume_id,skill_label,in_dictionary,gold_status,resume_evidence_text,annotator
+CVJD03,39142341,13385306,R,y,missing,,hoaithuongnguyen-uts
+CVJD03,39142341,13385306,Python,y,missing,,hoaithuongnguyen-uts
+CVJD03,39142341,13385306,Scala,y,missing,,hoaithuongnguyen-uts
+CVJD03,39142341,13385306,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD03,39142341,13385306,Data privacy,y,missing,,hoaithuongnguyen-uts
+CVJD03,39142341,13385306,Data cleaning,y,missing,,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,Python,y,missing,,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,SQL,y,have,Oracle SQL,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,Excel,y,missing,,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,VBA,y,missing,,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,Hadoop,y,missing,,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,Hive,y,missing,,hoaithuongnguyen-uts
+CVJD04,40386941,13385306,Data cleaning,y,missing,,hoaithuongnguyen-uts
+CVJD05,38680411,13385306,R,y,missing,,hoaithuongnguyen-uts
+CVJD05,38680411,13385306,Python,y,missing,,hoaithuongnguyen-uts
+CVJD05,38680411,13385306,Predictive modelling,y,missing,,hoaithuongnguyen-uts
+CVJD06,54948934,11957080,Python,y,missing,,hoaithuongnguyen-uts
+CVJD06,54948934,11957080,R,y,missing,,hoaithuongnguyen-uts
+CVJD06,54948934,11957080,SQL,y,have,"enterprise class, SQL compliant database software",hoaithuongnguyen-uts
+CVJD06,54948934,11957080,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD06,54948934,11957080,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD06,54948934,11957080,Statistics,y,missing,,hoaithuongnguyen-uts
+CVJD06,54948934,11957080,Time series forecasting,y,missing,,hoaithuongnguyen-uts
+CVJD06,54948934,11957080,Data visualisation,y,have,? Analyzed and produced visualized reports of abstract data,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,Python,y,missing,,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,NumPy,y,missing,,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,scikit-learn,y,missing,,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,pandas,y,missing,,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,SQL,y,have,"enterprise class, SQL compliant database software",hoaithuongnguyen-uts
+CVJD07,50727502,11957080,R,y,missing,,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,Tableau,y,missing,,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,Power BI,y,missing,,hoaithuongnguyen-uts
+CVJD07,50727502,11957080,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,Python,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,R,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,SQL,y,have,"enterprise class, SQL compliant database software",hoaithuongnguyen-uts
+CVJD08,50014854,11957080,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,Random forest,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,XGBoost,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,Logistic regression,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,Clustering,y,missing,,hoaithuongnguyen-uts
+CVJD08,50014854,11957080,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD09,55085339,11957080,SQL,y,have,"enterprise class, SQL compliant database software",hoaithuongnguyen-uts
+CVJD09,55085339,11957080,R,y,missing,,hoaithuongnguyen-uts
+CVJD09,55085339,11957080,Python,y,missing,,hoaithuongnguyen-uts
+CVJD10,38680411,11957080,R,y,missing,,hoaithuongnguyen-uts
+CVJD10,38680411,11957080,Python,y,missing,,hoaithuongnguyen-uts
+CVJD10,38680411,11957080,Predictive modelling,y,missing,,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,SQL,y,have,Languages: SQL,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,Python,y,missing,,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,R,y,missing,,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,Tableau,y,missing,,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,ETL,y,missing,,hoaithuongnguyen-uts
+CVJD11,53894393,30223363,Data quality,y,have,client reports relating to data quality,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,Python,y,missing,,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,SQL,y,have,Languages: SQL,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,R,y,missing,,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,Tableau,y,missing,,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,Excel,y,missing,,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,Data visualisation,y,missing,,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,Plotly,y,missing,,hoaithuongnguyen-uts
+CVJD12,52312136,30223363,matplotlib,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,Python,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,NumPy,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,scikit-learn,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,pandas,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,SQL,y,have,Languages: SQL,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,R,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,Tableau,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,Power BI,y,missing,,hoaithuongnguyen-uts
+CVJD13,50727502,30223363,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD14,55085339,30223363,SQL,y,have,Languages: SQL,hoaithuongnguyen-uts
+CVJD14,55085339,30223363,R,y,missing,,hoaithuongnguyen-uts
+CVJD14,55085339,30223363,Python,y,missing,,hoaithuongnguyen-uts
+CVJD15,50056288,30223363,Python,y,missing,,hoaithuongnguyen-uts
+CVJD15,50056288,30223363,MATLAB,y,missing,,hoaithuongnguyen-uts
+CVJD15,50056288,30223363,R,y,missing,,hoaithuongnguyen-uts
+CVJD15,50056288,30223363,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD15,50056288,30223363,Deep learning,y,missing,,hoaithuongnguyen-uts
+CVJD15,50056288,30223363,Azure,y,missing,,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,Python,y,have,Python using Pandas,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,R,y,have,"Modelling using R, SAS, Python",hoaithuongnguyen-uts
+CVJD16,50014854,12011623,SQL,y,have,Databases like Oracle and Microsoft SQL,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,SAS,y,have,"Modelling using R, SAS, Python",hoaithuongnguyen-uts
+CVJD16,50014854,12011623,Machine learning,y,have,Data Mining and Machine Learning,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,Random forest,y,have,Random Forests,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,XGBoost,y,missing,,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,Logistic regression,y,have,logistic regression,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,Clustering,y,have,Clustering techniques,hoaithuongnguyen-uts
+CVJD16,50014854,12011623,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,Python,y,have,Python using Pandas,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,SQL,y,have,Databases like Oracle and Microsoft SQL,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,Machine learning,y,have,Data Mining and Machine Learning,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,Excel,y,missing,,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,VBA,y,missing,,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,Hadoop,y,missing,,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,Hive,y,missing,,hoaithuongnguyen-uts
+CVJD17,40386941,12011623,Data cleaning,y,have,data cleaning,hoaithuongnguyen-uts
+CVJD18,53894393,12011623,SQL,y,have,Databases like Oracle and Microsoft SQL,hoaithuongnguyen-uts
+CVJD18,53894393,12011623,SAS,y,have,"Modelling using R, SAS, Python",hoaithuongnguyen-uts
+CVJD18,53894393,12011623,Python,y,have,Python using Pandas,hoaithuongnguyen-uts
+CVJD18,53894393,12011623,R,y,have,"Modelling using R, SAS, Python",hoaithuongnguyen-uts
+CVJD18,53894393,12011623,Tableau,y,have,Visualization software like Tableau,hoaithuongnguyen-uts
+CVJD18,53894393,12011623,Machine learning,y,have,Data Mining and Machine Learning,hoaithuongnguyen-uts
+CVJD18,53894393,12011623,ETL,y,missing,,hoaithuongnguyen-uts
+CVJD18,53894393,12011623,Data quality,y,missing,,hoaithuongnguyen-uts
+CVJD19,38692371,12011623,R,y,have,"Modelling using R, SAS, Python",hoaithuongnguyen-uts
+CVJD19,38692371,12011623,Python,y,have,Python using Pandas,hoaithuongnguyen-uts
+CVJD19,38692371,12011623,SQL,y,have,Databases like Oracle and Microsoft SQL,hoaithuongnguyen-uts
+CVJD19,38692371,12011623,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD19,38692371,12011623,Machine learning,y,have,Data Mining and Machine Learning,hoaithuongnguyen-uts
+CVJD19,38692371,12011623,Data visualisation,y,have,communicate effectively through visualization,hoaithuongnguyen-uts
+CVJD20,38680411,12011623,R,y,have,"Modelling using R, SAS, Python",hoaithuongnguyen-uts
+CVJD20,38680411,12011623,Python,y,have,Python using Pandas,hoaithuongnguyen-uts
+CVJD20,38680411,12011623,Predictive modelling,y,have,Design and implement statistical / predictive models,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,Python,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,R,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,SQL,y,have,Used SQL to mine data,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,Random forest,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,XGBoost,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,Logistic regression,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,Clustering,y,missing,,hoaithuongnguyen-uts
+CVJD21,50014854,23864858,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD22,38744632,23864858,Recommender systems,y,missing,,hoaithuongnguyen-uts
+CVJD22,38744632,23864858,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD22,38744632,23864858,R,y,missing,,hoaithuongnguyen-uts
+CVJD22,38744632,23864858,SQL,y,have,Used SQL to mine data,hoaithuongnguyen-uts
+CVJD22,38744632,23864858,Python,y,missing,,hoaithuongnguyen-uts
+CVJD22,38744632,23864858,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD23,50056288,23864858,Python,y,missing,,hoaithuongnguyen-uts
+CVJD23,50056288,23864858,MATLAB,y,missing,,hoaithuongnguyen-uts
+CVJD23,50056288,23864858,R,y,missing,,hoaithuongnguyen-uts
+CVJD23,50056288,23864858,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD23,50056288,23864858,Deep learning,y,missing,,hoaithuongnguyen-uts
+CVJD23,50056288,23864858,Azure,y,missing,,hoaithuongnguyen-uts
+CVJD24,55489506,23864858,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD24,55489506,23864858,Predictive modelling,y,missing,,hoaithuongnguyen-uts
+CVJD24,55489506,23864858,Statistics,y,have,Statistic,hoaithuongnguyen-uts
+CVJD24,55489506,23864858,Python,y,missing,,hoaithuongnguyen-uts
+CVJD25,38680411,23864858,R,y,missing,,hoaithuongnguyen-uts
+CVJD25,38680411,23864858,Python,y,missing,,hoaithuongnguyen-uts
+CVJD25,38680411,23864858,Predictive modelling,y,missing,,hoaithuongnguyen-uts
+CVJD26,54948934,50328713,Python,y,have,"C++, Python, MATLAB, Git, Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD26,54948934,50328713,R,y,have,"Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD26,54948934,50328713,SQL,y,have,SQL (basic),hoaithuongnguyen-uts
+CVJD26,54948934,50328713,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD26,54948934,50328713,Machine learning,y,have,Machine Learning Tools and Libraries,hoaithuongnguyen-uts
+CVJD26,54948934,50328713,Statistics,y,partial,"Regression analysis, Statistical process control",hoaithuongnguyen-uts
+CVJD26,54948934,50328713,Time series forecasting,y,missing,,hoaithuongnguyen-uts
+CVJD26,54948934,50328713,Data visualisation,y,partial,"Seaborn, matplotlib",hoaithuongnguyen-uts
+CVJD26,54948934,50328713,Deep learning,y,partial,TensorFlow (basic),hoaithuongnguyen-uts
+CVJD27,50727502,50328713,Python,y,have,"C++, Python, MATLAB, Git, Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD27,50727502,50328713,NumPy,y,missing,,hoaithuongnguyen-uts
+CVJD27,50727502,50328713,scikit-learn,y,have,Scikit-learn,hoaithuongnguyen-uts
+CVJD27,50727502,50328713,pandas,y,have,Pandas,hoaithuongnguyen-uts
+CVJD27,50727502,50328713,SQL,y,have,SQL (basic),hoaithuongnguyen-uts
+CVJD27,50727502,50328713,R,y,have,"Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD27,50727502,50328713,Tableau,y,missing,,hoaithuongnguyen-uts
+CVJD27,50727502,50328713,Power BI,y,missing,,hoaithuongnguyen-uts
+CVJD27,50727502,50328713,Machine learning,y,have,Machine Learning Tools and Libraries,hoaithuongnguyen-uts
+CVJD27,50727502,50328713,Data visualisation,y,partial,"Seaborn, matplotlib",hoaithuongnguyen-uts
+CVJD28,55489506,50328713,Machine learning,y,have,Machine Learning Tools and Libraries,hoaithuongnguyen-uts
+CVJD28,55489506,50328713,Predictive modelling,y,have,multivariate statistical model to substitute traditional CFD model for predicting,hoaithuongnguyen-uts
+CVJD28,55489506,50328713,Statistics,y,partial,"Regression analysis, Statistical process control",hoaithuongnguyen-uts
+CVJD28,55489506,50328713,Python,y,have,"C++, Python, MATLAB, Git, Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD29,38692371,50328713,R,y,have,"Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD29,38692371,50328713,Python,y,have,"C++, Python, MATLAB, Git, Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD29,38692371,50328713,SQL,y,have,SQL (basic),hoaithuongnguyen-uts
+CVJD29,38692371,50328713,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD29,38692371,50328713,Machine learning,y,have,Machine Learning Tools and Libraries,hoaithuongnguyen-uts
+CVJD29,38692371,50328713,Data visualisation,y,partial,"Seaborn, matplotlib",hoaithuongnguyen-uts
+CVJD30,38680411,50328713,R,y,have,"Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD30,38680411,50328713,Python,y,have,"C++, Python, MATLAB, Git, Bash, R, SQL (basic)",hoaithuongnguyen-uts
+CVJD30,38680411,50328713,Predictive modelling,y,have,multivariate statistical model to substitute traditional CFD model for predicting,hoaithuongnguyen-uts
+CVJD31,55085339,35483925,SQL,y,have,Used Oracle SQL to analyses the financial data,hoaithuongnguyen-uts
+CVJD31,55085339,35483925,R,y,missing,,hoaithuongnguyen-uts
+CVJD31,55085339,35483925,Python,y,missing,,hoaithuongnguyen-uts
+CVJD32,55520483,35483925,Python,y,missing,,hoaithuongnguyen-uts
+CVJD32,55520483,35483925,R,y,missing,,hoaithuongnguyen-uts
+CVJD32,55520483,35483925,Predictive modelling,y,missing,,hoaithuongnguyen-uts
+CVJD32,55520483,35483925,Data warehousing,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,Python,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,Feature engineering,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,SQL,y,have,Used Oracle SQL to analyses the financial data,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,NoSQL,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,MLOps,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,Azure,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,AWS,y,missing,,hoaithuongnguyen-uts
+CVJD34,52727857,35483925,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD35,50056288,35483925,Python,y,missing,,hoaithuongnguyen-uts
+CVJD35,50056288,35483925,MATLAB,y,missing,,hoaithuongnguyen-uts
+CVJD35,50056288,35483925,R,y,missing,,hoaithuongnguyen-uts
+CVJD35,50056288,35483925,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD35,50056288,35483925,Deep learning,y,missing,,hoaithuongnguyen-uts
+CVJD35,50056288,35483925,Azure,y,missing,,hoaithuongnguyen-uts
+CVJD36,55085339,15083600,SQL,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD36,55085339,15083600,R,y,missing,,hoaithuongnguyen-uts
+CVJD36,55085339,15083600,Python,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,Python,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,SQL,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,Excel,y,have,Proficient in Excel,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,VBA,y,missing,,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,Hadoop,y,missing,,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,Hive,y,missing,,hoaithuongnguyen-uts
+CVJD37,40386941,15083600,Data cleaning,y,missing,,hoaithuongnguyen-uts
+CVJD38,38692371,15083600,R,y,missing,,hoaithuongnguyen-uts
+CVJD38,38692371,15083600,Python,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD38,38692371,15083600,SQL,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD38,38692371,15083600,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD38,38692371,15083600,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD38,38692371,15083600,Data visualisation,y,missing,,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,SQL,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,Python,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,R,y,missing,,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,Tableau,y,missing,,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,ETL,y,missing,,hoaithuongnguyen-uts
+CVJD39,53894393,15083600,Data quality,y,missing,,hoaithuongnguyen-uts
+CVJD40,38644875,15083600,R,y,missing,,hoaithuongnguyen-uts
+CVJD40,38644875,15083600,Python,y,have,analyzing SQL and Python scripts,hoaithuongnguyen-uts
+CVJD40,38644875,15083600,Scala,y,missing,,hoaithuongnguyen-uts
+CVJD40,38644875,15083600,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD40,38644875,15083600,Hive,y,missing,,hoaithuongnguyen-uts
+CVJD40,38644875,15083600,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD41,55085339,13586069,SQL,y,have,SQL (1 year),hoaithuongnguyen-uts
+CVJD41,55085339,13586069,R,y,missing,,hoaithuongnguyen-uts
+CVJD41,55085339,13586069,Python,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,Python,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,R,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,SQL,y,have,SQL (1 year),hoaithuongnguyen-uts
+CVJD42,50014854,13586069,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,Machine learning,y,have,Machine Learning (2 years),hoaithuongnguyen-uts
+CVJD42,50014854,13586069,Random forest,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,XGBoost,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,Logistic regression,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,Clustering,y,missing,,hoaithuongnguyen-uts
+CVJD42,50014854,13586069,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD44,38744632,13586069,Recommender systems,y,missing,,hoaithuongnguyen-uts
+CVJD44,38744632,13586069,Machine learning,y,have,Machine Learning (2 years),hoaithuongnguyen-uts
+CVJD44,38744632,13586069,R,y,missing,,hoaithuongnguyen-uts
+CVJD44,38744632,13586069,SQL,y,have,SQL (1 year),hoaithuongnguyen-uts
+CVJD44,38744632,13586069,Python,y,missing,,hoaithuongnguyen-uts
+CVJD44,38744632,13586069,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD45,50056288,13586069,Python,y,missing,,hoaithuongnguyen-uts
+CVJD45,50056288,13586069,MATLAB,y,missing,,hoaithuongnguyen-uts
+CVJD45,50056288,13586069,R,y,missing,,hoaithuongnguyen-uts
+CVJD45,50056288,13586069,Machine learning,y,have,Machine Learning (2 years),hoaithuongnguyen-uts
+CVJD45,50056288,13586069,Deep learning,y,missing,,hoaithuongnguyen-uts
+CVJD45,50056288,13586069,Azure,y,missing,,hoaithuongnguyen-uts
+CVJD46,55489506,98348532,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD46,55489506,98348532,Predictive modelling,y,missing,,hoaithuongnguyen-uts
+CVJD46,55489506,98348532,Statistics,y,missing,,hoaithuongnguyen-uts
+CVJD46,55489506,98348532,Python,y,missing,,hoaithuongnguyen-uts
+CVJD47,53894393,98348532,SQL,y,have,SQL Query writing,hoaithuongnguyen-uts
+CVJD47,53894393,98348532,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD47,53894393,98348532,Python,y,missing,,hoaithuongnguyen-uts
+CVJD47,53894393,98348532,R,y,missing,,hoaithuongnguyen-uts
+CVJD47,53894393,98348532,Tableau,y,missing,,hoaithuongnguyen-uts
+CVJD47,53894393,98348532,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD47,53894393,98348532,ETL,y,have,"BTEQ, Fast load, and Fast export for loading data from Oracle to Teradata",hoaithuongnguyen-uts
+CVJD47,53894393,98348532,Data quality,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,Python,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,R,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,SQL,y,have,SQL Query writing,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,SAS,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,Random forest,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,XGBoost,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,Logistic regression,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,Clustering,y,missing,,hoaithuongnguyen-uts
+CVJD48,50014854,98348532,Spark,y,missing,,hoaithuongnguyen-uts
+CVJD50,50056288,98348532,Python,y,missing,,hoaithuongnguyen-uts
+CVJD50,50056288,98348532,MATLAB,y,missing,,hoaithuongnguyen-uts
+CVJD50,50056288,98348532,R,y,missing,,hoaithuongnguyen-uts
+CVJD50,50056288,98348532,Machine learning,y,missing,,hoaithuongnguyen-uts
+CVJD50,50056288,98348532,Deep learning,y,missing,,hoaithuongnguyen-uts
+CVJD50,50056288,98348532,Azure,y,missing,,hoaithuongnguyen-uts
