@@ -353,6 +353,6 @@ elif ss.step == "results":
                         f"covers {', '.join(lc(c) for c in r['covers'])} · [Handbook]({r['source_url']})")
 
     st.markdown(
-        f"<p class='engine'>Engine: {ss.engine}. Skills matched with our 138-skill dictionary; "
+        f"<p class='engine'>Engine: {ss.engine}. Skills matched with our {backend.dictionary_size()}-skill dictionary; "
         "subjects matched on Handbook learning objectives, topics and descriptions. "
         "Results are suggestions, not advice.</p>", unsafe_allow_html=True)

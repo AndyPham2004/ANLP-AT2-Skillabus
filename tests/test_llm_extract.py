@@ -68,6 +68,25 @@ def test_second_run_uses_the_cache(tmp_path, monkeypatch):
     assert first == second and client.calls == 1
 
 
+def test_no_key_and_no_cache_raises_runtime_error(tmp_path, monkeypatch):
+    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    try:
+        llm_extract.extract_llm(AD)
+    except RuntimeError as error:
+        assert "OPENAI_API_KEY" in str(error)
+    else:
+        raise AssertionError("expected RuntimeError")
+    assert not list(tmp_path.iterdir())   # nothing cached
+
+
+def test_no_key_still_reads_the_cache(tmp_path, monkeypatch):
+    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
+    first = llm_extract.extract_llm(AD, client=FakeClient([{"text": "SQL", "kind": "hard"}]))
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    assert llm_extract.extract_llm(AD) == first
+
+
 def test_bad_json_returns_nothing(tmp_path, monkeypatch):
     monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
     client = FakeClient([])

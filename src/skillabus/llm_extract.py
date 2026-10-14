@@ -61,6 +61,8 @@ def _cache_path(text: str) -> Path:
 
 def _call(text: str, client) -> list[dict]:
     if client is None:
+        if not os.getenv("OPENAI_API_KEY"):   # RuntimeError: the evaluation reports the tier as "not run"
+            raise RuntimeError("OPENAI_API_KEY is not set and this text is not in the cache")
         from openai import OpenAI
         client = OpenAI(max_retries=3, timeout=60)
     resp = client.chat.completions.create(

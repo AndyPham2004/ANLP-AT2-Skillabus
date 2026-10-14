@@ -39,5 +39,6 @@ CLAUDE.md
 # Votes written by the app during testing
 data/processed/feedback.csv
 
-# LLM and Lightcast response caches
+# LLM and Lightcast response caches. The 30 GPT-4o-mini files for the evaluation sets are committed with
+# `git add -f` (data/cache/llm_extract/README.md); files the app writes for user ads and resumes stay ignored.
 data/cache/
