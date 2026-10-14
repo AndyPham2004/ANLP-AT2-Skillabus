@@ -1,0 +1,170 @@
+{
+ "code": "36118",
+ "title": "Applied Natural Language Processing",
+ "credit_points": "8",
+ "academic_org": "TD School - Retired",
+ "study_level_ref": "Postgraduate",
+ "implementation_year": "2026",
+ "unit_learning_outcomes": [
+  {
+   "lo_domain_description": "",
+   "offerings": [],
+   "linking_id": "09f8426147351610a31de422036d43ea",
+   "lo_cl_id": "f47a7a4583d02e50fed7d4326daad35d",
+   "academic_item": {
+    "value": "36118",
+    "cl_id": "347a7a4583d02e50fed7d4326daad35b",
+    "key": "code"
+   },
+   "description": "<p>Evaluate complex challenges for problem solving and build practical NLP applications (CILO 2.3, 4.2)</p>",
+   "lo_domain": [],
+   "order": "200",
+   "number": "2",
+   "code": "SLO2",
+   "cl_id": "f47a7a4583d02e50fed7d4326daad35d",
+   "ga_map": []
+  },
+  {
+   "lo_domain_description": "",
+   "offerings": [],
+   "linking_id": "8df8426147351610a31de422036d43ea",
+   "lo_cl_id": "707a7a4583d02e50fed7d4326daad35e",
+   "academic_item": {
+    "value": "36118",
+    "cl_id": "347a7a4583d02e50fed7d4326daad35b",
+    "key": "code"
+   },
+   "description": "<p>Apply text mining techniques on unstructured data sets using advanced NLP programming packages (CILOs 1.2, 2.2)</p>",
+   "lo_domain": [],
+   "order": "300",
+   "number": "3",
+   "code": "SLO3",
+   "cl_id": "707a7a4583d02e50fed7d4326daad35e",
+   "ga_map": []
+  },
+  {
+   "lo_domain_description": "",
+   "offerings": [],
+   "linking_id": "89f8426147351610a31de422036d43eb",
+   "lo_cl_id": "f87a7a4583d02e50fed7d4326daad35d",
+   "academic_item": {
+    "value": "36118",
+    "cl_id": "347a7a4583d02e50fed7d4326daad35b",
+    "key": "code"
+   },
+   "description": "<p>Articulate the strengths, weaknesses and underlying assumptions of NLP and text analysis to apply ethical practices (CILO 5.1, 5.2)</p>",
+   "lo_domain": [],
+   "order": "500",
+   "number": "5",
+   "code": "SLO5",
+   "cl_id": "f87a7a4583d02e50fed7d4326daad35d",
+   "ga_map": []
+  },
+  {
+   "lo_domain_description": "",
+   "offerings": [],
+   "linking_id": "05f8426147351610a31de422036d43eb",
+   "lo_cl_id": "fc7a7a4583d02e50fed7d4326daad35d",
+   "academic_item": {
+    "value": "36118",
+    "cl_id": "347a7a4583d02e50fed7d4326daad35b",
+    "key": "code"
+   },
+   "description": "<p>Interpret, extract value and effectively communicate insights from text analysis and create real-world applications suitable to a range of audiences (CILOs 2.4, 3.2, 4.2)</p>",
+   "lo_domain": [],
+   "order": "400",
+   "number": "4",
+   "code": "SLO4",
+   "cl_id": "fc7a7a4583d02e50fed7d4326daad35d",
+   "ga_map": []
+  },
+  {
+   "lo_domain_description": "",
+   "offerings": [],
+   "linking_id": "41f8426147351610a31de422036d43ea",
+   "lo_cl_id": "7c7a7a4583d02e50fed7d4326daad35d",
+   "academic_item": {
+    "value": "36118",
+    "cl_id": "347a7a4583d02e50fed7d4326daad35b",
+    "key": "code"
+   },
+   "description": "<p>Understand core concepts of Natural Language Processing (NLP) and computational linguistics including its limitations (CILO 2.2, 2.3)</p>",
+   "lo_domain": [],
+   "order": "100",
+   "number": "1",
+   "code": "SLO1",
+   "cl_id": "7c7a7a4583d02e50fed7d4326daad35d",
+   "ga_map": []
+  }
+ ],
+ "description": "<p>This subject introduces you to the complexities of analysing human language data and the use of Natural Language Processing (NLP) and text mining techniques. You&#39;ll develop both technical and communicative skills to process and interpret unstructured textual data. Covering core NLP concepts and extraction techniques, the course equips you with practical skills for insightful pattern discovery in natural language text, while emphasising ethical considerations in diverse applications.</p>",
+ "learning_approach": "<ul>\n<li>Introduction to unstructured data and natural language text</li>\n<li>Foundations of Natural Language Processing (NLP)</li>\n<li>Text analysis techniques using Python</li>\n<li>Machine Learning using text</li>\n<li>Advanced NLP and Deep Learning</li>\n<li>Natural Language Understanding (NLU) and Natural Language Generation (NLG)</li>\n<li>Large Language Models (LLMs)</li>\n<li>Real-world applications of NLP</li>\n<li>Ethical best practices in NLP</li>\n</ul>",
+ "teaching_strategies": "<p>Blend of online and face to face activities: The subject is offered through a series of teaching sessions which blend online and face-to-face learning. Students learn through interactive lectures and classroom activities making use of the subject materials on canvas. They also engage in individual and collaborative learning activities to understand and apply text analysis techniques in diverse settings.</p>\n<p>Authentic problem based learning: This subject offers a range of authentic data science problems to solve that will help develop studentsâ text analysis skills. They work on real world data analysis problems for broad areas of interest using unstructured data and contemporary techniques.</p>\n<p>Collaborative work: Group activities will enable students to leverage peer-learning and demonstrate effective team participation, as well as learning to work in professional teams with an appreciation of diverse perspectives on data science and innovation.</p>\n<p>Future-oriented strategies: Students will be exposed to contemporary learning models using speculative thinking, ethical and human-centered approaches as well as reflection. Electronic portfolios will be used to curate, consolidate and provide evidence of learning and development of course outcomes, graduate attributes and professional evolution. Formative feedback will be offered with all assessment activities for successful engagement.</p>",
+ "requisite_detail": "<p>Before you enrol in this subject, you must ensure you have met its requisites. The requisites for this subject can be viewed on its <a href=\"https://studentforms.uts.edu.au/evop/access/search.cfm?subjectcode=36118\"> access conditions </a>page. </p><p>To learn more about requisites, please visit the<a href=\"https://www.uts.edu.au/current-students/managing-your-course/using-uts-systems/student-forms-apps-and-systems/uts-handbook\"> How to use the Handbook </a>guide.</p>",
+ "offering": [
+  {
+   "linking_id": "0901ab4f47dd5610d42c8833036d43ad",
+   "cl_id": "747a7a4583d02e50fed7d4326daad35c",
+   "comments": "",
+   "language_of_instruction": {
+    "label": "English",
+    "value": "en"
+   },
+   "name": "",
+   "ext_id": "",
+   "publish": "true",
+   "order": "",
+   "offered": "true",
+   "off_id": "747a7a4583d02e50fed7d4326daad35c",
+   "academic_item": {
+    "value": "36118",
+    "cl_id": "347a7a4583d02e50fed7d4326daad35b",
+    "key": "code"
+   },
+   "year": "",
+   "clarification_to_appear_in_handbook": "",
+   "start_date": "",
+   "end_date": "",
+   "display_name": "City campus-Autumn Session-On campus - Weekly",
+   "location": "City campus",
+   "attendance_type": "NA",
+   "student_types": "Domestic, International",
+   "mode": "On campus - Weekly",
+   "admission_calendar": "",
+   "teaching_period": "Autumn Session",
+   "links": []
+  },
+  {
+   "linking_id": "4901ab4f47dd5610d42c8833036d43ae",
+   "cl_id": "f47a7a4583d02e50fed7d4326daad35c",
+   "comments": "",
+   "language_of_instruction": {
+    "label": "English",
+    "value": "en"
+   },
+   "name": "",
+   "ext_id": "",
+   "publish": "true",
+   "order": "",
+   "offered": "true",
+   "off_id": "f47a7a4583d02e50fed7d4326daad35c",
+   "academic_item": {
+    "value": "36118",
+    "cl_id": "347a7a4583d02e50fed7d4326daad35b",
+    "key": "code"
+   },
+   "year": "",
+   "clarification_to_appear_in_handbook": "",
+   "start_date": "",
+   "end_date": "",
+   "display_name": "City campus-Spring Session-On campus - Weekly",
+   "location": "City campus",
+   "attendance_type": "NA",
+   "student_types": "Domestic, International",
+   "mode": "On campus - Weekly",
+   "admission_calendar": "",
+   "teaching_period": "Spring Session",
+   "links": []
+  }
+ ]
+}

@@ -95,6 +95,17 @@ no assessments yet), by `app/mock/build_mock.py`.
 | `source_url` | Handbook or subject outline URL |
 | `collected_by` | `Akash` |
 
+Since 13 Oct 2026 the file holds 360 subjects in 44 UTS courses (Masters, graduate certificates and
+diplomas, bachelors, honours), all four layers, 6,853 rows; `course` is pipe-joined when a subject
+sits in several courses; read it with `dtype=str` (codes such as `090043`). Three companion files
+share the `subject_code` key:
+
+| File | One row = | Columns to know |
+|---|---|---|
+| `prerequisites.csv` | one item of a subject's access-conditions rule | `kind` requisite / antirequisite; `rule` ("(1 AND 2 AND 3)"); `item` ("1a"); `type` academic / admission / other / corequisite; `requisite_code` when the item is a subject; `evop_found` n when the site has no record of the code (then an empty rule is unverified) |
+| `offerings.csv` | one teaching period × mode | `teaching_period` ("Autumn Session"), `mode` |
+| `external_courses.csv` | one sentence or module of an outside course | same 7 columns as the profiles, `subject_code` = `EXT-<provider>-<slug>`, `course` = `external`, plus `provider`, `cost` (free / free-to-audit / paid), `date_checked` |
+
 ## 4. Feedback votes: `data/processed/feedback.csv` (written by the app)
 
 `timestamp, subject_code, skill_label, vote (up|down), has_taken_subject (y|n)`. No names.
