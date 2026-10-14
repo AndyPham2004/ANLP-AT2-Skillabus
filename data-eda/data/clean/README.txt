@@ -73,9 +73,11 @@ jobs_au_recent_2024-2026_clean.csv              192 roles   src/build_recent_sam
  in_sample on the 2026 job-board rows: posted within 60 days of the snapshot
  and at most 3 per company and role group (most recent first). 22 rows:
  9 data scientists from 5 employers, 13 other data roles. Count only these.
- Recruiter emails and phone numbers are masked as [EMAIL] / [PHONE] (63 and 23).
- Recruiters' names next to them ("contact Raj Singh on [PHONE]", about 13 rows)
- are left as published, per the team's decision on #53.
+ Recruiter emails and phone numbers are masked as [EMAIL] / [PHONE] (63 and 24;
+ mobiles in any grouping, landlines with an area code, +61, 1300/1800). Left as
+ published: recruiters' names next to them ("contact Raj Singh on [PHONE]", about
+ 13 rows), per the team's decision on #53, and two organisations' public 13 numbers
+ ("13 64 64", "13 44 77"), which are switchboards, not people.
  For skill shares use full_text == True only, and never pool the periods.
  The 2026 sample is small: report a direction, not a precise percentage.
 
