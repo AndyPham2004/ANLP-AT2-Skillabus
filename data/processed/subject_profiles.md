@@ -63,7 +63,7 @@ Three traps:
 
 | File | Rows | What |
 |---|---|---|
-| `prerequisites.csv` | 2,571 (360 subjects; 290 with a requisite rule; 172 with anti-requisites, 301 rows, re-scraped 14 Oct after the parser fix) | One row per item of the access-conditions rule: `kind` (requisite / antirequisite), `rule` ("(1 AND 2 AND 3)"), `item`, `type` (academic, admission, other, corequisite), `requisite_code`, `requisite_text`, `evop_found` (n for 47 subjects the access-conditions site has no record of: an empty rule there is unverified). 36118 needs 36100, 36103, 36106; 43023 needs 42172 or 41040, which MDSI does not offer; 139 academic items point at codes outside the 360. From `data-eda/src/scrape_requisites.py`. |
+| `prerequisites.csv` | 2,571 (360 subjects; 290 with a requisite rule; 172 with anti-requisites, 301 rows, re-scraped 14 Oct after the parser fix) | One row per item of the access-conditions rule: `kind` (requisite / antirequisite), `rule` ("(1 AND 2 AND 3)"), `item`, `type` (academic, admission, other, corequisite), `requisite_code`, `requisite_text`, `evop_found` (n for 47 subjects the access-conditions site has no record of: an empty rule there is unverified). 36118 needs 36100, 36103, 36106; 43023 needs 42172 or 41040, which MDSI does not offer; 138 academic requisite items point at codes outside the 360. From `data-eda/src/scrape_requisites.py`. |
 | `offerings.csv` | 510 (330 subjects) | `teaching_period` × `mode` per subject (94691 Autumn only, 36120 Spring only). 30 subjects have no offering listed for 2026. |
 | `assessments_scraped.csv` | 1,015 (326 subjects) | The assessment layer before merging; `collected_by = "script (handbook)"`. |
 
