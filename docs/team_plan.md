@@ -42,7 +42,7 @@ serves one of them:
 | Wire the app to the real pipeline; chat panel; feedback buttons | 11 Oct | Hoai Thuong |
 | Deploy (Streamlit Community Cloud) and QR code | 11 Oct | Van Thong |
 | Report: introduction, related work and innovation, architecture, conclusion | 12 Oct | Phuong Nhi |
-| Final edit, assembly and submission | 14 Oct | all |
+| Final edit, assembly and submission | 17 Oct (was 14 Oct) | all |
 
 ### Van Thong (B): data
 | Task | Due | Reviewer |
@@ -94,7 +94,7 @@ serves one of them:
 | 8 Oct | **M3 App on mock data** | Every screen clickable |
 | 11 Oct | **M4 App on real data + evaluation** | Deployed link; metrics table filled |
 | 12 Oct | **M5 Report draft** | Every section in `docs/report/` |
-| 14 Oct | **M6 Submit** | Report PDF and app link on Canvas |
+| 17 Oct (was 14 Oct) | **M6 Submit** | Report PDF and app link on Canvas |
 
 If a test set is late, it shrinks; nothing else waits for it.
 
