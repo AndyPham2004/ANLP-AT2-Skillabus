@@ -247,7 +247,7 @@ Every `source_url` was requested again (one request per second) and the stored t
 
 | Check | Result |
 |---|---|
-| Links | **56 of 56 answer HTTP 200.** Four DeepLearning.AI links now redirect to `/courses/...`, OpenCV's to the 4.13.0 docs; both still land on the same course |
+| Links | **56 of 56 answer HTTP 200** to GET (Kaggle Learn answers 404 to HEAD, so use GET). Redirects that still land on the same course: the four DeepLearning.AI links (to `/courses/...`), OpenCV (to the 4.13.0 docs), Apache Hive's wiki page, and the four Google Cloud Skills Boost pages (now at skills.google). `date_checked` is 2026-10-14 on every row |
 | Module titles on the page, word for word | 36 of the 55 courses with a module list match at least half their titles exactly; the rest differ only in formatting (the file joins title and blurb with " — ", the page shows them apart). Comparing words instead of whole strings, every module is on its page except one Kubeflow blurb and the 6 Terraform rows below |
 | Not checkable by script | Kaggle Learn (3 courses) and dbt Learn (1) render their module list in the browser only; check by hand |
 | `cost` | 54 free, 2 Coursera free-to-audit; not re-checked against the providers' pricing |

@@ -6,11 +6,11 @@ and `retrieve()` indexes for the chat. Shape is `docs/data_contract.md` section 
 | | |
 |---|---|
 | Rows | 6,853 |
-| Subjects | 360, in 44 UTS courses; 19 are MDSI (`C04372`), 276 rows |
+| Subjects | 360, in 44 UTS courses; 19 are MDSI (`C04372`), 288 rows |
 | Built by | `python data-eda/src/build_subject_profiles.py` |
 | Source | `data-eda/data/raw/uts_subjects_2026.csv` (not committed), UTS Handbook 2026, scraped 13 Oct 2026; assessment tasks from the handbook's per-offering data route (`data-eda/src/scrape_assessments.py`) |
 | Owner | Van Thong (data); the 13 Oct rebuild by Quan's session |
-| Built | 13 Oct 2026 (first build 8 Oct, 70 subjects, 1,039 rows; every one of those rows is still here) |
+| Built | 13 Oct 2026 (first build 8 Oct, 70 subjects, 1,039 rows; all still here, except 42904's one topic row, now split into its 9 numbered topics); SPARKPlus fix 14 Oct |
 
 ## Rows per layer
 
@@ -86,6 +86,14 @@ keyword 32547 UNIX Systems Programming "taught" generative AI. `build_subject_pr
 removes a sentence when it names AI tools and uses policy wording (permit, allow, must not, may use,
 guidelines, usage ...). The one sentence kept, in 32130, asks students to use GenAI in the task.
 Checked 13 Oct by an independent pass over all 30 rows.
+
+**SPARKPlus is not Apache Spark** (14 Oct). 18 subjects' assessments name UTS's peer-review tool,
+spelled "SPARK Plus", "Spark+" or "SPARK". The dictionary's `spark` alias read 8 of them as
+Apache Spark: the app's matcher found Spark in 9 subjects, 8 of them wrongly.
+`build_subject_profiles.clean()` writes the tool as "SPARKPlus", which no alias matches; Spark
+now matches only 94693. 15 rows changed here and 14 in `assessments_scraped.csv`, which was
+edited in place: `scrape_assessments.py` does not apply the fix, so a re-scrape brings the old
+spellings back there, and `clean()` fixes them again here.
 
 ## Known gaps in the source data
 

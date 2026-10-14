@@ -91,6 +91,12 @@ LONG_TOPIC_CHARS = 200
 log = logging.getLogger("subject_profiles")
 
 
+# UTS's peer-assessment tool SPARKPlus is written "SPARK Plus", "Spark+" or "SPARK" in 8
+# assessment descriptions, and the dictionary's "spark" alias read those as Apache Spark (#67).
+# One spelling, glued, so no alias matches it. "Spark" as Apache Spark is left alone.
+SPARK_PLUS = re.compile(r"\b(?:SPARK|Spark)\s*(?:\+|[Pp][Ll][Uu][Ss]\b)|\bSPARK\b")
+
+
 def clean(raw) -> str:
     """Repair the handbook's encoding damage and collapse whitespace."""
     if not isinstance(raw, str):
@@ -98,6 +104,7 @@ def clean(raw) -> str:
     text = raw
     for broken, fixed in MOJIBAKE.items():
         text = text.replace(broken, fixed)
+    text = SPARK_PLUS.sub("SPARKPlus", text)
     return re.sub(r"\s+", " ", text).strip()
 
 
