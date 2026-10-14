@@ -122,6 +122,34 @@ def test_role_profile_matches_like_an_ad():
     assert skills[1]["ad_evidence"] == "Asked for in 72% of 3,204 Seek Data Scientist ads (2019-22)."
 
 
+@pytest.fixture
+def role_file(monkeypatch):
+    import skillabus.match as match_module
+    monkeypatch.setattr(match_module, "ROLES_CSV", ROOT / "tests/fixtures/role_profiles_sample.csv")
+    match_module._role_rows.cache_clear()
+    yield
+    match_module._role_rows.cache_clear()
+
+
+def test_roles_come_from_the_role_file(role_file):
+    from skillabus.match import roles
+    assert [r["role"] for r in roles()] == ["Data Scientist", "Data Engineer", "ML Engineer"]
+    assert roles()[1] == {"role": "Data Engineer", "n_ads": 4438, "source": "Australian", "period": "2023"}
+    assert roles()[0]["n_ads"] == 3204          # Data Scientist stays on the full-text Seek ads
+
+
+def test_match_role_uses_the_role_s_own_demand(role_file):
+    from skillabus.match import match_role
+    profile = role_profile("Data Engineer")
+    assert [m["canonical"] for m in profile] == ["SQL", "Python", "Spark", "AWS", "Airflow"]   # no soft skills
+    assert profile[0]["sentence"] == "Asked for in 70% of 4,438 Australian Data Engineer ads (2023)."
+    skills = {s["skill_label"]: s for s in match_role(extract(RESUME), "Data Engineer")}
+    assert skills["SQL"]["status"] == "have" and skills["Spark"]["demand_pct"] == 40.0
+    assert match_role(extract(RESUME))[0]["demand_pct"] == 82.8             # Data Scientist: the Seek shares
+    with pytest.raises(KeyError):
+        role_profile("Astronaut")
+
+
 def test_skill_overlap_is_demand_weighted():
     ad = extract("Python and Tableau.")
     assert skill_overlap(ad, extract("Python.")) > skill_overlap(ad, extract("Tableau.")) > skill_overlap(ad, []) == 0.0
