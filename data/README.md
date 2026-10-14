@@ -37,7 +37,7 @@ Notes for anyone citing these:
   welded together where HTML was stripped (`TableauSuperior`); the clean file repairs that,
   so the labeller and the extractor see the same words.
 - **The 2026 sample is small: 22 roles, not the ~150 planned** (posted within 60 days of a
-  snapshot, at most 3 per employer; 9 are data scientists). Indeed was dropped because its
+  snapshot, at most 3 per employer and role group; 9 are data scientists). Indeed was dropped because its
   terms forbid scraping and it has no public search API. Adzuna's API cuts every description
   at 500 characters, so its 32 roles count as roles but not for skill shares.
   The January 2024 LinkedIn rows are kept as their own period, not merged into 2026. All of
@@ -66,7 +66,8 @@ Small CSVs, committed. They are the record of what the poster shows; the bars in
   method: `pct_2019_22` (3,204 Seek listings, clean text, counted per listing as on the poster), `pct_2024_01` (122 Australian LinkedIn data
   roles), `n_2026` / `pct_2026` (the 9 data-scientist ads of the 2026 sample) and `n_2026_all` /
   `pct_2026_all` (all 22 sample roles), each with a 95% Wilson interval. `match.py` reads
-  `pct_2026` as `demand_pct_2026` (trend column) and `pct_2026_all_low` for the emerging flags.
+  `pct_2026` as `demand_pct_2026` (trend column) and `pct_2026_all_low` as the 2026 floor of the
+  gap weight in `recommend._weight` (via `match.demand_2026_low`).
   Built by `python data-eda/src/recount_recent.py`.
   **Read with care:** 22 ads from 12 employers, 9 of them data scientists from 5, so one ad moves
   a data-scientist share by 11 points. The one robust signal is direction: any LLM-era skill

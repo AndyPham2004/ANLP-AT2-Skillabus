@@ -481,8 +481,9 @@ unnamed_tech = unnamed[unnamed.category != "Professional"]
 print(f"dictionary skills named by no subject: {len(unnamed)} of {len(seed)} "
       f"({len(unnamed_tech)} of {(seed.category != 'Professional').sum()} technical)")
 print("most demanded of them:", list(tech[tech.index.isin(unnamed_tech.canonical)].head(10).index))
-sparkplus = profiles[profiles.text.str.contains(r"(?i)spark\s*\+|spark\s*plus|sparkplus|\bSPARK\b")]
-print(f"subjects naming the SPARKPlus peer-review tool (any spelling): {sparkplus.subject_code.nunique()}; "
+# clean() writes every spelling of the tool as SPARKPlus, so this finds them all and never Apache Spark.
+sparkplus = profiles[profiles.text.str.contains(r"(?i)sparkplus")]
+print(f"subjects naming the SPARKPlus peer-review tool: {sparkplus.subject_code.nunique()}; "
       f"subjects the extractor reads as Apache Spark: {sorted(long_prof[long_prof.skill == 'Spark'].subject_code.unique())}")
 
 # %%

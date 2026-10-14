@@ -87,11 +87,13 @@ removes a sentence when it names AI tools and uses policy wording (permit, allow
 guidelines, usage ...). The one sentence kept, in 32130, asks students to use GenAI in the task.
 Checked 13 Oct by an independent pass over all 30 rows.
 
-**SPARKPlus is not Apache Spark** (14 Oct). Eight subjects' assessments name UTS's peer-review tool
-as "SPARK Plus", "Spark+" or "SPARK", and the dictionary's `spark` alias read them as Apache Spark:
-Spark matched 9 subjects, 8 of them wrongly. `build_subject_profiles.clean()` writes the tool as
-"SPARKPlus", which no alias matches; Spark now matches only 94693. 15 rows changed here and 14 in
-`assessments_scraped.csv`.
+**SPARKPlus is not Apache Spark** (14 Oct). 18 subjects' assessments name UTS's peer-review tool,
+spelled "SPARK Plus", "Spark+" or "SPARK". The dictionary's `spark` alias read 8 of them as
+Apache Spark: the app's matcher found Spark in 9 subjects, 8 of them wrongly.
+`build_subject_profiles.clean()` writes the tool as "SPARKPlus", which no alias matches; Spark
+now matches only 94693. 15 rows changed here and 14 in `assessments_scraped.csv`, which was
+edited in place: `scrape_assessments.py` does not apply the fix, so a re-scrape brings the old
+spellings back there, and `clean()` fixes them again here.
 
 ## Known gaps in the source data
 

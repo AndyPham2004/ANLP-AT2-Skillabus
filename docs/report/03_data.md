@@ -3,8 +3,8 @@
 > Draft by Van Thong (with Claude), updated 14 Oct 2026. Every number below comes from
 > `notebooks/vt_eda.ipynb`, which runs on committed files only, or from the file named next
 > to it. The script behind each file is named in `data-eda/data/clean/README.txt` and
-> `data/README.md`. The 2026 job-board sample is re-collected daily until 16 Oct, so its
-> counts in section 3.7 may still move by an ad or two.
+> `data/README.md`. The 2026 job-board sample is final as of the last fetch on 14 Oct;
+> a second fetch that evening found no new data role.
 
 ## 3.1 Sources
 
@@ -89,10 +89,11 @@ systems"), so a lookup alone cannot normalise them. In the Handbook text, broken
 punctuation and course-level outcome codes were removed. Two kinds of assessment text would
 have misled a keyword matcher. Subjects state their policy on AI tools ("generative AI tools
 are not permitted"), and 29 of 30 such mentions were policy rather than content, so those
-sentences are dropped. The assessments of 19 subjects name UTS's peer-review tool SPARKPlus,
-and in eight of them its spelling ("SPARK Plus", "Spark+", "SPARK") was read as Apache Spark. It
-is now written as one word, and Spark is matched in one subject (94693) instead of nine
-(notebook section 7).
+sentences are dropped. The assessments of 18 subjects name UTS's peer-review tool SPARKPlus
+(notebook section 7), and its spellings ("SPARK Plus", "Spark+", "SPARK") were read as Apache
+Spark: before the fix, the app's matcher (`skillabus.extract`) found Spark in nine subjects
+(`subject_profiles.csv` at commit 8886fdf), eight of them through the tool's name. The tool is
+now written as one word, and Spark is matched only in 94693, which teaches it.
 
 ## 3.4 Subject profiles
 
@@ -174,10 +175,11 @@ changes: the January 2024 sample is mostly data engineers and analysts.
 The plan asked for about 150 Australian ads from 2026. Seek, LinkedIn and Indeed forbid
 scraping, so we listed 206 candidate employers (`data-eda/config/ats_candidates.csv`) and probed
 their boards on five public job-board APIs: 94 boards at 89 employers answered with jobs
-(`data-eda/data/clean/ats_probe_2026-10-13.csv`), and the 65 with Australian roles
-(`data-eda/config/ats_companies.csv`) are fetched daily. A 2026 ad counts only if its
+(`data-eda/data/clean/ats_probe_2026-10-13.csv`), and 65 boards, mostly those with Australian
+roles (`data-eda/config/ats_companies.csv`), were fetched on 14 Oct. A 2026 ad counts only if its
 title is a data role (sales roles that sell analytics are excluded), it was posted within 60
-days of the day it was fetched, and its employer has not already given three. Twelve older
+days of the day it was fetched, and its employer has not already given three in the same
+group (data scientists, or other data roles). Twelve older
 ads, kept open for months, were dropped this way. The sample is 22 ads: 9 data-scientist
 titles from 5 employers, the like-for-like group for the Seek file, and 13 other data roles.
 Adzuna adds 32 roles, but its API cuts every description at 500 characters, so they are
