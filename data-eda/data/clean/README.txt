@@ -71,8 +71,11 @@ jobs_au_recent_2024-2026_clean.csv              192 roles   src/build_recent_sam
  role_group ("data scientist" = data/applied/ML/AI/research scientist titles,
  like the 2019-22 Seek file; else "data role") and in_sample.
  in_sample on the 2026 job-board rows: posted within 60 days of the snapshot
- and at most 3 per company and role group (most recent first). 22 rows:
+ and at most 3 per company and role group (most recent first; ads posted the
+ same day are ordered by ad_id, so a rerun keeps the same rows). 22 rows:
  9 data scientists from 5 employers, 13 other data roles. Count only these.
+ Reruns: 14 Oct 03:10 (595 ads) and 14 Oct 22:53 (592 ads, file _pm; 10 new,
+ 13 closed, none a new data role): same 22 rows, same skill counts.
  Recruiter emails and phone numbers are masked as [EMAIL] / [PHONE] (63 and 24;
  mobiles in any grouping, landlines with an area code, +61, 1300/1800). Left as
  published: recruiters' names next to them ("contact Raj Singh on [PHONE]", about
