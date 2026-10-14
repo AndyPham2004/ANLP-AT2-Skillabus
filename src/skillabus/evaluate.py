@@ -404,9 +404,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         runner.add_argument("--all", action="store_true")
         runner.add_argument("--methods", default="dictionary,ner,llm", help="comma-separated extraction tiers to try")
         runner.add_argument("--out", help="output folder (default data/processed)")
+        runner.add_argument("--gold-annotator", default="hoaithuongnguyen-uts", help="whose ad_skills.csv rows are the extraction gold set")
         ns = runner.parse_args(args_in)
         from .eval_run import run_all
-        return run_all(tuple(ns.methods.split(",")), ns.out)
+        return run_all(tuple(ns.methods.split(",")), ns.out, ns.gold_annotator)
     parser = argparse.ArgumentParser(prog="python -m skillabus.evaluate")
     sub = parser.add_subparsers(dest="cmd", required=True)
 

@@ -26,6 +26,7 @@ RES = ROOT / "data-eda/data/clean/resumes_us_2021_clean.csv"
 DICT = ROOT / "data/processed/skills_seed_v2.csv"
 LAB = ROOT / "data/labels"
 TIERS = ("dictionary", "ner", "llm")
+GOLD_ANNOTATOR = "hoaithuongnguyen-uts"   # whose ad_skills.csv rows are the extraction gold; the other annotator is for kappa only
 
 
 def _table(path: Path, key: str, field: str) -> dict:
@@ -34,13 +35,13 @@ def _table(path: Path, key: str, field: str) -> dict:
         return {r[key]: r[field] for r in csv.DictReader(f)}
 
 
-def run_tier(method: str) -> dict:
+def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
     """Extraction scores, matching (end to end and matching only) and evidence ranking for one tier."""
     ads, res = _table(ADS, "ad_id", "description"), _table(RES, "resume_id", "resume_text")
     dic = ev.load_dictionary(str(DICT))
     out: dict = {"method": method}
 
-    gold = ev.load_ad_skills(str(LAB / "ad_skills.csv"))
+    gold = ev.load_ad_skills(str(LAB / "ad_skills.csv"), gold_annotator)   # one annotator: a second one's rows must not enlarge the gold set
     pred = {ad: {ev.norm(m.get("canonical") or m.get("skill_label") or m["text"]) for m in extract(ads[ad], method)}
             for ad in gold}
     out["extraction_all"] = ev.extraction_scores(gold, pred)
@@ -84,7 +85,11 @@ def run_tier(method: str) -> dict:
 
 
 def kappa_result() -> dict | str:
-    """Kappa between two annotators in data/labels/ad_skills.csv, or the reason it cannot be computed."""
+    """Kappa between two annotators in data/labels/ad_skills.csv, or the reason it cannot be computed.
+
+    "dictionary" restricts both sides to dictionary skills (every unlabelled dictionary skill counts as an agreed
+    absence); "all" also counts free-text labels, which only one annotator may have written, so it is lower.
+    """
     path = LAB / "ad_skills.csv"
     names = sorted({r.get("annotator", "").strip() for r in ev._rows(str(path)) if r.get("annotator", "").strip()})
     if len(names) < 2:
@@ -93,7 +98,9 @@ def kappa_result() -> dict | str:
     shared = sorted(set(a) & set(b))
     if not shared:
         return f"not run: {names[0]} and {names[1]} share no ads"
-    res = ev.annotator_agreement(a, b, shared, ev.load_dictionary(str(DICT)))
+    universe = ev.load_dictionary(str(DICT))
+    res = ev.annotator_agreement(ev.restrict_to(a, universe), ev.restrict_to(b, universe), shared, universe)
+    res["all_labels"] = ev.annotator_agreement(a, b, shared, universe)
     res["annotators"] = names[:2]
     return res
 
@@ -126,20 +133,24 @@ def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
               f"| P@5 | {_f(rk['p_at_k'])} |", f"| Hit@5 | {_f(rk['hit_at_k'])} |", f"| MRR | {_f(rk['mrr'])} |", f"| n | {rk['n']} |"]
     L += ["", "## Annotator agreement", ""]
     if isinstance(kappa, dict):
-        L += [f"Cohen's kappa {_f(kappa['kappa'])} ({kappa['interpretation']}) between {' and '.join(kappa['annotators'])} on {kappa['n_ads']} ads; observed agreement {_f(kappa['observed_agreement'])}."]
+        k2 = kappa["all_labels"]
+        L += [f"Cohen's kappa between {' and '.join(kappa['annotators'])} on {kappa['n_ads']} ads:", "",
+              "| Items | kappa | Interpretation | Observed agreement |", "|---|---|---|---|",
+              f"| Dictionary skills only | {_f(kappa['kappa'])} | {kappa['interpretation']} | {_f(kappa['observed_agreement'])} |",
+              f"| All labels incl. free text | {_f(k2['kappa'])} | {k2['interpretation']} | {_f(k2['observed_agreement'])} |"]
     else:
         L += [kappa]
     L += ["", "## Not run", ""] + [f"- {k}: {v}" for k, v in other.items()]
     return "\n".join(L) + "\n"
 
 
-def run_all(methods=TIERS, out_dir: str | Path | None = None) -> int:
+def run_all(methods=TIERS, out_dir: str | Path | None = None, gold_annotator: str | None = GOLD_ANNOTATOR) -> int:
     out = Path(out_dir) if out_dir else ROOT / "data/processed"
     out.mkdir(parents=True, exist_ok=True)
     results, skipped = {}, {}
     for m in methods:
         try:
-            results[m] = run_tier(m)
+            results[m] = run_tier(m, gold_annotator)
         except (RuntimeError, ImportError, NotImplementedError, OSError) as error:
             skipped[m] = f"{type(error).__name__}: {str(error).splitlines()[0][:120]}"
             print(f"{m}: not run ({skipped[m]})")
