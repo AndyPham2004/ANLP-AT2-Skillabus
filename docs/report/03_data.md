@@ -52,7 +52,8 @@ are kept, with the link.
 
 Resumes are de-identified (section 3.3) before any use, and the app masks names again
 before any text reaches a language model. Recruiters' emails and phone numbers in the
-recent-ads file (63 and 21, mostly in the 2024 LinkedIn ads) are masked as well.
+recent-ads file (63 and 23, mostly in the 2024 LinkedIn ads) are masked as well; recruiters'
+names stay as published.
 
 ## 3.3 Cleaning
 
@@ -199,9 +200,10 @@ data-scientist share (n = 9; technical skills named in at least 3 of the 9 ads, 
 | Predictive modelling | 31.1% | 9.8% | 0 of 9 | 0% |
 
 The direction is clear, the sizes are not: with 9 ads, one ad moves a share by 11 points,
-and the rank correlation between the 2019–22 and 2026 shares is only 0.29. The app therefore
-keeps the 2019–22 shares as its demand weights and uses 2026 for the "emerging" flag and a
-trend column that shows the count ("6 of 9 recent ads"). Eight LLM tools and vendors appear
+and a rank correlation with 2019–22 swings between 0.28 and 0.57 depending on which skills are
+counted, so we do not report one. The app therefore keeps the 2019–22 shares as its demand
+weights. The 2026 shares feed the "emerging" flag, read over all 22 roles, and a trend column
+that shows the data-scientist count ("6 of 9 recent ads"). Eight LLM tools and vendors appear
 only in the 2026 ads and are not in our dictionary, among them LangGraph, LangSmith, GraphRAG
 and Claude;
 these are the skills normalisation tags as emerging (section 4).
