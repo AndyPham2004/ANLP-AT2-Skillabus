@@ -80,7 +80,7 @@ only if it is two or more capitalised words, starts with a known first name, occ
 most two resumes, and is not a dictionary skill or an O\*NET tool. A first-name list misses
 many South Asian names, so referees also lose their names after a title ("Dr. [NAME]") or
 before a credential ("[NAME], RN"). In all, 1,146 names are masked in 551 resumes, and every
-skill count is unchanged (Java 301 before and after). The result is de-identified, not anonymous.
+skill count is unchanged (whole-word Java: 170 mentions in 64 resumes before and after). The result is de-identified, not anonymous.
 
 **ESCO and the Handbook.** ESCO keeps alternative labels as a newline-separated list
 inside one cell; we reshaped it into a lookup of 100,886 label–concept rows. 716 labels
@@ -89,9 +89,10 @@ systems"), so a lookup alone cannot normalise them. In the Handbook text, broken
 punctuation and course-level outcome codes were removed. Two kinds of assessment text would
 have misled a keyword matcher. Subjects state their policy on AI tools ("generative AI tools
 are not permitted"), and 29 of 30 such mentions were policy rather than content, so those
-sentences are dropped. The assessments of eight subjects name UTS's peer-review tool SPARKPlus ("SPARK
-Plus", "Spark+"), which the dictionary read as Apache Spark. It is now written as one word,
-and Spark is matched in one subject (94693) instead of nine.
+sentences are dropped. The assessments of 19 subjects name UTS's peer-review tool SPARKPlus,
+and in eight of them its spelling ("SPARK Plus", "Spark+", "SPARK") was read as Apache Spark. It
+is now written as one word, and Spark is matched in one subject (94693) instead of nine
+(notebook section 7).
 
 ## 3.4 Subject profiles
 
@@ -112,9 +113,10 @@ The 360 subjects come from 44 courses: the data, IT, AI, analytics and mathemati
 graduate certificates and diplomas, and the matching bachelor and honours degrees. The
 assessment layer was the one the poster lacked. The Handbook shows tasks only after a
 teaching period is chosen, and the page then requests them as data; we made that request
-directly for each subject. Alongside the profiles, `prerequisites.csv` holds 2,278
-requisite items for 290 subjects and 1,216 anti-requisite items for 172, and `offerings.csv`
-lists the teaching sessions of 330 subjects, so a learning path can respect order and timing.
+directly for each subject. Alongside the profiles, `prerequisites.csv` holds 2,208
+requisite items for 290 subjects (70 further rows mark subjects with no rule) and each
+subject's anti-requisites, and `offerings.csv` lists the teaching sessions of 330 subjects,
+so a learning path can respect order and timing.
 
 The extra layers matter. Subject 36118 Applied NLP lists "Large Language Models (LLMs)" as
 a weekly topic, which its learning objectives never mention, and 43007's assessment asks for
@@ -135,7 +137,8 @@ After them only predictive modelling passes 30%, and 24 technical skills appear 
 for all of Python, SQL and statistics. Communication appears in 30% of ads, more often than
 any technical skill outside the top five. The app's demand figures
 (`data/processed/skill_counts_v2.csv`) are the poster's counts on the uncleaned text; they are
-within 1.7 points of Figure 3.1 and rank skills the same way (rank correlation 0.9996).
+within 1.7 points of Figure 3.1 and rank skills the same way (rank correlation 0.9991 over
+the 123 technical skills named in both; notebook section 3).
 
 ## 3.6 Can the counts be trusted?
 
@@ -145,8 +148,11 @@ gives a median Cohen's kappa (Cohen, 1960) of 0.637, with 8 of 14 at 0.60 or abo
 mostly disagree in one direction: for 3,348 of the author's 3,734 extra positives, the tool
 does not appear in the ad at all (their R flag fires on 70% of ads). Our own misses were
 mainly the welded words fixed in section 3.3. This measures agreement, not accuracy;
-accuracy comes from the hand-labelled test set in section 6, whose two annotators agree with
-a kappa of 0.862 on the 138 dictionary skills they both labelled against.
+accuracy comes from the hand-labelled test set in section 6. Its two annotators labelled the
+same 20 ads independently (`data/labels/ad_skills.csv`) and agree with a Cohen's kappa of 0.856
+on dictionary skills (20 ads × 148 skills, 2,960 items) and 0.686 when free-text labels are
+included (4,580 items), computed with the evaluation harness's `annotator_agreement` (notebook
+section 4).
 
 **Other platforms and markets.** If the ranking were an artefact of how Seek ads are
 written, other sources would rank skills differently. Table 3.3 compares them, using the
@@ -166,8 +172,10 @@ changes: the January 2024 sample is mostly data engineers and analysts.
 ## 3.7 Recent ads and the LLM shift
 
 The plan asked for about 150 Australian ads from 2026. Seek, LinkedIn and Indeed forbid
-scraping, so we probed about 170 employers on five public job-board APIs: 94 boards answered,
-and the 65 boards with Australian roles are fetched daily. A 2026 ad counts only if its
+scraping, so we listed 206 candidate employers (`data-eda/config/ats_candidates.csv`) and probed
+their boards on five public job-board APIs: 94 boards at 89 employers answered with jobs
+(`data-eda/data/clean/ats_probe_2026-10-13.csv`), and the 65 with Australian roles
+(`data-eda/config/ats_companies.csv`) are fetched daily. A 2026 ad counts only if its
 title is a data role (sales roles that sell analytics are excluded), it was posted within 60
 days of the day it was fetched, and its employer has not already given three. Twelve older
 ads, kept open for months, were dropped this way. The sample is 22 ads: 9 data-scientist
@@ -178,7 +186,7 @@ excluded from skill shares. All periods use the same dictionary, cleaning and co
 
 ![LLM-era skills over time](../../data-eda/outputs/figures/fig2_llm_trend.png)
 
-*Figure 3.2. Australian data ads naming an LLM-era skill, with 95% Wilson intervals.*
+*Figure 3.2. Australian data ads naming an LLM-era skill, with 95% Wilson intervals (n = 3,204; 122; 9; 22).*
 
 LLM-era skills went from one ad in 3,204 to 3 of 122 in early 2024 (2.5%), then to 7 of the
 9 data-scientist ads of 2026 (78%; 95% Wilson interval 45–94%; Wilson, 1927) and 9 of all 22
@@ -199,9 +207,8 @@ data-scientist share (n = 9; technical skills named in at least 3 of the 9 ads, 
 | Generative AI | 0.0% | 1.6% | 3 of 9 | 14% |
 | Predictive modelling | 31.1% | 9.8% | 0 of 9 | 0% |
 
-The direction is clear, the sizes are not: with 9 ads, one ad moves a share by 11 points,
-and a rank correlation with 2019–22 swings between 0.28 and 0.57 depending on which skills are
-counted, so we do not report one. The app therefore keeps the 2019–22 shares as its demand
+The direction is clear, the sizes are not: with 9 ads, one ad moves a share by 11 points.
+The app therefore keeps the 2019–22 shares as its demand
 weights. The 2026 shares feed the "emerging" flag, read over all 22 roles, and a trend column
 that shows the data-scientist count ("6 of 9 recent ads"). Eight LLM tools and vendors appear
 only in the 2026 ads and are not in our dictionary, among them LangGraph, LangSmith, GraphRAG
@@ -221,8 +228,8 @@ English word "go" as the Go language, so Go is counted only from "golang".
 
 ![Market demand against the UTS curriculum](../../data-eda/outputs/figures/fig3_subject_coverage.png)
 
-*Figure 3.3. The 25 most-demanded technical skills, coloured by whether any of the 360 UTS
-subjects names them.*
+*Figure 3.3. The 25 most-demanded technical skills (share of the 3,204 Seek ads), coloured by
+whether any of the 360 UTS subjects names them.*
 
 24 of the 25 most-demanded technical skills are named by at least one of the 360 subjects,
 and 15 by an MDSI subject. Only Scala is named by none. Naming is not depth, though: Spark
@@ -231,8 +238,9 @@ one subject and AWS in five, none of them in MDSI. "Named" is a keyword match, s
 twelve subjects use "excel" as a verb. The LLM toolchain is still the clearest gap. Large
 language models appear as topics in 36118, 41180 and 43023 and in an assessment of 43007,
 and generative AI in five subjects, but prompt engineering and retrieval-augmented
-generation appear in none of the 360. For the 54 dictionary skills that no subject names,
-the app's second tier draws on the 56 external courses.
+generation appear in none of the 360. For the 62 dictionary skills that no subject names
+(61 of them technical, led by Scala, Google Cloud and TensorFlow; notebook section 7), the
+app's second tier draws on the 56 external courses.
 
 On the input side, only 125 of the 2,481 resumes name two or more of six core data skills,
 and none of the 24 categories is data science. The CV–JD test pairs are drawn from those

@@ -19,7 +19,7 @@ everyone labels and evaluates on byte-identical files.
 | Seek Australia, Data Scientist ads (Kaggle, nomilk) | **3,204** full-text ads | 2019–22 | the demand side: every demand % | [kaggle](https://www.kaggle.com/datasets/nomilk/data-science-job-listings-australia-20192020) |
 | LinkedIn Job Postings (Kaggle, arshkon) | 123,849 ads, 99.9% US; 1,355 data roles | 2023–24 | validation only: ranking agrees with Seek at ρ = 0.819 | [kaggle](https://www.kaggle.com/datasets/arshkon/linkedin-job-postings) |
 | Glassdoor Australia (Kaggle, nadzmiagthomas) | 193 data roles, full text | Aug–Dec 2022 | platform check only: rank correlation 0.75 with Seek (technical skills) | [kaggle](https://www.kaggle.com/datasets/nadzmiagthomas/australia-data-science-jobs) |
-| ESCO v1.2.1 | 13,960 skill concepts, 100,886 labels | 2025 | the vocabulary `normalise()` maps to | [esco](https://esco.ec.europa.eu/en/use-esco/download) |
+| ESCO v1.2.1 | 13,960 skill concepts, 100,135 distinct labels (100,886 label–concept rows) | 2025 | the vocabulary `normalise()` maps to | [esco](https://esco.ec.europa.eu/en/use-esco/download) |
 | O*NET 31.0 | 8,753 tool names | 2026 | tools ESCO lacks | [onet](https://www.onetcenter.org/database.html) |
 | UTS Handbook 2026 | 360 subjects in 44 courses (19 MDSI) | 2026 | subject profiles, prerequisites, teaching sessions | [handbook](https://coursehandbook.uts.edu.au) |
 | Resume Dataset (Kaggle, snehaanbhawal) | 2,481 resumes; 125 with 2+ data skills | 2021 | resume parsing and CV–JD test pairs | [kaggle](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) |

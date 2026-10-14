@@ -213,6 +213,17 @@ print(f"technical skills in >=20% of ads: {(tech.pct >= 20).sum()}  |  in >=10%:
       f"|  in >=1%: {(tech.pct >= 1).sum()} of {len(seed)}")
 tech.head(15).round(1)
 
+# %% [markdown]
+# The app's demand figures, `data/processed/skill_counts_v2.csv` (counted on the raw text in
+# September), against Figure 3.1 (clean text): technical skills named in both.
+
+# %%
+v2 = pd.read_csv(PROC / "skill_counts_v2.csv").set_index("skill").pct_ads
+shared_v2 = [s for s in tech.index if v2.get(s, 0) > 0]
+rho_v2 = np.corrcoef(v2[shared_v2].rank(), tech.pct[shared_v2].rank())[0, 1]
+print(f"skill_counts_v2 vs Figure 3.1: rank correlation {rho_v2:.4f} over {len(shared_v2)} technical skills; "
+      f"largest gap {(tech.pct[shared_v2] - v2[shared_v2]).abs().max():.1f} points")
+
 # %%
 top = tech.head(15).iloc[::-1]
 fig, ax = plt.subplots(figsize=(7, 5))
@@ -282,6 +293,31 @@ parts
 
 # %%
 demand.loc[demand.index.isin(["R", "Go", "Artificial intelligence"]), ["pct"]].round(1).T
+
+# %% [markdown]
+# **Two people labelling the same ads.** The 20 `double_label = y` ads were labelled by
+# Hoai Thuong and Van Thong independently (`data/labels/ad_skills.csv`, #55 and #85). Cohen's
+# kappa with the evaluation harness's own function, every (ad, skill) pair one item. The
+# harness command `python -m skillabus.evaluate kappa data/labels/ad_skills.csv
+# data/labels/ad_skills.csv --a-name hoaithuongnguyen-uts --b-name tompham9016 --dictionary
+# data/processed/skills_seed_v2.csv` gives the "all labels" row; the "dictionary skills" row
+# keeps only labels that are dictionary skills, since free-text labels cannot match between
+# two people's wording.
+
+# %%
+sys.path.insert(0, str(REPO / "src"))
+from skillabus import evaluate as ev  # noqa: E402
+LAB = str(REPO / "data" / "labels" / "ad_skills.csv")
+ann_a, ann_b = ev.load_ad_skills(LAB, "hoaithuongnguyen-uts"), ev.load_ad_skills(LAB, "tompham9016")
+both_ads = sorted(set(ann_a) & set(ann_b))
+dict_set = set(ev.load_dictionary(str(SEED)))
+rows = []
+for name, a, b in [("dictionary skills", {k: v & dict_set for k, v in ann_a.items()},
+                    {k: v & dict_set for k, v in ann_b.items()}),
+                   ("all labels", ann_a, ann_b)]:
+    r = ev.annotator_agreement(a, b, both_ads, sorted(dict_set))
+    rows.append((name, r["n_ads"], r["n_items"], round(r["kappa"], 3), r["both_yes"], r["a_only"], r["b_only"]))
+pd.DataFrame(rows, columns=["labels compared", "ads", "items", "kappa", "both", "Hoai Thuong only", "Van Thong only"])
 
 # %% [markdown]
 # ## 5. Does the ranking hold elsewhere?
@@ -434,6 +470,21 @@ print(f"taught by at least one of the {N_SUB} subjects: {(top25.subjects > 0).su
 print(f"not taught anywhere in the {N_SUB}:", list(top25[top25.subjects == 0].index))
 top25.round(1)
 
+# %% [markdown]
+# Every dictionary skill, not only the top 25: which ones no subject names at all? These are
+# the gaps the second tier (`external_courses.csv`) has to fill. Same extractor as above.
+
+# %%
+named = set(long_prof.skill)
+unnamed = seed[~seed.canonical.isin(named)]
+unnamed_tech = unnamed[unnamed.category != "Professional"]
+print(f"dictionary skills named by no subject: {len(unnamed)} of {len(seed)} "
+      f"({len(unnamed_tech)} of {(seed.category != 'Professional').sum()} technical)")
+print("most demanded of them:", list(tech[tech.index.isin(unnamed_tech.canonical)].head(10).index))
+sparkplus = profiles[profiles.text.str.contains(r"(?i)spark\s*\+|spark\s*plus|sparkplus|\bSPARK\b")]
+print(f"subjects naming the SPARKPlus peer-review tool (any spelling): {sparkplus.subject_code.nunique()}; "
+      f"subjects the extractor reads as Apache Spark: {sorted(long_prof[long_prof.skill == 'Spark'].subject_code.unique())}")
+
 # %%
 d = top25.iloc[::-1]
 fig, ax = plt.subplots(figsize=(7.2, 7))
@@ -513,7 +564,7 @@ lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "amb
 # | 4 | The 2019-22 corpus predates LLMs | LLM-era skills in 1 of 3,204 ads -> 2.5% (Jan 2024) -> 7 of 9 data-scientist ads and 9 of 22 data roles (2026); rises within non-AI titles too | show the trend; flag LLM skills as emerging |
 # | 5 | 2026 is small and tech-heavy | 22 ads in the sample (60-day, 3 per employer), 9 of them data scientists; one ad = 11 points | keep 2019-22 as the weight; show 2026 as "n of 9" |
 # | 6 | Other roles need another source | the Seek corpus is Data Scientist titles only; 2023 tool lists (10,925 AU postings) give 6 more roles | role profiles from role_profiles.csv, tools only; Data Scientist keeps Seek |
-# | 7 | The curriculum names most demand | 24 of the top 25 technical skills named by at least one of 360 subjects, 15 in MDSI; Scala in none; Spark, Hadoop only in 94693 | named is not taught in depth; external courses cover the 54 skills no subject names |
+# | 7 | The curriculum names most demand | 24 of the top 25 technical skills named by at least one of 360 subjects, 15 in MDSI; Scala in none; Spark, Hadoop only in 94693 | named is not taught in depth; external courses cover the 62 skills no subject names |
 # | 8 | Subject text is uneven | assessment layer for 326 of 360 subjects; 9 MDSI subjects have no topic list, 3 have description only | thin subjects rank low for lack of text, not content |
 # | 9 | Few resumes look like data profiles | 125 of 2,481 with 2+ data skills; none in a data category | draw CV-JD pairs from those 125 only |
 # | 10 | ESCO reaches little of the modern stack | 36% of our dictionary maps; 716 ambiguous labels incl. "sql" | normalise() needs the emerging tag and a tie-break for ambiguous labels |

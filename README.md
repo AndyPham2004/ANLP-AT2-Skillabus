@@ -64,8 +64,11 @@ UTS subjects that teach the missing skills, quoting the Handbook text it relied 
 | Mode | Question it answers | What you give it |
 | --- | --- | --- |
 | Job seeker | What does my resume lack for this ad? | a job ad (paste it, or use the sample) and your resume |
-| Elective chooser | Which subject moves me closest to my target role? | a target role, your resume and the UTS subjects you have taken |
-| Career switcher | How far is my profile from a new role? | a target role and your resume |
+| Elective chooser | Which subject moves me closest to my target role? | your resume and the UTS subjects you have taken |
+| Career switcher | How far is my profile from a new role? | your resume |
+
+In Elective chooser and Career switcher the target role is Data Scientist, the only option in
+the role picker for now: the 15 skills most often asked for in 3,204 Seek Data Scientist ads.
 
 **2. Add your inputs.** Upload a resume as PDF or text, or tick *Use the sample resume*
 (a synthetic early-career MDSI student). The resume stays in memory for the session and is
@@ -79,14 +82,16 @@ Press **Show my gaps**.
   learning) but not the skill itself.
 - **How often employers ask for each skill**: each bar is the share of 3,204 Seek Australia
   Data Scientist ads (2019–22) naming the skill. A ✦ marks an emerging skill with no ESCO
-  concept yet. The 2019–22 ads predate ChatGPT, so LLM skills show low there even though most
-  2026 ads ask for them (report section 3.7).
+  concept yet. LLMs and generative AI show 0% because those ads predate ChatGPT; the caption
+  notes that 15.8% of 247 US Data Scientist ads in 2023–24 ask for LLMs (for Australian ads
+  in 2026, see report section 3.7).
 - **Your shortest path**: the fewest subjects that close the most gaps, and the share of
   employer demand behind those gaps they cover. Gaps no subject names are listed under it.
 - **Why these subjects?**: pick a gap to see what the ad (or employers) said and the exact
-  Handbook sentence for each subject, labelled by where it came from: learning objective,
-  assessment, weekly topic or description. *👍 Teaches it* / *👎 Not really* records whether
-  the match is right; the votes help us check the matcher.
+  Handbook sentence for up to three subjects, labelled by where it came from: learning
+  objective, assessment, weekly topic or description. *👍 Teaches it* / *👎 Not really*
+  records whether the match is right, and *I've taken it* marks a subject you have done, so
+  votes from students who took it can be told apart; the votes help us check the matcher.
 - **All recommended subjects** lists every match with its score and a link to the Handbook.
 
 **4. Ask about subjects.** The chat in the sidebar answers from the UTS Handbook 2026 text
