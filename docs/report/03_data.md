@@ -52,7 +52,7 @@ are kept, with the link.
 
 Resumes are de-identified (section 3.3) before any use, and the app masks names again
 before any text reaches a language model. Recruiters' emails and phone numbers in the
-recent-ads file (63 and 23, mostly in the 2024 LinkedIn ads) are masked as well; recruiters'
+recent-ads file (63 and 24, mostly in the 2024 LinkedIn ads) are masked as well; recruiters'
 names stay as published.
 
 ## 3.3 Cleaning
