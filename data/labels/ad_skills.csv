@@ -377,7 +377,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 50449684,Python,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
 50449684,Google Cloud,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
 50449684,Tableau,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
-50449684,Linux,n,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
+50449684,Linux,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
 50449684,Statistics,y,Experience with open source machine learning or statistical analysis tools in conjunction with data engineering experience,tompham9016
 50449684,Financial Analysis,n,"stics, Finance or Commerce with in-depth experience in Financial Analysis",tompham9016
 50449684,data engineering,n,"ning or statistical analysis tools in conjunction with data engineering experience, including SQL & structured or unstructured",tompham9016
@@ -395,7 +395,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 39372682,NoSQL,y,"The role will also involve working with our NoSQL Databases (MongoDB), as you will be working with Petab",tompham9016
 39372682,MongoDB,y,"le will also involve working with our NoSQL Databases (MongoDB), as you will be working with Petabyte datasets",tompham9016
 39372682,Machine learning,y,"ommercial experience as Data Scientist Experience with Machine Learning Big Data - Scala (preferred), Spark, Kafka, Redshift E",tompham9016
-39372682,kafka,n,"Machine Learning Big Data - Scala (preferred), Spark, Kafka, Redshift Experience with R, Python or Scala is Desira",tompham9016
+39372682,Kafka,y,"Machine Learning Big Data - Scala (preferred), Spark, Kafka, Redshift Experience with R, Python or Scala is Desira",tompham9016
 39372682,R,y,"la (preferred), Spark, Kafka, Redshift Experience with R, Python or Scala is Desirable Strong Business Awarenes",tompham9016
 39372682,Python,y,"preferred), Spark, Kafka, Redshift Experience with R, Python or Scala is Desirable Strong Business Awareness Positi",tompham9016
 39372682,Business acumen,y,"Experience with R, Python or Scala is Desirable Strong Business Awareness Positive Approach Extremely passionate about",tompham9016
@@ -515,7 +515,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 40386941,Translating analytical insights,n,"Translating analytical insights into concrete, actionable recommendations for business",tompham9016
 40386941,Python,y,"ll have experience with software and languages such as Python, SQL, React",tompham9016
 40386941,SQL,y,"experience with software and languages such as Python, SQL, React",tompham9016
-40386941,React,n,"ience with software and languages such as Python, SQL, React",tompham9016
+40386941,React,y,"ience with software and languages such as Python, SQL, React",tompham9016
 40386941,Machine learning,y,You will be able to demonstrate an understanding of machine learning techniques/algorithms and common data science tool-kit,tompham9016
 40386941,data manipulation,n,"A proven ability to manipulate and analyse complex, high-volume, high dimensional dat",tompham9016
 40386941,Excel,y,"Advanced skills in excel, including macros",tompham9016
