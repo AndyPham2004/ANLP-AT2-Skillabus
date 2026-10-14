@@ -83,3 +83,18 @@ def test_corequisites_are_items_of_their_own_type():
     out = parse_requisites(COREQ)
     assert [(i["item"], i["type"], i["code"]) for i in out["items"]] == [
         ("1", "admission", ""), ("1a", "corequisite", ""), ("2", "corequisite", "25741"), ("3", "admission", "")]
+
+
+ANTI_THEN_REQUISITE = """<html><body>32513 Advanced Data Analytics Algorithms Anti-requisite(s) Anti-requisite rule: (1) Item Details
+1 31005 Machine Learning Requisite(s) Requisite rule: (((1 OR 1a)) OR (2)) Item Type Details
+1 Academic requisite 32130 Fundamentals of Data Analytics 1a Academic requisite 31250 Introduction to Data Analytics
+2 Academic requisite 26776 Foundations of Business Analytics Note: See also</body></html>"""
+
+
+def test_anti_requisite_table_before_the_requisite_table():
+    """The live page lists anti-requisites first; the requisite rows must not leak into them (14 Oct fix)."""
+    out = parse_requisites(ANTI_THEN_REQUISITE, "32513")
+    assert out["anti_rule"] == "(1)"
+    assert [(i["item"], i["code"]) for i in out["anti_items"]] == [("1", "31005")]
+    assert out["rule"] == "(((1 OR 1a)) OR (2))"
+    assert [i["code"] for i in out["items"]] == ["32130", "31250", "26776"]

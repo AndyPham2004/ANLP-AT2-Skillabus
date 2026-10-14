@@ -98,7 +98,11 @@ def parse_requisites(html: str, code: str | None = None) -> dict:
     if a:
         out["anti_rule"] = a.group(1).strip()
         body = text[a.end():]
-        body = body[:body.find("Note:")] if "Note:" in body else body
+        # The anti-requisite table usually comes BEFORE the requisite table on the page, so the body
+        # must stop at the "Requisite(s)" heading too, or the subject's own prerequisites are read as
+        # anti-requisites (that happened to 151 of 172 subjects in the 13 Oct scrape).
+        ends = [k for k in (body.find("Note:"), body.find("Requisite(s)"), body.find("Requisite rule:")) if k >= 0]
+        body = body[:min(ends)] if ends else body
         out["anti_items"] = _items(body) or [
             {"item": item, "type": "academic", "code": code, "text": f"{code} {name.strip()}"}
             for item, code, name in ANTI_ITEM.findall(body)]
