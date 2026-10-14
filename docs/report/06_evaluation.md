@@ -16,12 +16,12 @@ runs without spaCy or an API key. The table says what the numbers below cover.
 | Matching | 45 CV–JD pairs, 287 skill rows (81 have, 6 partial, 200 missing) | `match()` and `rank_evidence()` | Done |
 | Subjects P@3 | **[TODO]** | | |
 | Chat judge | **[TODO]** | | |
-| Annotator agreement | 20 overlap ads, two annotators | Cohen's kappa | **[TODO]** needs the second annotator's file |
+| Annotator agreement | 20 overlap ads, two annotators | Cohen's kappa | **0.857** on dictionary skills (almost perfect); 0.683 on all labels incl. free text (substantial) |
 
 The test sets are much smaller than planned (200 ads, 50 pairs). Five of the 50 selected pairs have no scored skills, because
 their ads name only soft skills, which `match()` leaves out. Every figure below is therefore a small-sample estimate.
 
-The test sets were labelled following the rules in data/labels/README.md. The 20 overlap ads are also labelled separately by a second annotator (Akash) so that inter-annotator agreement can be measured with Cohen’s kappa.
+The test sets were labelled following the rules in data/labels/README.md. The 20 overlap ads are also labelled separately by a second annotator (Van Thong) so that inter-annotator agreement can be measured with Cohen’s kappa.
 
 ## 6.2 Extraction
 
@@ -97,5 +97,5 @@ lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; the notebook now pa
 - 20 ads and 45 pairs are small; the confidence intervals are wide, and results from different tiers will differ by less
   than the noise unless the gap is large.
 - One ad row and one pair row carry the "unsure" mark; `load_ad_skills()` and `load_cv_jd_pairs()` drop the mark, so unsure labels count as gold, which slightly lowers recall.
-- Gold labels come from one annotator. Kappa on the 20 overlap ads (**[TODO]**) will show how far another person agrees.
+- Gold labels come from one annotator. Cohen's kappa on the 20 overlap ads is 0.857 for dictionary skills (observed agreement 0.979) and 0.683 when free-text labels are included (0.964), so another annotator largely agrees on dictionary skills and disagrees more on free-text skills outside the dictionary. Extraction scores use the first annotator's rows only.
 - Matching and ranking use the dictionary tier. Tier 2 and tier 3 will change which skills reach `match()`.
