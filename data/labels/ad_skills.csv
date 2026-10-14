@@ -220,7 +220,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 54948934,R,y,"Advanced programming skills (Python, R, SQL or SAS) Appointments are subject to reference che",tompham9016
 54948934,SQL,y,"Advanced programming skills (Python, R, SQL or SAS) Appointments are subject to reference checks",tompham9016
 54948934,SAS,y,"Advanced programming skills (Python, R, SQL or SAS) Appointments are subject to reference checks",tompham9016
-54948934,Data cleaning,y,,tompham9016
+54948934,data processing,n,"Data processing, data analyses, modelling, machine learning and/or forecasting to sup",tompham9016
 54948934,Machine learning,y,"ues including — but not limited to — data/text mining, machine learning, pattern matching, forecasting, visualisation, semanti",tompham9016
 54948934,Predictive modelling,y,"y applying mathematics, statistics, data mining and/or predictive modelling techniques to gain insights, predict behaviours/outcom",tompham9016
 54948934,Probability,y,"Integrating methods from mathematics, statistics and probability modelling using specialised programming languages, too",tompham9016
@@ -234,14 +234,14 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 54948934,Deep learning,y,"graph analysis, simulation, complex event processing, neural networks Preparing justice policy simulations and forecasting o",tompham9016
 54948934,simulation,n,"ex modelling and forecasting, including development of simulation models, to assess the impact of changes in one part of",tompham9016
 54948934,complex event processing,n,"multivariate statistics, graph analysis, simulation, complex event processing, neural networks Preparing justice policy simulations",tompham9016
-54948934,Presentation skills,y,,tompham9016
+54948934,Presentation skills,y,"t, and reports explaining and interpreting the results Presenting and communicating analysis to senior and non-technical audiences to build their u",tompham9016
 54948934,Communication,y,kers in solving real-world problems Excellent oral and written communication skills to effectively engage with a range of internal,tompham9016
 54948934,Stakeholder management,y,pert advice across the data science domain to internal stakeholders Essential requirements of the role Tertiary qualificat,tompham9016
 50727502,Machine learning,y,"You’ll use Artificial Intelligence techniques such as machine learning, to develop and deploy models and digital products in",tompham9016
 50727502,Artificial intelligence,y,"You’ll use Artificial Intelligence techniques such as machine learning, to develop and de",tompham9016
 50727502,Agile,y,You’ll apply agile practices that provide a foundation for iterative prod,tompham9016
 50727502,Time series forecasting,y,"Experience working with time-series data3+ years professional experience developing, deplo",tompham9016
-50727502,MLOps,y,,tompham9016
+50727502,MLOps,y,"l Intelligence techniques such as machine learning, to develop and deploy models and digital products in real-time production environme",tompham9016
 50727502,Cloud platforms,y,"developing, deploying and maintaining models in public cloud and on-premises environments3+ years professional expe",tompham9016
 50727502,Python,y,s3+ years professional experience writing high quality Python code with expert level knowledge of the scientific sta,tompham9016
 50727502,NumPy,y,"e with expert level knowledge of the scientific stack (NumPy, SciPy, scikit-learn, pandas etc)Expertise in other re",tompham9016
@@ -261,21 +261,20 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 50727502,Interpersonal skills,n,"Excellent interpersonal and communication skills (written and verbal), includi",tompham9016
 50727502,Communication,y,"Excellent interpersonal and communication skills (written and verbal), including working in a team envi",tompham9016
 50727502,Presentation skills,y,"including working in a team environment, delivering presentations and translating technical concepts into business value",tompham9016
-50727502,Teamwork,y,,tompham9016
+50727502,Teamwork,y,"d communication skills (written and verbal), including working in a team environment, delivering presentations and translating technical co",tompham9016
 50727502,Business acumen,y,duals who are committed to team success and delivering business value,tompham9016
 50727502,workflow automation,n,"s efficiently and effectively through standardisation, workflow automation and continuous improvement",tompham9016
 50727502,standardisation,n,"o deliver projects efficiently and effectively through standardisation, workflow automation and continuous improvement",tompham9016
 55520483,Business acumen,y,Translate business needs into analytics requirements and a roadmap of spe,tompham9016
-55520483,data insights,n,,tompham9016
 55520483,Predictive modelling,y,Operationalise predictive models by working with the business to implement outputs into,tompham9016
 55520483,Data warehousing,y,rnal and external data and lead the development of the data warehouse,tompham9016
 55520483,ETL,y,Work with the data engineer to create data pipelines from both internal and external data and lead the deve,tompham9016
-55520483,Leadership,y,,tompham9016
+55520483,Leadership,y,"Lead a small team with responsibility for team outputs, learning, develo",tompham9016
 55520483,R,y,"edge and experience in several languages, for instance R/PythonProven ability to build predictive models that a",tompham9016
 55520483,Python,y,"ge and experience in several languages, for instance R/PythonProven ability to build predictive models that are adopted by",tompham9016
 55520483,Problem solving,y,models that are adopted by the organisationOutstanding problem solving skills including the ability to work with ambiguitySuc,tompham9016
 55520483,Work with ambiguity,n,blem solving skills including the ability to work with ambiguitySuccessful management of a small team or unitAppropriate tertiary,tompham9016
-53187210,Leadership,y,,tompham9016
+53187210,Leadership,y,An ability to guide and mentor co-workers is essential,tompham9016
 53187210,Problem solving,y,A curiosity and a willingness to solve problems is essential to this role,tompham9016
 53187210,design data driven solution,n,"Experience in helping a business design a data driven solution, as opposed to just building fr",tompham9016
 53187210,Strong technical skills,n,"my, the role would suit someone willing to apply their strong technical skills to manipulate and present data in a way that drives va",tompham9016
@@ -297,7 +296,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 55085339,Python,y,"Experience with SQL, R and Python",tompham9016
 55085339,Communication,y,Strong verbal communication skills and a passion for consulting,tompham9016
 55085339,Problem solving,y,A problem-solving mindset,tompham9016
-55085339,Teamwork,y,,tompham9016
+55085339,Teamwork,y,A team player who is keen to collaborate with clients and teams,tompham9016
 50014854,Leadership,y,Experience in leading and mentoring teams of data scientists,tompham9016
 50014854,Predictive modelling,y,"7 to 10 years’ experience developing predictive models in commercial environments, preferably exposure to Sal",tompham9016
 50014854,classification,n,"ta mining techniques as well as the use of predictive, classification and alternate analytic algorithms for modelling and se",tompham9016
@@ -306,7 +305,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 50014854,Stakeholder management,y,Managing both internal and external stakeholders for the successful launch of new product features,tompham9016
 50014854,Machine learning,y,"and maintain state of the art advanced statistical and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to dri",tompham9016
 50014854,Random forest,y,"advanced statistical and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to drive marketing strategies and",tompham9016
-50014854,Gradient boosting,y,,tompham9016
+50014854,Gradient boosting,y,"ical and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to drive marketing strategies and tactical execu",tompham9016
 50014854,XGBoost,y,"and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to drive marketing strategies and tactical execu",tompham9016
 50014854,Linear regression,y,"Linear & Logistics Regression, Decision Trees, Random forests",tompham9016
 50014854,Logistic regression,y,"Linear & Logistics Regression, Decision Trees, Random forests, Markov Cha",tompham9016
@@ -357,7 +356,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 38692371,Predictive modelling,y,visualisation and text mining to identify patterns and predict outcomes from large datasets,tompham9016
 38692371,Leadership,y,"insights across a broad range of datasets, and take a leadership role for projects which solve important business probl",tompham9016
 38692371,Problem solving,y,"e projects involving research and analysis, high level problem solving and the formation of sound judgements",tompham9016
-38692371,MLOps,y,,tompham9016
+38692371,MLOps,y,"They will initiate, design, develop, implement, deploy, test and evaluate models to provide actionable insights across a broad range of",tompham9016
 38692371,Communication,y,You have highly developed oral and written communication skills and can easily develop and maintain effective w,tompham9016
 38692371,R,y,"R, Python, Scala Strong skills in data wrangling with co",tompham9016
 38692371,Python,y,"R, Python, Scala Strong skills in data wrangling with complex da",tompham9016
@@ -367,12 +366,12 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 52219256,risk management,n,Risk Management is responsible for protecting the Group's and Bankwest,tompham9016
 52219256,Communication,y,"rn and be part of a highly engaged teamHave proficient written communication skills, can problem solve and collaborate well with ot",tompham9016
 52219256,Problem solving,y,"teamHave proficient written communication skills, can problem solve and collaborate well with other colleaguesCan th",tompham9016
-52219256,Teamwork,y,,tompham9016
+52219256,Teamwork,y,"nt written communication skills, can problem solve and collaborate well with other colleaguesCan think creatively, handle change and deadlinesAre on",tompham9016
 52219256,data analysis,n,"t university and through on the job training toPerform data analysis to monitor, measure, and manage risksAssist in develop",tompham9016
 50449684,Machine learning,y,ust advanced analytics and developing new cutting-edge machine learning models and data-driven tools to support our ongoing da,tompham9016
-50449684,Optimisation,y,,tompham9016
-50449684,Presentation skills,y,,tompham9016
-50449684,Teamwork,y,,tompham9016
+50449684,Optimisation,y,"ng data strategy and drive future business performance Optimising and evolving the current models and analytics solutions that are in production, taking",tompham9016
+50449684,Presentation skills,y,"actful and aligned to business objectives and strategy Presenting the analytics solutions, models and insights to a range of business stakeholde",tompham9016
+50449684,Teamwork,y,s stakeholders and contributing to strategic decisions Collaborating with engineering and product development teams Your background,tompham9016
 50449684,SQL,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
 50449684,Python,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
 50449684,Google Cloud,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
@@ -404,10 +403,9 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 39372682,Stakeholder management,y,ng problem Experience writing Algorithms Deep Learning Stakeholder Engagement Strong Communication skills IT'S NICE TO HAVEStatistic,tompham9016
 39372682,Communication,y,Algorithms Deep Learning Stakeholder Engagement Strong Communication skills IT'S NICE TO HAVEStatistical Analysis Master's or PhD,tompham9016
 52312136,deliver solutions,n,rience working as a Data Scientist Proven track record delivering Data Science solutions with extremely large customer datasets Experience buil,tompham9016
-52312136,big data,n,,tompham9016
+52312136,big data,n,en track record delivering Data Science solutions with extremely large customer datasets Experience building and deploying models and segmentat,tompham9016
 52312136,segmentations,n,datasets Experience building and deploying models and segmentations High quality coding experience across Python/SQL/R Exp,tompham9016
-52312136,MLOps,y,,tompham9016
-52312136,CI/CD,y,,tompham9016
+52312136,MLOps,y,ions with extremely large customer datasets Experience building and deploying models and segmentations High quality coding experience acros,tompham9016
 52312136,Python,y,nd segmentations High quality coding experience across Python/SQL/R Expert in large scale data prep and manipulation,tompham9016
 52312136,R,y,"tions High quality coding experience across Python/SQL/R Expert in large scale data prep and manipulation, idea",tompham9016
 52312136,SQL,y,"entations High quality coding experience across Python/SQL/R Expert in large scale data prep and manipulation, id",tompham9016
@@ -447,8 +445,8 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 38744632,Keras,y,"GCP (Google Cloud Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why this role is different",tompham9016
 38744632,TensorFlow,y,"Google Cloud Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why this role is different",tompham9016
 38744632,SparkMLlib,n,"Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why this role is different",tompham9016
-38744632,Teamwork,y,,tompham9016
-38680411,R,y,,tompham9016
+38744632,Teamwork,y,grade models/recommendation systems/propensity models as part of a team,tompham9016
+38680411,R,y,Solid expereince with r or python,tompham9016
 38680411,Python,y,Solid expereince with r or python,tompham9016
 38680411,Communication,y,Strong communication skills with the ability to influence others,tompham9016
 38680411,PD,n,"Experience with PD, LGD and EAD through modelling or validation will be h",tompham9016
@@ -462,7 +460,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 38680411,Stakeholder management,y,credit risk portfolios trends and presenting to senior stakeholders,tompham9016
 38680411,Presentation skills,y,ing on the health of credit risk portfolios trends and presenting to senior stakeholders,tompham9016
 55489506,Predictive modelling,y,pointData is an Australian owned and based predictive analytics company that provides superior property and planning a,tompham9016
-55489506,Leadership,y,,tompham9016
+55489506,Leadership,y,"Formulate and lead analytical studies against large data-setsDesign, implement and validate",tompham9016
 55489506,Statistics,y,models to deliver commercial outcomesDevelop and apply statistical methods for analysis and validationPlan and carry out,tompham9016
 55489506,data collection,n,"methods for analysis and validationPlan and carry out data collection, conversion and processing pipelinesDesign and employ",tompham9016
 55489506,processing pipelines,n,"tionPlan and carry out data collection, conversion and processing pipelinesDesign and employ systems related to data sto",tompham9016
@@ -508,7 +506,7 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 53894393,high level of accuracy,n,"mendationsThorough approach to detail, ensuring a high level of accuracyYou will have excellent interpersonal skills and the ab",tompham9016
 40386941,data analysis,n,and service teams to identify questions and issues for data analysis and experiments,tompham9016
 40386941,big data,n,ross-business approach and strategic/tactical plan for big data initiatives,tompham9016
-40386941,ETL,y,,tompham9016
+40386941,ETL,y,"ftware programs, algorithms and automated processes to cleanse, integrate and evaluate large data sets from multiple data sources",tompham9016
 40386941,data science,n,"Learning, adopting and leveraging data science best practice to delivery quantitative improvements to",tompham9016
 40386941,providing insight,n,"ta tools and techniques for the purposes of analysing, providing insight and validating hypotheses",tompham9016
 40386941,validating hypotheses,n,"s for the purposes of analysing, providing insight and validating hypotheses",tompham9016
@@ -530,8 +528,8 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 38644875,Hive,y,"Experience in Hive, Spark or Map R would also be desirable",tompham9016
 38644875,Spark,y,"Experience in Hive, Spark or Map R would also be desirable",tompham9016
 38644875,Map R,n,"Experience in Hive, Spark or Map R would also be desirable",tompham9016
-38644875,ETL,y,,tompham9016
-38644875,MLOps,y,,tompham9016
+38644875,ETL,y,The ability to extract data from complex data sets,tompham9016
+38644875,MLOps,y,"The role will also be involved in implementing, deploying, testing and evaluating statistical and machine learning models to identify pa",tompham9016
 38644875,Statistics,y,"ved in implementing, deploying, testing and evaluating statistical and machine learning models to identify patterns, pred",tompham9016
 38644875,Predictive modelling,y,"ical and machine learning models to identify patterns, predict outcomes and provide actionable insights across linked",tompham9016
 38644875,Artificial intelligence,y,R programming - Python - AI - Machine learning - Data ScienceYour new company You,tompham9016
