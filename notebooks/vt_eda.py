@@ -120,6 +120,14 @@ inventory = pd.DataFrame([
     ("ESCO label lookup rows", len(lookup), "v1.2.1", "normalise()", "clean_esco.py"),
     ("Label sample (ads)", len(label_sample), "2019-22", "extraction test set", "make_label_sample.py"),
     ("Skill dictionary", len(seed), "v2", "extract() tier 1", "data/processed/"),
+    ("Prerequisite items", len(pd.read_csv(PROC / "prerequisites.csv", dtype=str)), "2026",
+     "recommend(): order, anti-requisites", "scrape_requisites.py"),
+    ("Teaching sessions", len(pd.read_csv(PROC / "offerings.csv", dtype=str)), "2026",
+     "recommend(): when a subject runs", "scrape_requisites.py"),
+    ("Role profile rows", len(pd.read_csv(PROC / "role_profiles.csv")), "2023, 7 roles",
+     "role picker, match()", "build_role_profiles.py"),
+    ("External course rows", len(pd.read_csv(PROC / "external_courses.csv", dtype=str)), "Oct 2026, 56 courses",
+     "recommend() tier 2", "external/ (Quan)"),
 ], columns=["data", "rows", "period", "used by", "built by"])
 inventory
 
@@ -191,7 +199,7 @@ delta.sort_values(ascending=False).head(6).rename("change, pts").to_frame().T
 # %% [markdown]
 # ## 3. What do Australian employers ask for?
 #
-# From here on: the app's v2 dictionary (138 skills) on the clean text.
+# From here on: the app's v2 dictionary (148 skills) on the clean text.
 
 # %%
 seek_ids = seek.assign(ad_id=seek.ad_id)
@@ -217,7 +225,7 @@ ax.spines["bottom"].set_visible(False)
 ax.tick_params(axis="y", length=0)
 ax.set_title("Technical skills named in Australian Data Scientist ads", loc="left", color=INK, fontsize=12)
 fig.subplots_adjust(bottom=0.06)
-fig.text(0.01, 0.0, f"Seek Australia 2019-22, n = {len(seek):,} ads, clean text, 138-skill dictionary",
+fig.text(0.01, 0.0, f"Seek Australia 2019-22, n = {len(seek):,} ads, clean text, {len(seed)}-skill dictionary",
          color=MUTED, fontsize=8)
 fig.savefig(FIG / "fig1_top_skills.png")
 plt.show()
@@ -345,7 +353,7 @@ trend = pd.DataFrame(rows, columns=["period", "ads", "with LLM-era skill", "pct"
 trend.round(1)
 
 # %%
-fig, ax = plt.subplots(figsize=(6.5, 3.6))
+fig, ax = plt.subplots(figsize=(7.6, 3.8))
 x = np.arange(len(trend))
 ax.errorbar(x, trend.pct, yerr=[trend.pct - trend.low, trend.high - trend.pct], fmt="none",
             ecolor=MUTED, elinewidth=1.5, capsize=4)
@@ -353,7 +361,7 @@ ax.plot(x, trend.pct, "o", color=TEAL, markersize=9)
 for i, r in trend.iterrows():
     ax.text(i + 0.08, r.pct, f"{r.pct:.0f}%  ({r['with LLM-era skill']} of {r.ads:,})", va="center",
             color=INK, fontsize=9)
-ax.set_xticks(x, [p[0] for p in periods])
+ax.set_xticks(x, ["2019-22\nSeek", "Jan 2024\nLinkedIn", "2026\ndata scientists", "2026\nall data roles"])
 ax.set_ylim(-3, 100)
 ax.set_xlim(-0.4, 3.9)
 ax.set_ylabel("ads naming an LLM-era skill (%)")
@@ -395,7 +403,7 @@ new[new.sum(axis=1) > 0].assign(in_dictionary=lambda d: [t.lower() in in_dict fo
 # ## 7. What does the UTS curriculum cover?
 #
 # `data/processed/subject_profiles.csv` (`build_subject_profiles.py`): one row per
-# learning objective, weekly topic or description sentence.
+# learning objective, assessment task, weekly topic or description sentence.
 
 # %%
 profiles["mdsi"] = profiles.course.fillna("").str.contains("C04372")
@@ -432,14 +440,14 @@ fig, ax = plt.subplots(figsize=(7.2, 7))
 colors = [TEAL if s > 0 else COPPER for s in d.subjects]
 ax.barh(d.index, d.pct, color=colors, height=0.68)
 for y, (v, m, s) in enumerate(zip(d.pct, d.mdsi_subjects, d.subjects)):
-    note = "no UTS subject" if s == 0 else (f"{s} subject{'s' if s > 1 else ''}" + (" incl. MDSI" if m else ""))
+    note = "named by no UTS subject" if s == 0 else (f"{s} subject{'s' if s > 1 else ''}" + (" incl. MDSI" if m else ""))
     ax.text(v + 1, y, f"{v:.0f}%  ·  {note}", va="center", color=INK, fontsize=8)
 ax.set_xlim(0, 120)
 ax.set_xticks([])
 ax.spines["bottom"].set_visible(False)
 ax.tick_params(axis="y", length=0)
 ax.legend(handles=[plt.Rectangle((0, 0), 1, 1, color=TEAL), plt.Rectangle((0, 0), 1, 1, color=COPPER)],
-          labels=["taught by a UTS subject", f"not taught in the {N_SUB} subjects"], frameon=False,
+          labels=["named in a UTS subject's text", f"named in none of the {N_SUB} subjects"], frameon=False,
           loc="lower right", fontsize=8)
 ax.set_title("Market demand against the UTS curriculum", loc="left", color=INK, fontsize=12)
 fig.subplots_adjust(bottom=0.05)

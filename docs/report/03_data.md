@@ -146,7 +146,7 @@ mostly disagree in one direction: for 3,348 of the author's 3,734 extra positive
 does not appear in the ad at all (their R flag fires on 70% of ads). Our own misses were
 mainly the welded words fixed in section 3.3. This measures agreement, not accuracy;
 accuracy comes from the hand-labelled test set in section 6, whose two annotators agree with
-a kappa of 0.857 on dictionary skills.
+a kappa of 0.857 on the 138 dictionary skills they both labelled against.
 
 **Other platforms and markets.** If the ranking were an artefact of how Seek ads are
 written, other sources would rank skills differently. Table 3.3 compares them, using the

@@ -21,28 +21,29 @@ everyone labels and evaluates on byte-identical files.
 | Glassdoor Australia (Kaggle, nadzmiagthomas) | 193 data roles, full text | Aug–Dec 2022 | platform check only: rank correlation 0.75 with Seek (technical skills) | [kaggle](https://www.kaggle.com/datasets/nadzmiagthomas/australia-data-science-jobs) |
 | ESCO v1.2.1 | 13,960 skill concepts, 100,886 labels | 2025 | the vocabulary `normalise()` maps to | [esco](https://esco.ec.europa.eu/en/use-esco/download) |
 | O*NET 31.0 | 8,753 tool names | 2026 | tools ESCO lacks | [onet](https://www.onetcenter.org/database.html) |
-| UTS Handbook 2026 | 70 subjects, 6 courses (19 MDSI) | 2026 | subject profiles | [handbook](https://coursehandbook.uts.edu.au) |
+| UTS Handbook 2026 | 360 subjects in 44 courses (19 MDSI) | 2026 | subject profiles, prerequisites, teaching sessions | [handbook](https://coursehandbook.uts.edu.au) |
 | Resume Dataset (Kaggle, snehaanbhawal) | 2,481 resumes; 125 with 2+ data skills | 2021 | resume parsing and CV–JD test pairs | [kaggle](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) |
-| Job-board APIs (Greenhouse, Lever, SmartRecruiters) + Adzuna API | 55 Australian data roles: 22 full text, 33 cut at 500 characters by Adzuna | Sept 2026 | the 2026 sample | public APIs |
-| LinkedIn data-science postings (Kaggle, asaniczka) | 124 Australian data roles, full text | Jan 2024 | Australian middle point for the 2019–22 → 2026 trend | [kaggle](https://www.kaggle.com/datasets/asaniczka/data-science-job-postings-and-skills) |
+| Job-board APIs of 65 employers (Greenhouse, Lever, SmartRecruiters, Ashby, Workable) + Adzuna API | 38 Australian data roles with full text (22 in the sample, 9 of them data scientists) + 32 Adzuna roles cut at 500 characters | Sep–Oct 2026 | the 2026 sample | public APIs |
+| LinkedIn data-science postings (Kaggle, asaniczka) | 122 Australian data roles, full text | Jan 2024 | Australian middle point for the 2019–22 → 2026 trend | [kaggle](https://www.kaggle.com/datasets/asaniczka/data-science-job-postings-and-skills) |
 
 Notes for anyone citing these:
 
 - **The Seek data is not PromptCloud's.** The poster's reference list says PromptCloud; the
   file we use is `listings2019_2022.csv` from the nomilk dataset above. Cite that one.
-- We scraped neither Seek nor LinkedIn; both are published Kaggle datasets. The handbook was
-  read with about 90 targeted, rate-limited requests, not a crawl; its `robots.txt`
-  disallows crawling.
+- We scraped neither Seek nor LinkedIn; both are published Kaggle datasets. The handbook's
+  `robots.txt` disallows crawling; its 360 subject pages, their assessment tasks and their
+  access conditions were read one request at a time, at least 1.2 s apart.
 - **Label and evaluate on `data-eda/data/clean/`**, not `raw/`. The raw Seek text has words
   welded together where HTML was stripped (`TableauSuperior`); the clean file repairs that,
   so the labeller and the extractor see the same words.
-- **The 2026 sample is small: 22 full-text roles, not the ~150 planned.** Indeed was dropped
-  because its terms forbid scraping and it has no public search API. Adzuna's API cuts every
-  description at 500 characters, so its 33 roles count as roles but not for skill shares.
+- **The 2026 sample is small: 22 roles, not the ~150 planned** (posted within 60 days of a
+  snapshot, at most 3 per employer; 9 are data scientists). Indeed was dropped because its
+  terms forbid scraping and it has no public search API. Adzuna's API cuts every description
+  at 500 characters, so its 32 roles count as roles but not for skill shares.
   The January 2024 LinkedIn rows are kept as their own period, not merged into 2026. All of
   it is in `data-eda/data/clean/jobs_au_recent_2024-2026_clean.csv`
   (`python src/build_recent_sample.py`).
-- Resumes are de-identified, not anonymous: emails, phones, URLs and 1,071 person names are
+- Resumes are de-identified, not anonymous: emails, phones, URLs and 1,146 person names are
   masked, but a name in capitals or a lone first name can survive. Mask again with spaCy
   before sending any resume text to an LLM.
 
@@ -62,13 +63,15 @@ Small CSVs, committed. They are the record of what the poster shows; the bars in
 - `data/processed/gap.csv` — block 5: columns `skill,pct_ads,covered` (`covered` = 1 if the sample resume has the skill)
 
 - `data/processed/skill_counts_2026.csv` — every v2 dictionary skill in three periods, same
-  method: `pct_2019_22` (3,204 Seek listings, clean text, counted per listing as on the poster), `pct_2024_01` (124 Australian LinkedIn data
-  roles), `n_2026` / `pct_2026` (22 full-text 2026 roles) with a 95% Wilson interval. `match.py`
-  reads `pct_2026` as `demand_pct_2026`. Built by `python data-eda/src/recount_recent.py`.
-  **Read with care:** 2026 is 22 ads from 8 employers (12 from Canva), AI-titled roles included, so
-  per-skill 2026 shares carry intervals of ±20 points. The one robust signal is direction: any
-  LLM-era skill 0% → 2.4% → 50% (11 of 22), and the rise holds within non-AI-titled roles
-  (0.9% → 30%, n = 10). Show 2026 as "n of 22", not as a bare percentage.
+  method: `pct_2019_22` (3,204 Seek listings, clean text, counted per listing as on the poster), `pct_2024_01` (122 Australian LinkedIn data
+  roles), `n_2026` / `pct_2026` (the 9 data-scientist ads of the 2026 sample) and `n_2026_all` /
+  `pct_2026_all` (all 22 sample roles), each with a 95% Wilson interval. `match.py` reads
+  `pct_2026` as `demand_pct_2026` (trend column) and `pct_2026_all_low` for the emerging flags.
+  Built by `python data-eda/src/recount_recent.py`.
+  **Read with care:** 22 ads from 12 employers, 9 of them data scientists from 5, so one ad moves
+  a data-scientist share by 11 points. The one robust signal is direction: any LLM-era skill
+  0% → 2.5% (Jan 2024) → 7 of 9 data scientists and 9 of 22 data roles, and the rise holds within
+  titles without AI or ML (1 of 108 → 4 of 14). Show 2026 as "n of 9", not as a bare percentage.
 
 Careful with `skills_seed_v2.csv`: it starts with a `#` comment line and also contains the
 skill `C#`, so `pd.read_csv(..., comment="#")` silently cuts that row down to `C` with no
