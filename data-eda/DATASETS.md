@@ -11,7 +11,7 @@ page. Verified 23 September 2026.
 | `jobs_au_seek_datascience_2019-2022.csv` | 3,895 | full | 2019–2022 | all data-ish roles; superset of the above |
 | `jobs_au_seek_datascience_2019-2022_authorflags.csv` | 3,902 | full | 2019–2022 | superset carrying the author's own 25 tool flags. **Our external validation set** — joins to the primary on `ad_id == jobId`, all 3,204. See `outputs/extractor_agreement.csv` |
 | `jobs_au_ats_2026.csv` | 234 | full, ~6.2k | Sept 2026 | first job-board snapshot (23 Sep); Greenhouse/Lever/SmartRecruiters, 12 employers |
-| `ats_ads_2026-MM-DD.csv` | 595 (14 Oct) | full | Oct 2026 | one snapshot per daily run of `fetch_ats.py --australia-only` over the 65 boards in `config/ats_companies.csv`; Greenhouse, Lever, SmartRecruiters, Ashby, Workable. Not committed |
+| `ats_ads_2026-MM-DD.csv` | 595 (14 Oct), 592 (14 Oct evening, `_pm`) | full | Oct 2026 | one snapshot per daily run of `fetch_ats.py --australia-only` over the 65 boards in `config/ats_companies.csv`; Greenhouse, Lever, SmartRecruiters, Ashby, Workable. Not committed |
 | `jobs_au_adzuna_2026.csv` | 50 | **capped at 500 chars** | Sept 2026 | employers, volume, geography only |
 
 ## Job advertisements — international

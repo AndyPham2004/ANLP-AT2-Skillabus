@@ -31,10 +31,12 @@ job-board rows (issue #64) three more rules apply before a row counts:
              group is the like-for-like comparison; "data role" for the rest of
              DATA_TITLE (engineers, analysts, ML engineers)
   * cap      at most --cap (3) rows per company and group, the most recent first,
-             so one employer (Canva had 12 of 22 in September) cannot set the shares
+             so one employer (Canva had 12 of 22 in September) cannot set the shares;
+             ads posted on the same day are ordered by ad_id, so reruns keep the same rows
 
 `in_sample` marks the rows that pass all three; recount_recent.py counts those.
-The same role seen in several snapshots is kept once, from the latest snapshot.
+The same role seen in several snapshots is kept once, from the latest snapshot; a role
+re-posted under a new id is kept once, from the newest posting.
 
 Usage (from data-eda/):
     python src/build_recent_sample.py                       # Sept file + every ats_ads_2026-*.csv
@@ -173,7 +175,8 @@ def mark_sample(df: pd.DataFrame, max_age: int, cap: int) -> pd.DataFrame:
     boards = df.period.str.startswith("2026") & df.full_text
     fresh = df.age_days.isna() | (df.age_days <= max_age)
     df["in_sample"] = False
-    pool = df[boards & fresh].sort_values(["snapshot", "posted"], ascending=False)
+    # ad_id breaks ties on the same posting day, so the rows kept never depend on input order.
+    pool = df[boards & fresh].sort_values(["snapshot", "posted", "ad_id"], ascending=False, kind="stable")
     keep = pool.groupby(["company", "role_group"]).head(cap).index
     df.loc[keep, "in_sample"] = True
     df.loc[~boards, "in_sample"] = df.loc[~boards, "full_text"]   # LinkedIn 2024 as before; Adzuna never
@@ -199,8 +202,13 @@ def main() -> None:
         if not path.exists():
             raise SystemExit(f"{path} not found - see data/README.md for where each source comes from")
 
-    # Latest snapshot first, so a role seen on several days keeps its newest text and date.
-    boards = pd.concat([from_ats(p) for p in ats_files], ignore_index=True).sort_values("snapshot", ascending=False)
+    # Latest snapshot first, so a role seen on several days keeps its newest text and date;
+    # then the newest posting, so a role re-posted under a new id keeps the fresh copy; ad_id
+    # settles the rest. Files are read in reverse name order so a second run on one day (_pm)
+    # wins over the first.
+    boards = (pd.concat([from_ats(p) for p in sorted(ats_files, key=lambda p: p.name, reverse=True)],
+                        ignore_index=True)
+                .sort_values(["snapshot", "posted", "ad_id"], ascending=False, kind="stable"))
     frames = {"job boards": boards, "adzuna": from_adzuna(args.adzuna), "linkedin": from_linkedin(args.linkedin)}
     log.info("job-board snapshots: %s", ", ".join(f"{p.name} ({len(from_ats(p))})" for p in ats_files))
     log.info("%-12s %6s %6s %8s", "source", "rows", "data", "deduped")
