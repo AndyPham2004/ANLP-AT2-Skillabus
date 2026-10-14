@@ -69,7 +69,7 @@ SENTENCE = re.compile(r"(?<=[.!?])\s+|\n+|\s*•\s*")
 
 # ------------------------------------------------------------------------------- corpus
 def _skill_pattern() -> re.Pattern:
-    """Any alias in the 138-skill dictionary, as one case-insensitive pattern."""
+    """Any alias in the skill dictionary (skills_seed_v2.csv), as one case-insensitive pattern."""
     with open(SEED_CSV, encoding="utf-8") as f:
         has_comment = f.readline().startswith("#")
     seed = pd.read_csv(SEED_CSV, skiprows=1 if has_comment else 0, dtype=str)  # not comment="#": C#

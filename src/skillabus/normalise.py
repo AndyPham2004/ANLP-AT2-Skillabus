@@ -1,7 +1,7 @@
 """Map raw skill mentions to ESCO, then Lightcast, else tag as emerging. Owner: Quan.
 
 For each mention, in order (first hit wins):
-1. dictionary   our 138-row alias list (skills_seed_v2.csv) -> canonical name, ESCO link if Van Thong made one
+1. dictionary   our alias list (skills_seed_v2.csv) -> canonical name, ESCO link if Van Thong made one
 2. esco_exact   the phrase (or its canonical name) equals an ESCO preferred or alternative label
 3. esco_embed   nearest ESCO preferred label by sentence embedding, if cosine >= ESCO_MIN_SIM
    (a dictionary skill still unmatched here keeps vocab "seed", id seed:<slug>)
