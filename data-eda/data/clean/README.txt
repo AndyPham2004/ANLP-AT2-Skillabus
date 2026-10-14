@@ -75,7 +75,8 @@ resumes_us_2021_clean.csv                       2,481 resumes   src/clean_resume
  resume_id, category, resume_text, n_data_skills
 
  Masked: emails (19 resumes), phone numbers incl. international (62),
- URLs (100), and person names (1,069 spans in 535 resumes) -> [NAME].
+ URLs (101), and person names (1,146 in 551 resumes: 1,069 by spaCy NER, 2 by
+ the 'Summary <Name> is' rule, 75 by the title / credential rule) -> [NAME].
  14 Oct 2026 (#53): phone numbers with spaces around the dash ("(281) 491 - 3225")
  and 75 more names: after Dr./Mr./Ms./Mrs./Prof., or before RN, LVN, LPN, CCM,
  NP, PhD (referees whose first name the name list lacks). 39 resumes changed;
