@@ -55,12 +55,16 @@ def load_dictionary(path: str) -> list[str]:
 
 
 def load_ad_skills(path: str, annotator: str | None = None) -> dict[str, set[str]]:
-    """ad_skills.csv -> {ad_id: {skill, ...}}. Pass `annotator` when two people share one file."""
+    """ad_skills.csv -> {ad_id: {skill, ...}}. Pass `annotator` when two people share one file.
+
+    A leading '?' (unsure) is dropped from skill_label too: labellers put it there as well as on
+    evidence_text, and "?telecommunications" would never match.
+    """
     out: dict[str, set[str]] = defaultdict(set)
     for r in _rows(path):
         if annotator and r.get("annotator", "").strip().casefold() != annotator.strip().casefold():
             continue
-        label = norm(r.get("skill_label", ""))
+        label = norm(r.get("skill_label", "").lstrip(" ?"))
         if label and r.get("ad_id", "").strip():
             out[r["ad_id"].strip()].add(label)
     return dict(out)
