@@ -11,8 +11,11 @@ The access-conditions rule of a subject is a boolean expression over numbered it
     admission                       its text names the student's course (C04372 for MDSI)
     academic, no code               (credit points) its text names the student's course
 Anything else (admission into another course, an item the scrape did not capture) is not
-satisfied, so we never recommend a subject the student may be refused. An antirequisite rule
-closes the subject when it is true. A rule left empty because the access-conditions site has no
+satisfied, so we never recommend a subject the student may be refused. Antirequisites are read
+item by item, not as a rule: the subject closes when the student has taken ANY subject on its
+antirequisite list, or when it is on the antirequisite list of a subject they have taken (the
+site often lists a pair on one side only). The rule string is ignored for antirequisites: the
+site prints the list as "(1 AND 2 AND 3)", and some rules name items it does not list. A rule left empty because the access-conditions site has no
 record of the subject (`evop_found` = n) is treated as open but flagged `unverified`.
 
 A subject that is not open may still be reachable: if its rule is met by taking at most
@@ -242,6 +245,16 @@ def _describe(rule: Rule, done: set[str], home_course: str | None) -> str:
     return text if len(text) <= MAX_REASON else text[: MAX_REASON - 1].rsplit(" ", 1)[0] + " …"
 
 
+def antirequisite_clash(code: str, done: set[str], rules: Rules) -> list[str]:
+    """Subjects in `done` that rule `code` out, in either direction."""
+    anti = rules.antirequisite.get(code)
+    mine = {it.code for it in anti.items.values() if it.code} if anti else set()
+    theirs = {other for other in done
+              if other in rules.antirequisite
+              and code in {it.code for it in rules.antirequisite[other].items.values()}}
+    return sorted((mine & done) | theirs)
+
+
 def enrolment(code: str, done: set[str], rules: Rules, home_course: str | None = HOME_COURSE,
               _depth: int = 0) -> dict:
     """Whether the student can take `code` next, given the subjects in `done`.
@@ -253,10 +266,9 @@ def enrolment(code: str, done: set[str], rules: Rules, home_course: str | None =
     out = {"status": "open", "needs": [], "reason": "", "unverified": code in rules.unverified}
     if rules.has_offerings and code not in rules.offered and code in rules.requisite:   # scraped, no 2026 period
         return {**out, "status": "closed", "reason": "not taught in 2026 (Handbook)"}
-    anti = rules.antirequisite.get(code)
-    if anti and anti.expr and _true(_tree(anti.expr), anti, done, home_course):
-        taken = [it.code for it in anti.items.values() if it.code in done]
-        return {**out, "status": "closed", "reason": "antirequisite" + (f": already took {', '.join(taken)}" if taken else "")}
+    clash = antirequisite_clash(code, done, rules)
+    if clash:
+        return {**out, "status": "closed", "reason": f"antirequisite: already took {', '.join(clash)}"}
     rule = rules.requisite.get(code)
     if not rule or not rule.expr:
         return out
@@ -318,7 +330,10 @@ def schedule(path: list[str], rules: Rules, start: tuple[str, int] | None = None
         main = [s for s in offered if s in SESSIONS]
         slot = next((i for i, name in names[earliest:] if not main or name.split()[0] in main), earliest)
         placed[code] = slot
-        plan.append({"subject_code": code, "session": names[slot][1], "offered": offered,
+        session = names[slot][1]
+        if offered and not main:                         # Summer, Session 3, ...: no Autumn/Spring slot
+            session = f"{' or '.join(offered[:2])}, {session.split()[1]}"
+        plan.append({"subject_code": code, "session": session, "offered": offered,
                      "after": sorted(set(after)), "unverified": code in rules.unverified, "_slot": slot})
     plan.sort(key=lambda step: step["_slot"])            # stable: path order within a session
     for step in plan:

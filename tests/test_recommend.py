@@ -58,8 +58,10 @@ def test_result_follows_the_data_contract(method):
     assert set(result) == {"recommendations", "learning_path", "outside_recommendations"}
     labels = {g["skill_label"] for g in gaps}
     for rec in result["recommendations"]:
-        assert {"subject_code", "subject_name", "source_url", "score", "covers", "evidence", "needs", "offered"} == set(rec)
-        assert 0 < rec["score"] <= 1.0 and set(rec["covers"]) <= labels
+        assert {"subject_code", "subject_name", "source_url", "score", "covers", "evidence", "needs", "offered",
+                "unverified"} == set(rec)
+        assert 0 <= rec["score"] <= 1.0 and set(rec["covers"]) <= labels
+        assert rec["score"] > 0 or not rec["covers"]          # score 0 only for a prerequisite the path adds
         assert [e["skill_label"] for e in rec["evidence"]] == rec["covers"]
         assert all(e["layer"] in ("learning_objective", "assessment", "weekly_topic", "description")
                    and e["text"] for e in rec["evidence"])

@@ -111,7 +111,7 @@ and Phuong Nhi**.
 | `demand_pct_2026` | Same over the 2026 sample; `null` until that sample exists |
 | `layer` | `learning_objective`, `assessment`, `weekly_topic`, `description` (strongest first) |
 | `match` | `named` (the row names the skill) or `similar` (TF-IDF or embedding similarity only) |
-| `needs` | Prerequisites the student has not taken yet (at most two, each open now); `[]` = can enrol now. A recommended subject may still need them; the path adds them before it |
+| `needs` | Prerequisites the student has not taken yet (at most two, each open now); `[]` = can enrol now, unless `unverified` is true (no record on the access-conditions site, so "no prerequisite" is not confirmed). A recommended subject may still need them; the path adds them before it |
 | `offered` | `Autumn` / `Spring` when the subject runs in them in 2026, else the periods it does run in (`Session 3`); `[]` when `offerings.csv` has no row |
 | `learning_path.subjects` | In the order chosen (most demand first); a prerequisite comes right before the subject that needs it and also uses one of the three places. A prerequisite that covers no gap is in `recommendations` with `score` 0 and empty `covers` |
 | `plan` | The same subjects over sessions, earliest first: each goes in the first session after its prerequisites (`after`) that teaches it, starting from the next session (`recommend(start=...)`). `unverified`: the access-conditions site has no record, so "no prerequisite" is not confirmed |
@@ -124,7 +124,10 @@ Who can enrol (`src/skillabus/requisites.py`, from `prerequisites.csv` and `offe
 credit-point item counts as met only when its text names the student's course (C04372); a subject-code item
 when the student took that subject (a corequisite may also be taken in the same session); an item the scrape
 did not capture is never met. Subjects taken (`recommend(exclude=...)`, the app's "taken" box) meet
-prerequisites. Without the two files every subject is open and `plan` is a single session.
+prerequisites. Antirequisites count item by item and in both directions (the site often lists a pair on
+one side only). `unverified` is on each recommendation and each `plan` step. Without the two files every
+subject is open and `plan` is a single session. The fallback engine (`app/baseline.py`) has no
+prerequisite data: it fills `needs`, `offered` and `dropped` with empty values and `plan` with empty sessions.
 
 ## 3. Subject profiles: `data/processed/subject_profiles.csv`
 
