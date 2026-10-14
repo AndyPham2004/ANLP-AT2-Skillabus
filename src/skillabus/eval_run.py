@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import csv
 import json
+import os
+import re
 from pathlib import Path
 
 from . import evaluate as ev
@@ -105,6 +107,85 @@ def kappa_result() -> dict | str:
     return res
 
 
+SUBJECT_METHODS = ("keyword", "tfidf", "embed")
+CODE = re.compile(r"(?<!\d)(\d{5})(?!\d)")
+
+
+def subject_result(methods=SUBJECT_METHODS) -> dict:
+    """Subject P@3 for each retrieval method on data/labels/skill_subject_pairs.csv.
+
+    Each labelled skill is looked up with recommend.subject_evidence(); the subjects are taken best first, one per code.
+    A method that cannot run here (no sentence-transformers) is listed under "skipped" with the reason.
+    """
+    from .recommend import subject_evidence
+    gold = ev.load_skill_subject_pairs(str(LAB / "skill_subject_pairs.csv"))
+    canon = {ev.norm(r["canonical"]): r["canonical"] for r in ev._rows(str(DICT)) if r.get("canonical")}
+    skills = sorted({skill for skill, _ in gold})
+    out: dict = {"n_pairs": len(gold), "n_skills": len(skills), "methods": {}, "skipped": {}}
+    for m in methods:
+        try:
+            found = subject_evidence([canon.get(s, s) for s in skills], method=m)
+        except (RuntimeError, ImportError, OSError, ValueError) as error:
+            out["skipped"][m] = f"{type(error).__name__}: {str(error).splitlines()[0][:120]}"
+            continue
+        recs = {s: list(dict.fromkeys(e["subject_code"] for e in found.get(canon.get(s, s), []))) for s in skills}
+        out["methods"][m] = {"with_partly": ev.subject_precision_at_k(recs, gold, 3, True),
+                             "y_only": ev.subject_precision_at_k(recs, gold, 3, False)}
+    return out
+
+
+def chat_result(call_llm=None, methods=("tfidf", "embed"), k: int = 5) -> dict:
+    """Chat questions: did retrieval bring back the subjects the reference answer cites (no API needed),
+    and, when call_llm is given, the LLM judge's relevance and faithfulness for the answers built from those passages.
+
+    call_llm(prompt) -> reply text. Used for both the answer and the judge, so a cached or fake client works.
+    """
+    from .rag import retrieve
+    questions = ev._rows(str(LAB / "chat_questions.csv"))
+    out: dict = {"n_questions": len(questions), "retrieval": {}, "skipped": {}}
+    for m in methods:
+        try:
+            hits, recalls, per_q = [], [], []
+            for q in questions:
+                want = set(CODE.findall(q["source"]))
+                got = [p["subject_code"] for p in retrieve(q["question"], k=k, method=m) if p.get("subject_code")]
+                hit = bool(want & set(got))
+                recall = len(want & set(got)) / len(want) if want else 0.0
+                hits.append(hit)
+                recalls.append(recall)
+                per_q.append({"question_id": q["question_id"], "hit": hit, "recall": recall, "missing": sorted(want - set(got))})
+            out["retrieval"][m] = {"hit_at_k": ev.mean(hits), "subject_recall_at_k": ev.mean(recalls), "k": k, "per_question": per_q}
+        except (RuntimeError, ImportError, OSError, ValueError) as error:
+            out["skipped"][m] = f"{type(error).__name__}: {str(error).splitlines()[0][:120]}"
+    if call_llm is not None:
+        method = next(iter(out["retrieval"]), None)
+        items = []
+        for q in questions:
+            passages = retrieve(q["question"], k=k, method=method)
+            context = "\n".join(f"[{i + 1}] {p['source']}: {p['text']}" for i, p in enumerate(passages))
+            answer = call_llm("You help UTS data science students choose subjects. Answer only from the numbered Handbook "
+                              "passages. Cite them like [1]. Two to four sentences.\n\nPassages:\n"
+                              f"{context}\n\nQuestion: {q['question']}")
+            items.append({"question_id": q["question_id"], "question": q["question"], "reference": q["reference_answer"],
+                          "answer": answer, "passages": [p["text"] for p in passages]})
+        judged = ev.judge_answers(items, call_llm)
+        out["judge"] = {"method": method, **ev.chat_summary(judged), "rows": judged}
+    return out
+
+
+def openai_caller():
+    """call_llm backed by GPT-4o-mini when OPENAI_API_KEY is set, else None."""
+    if not os.getenv("OPENAI_API_KEY"):
+        return None
+    from openai import OpenAI
+    client = OpenAI()
+
+    def call(prompt: str) -> str:
+        resp = client.chat.completions.create(model="gpt-4o-mini", temperature=0, messages=[{"role": "user", "content": prompt}])
+        return resp.choices[0].message.content
+    return call
+
+
 def _f(x) -> str:
     return f"{x:.3f}"
 
@@ -140,7 +221,25 @@ def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
               f"| All labels incl. free text | {_f(k2['kappa'])} | {k2['interpretation']} | {_f(k2['observed_agreement'])} |"]
     else:
         L += [kappa]
-    L += ["", "## Not run", ""] + [f"- {k}: {v}" for k, v in other.items()]
+    if isinstance(other.get("subject"), dict):
+        sj = other["subject"]
+        L += ["", f"## Subject recommendation, P@3 ({sj['n_pairs']} labelled skill-subject pairs, {sj['n_skills']} skills)", "",
+              "| Method | P@3 (y or partly) | P@3 (y only) | Labelled / recommended | Coverage |", "|---|---|---|---|---|"]
+        for m, r in sj["methods"].items():
+            a, b = r["with_partly"], r["y_only"]
+            L.append(f"| {m} | {_f(a['p_at_k'])} | {_f(b['p_at_k'])} | {a['labelled']} / {a['total_recommended']} | {_f(a['coverage'])} |")
+        L += [f"| {m} | not run | | | {why} |" for m, why in sj["skipped"].items()]
+    if isinstance(other.get("chat"), dict):
+        ch = other["chat"]
+        L += ["", f"## Chat retrieval ({ch['n_questions']} questions)", "", "| Method | Hit@k | Subject recall@k |", "|---|---|---|"]
+        for m, r in ch["retrieval"].items():
+            L.append(f"| {m} | {_f(r['hit_at_k'])} | {_f(r['subject_recall_at_k'])} |")
+        L += [f"| {m} | not run | {why} |" for m, why in ch["skipped"].items()]
+        if "judge" in ch:
+            j = ch["judge"]
+            L += ["", f"LLM judge (retrieval: {j['method']}, n={j['n']}, unparsed={j['n_unparsed']}): relevance {j['relevance_mean']:.2f}/5, "
+                      f"faithfulness {j['faithfulness_mean']:.2f}/5, share of answers with faithfulness 4+: {j['share_faithfulness_4plus']:.2f}"]
+    L += ["", "## Not run", ""] + [f"- {k}: {v}" for k, v in other.items() if isinstance(v, str)]
     return "\n".join(L) + "\n"
 
 
@@ -160,9 +259,19 @@ def run_all(methods=TIERS, out_dir: str | Path | None = None, gold_annotator: st
         e = results[m]
         print(f"{m}: extraction F1 {e['extraction_all']['f1']:.3f}; matching accuracy {e['matching_end_to_end']['accuracy']:.3f}; Hit@5 {e['ranking']['hit_at_k']:.3f}")
     kappa = kappa_result()
-    other = {}
-    for name, fname in (("Subject P@3", "skill_subject_pairs.csv"), ("Chat judge", "chat_questions.csv")):
-        other[name] = "labelled file present but this stage is not wired into --all yet" if (LAB / fname).exists() else f"not run: data/labels/{fname} does not exist yet"
+    other: dict = {}
+    for key, name, fname, fn in (("subject", "Subject P@3", "skill_subject_pairs.csv", subject_result),
+                                 ("chat", "Chat retrieval and judge", "chat_questions.csv", lambda: chat_result(openai_caller()))):
+        if not (LAB / fname).exists():
+            other[name] = f"not run: data/labels/{fname} does not exist yet"
+            continue
+        try:
+            other[key] = fn()
+            (out / f"eval_{key}.json").write_text(json.dumps(other[key], indent=1, default=str), encoding="utf-8")
+        except (RuntimeError, ImportError, OSError, ValueError) as error:
+            other[name] = f"not run: {type(error).__name__}: {str(error).splitlines()[0][:120]}"
+    if isinstance(other.get("chat"), dict) and "judge" not in other["chat"]:
+        other["Chat LLM judge"] = "not run: set OPENAI_API_KEY (answers and judge use GPT-4o-mini)"
     (out / "eval_tables.md").write_text(tables_md(results, skipped, kappa, other), encoding="utf-8")
     print("wrote", out / "eval_tables.md")
     return 0

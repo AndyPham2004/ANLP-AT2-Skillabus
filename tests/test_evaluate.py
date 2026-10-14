@@ -224,3 +224,14 @@ class EvalRunTables(unittest.TestCase):
         self.assertIn("RuntimeError: needs spaCy", text)
         self.assertIn("not run: one annotator", text)
         self.assertIn("- Chat judge: not run: file missing", text)
+
+    def test_subject_and_chat_tables(self):
+        from skillabus.eval_run import tables_md
+        pk = {"k": 3, "p_at_k": 0.5, "relevant": 1, "labelled": 2, "total_recommended": 4, "coverage": 0.5}
+        subject = {"n_pairs": 2, "n_skills": 1, "methods": {"tfidf": {"with_partly": pk, "y_only": pk}}, "skipped": {"embed": "ImportError: no model"}}
+        chat = {"n_questions": 1, "retrieval": {"tfidf": {"hit_at_k": 1.0, "subject_recall_at_k": 0.5}}, "skipped": {}}
+        text = tables_md({}, {}, "k", {"subject": subject, "chat": chat, "Chat LLM judge": "not run: no key"})
+        self.assertIn("| tfidf | 0.500 | 0.500 | 2 / 4 | 0.500 |", text)
+        self.assertIn("| embed | not run |", text)
+        self.assertIn("| tfidf | 1.000 | 0.500 |", text)
+        self.assertIn("- Chat LLM judge: not run: no key", text)
