@@ -14,16 +14,16 @@ assessments). **Emerging**: handles skills absent from the taxonomy.
 | System | For whom | What it does | What it lacks for our users | CV gap | Subject rec. | Evidence | Demand | Beyond description | Emerging |
 |---|---|---|---|---|---|---|---|---|---|
 | LinkedIn (Skills Match, LinkedIn Learning) | Job seekers | Shows which of a job's top skills a profile lists; suggests LinkedIn Learning courses from job title and profile skills | Matches self-declared profile skills, not CV text; recommends its own short courses, not university subjects; no evidence for a match | ✓ | ✗ | ✗ | Partial | n/a | Own taxonomy |
-| SEEK (in-demand skills, SEEK Profile, SEEK Learning) | Job seekers (AU) | Publishes top skills by industry from SEEK ads; links to courses at TAFEs and universities | Industry-level only, no comparison with a specific job; course links at program level; no evidence | ✗ | ✗ (program level) | ✗ | Aggregate only | ✗ | Not reported |
+| SEEK (in-demand skills page) | Job seekers (AU) | Publishes the skills employers ask for most, by industry, from SEEK ads; job seekers can add those skills to their SEEK Profile | Industry level only, no comparison with a specific job; no link to courses or subjects; no evidence | ✗ | ✗ | ✗ | Aggregate only | n/a | Not reported |
 | Jobscan and similar ATS checkers | Job seekers | Keyword match between a resume and a job description; top skills by job title | Stops at "add this keyword"; never says where to learn a skill; lexical matching | ✓ | ✗ | Keywords highlighted | ✗ | n/a | ✗ |
-| University handbooks and course planners | Students | List subjects, learning outcomes and requisites | No labour-market signal; electives listed, not ranked by career value | ✗ | Rules only | ✗ | ✗ | ✗ | ✗ |
+| University handbooks and course planners | Students | List subjects, learning outcomes and requisites | No labour-market signal; electives listed, not ranked by career value | ✗ | Rules only | ✗ | ✗ | n/a | ✗ |
 | Lightcast Skillabi (Lightcast, 2025) | Program leaders, L&D | Maps curriculum text (descriptions, learning outcomes, syllabi) to the Lightcast taxonomy and scores program-occupation alignment 0-100 | Program level, not student level; no CV; proprietary and licensed | ✗ | ✗ (program audit) | ✗ | ✓ | Syllabi if supplied | ✓ (Lightcast) |
 | UniSkill (Musazade et al., 2026) | Researchers | Dataset pairing graduate course sentences with ESCO skills; a BERT baseline reaches 87% F1 on course-skill matching | No job ads, no student, no recommendation | ✗ | ✗ | Sentence-level | ✗ | ✗ | ✗ |
 | SkillSpan and weak supervision (Zhang, Jensen, Sonniks et al., 2022; Zhang, Jensen, van der Goot et al., 2022) | Researchers | Expert-annotated skill spans in English job ads; spans linked to ESCO skills by embedding similarity | Extraction only; both note that fixed inventories like ESCO miss new skills | ✗ | ✗ | n/a | ✗ | n/a | Identified, not solved |
 | Skill Scanner (Schlippe & Bothmer, 2023) | Employers, job seekers, institutions | Sentence-BERT embeddings of 2,633 data-scientist ads (Indeed, Kaggle), CVs and one data-science master's curriculum, clustered with UMAP, DBSCAN and K-means; reports which market skills a document covers | Coverage reports, not subject recommendations for one student; no taxonomy; clusters labelled by bigrams, no evidence sentences; evaluated by silhouette score and a user survey, not against labelled ground truth | Partial (vs. market) | ✗ | ✗ | Partial | Not stated | Partial (clusters, no taxonomy) |
 | Karakolis et al. (2022) | Students, professors | ~1,500 posts from Greek job sites; ESCO-based extraction; recommends skills and NTUA courses from the learner's CV, plus curriculum updates via association rules | Gap is to a job specialisation, not a target ad; course skills from descriptions only; relevance scores rather than evidence sentences; frequency threshold drops rare skills; evaluated by a survey of 31 early users | Partial (vs. specialisation) | ✓ | Scores only | ✓ | ✗ | ✗ |
 | Frej et al. (2024), JCRec | Researchers | LLM few-shot skill extraction from resumes, ads and course descriptions; reinforcement learning picks course sequences that maximise jobs a learner qualifies for | Explainability is a goal, not a feature; description-only course text; optimises job count, not gaps to one role; simulated users | ✓ | ✓ (sequence) | ✗ | ✓ | ✗ | Partial (LLM) |
-| **Skillabus (ours)** | UTS students | CV and one ad or role → gaps → UTS subjects with evidence → demand-weighted learning path | | ✓ | ✓ (subject level) | Ad and subject sentence | ✓ | ✓ (objectives, weekly topics, assessments) | ✓ (Lightcast, then "emerging") |
+| **Skillabus (ours)** | UTS students | CV and one ad or role → gaps → UTS subjects with evidence → demand-weighted learning path | | ✓ | ✓ (subject level) | Ad and subject sentence | ✓ | ✓ (objectives, weekly topics, assessments) | ✓ ("emerging" tag; Lightcast lookup designed, needs API keys) |
 
 ## 2.2 What is new
 
@@ -67,10 +67,12 @@ decision support services. *Applied Sciences, 12*(14), Article 7139. https://doi
 
 Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N., Küttler, H., Lewis, M., Yih, W.,
 Rocktäschel, T., Riedel, S., & Kiela, D. (2020). Retrieval-augmented generation for knowledge-intensive NLP
-tasks. In *Advances in Neural Information Processing Systems* (Vol. 33, pp. 9459–9474).
+tasks. In *Advances in Neural Information Processing Systems* (Vol. 33, pp. 9459–9474). https://arxiv.org/abs/2005.11401
 
 Lightcast. (2025, June 3). *Lightcast addresses higher education's relevance crisis with real-time skills
 alignment technology* [Press release]. https://lightcast.io/resources/blog/skillabi-press-release-june-3-2025
+
+Lightcast. (n.d.). *Skillabi*. Retrieved October 15, 2026, from https://lightcast.io/solutions/software/skillabi
 
 LinkedIn. (n.d.). *LinkedIn Learning Hub: Skill building*. Retrieved October 14, 2026, from
 https://learning.linkedin.com/skill-building
