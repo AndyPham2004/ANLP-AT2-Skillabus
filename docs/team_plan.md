@@ -1,6 +1,6 @@
 # AT2B team plan: Skillabus app + technical report
 
-Due **14 Oct 2026**. Plan agreed 3 Oct 2026. Every task is a GitHub issue with the same title;
+Due **17 Oct 2026** (moved from 14 Oct). Plan agreed 3 Oct 2026, replanned 12 Oct (see the last section). Every task is a GitHub issue with the same title;
 the issue is where questions, decisions and links go. Every task has a reviewer: nothing is merged
 or counted as done until someone other than the author has checked it. Quan, as tech lead, also approves every
 pull request into `main` (GitHub enforces this) and integrates each stage into the app: a stage is done when it runs in the app.
@@ -42,7 +42,7 @@ serves one of them:
 | Wire the app to the real pipeline; chat panel; feedback buttons | 11 Oct | Hoai Thuong |
 | Deploy (Streamlit Community Cloud) and QR code | 11 Oct | Van Thong |
 | Report: introduction, related work and innovation, architecture, conclusion | 12 Oct | Phuong Nhi |
-| Final edit, assembly and submission | 14 Oct | all |
+| Final edit, assembly and submission | 17 Oct (was 14 Oct) | all |
 
 ### Van Thong (B): data
 | Task | Due | Reviewer |
@@ -94,6 +94,22 @@ serves one of them:
 | 8 Oct | **M3 App on mock data** | Every screen clickable |
 | 11 Oct | **M4 App on real data + evaluation** | Deployed link; metrics table filled |
 | 12 Oct | **M5 Report draft** | Every section in `docs/report/` |
-| 14 Oct | **M6 Submit** | Report PDF and app link on Canvas |
+| 17 Oct (was 14 Oct) | **M6 Submit** | Report PDF and app link on Canvas |
 
 If a test set is late, it shrinks; nothing else waits for it.
+
+## Replan of 12 Oct 2026 (after the 16 merges)
+
+The tables above are the 3 Oct plan; most of it is on `main`. What each person does from 13 Oct is in
+[docs/plan/ideas_2026-10-12.md](plan/ideas_2026-10-12.md) section 7, approved by Quan on 12 Oct, and in
+issues #57-#79. In one line each:
+
+| Who | 13-16 Oct |
+|---|---|
+| Quan | App features and UI: deploy, results screen, inline skill highlighting, prerequisites in the app, two-tier path, what-if; report 01/02/05/08; user test; assembly |
+| Van Thong | Subject profiles with assessment and prerequisites, 2026 ad sample, 7 role profiles, outside-course file, section 03, README |
+| Phuong Nhi | Prerequisite-aware and two-tier `recommend()`, emerging-skill detection, section 04 |
+| Hoai Thuong | spaCy and GPT tiers, TF-IDF vs embedding, P@3, kappa, chat judge, one-command evaluation, section 06 |
+| Akash | Ads 21-60, 15 extra pairs, outside-course draft, related-work check, sections on phases/contributions, challenges, next steps, appendix, proofread. Every item has a fallback owner so nothing waits on it |
+
+Milestones: M7 deep app + measured (15 Oct), M8 report assembled (16 Oct), M6 submit (17 Oct).
