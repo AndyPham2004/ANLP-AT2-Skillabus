@@ -19,6 +19,7 @@ Two modes:
     python src/scrape_handbook.py --codes 36118 36103 36106 --year 2026
 
 Output: data/raw/uts_subjects.csv
+Columns added 13 Oct 2026: sessions, modes (from the offering list).
 """
 
 import argparse
@@ -119,6 +120,10 @@ def parse_subject(payload, year):
         if clean(o.get("description"))
     )
 
+    offerings = [o for o in (payload.get("offering") or []) if str(o.get("offered", "true")).lower() != "false"]
+    sessions = sorted({o.get("teaching_period", "") for o in offerings if o.get("teaching_period")})
+    modes = sorted({o.get("mode", "") for o in offerings if o.get("mode")})
+
     return {
         "subject_code": payload.get("code", ""),
         "subject_name": payload.get("title", ""),
@@ -132,6 +137,8 @@ def parse_subject(payload, year):
         "topics": clean(payload.get("learning_approach")),
         "teaching_strategies": clean(payload.get("teaching_strategies")),
         "requisites": clean(payload.get("requisite_detail")),
+        "sessions": "|".join(sessions),
+        "modes": "|".join(modes),
         "handbook_url": f"{BASE}/subject/{year}/{payload.get('code', '')}",
     }
 
