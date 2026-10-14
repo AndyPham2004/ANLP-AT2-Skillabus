@@ -141,7 +141,7 @@ Cloud platforms,Cloud,0,cloud|cloud computing|cloud platform|cloud platforms|clo
 Kafka,Data wrangling,0,kafka|apache kafka
 Linux,Engineering,0,linux|unix|ubuntu|rhel|red hat enterprise linux
 Windows,Engineering,0,microsoft windows|windows server
-Jira,Engineering,0,jira|confluence|atlassian
+Jira,Engineering,0,jira
 SAP,Databases,1,SAP|SAP HANA|SAP ERP|S/4HANA
 Microsoft Office,Visualisation,0,microsoft office|ms office|office 365|microsoft 365|microsoft word|ms word|powerpoint|visio
 React,Programming,1,React|React.js|ReactJS|React Native
