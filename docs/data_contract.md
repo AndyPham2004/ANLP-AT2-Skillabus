@@ -127,7 +127,7 @@ did not capture is never met. Subjects taken (`recommend(exclude=...)`, the app'
 prerequisites. Antirequisites count item by item and in both directions (the site often lists a pair on
 one side only). `unverified` is on each recommendation and each `plan` step. Without the two files every
 subject is open and `plan` is a single session. The fallback engine (`app/baseline.py`) has no
-prerequisite data: it fills `needs`, `offered` and `dropped` with empty values and `plan` with empty sessions.
+prerequisite data: it fills `needs`, `offered` and `dropped` with empty values `plan` with empty sessions, and `outside` with no courses.
 
 ## 3. Subject profiles: `data/processed/subject_profiles.csv`
 
