@@ -267,7 +267,8 @@ def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | N
             rec = subjects.setdefault(code, {
                 "subject_code": code, "subject_name": e["subject_name"],
                 "source_url": e["source_url"], "score": 0.0, "covers": [], "evidence": [],
-                "needs": access[code]["needs"], "offered": sessions_offered(code, rules)})
+                "needs": access[code]["needs"], "offered": sessions_offered(code, rules),
+                "unverified": access[code]["unverified"]})
             rec["covers"].append(label)
             rec["evidence"].append({"skill_label": label, "layer": e["layer"], "text": e["text"], "match": e["match"]})
             rec["score"] += e["strength"] * weight[label]
@@ -288,7 +289,8 @@ def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | N
         if code not in subjects:
             name, url = names.get(code, (code, ""))
             subjects[code] = {"subject_code": code, "subject_name": name, "source_url": url, "score": 0.0,
-                              "covers": [], "evidence": [], "needs": [], "offered": sessions_offered(code, rules)}
+                              "covers": [], "evidence": [], "needs": [], "offered": sessions_offered(code, rules),
+                              "unverified": code in rules.unverified}
     path["plan"] = schedule(chosen, rules, start, done, home_course)
     path["dropped"] = sorted(dropped.values(), key=lambda d: (-sum(weight[k] for k in d["covers"]), d["subject_code"]))
 

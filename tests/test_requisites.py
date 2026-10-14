@@ -22,14 +22,18 @@ def rules(tmp_path):
         "F,requisite,(1 AND 2),1,academic,A,A Intro,y,u",                             # item 2 was not scraped
         "G,requisite,,,,,,n,u",                                                       # no record: unverified
         "H,requisite,(1),1,corequisite,A,A Intro,y,u",
-        "I,requisite,,,,,,y,u",                                                       # scraped, not taught in 2026
+        "I,requisite,,,,,,y,u",
+        "J,antirequisite,(1 AND 2 AND 3),1,academic,A,A Intro,y,u",                   # a list printed as AND
+        "J,antirequisite,(1 AND 2 AND 3),2,academic,X1,X1 Offshore copy,y,u",
+        "J,antirequisite,(1 AND 2 AND 3),3,academic,X2,X2 Offshore copy,y,u",
+        "K,antirequisite,(1),1,academic,J,J Listed on K's side only,y,u",                                                       # scraped, not taught in 2026
     ]) + "\n", encoding="utf-8")
     offer = tmp_path / "offerings.csv"
     offer.write_text("subject_code,teaching_period,mode\n" + "\n".join(
         f"{code},{period},On campus" for code, period in [
             ("A", "Autumn Session"), ("A", "Spring Session"), ("B", "Spring Session"), ("C", "Autumn Session"),
             ("D", "Autumn Session"), ("E", "Autumn Session"), ("F", "Autumn Session"), ("G", "Session 3"),
-            ("H", "Autumn Session")]) + "\n", encoding="utf-8")
+            ("H", "Autumn Session"), ("J", "Autumn Session"), ("K", "Autumn Session")]) + "\n", encoding="utf-8")
     return load_rules(prereq, offer)
 
 
@@ -60,6 +64,14 @@ def test_reasons_say_what_is_missing(rules):
     assert enrolment("Z", set(), rules)["status"] == "open"                      # not in the scrape at all
 
 
+def test_antirequisites_are_items_not_a_rule(rules):
+    """Any one listed subject closes it, and a pair listed on one side only closes both ways."""
+    assert enrolment("J", {"A"}, rules)["reason"] == "antirequisite: already took A"   # not all three
+    assert enrolment("J", set(), rules)["status"] == "open"
+    assert enrolment("J", {"K"}, rules)["reason"] == "antirequisite: already took K"   # K lists J, J does not list K
+    assert enrolment("K", {"J"}, rules)["status"] == "closed"
+
+
 def test_an_empty_rule_without_a_record_is_open_but_unverified(rules):
     assert enrolment("G", set(), rules) == {"status": "open", "needs": [], "reason": "", "unverified": True}
 
@@ -79,7 +91,7 @@ def test_schedule_puts_prerequisites_first_and_respects_sessions(rules):
     corequisite = schedule(["A", "H"], rules, start=("Autumn", 2027))
     assert [s["session"] for s in corequisite] == ["Autumn 2027", "Autumn 2027"]
     assert schedule(["G"], rules, start=("Spring", 2027))[0] == {
-        "subject_code": "G", "session": "Spring 2027", "offered": ["Session 3"], "after": [], "unverified": True}
+        "subject_code": "G", "session": "Session 3, 2027", "offered": ["Session 3"], "after": [], "unverified": True}
 
 
 def test_next_session():
