@@ -76,9 +76,16 @@ log = logging.getLogger("recent_sample")
 
 # Recruiters' names sit in their addresses (firstname.lastname@agency) and mobiles are personal,
 # so contact details are masked before the file is committed (#53). Skills never sit in them.
+# Recruiters' names next to a number ("contact Raj Singh on [PHONE]") stay: ads are published
+# for people to contact them, and the team decided on #53 to leave ad text as written.
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
-PHONE = re.compile(r"(?<!\d)(?:\+?61[\s-]?|\(0\d\)\s?|0)[2-478](?:[\s-]?\d){8}(?!\d)"
-                   r"|(?<!\d)1[38]00(?:[\s-]?\d){6}(?!\d)")
+PHONE = re.compile(
+    r"(?<![\d+])(?:"
+    r"(?:\+?61[\s-]?|0)4\d{2}[\s-]?\d{3}[\s-]?\d{3}"                   # mobile: 0404 380 704
+    r"|(?:\+?61[\s-]?\(?0?|\(0|0)[2378]\)?[\s-]?\d{4}[\s-]?\d{4}"     # landline: (08) 6551 9419, +61 2 9005 5000
+    r"|\+61[\s-]?\d{4}[\s-]?\d{4}"                                     # +61 without the area digit: +61 9236 7780
+    r"|1[38]00[\s-]?\d{3}[\s-]?\d{3}"                                  # 1300 / 1800
+    r")(?!\d)")
 
 
 def mask_contacts(text: str) -> str:
