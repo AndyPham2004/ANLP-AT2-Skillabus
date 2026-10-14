@@ -14,8 +14,8 @@ runs without spaCy or an API key. The table says what the numbers below cover.
 | Extraction | same | spaCy (tier 2) | Done (run by Phuong Nhi, same script, `--method ner`) |
 | Extraction | same | GPT-4o-mini (tier 3) | **[TODO]** needs the cached LLM responses |
 | Matching | 45 CV–JD pairs, 287 skill rows (81 have, 6 partial, 200 missing) | `match()` and `rank_evidence()` | Done |
-| Subjects P@3 | **[TODO]** | | |
-| Chat judge | **[TODO]** | | |
+| Subjects P@3 | 33 skill–subject pairs, 13 skills | Keyword and TF-IDF (embeddings **[TODO]**) | Done, see 6.5 |
+| Chat | 15 questions with reference answers | Retrieval: TF-IDF done, embeddings **[TODO]**; LLM judge **[TODO]** | Partly done, see 6.5 |
 | Annotator agreement | 20 overlap ads, two annotators | Cohen's kappa | **0.857** on dictionary skills (almost perfect); 0.683 on all labels incl. free text (substantial) |
 
 The test sets are much smaller than planned (200 ads, 50 pairs). Five of the 50 selected pairs have no scored skills, because
@@ -92,9 +92,23 @@ Each row has one gold phrase, so P@5 sits near its ceiling of 0.2 and says littl
 0.831 says it is usually first. The result does not depend on the extraction tier. (With lowercased skill labels the ranker
 lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; the notebook now passes the canonical name.) The baselines (TF-IDF and embedding ranking) are **[TODO]**.
 
-## 6.5 Limits of these numbers
+## 6.5 Subject recommendation and chat
 
-- 20 ads and 45 pairs are small; the confidence intervals are wide, and results from different tiers will differ by less
+**Subject P@3.** For each of the 13 labelled skills, the top three subjects returned by `subject_evidence()` are compared with the 33 labelled skill–subject pairs. A recommended subject with no label is left out of the count, so the table also gives how much of the top three was labelled.
+
+| Method | P@3 (y or partly) | P@3 (y only) | Labelled / recommended | Coverage |
+|---|---|---|---|---|
+| Keyword | 0.967 | 0.767 | 30 / 33 | 0.909 |
+| TF-IDF | 0.967 | 0.767 | 30 / 33 | 0.909 |
+| Embeddings | **[TODO]** | | | |
+
+Keyword and TF-IDF return the same top three for these skills, so this test set cannot tell them apart. The labels lean towards "y" (25 of 33; 7 "partly", 1 "n"), which lifts the first column; the y-only column is the stricter figure.
+
+**Chat retrieval.** For the 15 questions, TF-IDF retrieval returns at least one of the subjects named in the reference answer within the top five for every question (Hit@5 1.000), and finds 84.4% of all the subjects the reference answers cite (recall@5 0.844). The embedding row and the LLM judge's relevance and faithfulness scores (answers from GPT-4o-mini, judged by GPT-4o-mini) are **[TODO]**: they need the embedding libraries and an API key.
+
+## 6.6 Limits of these numbers
+
+- 20 ads, 45 pairs, 33 skill–subject pairs and 15 chat questions are small; the confidence intervals are wide, and results from different tiers will differ by less
   than the noise unless the gap is large.
 - One ad row and one pair row carry the "unsure" mark; `load_ad_skills()` and `load_cv_jd_pairs()` drop the mark, so unsure labels count as gold, which slightly lowers recall.
 - Gold labels come from one annotator. Cohen's kappa on the 20 overlap ads is 0.857 for dictionary skills (observed agreement 0.979) and 0.683 when free-text labels are included (0.964), so another annotator largely agrees on dictionary skills and disagrees more on free-text skills outside the dictionary. Extraction scores use the first annotator's rows only.
