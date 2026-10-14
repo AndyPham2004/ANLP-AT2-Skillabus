@@ -19,18 +19,18 @@ about what each method proposes, not how it is scored:
                       (Monroe, Colaresi & Quinn, 2008): how surely the phrase is more common now,
                       with small counts shrunk towards the pooled rate
     kept              rising (z >= MIN_Z), in >= MIN_ADS ads from >= MIN_EMPLOYERS employers
-                      (12 of the 22 ads are Canva's, so one employer's boilerplate cannot win),
+                      (one employer posts many of the recent ads, so its boilerplate cannot win),
                       not a dictionary skill or alias, and not an ESCO label
 
-The recent sample is the 22 full-text 2026 ads (8 employers) by default. That is too few for a
-phrase to reach 3 ads from 2 employers unless it is everywhere, so `--with-2024` adds the 124
-LinkedIn ads of January 2024 (mostly data engineers and analysts: the role mix differs, say so).
-Rerun when Van Thong's 2026 sample grows (ideas doc 4.6).
+The recent sample is the full-text 2026 ads in jobs_au_recent_2024-2026_clean.csv (the run prints
+how many, and from how many employers). It is small, so `--with-2024` adds the 124 LinkedIn ads
+of January 2024 (mostly data engineers and analysts: the role mix differs, say so). Rerun
+whenever Van Thong's 2026 sample changes (ideas doc 4.6).
 
 Output: emerging_candidates.csv, one row per method and phrase, best first, with an empty
 `is_skill` column to judge the top 20 of each method by hand (precision@20 for section 6).
 
-Run (from the repo root):
+Run from the repo root, with the package on the path (export PYTHONPATH=src):
     python -m skillabus.emerging                     # n-gram and spaCy, 2026 ads
     python -m skillabus.emerging --with-2024         # 2024-01 + 2026 ads
     python -m skillabus.emerging --methods ngram spacy llm   # needs OPENAI_API_KEY in .env
@@ -62,7 +62,8 @@ MIN_ADS = 3            # a candidate must appear in at least this many 2026 ads
 MIN_EMPLOYERS = 2      # ... from at least this many employers
 MIN_Z = 1.96           # and be more common in 2026 at about the 95% level
 PRIOR = 10.0           # strength of the Dirichlet prior (pseudo-ads)
-TOP = 30               # rows kept per method
+PRIOR_FLOOR = 0.5      # smallest pseudo-count in either cell (Jeffreys), see log_odds_z
+TOP = 50               # rows kept per method (phrases absent from 2019-22 rank around 35-50 in the 2026 run)
 
 # Words that never start or end a skill phrase. Small on purpose: the scoring and the employer
 # filter remove most boilerplate; this only stops "with python" and "data and".
@@ -70,6 +71,15 @@ EDGE_STOP = set("""a an and are as at be been but by can could do for from has h
 into is it its may more most must not of on or our over per so such than that the their them
 there these they this those to up us via was we were what when where which while who will with
 within without would you your you're we're it's they're plus etc e.g eg i.e ie also""".split())
+# Career-site boilerplate that sits in the same sentence as a skill ("you'll thrive building ...").
+# Hand-made from the n-gram output, not tuned on a test set; a phrase containing only these words
+# is dropped. Said in the report.
+BOILERPLATE = set("""across ai-powered amazing apply bar bringing build building closely collaborate
+culture day deliver drive ensure ensuring every excited exciting fast faster globally grow growth
+hands-on help helps hiring impact impactful intersection join landscape love millions mission
+opportunity own ownership passionate people perks product products role scale team teams thrive
+tackling turning users want way work working world you'll you've you're we'll we've connection
+employees benefits hybrid flexible""".split())
 _TOKEN = re.compile(r"[a-z0-9][a-z0-9+#]*(?:[.\-/'][a-z0-9+#]+)*")
 
 
@@ -232,9 +242,13 @@ def known_as(key: tuple[str, ...]) -> str:
 
 def log_odds_z(y_new: int, n_new: int, y_old: int, n_old: int, prior: float = PRIOR) -> float:
     """Weighted log-odds that a phrase is more common in the new ads, informative Dirichlet prior
-    (Monroe et al. 2008) on document counts: the prior is the pooled rate times `prior` pseudo-ads."""
+    (Monroe et al. 2008) on document counts: the prior is the pooled rate times `prior` pseudo-ads,
+    floored at PRIOR_FLOOR (the Jeffreys / Haldane-Anscombe 0.5). Without the floor a phrase absent
+    from 2019-22 gets a ~0.01 pseudo-count, the 1/(y_old + a) variance term is ~100, and exactly the
+    never-seen-before phrases this module looks for can never pass (3 of 22 ads vs 0 gave z 1.0;
+    with the floor 4.4)."""
     pooled = (y_new + y_old) / (n_new + n_old)
-    a, b = max(prior * pooled, 1e-3), max(prior * (1 - pooled), 1e-3)    # pseudo-ads with / without
+    a, b = max(prior * pooled, PRIOR_FLOOR), max(prior * (1 - pooled), PRIOR_FLOOR)   # pseudo-ads with / without
 
     def logit(y, n):
         return math.log((y + a) / (n - y + b))
@@ -258,11 +272,10 @@ def score(proposals: dict[tuple, str], new: list[Ad], old: list[Ad],
         z = log_odds_z(y_new, len(new), y_old, len(old))
         if z < MIN_Z:
             continue
-        known = known_as(key)
-        if known:
+        if known_as(key) or all(w in BOILERPLATE or w in EDGE_STOP for w in key):
             continue
         rows.append({
-            "phrase": text, "df_new": y_new, "pct_new": round(100 * y_new / len(new), 1),
+            "phrase": text.replace("’", "'"), "df_new": y_new, "pct_new": round(100 * y_new / len(new), 1),
             "df_2019_22": y_old, "pct_2019_22": round(100 * y_old / len(old), 2),
             "employers_new": employers, "z": round(z, 2),
         })
@@ -335,7 +348,7 @@ def main() -> None:
     table = [{"sample": sample, **row} for row in detect(methods, new, old, args.top)]
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with open(args.out, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(table[0]) if table else ["sample", "method"])
+        writer = csv.DictWriter(f, fieldnames=list(table[0]) if table else ["sample", "method"], lineterminator="\n")
         writer.writeheader()
         writer.writerows(table)
     for method in methods:

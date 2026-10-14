@@ -37,7 +37,7 @@ def test_tokens_keep_tool_names():
 
 def test_log_odds_rises_with_the_new_count_and_shrinks_small_counts():
     assert log_odds_z(3, 5, 0, 80) > log_odds_z(1, 5, 0, 80) > 0
-    assert log_odds_z(1, 5, 16, 80) == pytest.approx(log_odds_z(1, 5, 16, 80))
+    assert log_odds_z(3, 22, 0, 3204) > 1.96                             # never seen before: must pass
     assert abs(log_odds_z(1, 5, 16, 80)) < 1.96                          # same rate: not significant
 
 
@@ -46,6 +46,11 @@ def test_known_skills_and_esco_labels_are_not_emerging():
     assert known_as(("llms",)) == "dictionary"                           # alias "llm" + plural
     assert known_as(("evaluation",)) == "esco"
     assert known_as(("agentic", "workflows")) == ""
+
+
+def test_boilerplate_words_are_not_candidates():
+    new = ads(["Python. You'll thrive building scale."] * 3, employers=["A", "B", "C"])
+    assert [r["phrase"] for r in detect(("ngram",), new=new, old=OLD)] == []
 
 
 def test_detect_keeps_rising_phrases_from_several_employers():
