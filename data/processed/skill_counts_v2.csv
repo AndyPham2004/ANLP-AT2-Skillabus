@@ -45,11 +45,13 @@ Redshift,Cloud,185,5.8
 MATLAB,Programming,169,5.3
 Econometrics,Statistics,165,5.1
 XGBoost,Machine learning,155,4.8
+Microsoft Office,Visualisation,145,4.5
 Presentation skills,Professional,141,4.4
 Data warehousing,Databases,130,4.1
 SQL Server,Databases,130,4.1
 Databricks,Data wrangling,128,4.0
 scikit-learn,Machine learning,125,3.9
+Linux,Engineering,124,3.9
 NoSQL,Databases,123,3.8
 pandas,Data wrangling,121,3.8
 Data quality,Governance,121,3.8
@@ -63,6 +65,7 @@ Keras,Deep learning,104,3.2
 Computer vision,Computer vision,100,3.1
 NumPy,Data wrangling,100,3.1
 PyTorch,Deep learning,96,3.0
+Jira,Engineering,89,2.8
 Docker,Engineering,87,2.7
 Logistic regression,Machine learning,86,2.7
 C#,Programming,83,2.6
@@ -71,12 +74,15 @@ Gradient boosting,Machine learning,81,2.5
 SageMaker,Cloud,79,2.5
 Anomaly detection,Machine learning,79,2.5
 CI/CD,Engineering,76,2.4
+Kafka,Data wrangling,75,2.3
 BigQuery,Cloud,66,2.1
 matplotlib,Visualisation,64,2.0
 MongoDB,Databases,63,2.0
 Julia,Programming,62,1.9
+Alteryx,Data wrangling,57,1.8
 Hypothesis testing,Statistics,53,1.7
 PostgreSQL,Databases,52,1.6
+SAP,Databases,52,1.6
 Experimental design,Statistics,51,1.6
 Data security,Governance,46,1.4
 Kubernetes,Engineering,45,1.4
@@ -87,6 +93,7 @@ Data governance,Governance,38,1.2
 D3.js,Visualisation,38,1.2
 Probability,Statistics,38,1.2
 VBA,Programming,37,1.2
+React,Programming,33,1.0
 Regression analysis,Statistics,32,1.0
 MySQL,Databases,32,1.0
 API development,Engineering,25,0.8
@@ -105,6 +112,7 @@ Kubeflow,Engineering,13,0.4
 Flask,Engineering,11,0.3
 spaCy,NLP,10,0.3
 dbt,Engineering,10,0.3
+Ruby,Programming,10,0.3
 Looker,Visualisation,9,0.3
 Topic modelling,NLP,9,0.3
 Data privacy,Governance,8,0.2
@@ -122,11 +130,13 @@ Oracle,Databases,5,0.2
 Hyperparameter tuning,Machine learning,4,0.1
 Terraform,Engineering,4,0.1
 Dask,Data wrangling,3,0.1
+Ansible,Engineering,3,0.1
 Responsible AI,Governance,2,0.1
 Word embeddings,NLP,2,0.1
 Hive,Data wrangling,2,0.1
 Transformers,NLP,1,0.0
 FastAPI,Engineering,1,0.0
+Windows,Engineering,1,0.0
 Polars,Data wrangling,0,0.0
 CatBoost,Machine learning,0,0.0
 RAG,NLP,0,0.0
