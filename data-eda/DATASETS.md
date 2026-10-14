@@ -10,7 +10,8 @@ page. Verified 23 September 2026.
 | `jobs_au_seek_datascientist_2019-2022.csv` | **3,204** | full, ~2.8k chars | 2019–2022 | **PRIMARY — the block 5 chart.** Data Scientist titles only |
 | `jobs_au_seek_datascience_2019-2022.csv` | 3,895 | full | 2019–2022 | all data-ish roles; superset of the above |
 | `jobs_au_seek_datascience_2019-2022_authorflags.csv` | 3,902 | full | 2019–2022 | superset carrying the author's own 25 tool flags. **Our external validation set** — joins to the primary on `ad_id == jobId`, all 3,204. See `outputs/extractor_agreement.csv` |
-| `jobs_au_ats_2026.csv` | 234 | full, ~6.2k | Sept 2026 | current; Greenhouse/Lever/SmartRecruiters. ~27 data roles |
+| `jobs_au_ats_2026.csv` | 234 | full, ~6.2k | Sept 2026 | first job-board snapshot (23 Sep); Greenhouse/Lever/SmartRecruiters, 12 employers |
+| `ats_ads_2026-MM-DD.csv` | 595 (14 Oct) | full | Oct 2026 | one snapshot per daily run of `fetch_ats.py --australia-only` over the 65 boards in `config/ats_companies.csv`; Greenhouse, Lever, SmartRecruiters, Ashby, Workable. Not committed |
 | `jobs_au_adzuna_2026.csv` | 50 | **capped at 500 chars** | Sept 2026 | employers, volume, geography only |
 
 ## Job advertisements — international
@@ -18,6 +19,7 @@ page. Verified 23 September 2026.
 | File | Rows | Text | Period | Notes |
 |---|---|---|---|---|
 | `jobs_us_linkedin_2023-2024.csv` | 123,849 | full, ~3.4k | 2023–24 | 1,355 data roles. **99.9% US** — only 131 AU rows |
+| `data_jobs_hf/data_jobs.csv` | 785,741 (**12,955 AU**) | **none**: a list of tool names per ad | 2023 | Luke Barousse, [`lukebarousse/data_jobs`](https://huggingface.co/datasets/lukebarousse/data_jobs) on Hugging Face. **Licence: Apache-2.0** (dataset card, checked 14 Oct 2026). Collected from Google Jobs search results; we publish only per-role shares (`data/processed/role_profiles.csv`), no posting. 10 data/IT title classes from the author's BERT classifier. Its tool extractor counts the English word "go" as Go — dropped. Added 14 Oct 2026 for #65 |
 | `linkedin_mappings/skills.csv` | 35 | — | — | **NOT skills** — 35 broad job functions (IT, SALE, MNFC) |
 
 ## Skills taxonomies
@@ -101,7 +103,7 @@ Raw files are never edited; the cleaned copies are rebuilt by scripts. Full note
 | File | Rows | Script | What changed |
 |---|---|---|---|
 | `jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 | `clean_seek.py` | 13,181 glued words split where the desktop rendering shows a break; Python 82.8% → 84.5%, ranking unchanged (ρ = 0.9996) |
-| `jobs_au_recent_2024-2026_clean.csv` | 179 | `build_recent_sample.py` | Australian data roles: 2026 job boards (22 full text) + Adzuna (33, text capped at 500) + LinkedIn Jan 2024 (124, Kaggle asaniczka, ODC-By). Periods kept separate |
+| `jobs_au_recent_2024-2026_clean.csv` | 192 | `build_recent_sample.py` | Australian data roles: 38 job-board roles from the 2026 snapshots (full text; 22 `in_sample`: posted within 60 days, at most 3 per employer and role group, 9 of them data scientists) + Adzuna (32, text capped at 500) + LinkedIn Jan 2024 (122, Kaggle asaniczka, ODC-By). Periods kept separate; recruiter emails and phone numbers masked |
 | `seek_label_sample_200.csv` | 200 | `make_label_sample.py` | seeded sample for labelling; 4 batches of 50, 20 marked for double labelling |
 | `resumes_us_2021_clean.csv` | 2,481 | `clean_resumes.py` | emails, phones, URLs and names masked (names: spaCy NER with filters that protect skills, 1,069 spans in 535 resumes); HTML copy dropped; `n_data_skills` added. **De-identified, not anonymous** |
 | `esco_skills_clean.csv` | 13,960 | `clean_esco.py` | alt labels pipe-separated instead of newline-in-cell |

@@ -1,0 +1,218 @@
+ad_id,skill_label,in_dictionary,evidence_text,annotator
+54948934,Python,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,R,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,SQL,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,SAS,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,Machine learning,y,"machine learning, pattern matching",hoaithuongnguyen-uts
+54948934,Statistics,y,multivariate statistics,hoaithuongnguyen-uts
+54948934,Probability,y,statistics and probability modelling,hoaithuongnguyen-uts
+54948934,Time series forecasting,y,forecasting,hoaithuongnguyen-uts
+54948934,Data visualisation,y,visualisation,hoaithuongnguyen-uts
+54948934,Sentiment analysis,y,sentiment analysis,hoaithuongnguyen-uts
+54948934,Clustering,y,cluster analysis,hoaithuongnguyen-uts
+54948934,Deep learning,y,neural networks,hoaithuongnguyen-uts
+54948934,Predictive modelling,y,predictive modelling techniques,hoaithuongnguyen-uts
+54948934,Presentation skills,y,Presenting and communicating analysis to senior and non-technical audiences,hoaithuongnguyen-uts
+54948934,Communication,y,Excellent oral and written communication skills,hoaithuongnguyen-uts
+54948934,Stakeholder management,y,engage with a range of internal and external stakeholders,hoaithuongnguyen-uts
+50727502,Artificial intelligence,y,Artificial Intelligence techniques such as machine learning,hoaithuongnguyen-uts
+50727502,Machine learning,y,machine learning,hoaithuongnguyen-uts
+50727502,Time series forecasting,y,Experience working with time-series data,hoaithuongnguyen-uts
+50727502,Python,y,writing high quality Python code,hoaithuongnguyen-uts
+50727502,NumPy,y,NumPy,hoaithuongnguyen-uts
+50727502,scikit-learn,y,scikit-learn,hoaithuongnguyen-uts
+50727502,pandas,y,pandas,hoaithuongnguyen-uts
+50727502,JavaScript,y,JavaScript,hoaithuongnguyen-uts
+50727502,R,y,JavaScript / R / SQL,hoaithuongnguyen-uts
+50727502,SQL,y,JavaScript / R / SQL,hoaithuongnguyen-uts
+50727502,Power BI,y,PowerBI,hoaithuongnguyen-uts
+50727502,Tableau,y,Tableau,hoaithuongnguyen-uts
+50727502,Data visualisation,y,Expertise in data visualisation libraries,hoaithuongnguyen-uts
+50727502,Cloud platforms,y,public cloud and on-premises environments,hoaithuongnguyen-uts
+50727502,Agile,y,apply agile practices,hoaithuongnguyen-uts
+50727502,Communication,y,Excellent interpersonal and communication skills,hoaithuongnguyen-uts
+50727502,Teamwork,y,working in a team environment,hoaithuongnguyen-uts
+50727502,Presentation skills,y,delivering presentations,hoaithuongnguyen-uts
+55520483,R,y,R/Python,hoaithuongnguyen-uts
+55520483,Python,y,R/Python,hoaithuongnguyen-uts
+55520483,Predictive modelling,y,build predictive models,hoaithuongnguyen-uts
+55520483,Problem solving,y,Outstanding problem solving skills,hoaithuongnguyen-uts
+55520483,Leadership,y,Lead a small team,hoaithuongnguyen-uts
+55520483,Data warehousing,y,development of the data warehouse,hoaithuongnguyen-uts
+55520483,Requirements gathering,y,Translate business needs into analytics requirements,hoaithuongnguyen-uts
+53187210,Problem solving,y,willingness to solve problems,hoaithuongnguyen-uts
+53187210,Teamwork,y,work in a small team environment,hoaithuongnguyen-uts
+53187210,Leadership,y,guide and mentor co-workers,hoaithuongnguyen-uts
+53187210,Business acumen,y,design a data driven solution,hoaithuongnguyen-uts
+39142341,R,y,"R, Python, Scala",hoaithuongnguyen-uts
+39142341,Python,y,"R, Python, Scala",hoaithuongnguyen-uts
+39142341,Scala,y,"R, Python, Scala",hoaithuongnguyen-uts
+39142341,Machine learning,y,privacy-preserving machine learning techniques,hoaithuongnguyen-uts
+39142341,Data privacy,y,privacy-preserving machine learning,hoaithuongnguyen-uts
+39142341,Data cleaning,y,Data wrangling with complex datasets,hoaithuongnguyen-uts
+39142341,Communication,y,Excellent written and oral communication skills,hoaithuongnguyen-uts
+55085339,SQL,y,"Experience with SQL, R and Python",hoaithuongnguyen-uts
+55085339,R,y,"Experience with SQL, R and Python",hoaithuongnguyen-uts
+55085339,Python,y,"Experience with SQL, R and Python",hoaithuongnguyen-uts
+55085339,Communication,y,Strong verbal communication skills,hoaithuongnguyen-uts
+55085339,Problem solving,y,A problem-solving mindset,hoaithuongnguyen-uts
+55085339,Teamwork,y,A team player,hoaithuongnguyen-uts
+55085339,Predictive modelling,y,credit risk modelling,hoaithuongnguyen-uts
+50014854,Machine learning,y,statistical and machine learning models,hoaithuongnguyen-uts
+50014854,Random forest,y,Random Forests,hoaithuongnguyen-uts
+50014854,Gradient boosting,y,GBM,hoaithuongnguyen-uts
+50014854,XGBoost,y,xGBoost,hoaithuongnguyen-uts
+50014854,Logistic regression,y,Linear & Logistics Regression,hoaithuongnguyen-uts
+50014854,Linear regression,y,Linear & Logistics Regression,hoaithuongnguyen-uts
+50014854,Support vector machines,y,Support Vector Machines,hoaithuongnguyen-uts
+50014854,Clustering,y,Clustering,hoaithuongnguyen-uts
+50014854,SQL,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,SAS,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,R,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,Python,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,Redshift,y,AWS Redshift,hoaithuongnguyen-uts
+50014854,AWS,y,AWS Redshift,hoaithuongnguyen-uts
+50014854,Hadoop,y,Hadoop and Spark,hoaithuongnguyen-uts
+50014854,Spark,y,Hadoop and Spark,hoaithuongnguyen-uts
+50014854,Leadership,y,leading and mentoring teams,hoaithuongnguyen-uts
+50014854,Stakeholder management,y,Managing both internal and external stakeholders,hoaithuongnguyen-uts
+50014854,Predictive modelling,y,developing predictive models,hoaithuongnguyen-uts
+50014854,Deep learning,y,Neural Networks,hoaithuongnguyen-uts
+52727857,Python,y,writing production code using Python,hoaithuongnguyen-uts
+52727857,Feature engineering,y,feature engineering,hoaithuongnguyen-uts
+52727857,Machine learning,y,machine learning,hoaithuongnguyen-uts
+52727857,Deep learning,y,deep learning,hoaithuongnguyen-uts
+52727857,SQL,y,SQL and NoSQL database technologies,hoaithuongnguyen-uts
+52727857,NoSQL,y,NoSQL database technologies,hoaithuongnguyen-uts
+52727857,MLOps,y,MLOps/DevOps approaches,hoaithuongnguyen-uts
+52727857,Azure,y,Azure (preferred),hoaithuongnguyen-uts
+52727857,AWS,y,AWS,hoaithuongnguyen-uts
+52727857,Google Cloud,y,GCP,hoaithuongnguyen-uts
+52727857,Hadoop,y,Hadoop,hoaithuongnguyen-uts
+52727857,Spark,y,Spark,hoaithuongnguyen-uts
+52727857,Statistics,y,statistical and machine learning modelling,hoaithuongnguyen-uts
+52727857,Artificial intelligence,y,Artificial Intelligence,hoaithuongnguyen-uts
+38692371,Machine learning,y,machine learning,hoaithuongnguyen-uts
+38692371,Data visualisation,y,data visualisation,hoaithuongnguyen-uts
+38692371,R,y,"R, Python, Scala",hoaithuongnguyen-uts
+38692371,Python,y,"R, Python, Scala",hoaithuongnguyen-uts
+38692371,Scala,y,"R, Python, Scala",hoaithuongnguyen-uts
+38692371,SQL,y,"SQL, Spark",hoaithuongnguyen-uts
+38692371,Spark,y,"SQL, Spark",hoaithuongnguyen-uts
+38692371,Data cleaning,y,Strong skills in data wrangling,hoaithuongnguyen-uts
+38692371,Communication,y,highly developed oral and written communication skills,hoaithuongnguyen-uts
+38692371,Artificial intelligence,y,artificial intelligence,hoaithuongnguyen-uts
+52219256,Communication,y,proficient written communication skills,hoaithuongnguyen-uts
+52219256,Problem solving,y,can problem solve,hoaithuongnguyen-uts
+52219256,Teamwork,y,collaborate well with other colleagues,hoaithuongnguyen-uts
+50449684,SQL,y,"SQL, Python, GCP, Tableau, Linux",hoaithuongnguyen-uts
+50449684,Python,y,"SQL, Python, GCP, Tableau, Linux",hoaithuongnguyen-uts
+50449684,Google Cloud,y,GCP,hoaithuongnguyen-uts
+50449684,Tableau,y,Tableau,hoaithuongnguyen-uts
+50449684,Machine learning,y,machine learning models,hoaithuongnguyen-uts
+50449684,Hadoop,y,"Hadoop, Spark",hoaithuongnguyen-uts
+50449684,Spark,y,"Hadoop, Spark",hoaithuongnguyen-uts
+50449684,Deep learning,y,deep learning techniques,hoaithuongnguyen-uts
+50449684,Statistics,y,statistical analysis tools,hoaithuongnguyen-uts
+50449684,Problem solving,y,Strong problem-solving skills,hoaithuongnguyen-uts
+50449684,Shell scripting,y,bash,hoaithuongnguyen-uts
+50449684,Presentation skills,y,Presenting the analytics solutions,hoaithuongnguyen-uts
+39372682,Scala,y,Scala,hoaithuongnguyen-uts
+39372682,Spark,y,Spark,hoaithuongnguyen-uts
+39372682,Redshift,y,Redshift,hoaithuongnguyen-uts
+39372682,MongoDB,y,MongoDB,hoaithuongnguyen-uts
+39372682,NoSQL,y,NoSQL Databases,hoaithuongnguyen-uts
+39372682,Machine learning,y,Experience with Machine Learning,hoaithuongnguyen-uts
+39372682,R,y,"R, Python or Scala",hoaithuongnguyen-uts
+39372682,Python,y,"R, Python or Scala",hoaithuongnguyen-uts
+39372682,Deep learning,y,Deep Learning,hoaithuongnguyen-uts
+39372682,Stakeholder management,y,Stakeholder Engagement,hoaithuongnguyen-uts
+39372682,Communication,y,Strong Communication skills,hoaithuongnguyen-uts
+39372682,Business acumen,y,Strong Business Awareness,hoaithuongnguyen-uts
+39372682,Statistics,y,Statistical Analysis,hoaithuongnguyen-uts
+39372682,Problem solving,y,passionate about solving problem,hoaithuongnguyen-uts
+52312136,Python,y,Python/SQL/R,hoaithuongnguyen-uts
+52312136,SQL,y,Python/SQL/R,hoaithuongnguyen-uts
+52312136,R,y,Python/SQL/R,hoaithuongnguyen-uts
+52312136,BigQuery,y,big query,hoaithuongnguyen-uts
+52312136,Machine learning,y,Machine Learning/Supervised and Unsupervised techniques,hoaithuongnguyen-uts
+52312136,Data visualisation,y,data visualisation techniques,hoaithuongnguyen-uts
+52312136,Plotly,y,Plotly,hoaithuongnguyen-uts
+52312136,matplotlib,y,matplotlib,hoaithuongnguyen-uts
+52312136,Excel,y,MS Excel,hoaithuongnguyen-uts
+52312136,Tableau,y,Tableau,hoaithuongnguyen-uts
+52312136,Looker,y,Looker,hoaithuongnguyen-uts
+52312136,Communication,y,Excellent written & verbal communication skills,hoaithuongnguyen-uts
+52312136,Data storytelling,y,tell the story of data,hoaithuongnguyen-uts
+52312136,Clustering,y,segmentations,hoaithuongnguyen-uts
+52312136,Statistics,y,Statistical,hoaithuongnguyen-uts
+38744632,Recommender systems,y,recommendation systems,hoaithuongnguyen-uts
+38744632,Machine learning,y,machine learning,hoaithuongnguyen-uts
+38744632,R,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,SQL,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,Python,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,Spark,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,Scala,y,Scala,hoaithuongnguyen-uts
+38744632,Communication,y,Very strong communication & presentation skills,hoaithuongnguyen-uts
+38744632,Presentation skills,y,communication & presentation skills,hoaithuongnguyen-uts
+38744632,Google Cloud,y,GCP (Google Cloud Platform),hoaithuongnguyen-uts
+38744632,AWS,y,AWS,hoaithuongnguyen-uts
+38744632,Azure,y,Azure,hoaithuongnguyen-uts
+38744632,Keras,y,keras,hoaithuongnguyen-uts
+38744632,TensorFlow,y,TensorFlow,hoaithuongnguyen-uts
+38744632,Stakeholder management,y,liaising with key business stakeholders,hoaithuongnguyen-uts
+38744632,Predictive modelling,y,propensity models,hoaithuongnguyen-uts
+38680411,R,y,r or python,hoaithuongnguyen-uts
+38680411,Python,y,r or python,hoaithuongnguyen-uts
+38680411,Communication,y,Strong communication skills,hoaithuongnguyen-uts
+38680411,Business acumen,y,Strong understanding of business,hoaithuongnguyen-uts
+38680411,Presentation skills,y,Presenting to senior stakeholders,hoaithuongnguyen-uts
+38680411,Stakeholder management,y,Presenting to senior stakeholders,hoaithuongnguyen-uts
+38680411,Predictive modelling,y,"? credit scoring, behavioural scoring, scorecard development",hoaithuongnguyen-uts
+55489506,Machine learning,y,machine learning and other predictive models,hoaithuongnguyen-uts
+55489506,Predictive modelling,y,predictive models,hoaithuongnguyen-uts
+55489506,Statistics,y,statistical methods,hoaithuongnguyen-uts
+55489506,Python,y,Python projects,hoaithuongnguyen-uts
+55489506,Documentation,y,document development efforts,hoaithuongnguyen-uts
+55489506,Project management,y,project management skills,hoaithuongnguyen-uts
+55489506,Data modelling,y,manage data structure designs,hoaithuongnguyen-uts
+55489506,Problem solving,y,strong attention to detail,hoaithuongnguyen-uts
+55489506,Git,y,peer review process,hoaithuongnguyen-uts
+50056288,Python,y,"Python, C, Matlab, R",hoaithuongnguyen-uts
+50056288,MATLAB,y,Matlab,hoaithuongnguyen-uts
+50056288,R,y,"Matlab, R",hoaithuongnguyen-uts
+50056288,Machine learning,y,Machine Learning (neural networks),hoaithuongnguyen-uts
+50056288,Deep learning,y,neural networks,hoaithuongnguyen-uts
+50056288,Problem solving,y,Problem solving and troubleshooting skills,hoaithuongnguyen-uts
+50056288,Azure,y,Microsoft Azure,hoaithuongnguyen-uts
+53894393,SAS,y,"SAS, SQL, Python/R or Tableau",hoaithuongnguyen-uts
+53894393,SQL,y,"SAS, SQL, Python/R or Tableau",hoaithuongnguyen-uts
+53894393,Python,y,Python/R,hoaithuongnguyen-uts
+53894393,R,y,Python/R,hoaithuongnguyen-uts
+53894393,Tableau,y,Tableau,hoaithuongnguyen-uts
+53894393,Machine learning,y,supervised/unsupervised machine learning,hoaithuongnguyen-uts
+53894393,ETL,y,Implement ETL,hoaithuongnguyen-uts
+53894393,Data governance,y,Uplift governance and quality,hoaithuongnguyen-uts
+53894393,Data quality,y,governance and quality of data,hoaithuongnguyen-uts
+53894393,Data visualisation,y,data manipulation and visualisation,hoaithuongnguyen-uts
+53894393,Problem solving,y,problem-solving skills,hoaithuongnguyen-uts
+53894393,Stakeholder management,y,build strong stakeholder relationships,hoaithuongnguyen-uts
+53894393,Communication,y,excellent interpersonal skills,hoaithuongnguyen-uts
+53894393,Business acumen,y,business acumen,hoaithuongnguyen-uts
+53894393,Predictive modelling,y,decision models,hoaithuongnguyen-uts
+40386941,Python,y,"Python, SQL, React",hoaithuongnguyen-uts
+40386941,SQL,y,"Python, SQL, React",hoaithuongnguyen-uts
+40386941,Machine learning,y,machine learning techniques/algorithms,hoaithuongnguyen-uts
+40386941,Excel,y,Advanced skills in excel,hoaithuongnguyen-uts
+40386941,VBA,y,macros,hoaithuongnguyen-uts
+40386941,Hadoop,y,Hadoop,hoaithuongnguyen-uts
+40386941,Hive,y,Hive,hoaithuongnguyen-uts
+40386941,Data cleaning,y,"cleanse, integrate and evaluate large data sets",hoaithuongnguyen-uts
+40386941,Hypothesis testing,y,validating hypotheses,hoaithuongnguyen-uts
+38644875,R,y,R programming,hoaithuongnguyen-uts
+38644875,Python,y,Python,hoaithuongnguyen-uts
+38644875,Scala,y,"R, Python or Scala",hoaithuongnguyen-uts
+38644875,Machine learning,y,Machine learning,hoaithuongnguyen-uts
+38644875,Artificial intelligence,y,AI,hoaithuongnguyen-uts
+38644875,Hive,y,"Hive, Spark or Map R",hoaithuongnguyen-uts
+38644875,Spark,y,"Hive, Spark or Map R",hoaithuongnguyen-uts

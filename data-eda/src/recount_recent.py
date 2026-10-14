@@ -15,7 +15,9 @@ skills_seed_v2.csv:
   pct_2026_low,    95% Wilson interval on pct_2026. The sample is a few dozen ads,
   pct_2026_high    so the interval is wide; the app should show it or "n of N"
   n_2026_all,      the same over every 2026 data role in the sample (engineers,
-  pct_2026_all     analysts, ML engineers too); a secondary figure
+  pct_2026_all,    analysts, ML engineers too), with its 95% Wilson interval.
+  pct_2026_all_low, The emerging-skill flags read these (Quan, #87): 22 ads
+  pct_2026_all_high  rather than 9
   total_*          the denominators, repeated on every row
 
 All three periods go through the same extractor, the same dictionary and cleaned
@@ -117,6 +119,9 @@ def main() -> None:
     out["pct_2026_high"] = [hi for _, hi in ci]
     out["n_2026_all"] = out.skill.map(c_all).fillna(0).astype(int)
     out["pct_2026_all"] = (100 * out.n_2026_all / n_all).round(1)
+    ci_all = out.n_2026_all.apply(lambda k: wilson(k, n_all))
+    out["pct_2026_all_low"] = [lo for lo, _ in ci_all]
+    out["pct_2026_all_high"] = [hi for _, hi in ci_all]
     out["total_2019_22"], out["total_2024_01"], out["total_2026"] = n_seek, n_24, n_26
     out["total_2026_all"] = n_all
     out = out.sort_values(["pct_2019_22", "skill"], ascending=[False, True]).reset_index(drop=True)

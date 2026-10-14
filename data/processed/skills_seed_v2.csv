@@ -1,4 +1,4 @@
-# Van Thong's 133-alias dictionary (data-eda/config/skills_seed.csv) plus 5 generic rows added 25 Sep 2026 so the gap chart and the top-15 chart use one dictionary.
+# Van Thong's 133-alias dictionary (data-eda/config/skills_seed.csv) plus 5 generic rows added 25 Sep 2026 so the gap chart and the top-15 chart use one dictionary. 10 tool rows added 14 Oct 2026 (Kafka to Ansible) for the IT role profiles (#65).
 canonical,category,strict,aliases
 Python,Programming,0,python
 R,Programming,1,R programming|R language|RStudio|R Studio|programming in R|R and Python|Python and R|R/Python|Python/R
@@ -138,3 +138,13 @@ Artificial intelligence,Machine learning,0,artificial intelligence|ai
 Predictive modelling,Machine learning,0,predictive model|predictive models|predictive modelling|predictive modeling|predictive analytics
 Generative AI,NLP,0,generative ai|gen ai|genai|generative artificial intelligence
 Cloud platforms,Cloud,0,cloud|cloud computing|cloud platform|cloud platforms|cloud-based
+Kafka,Data wrangling,0,kafka|apache kafka
+Linux,Engineering,0,linux|unix|ubuntu|rhel|red hat enterprise linux
+Windows,Engineering,0,microsoft windows|windows server
+Jira,Engineering,0,jira
+SAP,Databases,1,SAP|SAP HANA|SAP ERP|S/4HANA
+Microsoft Office,Visualisation,0,microsoft office|ms office|office 365|microsoft 365|microsoft word|ms word|powerpoint|visio
+React,Programming,1,React|React.js|ReactJS|React Native
+Ruby,Programming,0,ruby|ruby on rails
+Alteryx,Data wrangling,0,alteryx
+Ansible,Engineering,0,ansible
