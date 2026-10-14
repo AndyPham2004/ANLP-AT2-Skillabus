@@ -54,12 +54,13 @@ Tool profiles for 7 data and IT roles, so the app can offer roles other than Dat
 
 Ten tools the 2023 lists name often and the dictionary lacked were added to `skills_seed_v2.csv`
 (now 148 skills), with aliases that are safe in running text: **Kafka, Linux** (with Unix),
-**Windows** (only "Microsoft Windows", "Windows Server"), **Jira** (with Confluence), **SAP**
+**Windows** (only "Microsoft Windows", "Windows Server"), **Jira** (not Confluence), **SAP**
 (case-sensitive), **Microsoft Office** (Word, PowerPoint, Visio; not "Outlook", which is also an
 ordinary word), **React** (case-sensitive), **Ruby, Alteryx, Ansible**. Their 2019-22 shares were
-appended to `skill_counts_v2.csv` (counted on the cleaned Seek text; the other 138 rows are
-unchanged): Microsoft Office 4.5%, Linux 3.9%, Jira 2.8%, Kafka 2.3%, Alteryx 1.8%, SAP 1.6%,
-React 1.0%, Ruby 0.3%, Ansible 0.1%, Windows 0.0%.
+added to `skill_counts_v2.csv`, counted on the raw Seek text like the other 138 rows (which
+are unchanged): Microsoft Office 4.4%, Linux 3.7%, Jira 2.4%, Kafka 2.3%, Alteryx 1.8%, SAP 1.6%,
+React 1.0%, Ruby 0.3%, Ansible 0.1%, Windows 0.0%. Jira counts only Jira since 14 Oct (#86
+review): Confluence and Atlassian are other products.
 
 ## Limits (say these wherever the numbers appear)
 
@@ -69,8 +70,8 @@ React 1.0%, Ruby 0.3%, Ansible 0.1%, Windows 0.0%.
 - **2023**, and collected through Google Jobs, so the mix of boards is the search engine's.
 - **The author's extractor, not ours.** It counts the English word "go" as the language
   (Go would be 9% of Data Analyst ads), so `go` is dropped and Go is counted only from `golang`.
-  For the same reason `flow` is dropped. 110 tool names stay unmapped (2,865 mentions; most
-  frequent DynamoDB, C, Express, HTML, Splunk, VMware), listed in the build log.
+  For the same reason `flow` is dropped. 112 tool names stay unmapped (3,261 mentions; most
+  frequent Confluence, DynamoDB, C, Express, HTML, Splunk), listed in the build log.
 - **Titles come from a classifier.** `job_title_short` is the author's BERT model; a mislabelled
   title moves an ad between roles.
 - No AI Engineer: the 2023 classes do not have it, and the 2026 sample holds only a few such ads.

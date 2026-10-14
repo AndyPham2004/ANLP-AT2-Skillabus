@@ -45,16 +45,16 @@ Redshift,Cloud,185,5.8
 MATLAB,Programming,169,5.3
 Econometrics,Statistics,165,5.1
 XGBoost,Machine learning,155,4.8
-Microsoft Office,Visualisation,145,4.5
+Microsoft Office,Visualisation,142,4.4
 Presentation skills,Professional,141,4.4
 Data warehousing,Databases,130,4.1
 SQL Server,Databases,130,4.1
 Databricks,Data wrangling,128,4.0
 scikit-learn,Machine learning,125,3.9
-Linux,Engineering,124,3.9
 NoSQL,Databases,123,3.8
 pandas,Data wrangling,121,3.8
 Data quality,Governance,121,3.8
+Linux,Engineering,119,3.7
 Feature engineering,Machine learning,119,3.7
 Qlik,Visualisation,117,3.7
 A/B testing,Statistics,116,3.6
@@ -65,7 +65,6 @@ Keras,Deep learning,104,3.2
 Computer vision,Computer vision,100,3.1
 NumPy,Data wrangling,100,3.1
 PyTorch,Deep learning,96,3.0
-Jira,Engineering,89,2.8
 Docker,Engineering,87,2.7
 Logistic regression,Machine learning,86,2.7
 C#,Programming,83,2.6
@@ -73,6 +72,7 @@ Plotly,Visualisation,82,2.6
 Gradient boosting,Machine learning,81,2.5
 SageMaker,Cloud,79,2.5
 Anomaly detection,Machine learning,79,2.5
+Jira,Engineering,77,2.4
 CI/CD,Engineering,76,2.4
 Kafka,Data wrangling,75,2.3
 BigQuery,Cloud,66,2.1

@@ -57,16 +57,29 @@ jobs_au_seek_datascientist_2019-2022_clean.csv  3,204 ads   src/clean_seek.py
 
 
 --------------------------------------------------------------------------------
-jobs_au_recent_2024-2026_clean.csv              179 roles   src/build_recent_sample.py
+jobs_au_recent_2024-2026_clean.csv              192 roles   src/build_recent_sample.py
 --------------------------------------------------------------------------------
- Recent Australian data roles, one row per role, same title filter for all.
-   period 2026-09  22 full text (job-board APIs) + 33 Adzuna (text cut at 500
-                   characters: full_text = False)
-   period 2024-01  124 full text (LinkedIn, Kaggle asaniczka, ODC-By)
- For skill shares use full_text == True only, and never pool the two periods.
- The 2026 full-text sample is 22 roles from 8 employers, 12 of them from
- Canva: report a direction, not a precise percentage. The title filter keeps AI-titled
- engineering roles ("AI Video Lead"), which raises LLM mentions in 2026.
+ Recent Australian data roles, one row per role, same title filter for all
+ (no bare "AI": "Senior Graphic AI Designer" is out; sales titles are out).
+   period 2026-09/   job-board APIs, one snapshot per run (23 Sep, then daily from
+   2026-10           14 Oct; the period is the snapshot's month): 38 full-text roles
+                     after the title filter and de-duplication, 35 of them posted
+                     in 2026; plus 32 Adzuna rows (text cut at 500 characters:
+                     full_text = False)
+   period 2024-01    122 full text (LinkedIn, Kaggle asaniczka, ODC-By)
+ Columns added 14 Oct 2026 (#64): snapshot, age_days (snapshot - posted),
+ role_group ("data scientist" = data/applied/ML/AI/research scientist titles,
+ like the 2019-22 Seek file; else "data role") and in_sample.
+ in_sample on the 2026 job-board rows: posted within 60 days of the snapshot
+ and at most 3 per company and role group (most recent first). 22 rows:
+ 9 data scientists from 5 employers, 13 other data roles. Count only these.
+ Recruiter emails and phone numbers are masked as [EMAIL] / [PHONE] (63 and 24;
+ mobiles in any grouping, landlines with an area code, +61, 1300/1800). Left as
+ published: recruiters' names next to them ("contact Raj Singh on [PHONE]", about
+ 13 rows), per the team's decision on #53, and two organisations' public 13 numbers
+ ("13 64 64", "13 44 77"), which are switchboards, not people.
+ For skill shares use full_text == True only, and never pool the periods.
+ The 2026 sample is small: report a direction, not a precise percentage.
 
 
 --------------------------------------------------------------------------------

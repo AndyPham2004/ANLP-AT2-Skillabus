@@ -165,9 +165,9 @@ NEW_SKILL_PCT = 1.0  # below this share of the 2019-22 ads, a skill counts as ne
 def _weight(gap: dict) -> float:
     """Market demand behind a gap: the 2019-22 share (3,204 ads). For a skill that barely existed
     then (LLMs are 0%), the 2026 share instead, by the lower end of its 95% interval, since the
-    2026 sample is only 22 ads from 8 employers. Skills that were already asked for keep their
-    2019-22 share: the 2026 sample over-represents AI-titled roles ("Artificial intelligence"
-    91%), so it would outweigh 3,204 ads. +1 so a skill at 0% still counts for something."""
+    2026 sample is only 22 data roles from 12 employers (9 of them data scientists). Skills that
+    were already asked for keep their 2019-22 share: the 2026 sample over-represents AI work
+    ("Artificial intelligence" in 86% of the 22), so it would outweigh 3,204 ads. +1 so a skill at 0% still counts for something."""
     old = gap.get("demand_pct") or 0.0
     if old < NEW_SKILL_PCT:
         old = max(old, demand_2026_low().get(gap["skill_label"], 0.0))
