@@ -143,7 +143,9 @@ def recommend(gaps: list[dict], exclude: set[str]) -> tuple[list[dict], dict]:
         for e in evidence_for(s["skill_label"], exclude)[:3]:
             rec = per_subject.setdefault(e["subject_code"], {
                 "subject_code": e["subject_code"], "subject_name": e["subject_name"],
-                "source_url": e["source_url"], "covers": [], "evidence": [], "_score": 0.0})
+                "source_url": e["source_url"], "covers": [], "evidence": [], "_score": 0.0,
+                # contract section 2 keys the baseline cannot fill: no prerequisite or session data here
+                "needs": [], "offered": [], "unverified": False})
             rec["covers"].append(s["skill_label"])
             rec["evidence"].append({k: e[k] for k in ("skill_label", "layer", "text")})
             # +1 so skills at 0% in the 2019-22 corpus (LLMs, generative AI) still count
@@ -171,6 +173,8 @@ def recommend(gaps: list[dict], exclude: set[str]) -> tuple[list[dict], dict]:
         "gaps_total": len(weight),
         "demand_covered_pct": round(
             100 * sum(s["demand_pct"] for s in gaps if s["skill_label"] in closed) / raw_total, 1),
+        "plan": [{"subject_code": c, "session": "", "offered": [], "after": [], "unverified": False} for c in path],
+        "dropped": [],
     }
     # Shown: the path first, then each gap's two strongest subjects (so a 0%-demand skill like
     # LLMs still gets its evidence), then the best of the rest up to MAX_SUBJECTS.
