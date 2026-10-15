@@ -178,7 +178,8 @@ def show_uts(label: str, res: dict) -> None:
     st.markdown("<div class='col-head'>Learn at UTS</div>", unsafe_allow_html=True)
     hits = [(r, e) for r in res["recommendations"] for e in r["evidence"] if e["skill_label"] == label]
     if not hits:
-        st.markdown("<span class='muted'>No UTS subject text names this skill.</span>", unsafe_allow_html=True)
+        st.markdown("<span class='muted'>No UTS subject you can take covers this skill in its Handbook text.</span>",
+                    unsafe_allow_html=True)
     for i, (r, e) in enumerate(hits[:3]):
         layer, meaning = LAYER_LABEL.get(e["layer"], (e["layer"], ""))
         st.markdown(
@@ -196,17 +197,21 @@ def show_uts(label: str, res: dict) -> None:
         if v2.button("👎 Not really", key=f"down_{k}"):
             save_vote(r["subject_code"], label, "down", took)
             st.toast("Thanks, your vote is saved.")
-    for d in res["learning_path"].get("dropped", []):
-        if label in d["covers"]:
-            st.caption(f"{d['subject_code']} {d['subject_name']} also teaches it, but {d['reason']}.")
+    # Subjects that teach it but the student cannot take (recommend()'s learning_path.dropped), the two strongest.
+    dropped = [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]]
+    for d in dropped[:2]:
+        st.caption(f"{d['subject_code']} {d['subject_name']} also teaches it, but {d['reason']}.")
 
 
 def show_self_study(label: str, levels: list[str], cost: tuple, role: str | None) -> None:
     """The "Self-study" column for one skill: at most three resources that pass the level and cost filters."""
     st.markdown("<div class='col-head'>Self-study</div>", unsafe_allow_html=True)
     found = backend.self_study(label, levels, cost, role)
-    if not found:
-        st.markdown("<span class='muted'>Nothing in our self-study list for this skill with these filters.</span>",
+    if not found and backend.self_study(label, backend.LEVELS, backend.COST_CHOICES["Include paid"], role):
+        st.markdown("<span class='muted'>Nothing with these filters: widen the level or cost above.</span>",
+                    unsafe_allow_html=True)
+    elif not found:
+        st.markdown("<span class='muted'>No self-study resource in our list for this skill yet.</span>",
                     unsafe_allow_html=True)
     for r in found:
         st.markdown(resource_line(r), unsafe_allow_html=True)

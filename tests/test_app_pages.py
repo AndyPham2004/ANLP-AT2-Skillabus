@@ -107,6 +107,7 @@ def test_job_seeker_mode_with_the_sample_ad():
     text = page_text(at)
     assert "this ad" in text
     assert "The ad says" in text and "Learn at UTS" in text and "Self-study" in text
+    assert "· free</span>" in text                                             # at least one resource listed
     assert "Certifications worth having" not in text                           # no role in this mode
 
 
@@ -116,6 +117,6 @@ def test_self_study_filters_change_the_column():
     show_gaps(at)
     at.multiselect(key="level_filter").set_value([]).run()
     assert not at.exception
-    assert "Nothing in our self-study list for this skill with these filters." in page_text(at)
+    assert "Nothing with these filters: widen the level or cost above." in page_text(at)
     at.radio(key="cost_filter").set_value("Free only").run()
     assert not at.exception

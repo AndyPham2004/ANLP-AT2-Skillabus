@@ -108,7 +108,9 @@ and Phuong Nhi**.
 | `found_by` | Optional: `llm` when only the GPT-4o-mini tier found the skill |
 | `score` | Subject score scaled so the best subject is 1.0 |
 | `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3 |
-| `demand_pct` | Share of the 3,204 Seek ads 2019-22 that mention the skill (`skill_counts_v2.csv`) |
+| `demand_pct` | Share of the 3,204 Seek ads 2019-22 that mention the skill (`skill_counts_v2.csv`); in role mode the share of that role's ads (section 5). `null` for a core skill of a role with no Australian ad counts (below) |
+| `role` | Role mode: the target role, a `role` of `role_occupations.csv` (11 roles); `null` for a pasted ad |
+| `core_source` | Only for the four roles with no Australian ad counts (QA/Test Engineer, DevOps/SRE, Network/Systems Administrator, Cybersecurity Analyst), whose skills are their core skills (`app/backend.py`, `core_skills()`): `onet` (an O*NET in-demand tool, through `onet_tool_map.csv`) or `esco` (an essential ESCO skill in ESCO's digital collection), O*NET first, at most 15; `status` is `have` or `missing` |
 | `demand_pct_2026` | Same over the 2026 sample; `null` until that sample exists |
 | `layer` | `learning_objective`, `assessment`, `weekly_topic`, `description` (strongest first) |
 | `match` | `named` (the row names the skill) or `similar` (TF-IDF or embedding similarity only) |
