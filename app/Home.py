@@ -43,6 +43,9 @@ ROLES = {
     "job": ("Job seeker", "What does my resume lack for this ad?"),
     "switch": ("Career switcher", "How far is my profile from a new role?"),
 }
+FAMILIES = backend.role_families()          # "Data & AI" -> ["Data Scientist", ...], all 11 target roles
+FAMILY_OF = {role: family for family, roles in FAMILIES.items() for role in roles}
+CORE_SOURCE = {"onet": "O*NET in-demand tool", "esco": "ESCO essential skill"}
 
 st.set_page_config(page_title="Skillabus", page_icon="🎓", layout="wide")
 
@@ -73,6 +76,9 @@ html, body, [class*="css"], .stMarkdown, .stButton button, input, textarea { fon
 .path h4 { margin: 0 0 6px; }
 .muted { color: #5b6678; font-size: .9rem; }
 .engine { font-size: .78rem; color: #5b6678; }
+.core { list-style: none; padding-left: 0; margin: 4px 0 8px; }
+.core li { margin: 7px 0; }
+.col-head { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: #1f4e8c; font-weight: 600; margin-bottom: 4px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -102,7 +108,7 @@ def save_vote(subject_code: str, skill: str, vote: str, taken: bool) -> None:
         w.writerow([datetime.now().isoformat(timespec="seconds"), subject_code, skill, vote, "y" if taken else "n"])
 
 
-def gap_chart(skills: list[dict]) -> alt.Chart:
+def gap_chart(skills: list[dict], share_of: str = "% of Seek ads") -> alt.Chart:
     df = pd.DataFrame(skills)
     df["label"] = df.skill_label + df.emerging.map({True: "  ✦", False: ""})
     df["pct_text"] = df.demand_pct.map(lambda v: f"{v:.0f}%")
@@ -115,11 +121,100 @@ def gap_chart(skills: list[dict]) -> alt.Chart:
         x=alt.X("demand_pct:Q", title=None, axis=None, scale=alt.Scale(domain=[0, max(100, df.demand_pct.max())])),
         y=y, color=color,
         tooltip=[alt.Tooltip("skill_label", title="Skill"), alt.Tooltip("status", title="Status"),
-                 alt.Tooltip("demand_pct", title="% of Seek ads")])
+                 alt.Tooltip("demand_pct", title=share_of)])
     text = alt.Chart(df).mark_text(align="left", dx=6, fontSize=13, fontWeight="bold", color=INK).encode(
         x="demand_pct:Q", y=y, text="pct_text:N")
     return ((bars + text).properties(height=max(220, 38 * len(df)), usermeta={"embedOptions": {"actions": False}})
             .configure_view(stroke=None))
+
+
+def core_list(skills: list[dict]) -> None:
+    """The core skills of a role with no ad counts: have or missing and where each comes from, no bars."""
+    items = "".join(
+        f"<li><span class='pill {s['status']}'>{s['status'].capitalize()}</span> <b>{s['skill_label']}</b> "
+        f"<span class='muted'>· {CORE_SOURCE.get(s.get('core_source'), '')}</span></li>"
+        for s in skills)
+    st.markdown(f"<ul class='core'>{items}</ul>", unsafe_allow_html=True)
+
+
+def enrol_note(r: dict) -> str:
+    """When a subject runs and what it needs first (recommend()'s offered, needs, unverified)."""
+    parts = []
+    if r.get("offered"):
+        parts.append("Runs in " + ", ".join(r["offered"]))
+    if r.get("needs"):
+        parts.append("needs " + " and ".join(r["needs"]) + " first")
+    elif r.get("unverified"):
+        parts.append("prerequisites not confirmed")
+    elif r.get("offered"):          # the baseline has no session data, so it claims nothing
+        parts.append("no prerequisite")
+    return " · ".join(parts)
+
+
+def resource_line(r: dict) -> str:
+    """One self-study resource: the title linked, then provider, level, format, hours and cost."""
+    hours = f"{r['hours']:g} h" if r["hours"] is not None else "hours not stated"
+    cost = f"A${r['cost_aud']}" if r["cost"] == "paid" and r.get("cost_aud") else r["cost"]
+    title = r["title"].replace("[", "(").replace("]", ")")       # brackets would break the Markdown link
+    return (f"**[{title}]({r['url']})**  \n"
+            f"<span class='muted'>{r['provider']} · {r['level']} · {r['format'].replace('_', ' ')} · "
+            f"{hours} · {cost}</span>")
+
+
+def cert_line(c: dict) -> str:
+    """One certification: name linked, vendor, exam code, level, exam price; "hot" only once it is measured."""
+    price = f"A${c['cost_aud']}" if c["cost_aud"] and c["cost_aud"] != "varies" else "price varies by country"
+    exam = f" · exam {c['exam_code']}" if c["exam_code"] else ""
+    line = f"**[{c['cert']}]({c['official_url']})** · {c['vendor']}{exam} · {c['level']} · {price}"
+    if c.get("hot", "").strip().lower() == "yes":    # blank until the Adzuna counts are in
+        line += " · <span class='pill new'>hot</span>"
+        if c.get("hot_reason"):
+            line += f" <span class='muted'>{c['hot_reason']}</span>"
+    return line
+
+
+def show_uts(label: str, res: dict) -> None:
+    """The "Learn at UTS" column for one skill: up to three subjects, the text that shows each teaches it, votes."""
+    st.markdown("<div class='col-head'>Learn at UTS</div>", unsafe_allow_html=True)
+    hits = [(r, e) for r in res["recommendations"] for e in r["evidence"] if e["skill_label"] == label]
+    if not hits:
+        st.markdown("<span class='muted'>No UTS subject text names this skill.</span>", unsafe_allow_html=True)
+    for i, (r, e) in enumerate(hits[:3]):
+        layer, meaning = LAYER_LABEL.get(e["layer"], (e["layer"], ""))
+        st.markdown(
+            f"<b>{r['subject_code']} {r['subject_name']}</b><br>"
+            f"<span class='layer-pill'>{layer}: {meaning}</span>"
+            f"<div class='quote subject'>{e['text']}</div>", unsafe_allow_html=True)
+        if enrol_note(r):
+            st.caption(enrol_note(r))
+        k = f"{r['subject_code']}_{label}_{i}"
+        v1, v2, v3 = st.columns([1.3, 1.5, 2])
+        took = v3.checkbox("I've taken it", key=f"took_{k}")
+        if v1.button("👍 Teaches it", key=f"up_{k}"):
+            save_vote(r["subject_code"], label, "up", took)
+            st.toast("Thanks, your vote is saved.")
+        if v2.button("👎 Not really", key=f"down_{k}"):
+            save_vote(r["subject_code"], label, "down", took)
+            st.toast("Thanks, your vote is saved.")
+    for d in res["learning_path"].get("dropped", []):
+        if label in d["covers"]:
+            st.caption(f"{d['subject_code']} {d['subject_name']} also teaches it, but {d['reason']}.")
+
+
+def show_self_study(label: str, levels: list[str], cost: tuple, role: str | None) -> None:
+    """The "Self-study" column for one skill: at most three resources that pass the level and cost filters."""
+    st.markdown("<div class='col-head'>Self-study</div>", unsafe_allow_html=True)
+    found = backend.self_study(label, levels, cost, role)
+    if not found:
+        st.markdown("<span class='muted'>Nothing in our self-study list for this skill with these filters.</span>",
+                    unsafe_allow_html=True)
+    for r in found:
+        st.markdown(resource_line(r), unsafe_allow_html=True)
+
+
+def pick_family() -> None:
+    """A new family was picked: start from its first role (the old role is not in the new list)."""
+    ss.role_box = FAMILIES[ss.family_box][0]
 
 
 # ---------------------------------------------------------------- state
@@ -141,7 +236,7 @@ if ss.step == "start":
     <div class="hero">
       <div class="eyebrow">36118 Applied NLP · UTS Master of Data Science and Innovation</div>
       <h1>Skillabus</h1>
-      <p>See which skills a role asks for that you don't have yet, and which UTS subject teaches each one.</p>
+      <p>See which skills a role asks for that you don't have yet, and where to learn each one: a UTS subject or self-study.</p>
     </div>
     """, unsafe_allow_html=True)
 else:
@@ -176,8 +271,9 @@ if ss.step == "start":
             st.button("Start", key=f"role_{key}", type="primary", width="stretch",
                       on_click=go, args=("input",), kwargs={"role": key})
     st.markdown(
-        "<p class='muted'>Built on 3,204 Seek Australia Data Scientist ads (2019-22), the ESCO skills "
-        "vocabulary and the UTS Handbook 2026. Results are suggestions, not advice.</p>",
+        f"<p class='muted'>{len(FAMILY_OF)} data and IT roles, built on Australian job ads (Seek 2019-22, "
+        "data_jobs 2023), the ESCO and O*NET occupation skills and the UTS Handbook 2026. "
+        "Results are suggestions, not advice.</p>",
         unsafe_allow_html=True)
 
 # ---------------------------------------------------------------- step 2: inputs
@@ -193,6 +289,10 @@ elif ss.step == "input":
         ss.ad_box = ss.get("ad_keep", "")
     if "taken_box" not in ss:
         ss.taken_box = ss.get("taken_keep", [])
+    if "role_box" not in ss:
+        ss.role_box = ss.get("role_keep", backend.DEFAULT_ROLE)
+    if "family_box" not in ss:
+        ss.family_box = FAMILY_OF[ss.role_box]
 
     left, right = st.columns(2, gap="large")
     with left:
@@ -205,8 +305,13 @@ elif ss.step == "input":
             ss.ad_keep = ad_text
         else:
             st.markdown("**Your target role**")
-            st.selectbox("Role", ["Data Scientist"], help="More roles once the 2026 ads are in.")
-            st.caption("The role is the 15 skills most often asked for in 3,204 Seek Data Scientist ads.")
+            family = st.radio("Field", list(FAMILIES), key="family_box", horizontal=True, on_change=pick_family)
+            target = st.selectbox("Role", FAMILIES[family], key="role_box")
+            ss.role_keep = target
+            if backend.has_ad_counts(target):
+                st.caption(f"The role is the 15 skills most often asked for in {backend.role_source(target)}")
+            else:
+                st.caption(f"{backend.role_source(target)} No percentages for this role.")
             if ss.role == "elective":
                 options = backend.subjects()
                 label = {c: f"{c} {n}" for c, n in options}
@@ -228,9 +333,10 @@ elif ss.step == "input":
     resume = kept[1] if (upload or use_kept) else (sample_cv if use_sample else "")
 
     ready = bool(resume or taken) and (ss.role != "job" or bool((ad_text or "").strip()))
-    if st.button("Show my gaps", type="primary", disabled=not ready):
+    if st.button("Show my gaps", type="primary", disabled=not ready, key="show_gaps"):
         with st.spinner("Reading the ad and your resume..."):
-            result, engine = backend.analyse(resume, ad_text if ss.role == "job" else None, taken)
+            result, engine = backend.analyse(resume, ad_text if ss.role == "job" else None, taken,
+                                             role=ss.get("role_keep", backend.DEFAULT_ROLE))
         go("results", result=result, engine=engine)
         st.rerun()
     if not ready:
@@ -244,7 +350,9 @@ elif ss.step == "results":
     n_have = sum(s["status"] == "have" for s in skills)
     n_part = sum(s["status"] == "partial" for s in skills)
     n_miss = sum(s["status"] == "missing" for s in skills)
-    target = "this ad" if ss.role == "job" else "a Data Scientist role"
+    target_role = res.get("role")                     # None in Job seeker mode
+    counted = target_role is None or backend.has_ad_counts(target_role)    # False: core skills, no percentages
+    target = "this ad" if ss.role == "job" else f"a {target_role} role"
 
     top_l, top_r = st.columns([3, 1])
     with top_l:
@@ -253,7 +361,10 @@ elif ss.step == "results":
         st.button("Start over", on_click=go, args=("start",), kwargs={"messages": []}, width="stretch")
 
     if not skills:
-        st.warning("I couldn't find any technical skills in that ad. Is it the full text?")
+        if ss.engine.startswith("none"):
+            st.error(f"The pipeline could not analyse this role: {ss.engine}")
+        else:
+            st.warning("I couldn't find any technical skills in that ad. Is it the full text?")
         st.stop()
 
     st.markdown(
@@ -268,12 +379,27 @@ elif ss.step == "results":
 
     chart_col, path_col = st.columns([3, 2], gap="large")
     with chart_col:
-        st.markdown("#### How often employers ask for each skill")
-        st.altair_chart(gap_chart(skills), width="stretch")
-        cap = "Bar = share of 3,204 Seek Australia Data Scientist ads (2019-22) naming the skill."
+        if counted:
+            st.markdown("#### How often employers ask for each skill")
+            st.altair_chart(gap_chart(skills, "% of Seek ads" if target_role is None else "% of the role's ads"),
+                            width="stretch")
+            if target_role is None:
+                cap = "Bar = share of 3,204 Seek Australia Data Scientist ads (2019-22) naming the skill."
+            else:
+                cap = f"Bar = share of the role's ads naming the skill: {backend.role_source(target_role)}"
+        else:
+            st.markdown("#### Core skills of the role")
+            core_list(skills)
+            onet = backend.occupation(target_role, "onet")
+            esco = backend.occupation(target_role, "esco")
+            cap = (f"No percentages: there are no Australian ad counts for {target_role} yet. These are the O*NET "
+                   f"in-demand tools of {onet['occupation_title']} ({onet['occupation_code']}), then the essential "
+                   f"digital skills of the ESCO occupation '{esco['occupation_title']}', at most "
+                   f"{backend.MAX_CORE_SKILLS}. Have = your resume names the skill.")
         if any(s["emerging"] for s in skills):
             cap += " ✦ = no ESCO concept yet, kept as an emerging skill."
-        if any(s["skill_label"] in ("Large language models", "Generative AI") for s in skills):
+        if target_role in (None, backend.DEFAULT_ROLE) and any(
+                s["skill_label"] in ("Large language models", "Generative AI") for s in skills):
             cap += (" LLMs and generative AI are 0% in these ads because the ads predate ChatGPT; "
                     "15.8% of 247 US Data Scientist ads in 2023-24 ask for LLMs.")
         if any(s.get("found_by") == "llm" for s in skills):
@@ -290,13 +416,15 @@ elif ss.step == "results":
         if lp["subjects"]:
             items = "".join(
                 f"<li><b>{c}</b> {recs[c]['subject_name']}<br><span class='muted'>covers "
-                f"{', '.join(lc(s) for s in recs[c]['covers'])}</span></li>"
+                f"{', '.join(lc(s) for s in recs[c]['covers']) or 'no gap itself: a prerequisite'}</span></li>"
                 for c in lp["subjects"] if c in recs)
+            # Roles without ad counts have no demand shares, so only the gap count is shown.
+            demand = (f"<span class='muted'>{lp['demand_covered_pct']:.0f}% of the employer demand behind your "
+                      "gaps.</span>" if counted else "")
             st.markdown(
                 f"<div class='path'><h4>{len(lp['subjects'])} subject{'s' if len(lp['subjects']) > 1 else ''}"
                 f" close {lp['gaps_closed']} of {lp['gaps_total']} gaps</h4>"
-                f"<ol style='padding-left:18px;margin:8px 0'>{items}</ol>"
-                f"<span class='muted'>{lp['demand_covered_pct']:.0f}% of the employer demand behind your gaps.</span></div>",
+                f"<ol style='padding-left:18px;margin:8px 0'>{items}</ol>{demand}</div>",
                 unsafe_allow_html=True)
         else:
             st.info("No subject in the Handbook text covers these gaps." if n_miss + n_part
@@ -310,50 +438,64 @@ elif ss.step == "results":
                        "Other subjects that teach them are listed below.")
         if no_subject:
             st.caption(f"No subject text names: {', '.join(lc(u) for u in no_subject)}.")
+        # Second tier of recommend(): outside courses for the gaps the UTS path leaves open.
+        outside = lp.get("outside", {})
+        if outside.get("courses"):
+            names = {r["subject_code"]: r["subject_name"] for r in res.get("outside_recommendations", [])}
+            st.caption(f"Outside UTS, no credit: {'; '.join(names.get(c, c) for c in outside['courses'])} "
+                       f"close {outside['gaps_closed']} of the {outside['gaps_open_before']} gaps the path leaves open.")
 
     st.divider()
-    st.markdown("#### Why these subjects?")
+    st.markdown("#### Where to learn each missing skill")
     gaps = [s for s in skills if s["status"] != "have"]
-    if gaps:
-        pick = st.selectbox("Pick a skill to see the evidence", [g["skill_label"] for g in gaps])
-        s = by[pick]
-        ev_ad, ev_sub = st.columns(2, gap="large")
-        with ev_ad:
-            st.markdown("**The ad says**" if ss.role == "job" else "**Employers say**")
-            st.markdown(f"<div class='quote'>{s['ad_evidence']}</div>", unsafe_allow_html=True)
-            if s["status"] == "partial":
-                st.markdown(f"**Your resume says** <div class='quote subject'>{s['resume_evidence']}</div>",
-                            unsafe_allow_html=True)
-            if s["emerging"]:
-                st.markdown("<span class='pill new'>✦ outside ESCO</span> <span class='muted'>no ESCO concept "
-                            "yet; kept and tracked as an emerging skill</span>", unsafe_allow_html=True)
-        with ev_sub:
-            st.markdown("**The subject says** <span class='muted'>· does it really teach this? Your vote helps us check.</span>", unsafe_allow_html=True)
-            hits = [(r, e) for r in res["recommendations"] for e in r["evidence"] if e["skill_label"] == pick]
-            if not hits:
-                st.markdown("<span class='muted'>No subject text names this skill.</span>", unsafe_allow_html=True)
-            for i, (r, e) in enumerate(hits[:3]):
-                layer, meaning = LAYER_LABEL.get(e["layer"], (e["layer"], ""))
-                st.markdown(
-                    f"<b>{r['subject_code']} {r['subject_name']}</b><br>"
-                    f"<span class='layer-pill'>{layer}: {meaning}</span>"
-                    f"<div class='quote subject'>{e['text']}</div>", unsafe_allow_html=True)
-                k = f"{r['subject_code']}_{pick}_{i}"
-                v1, v2, v3 = st.columns([1.3, 1.5, 2])
-                took = v3.checkbox("I've taken it", key=f"took_{k}")
-                if v1.button("👍 Teaches it", key=f"up_{k}"):
-                    save_vote(r["subject_code"], pick, "up", took)
-                    st.toast("Thanks, your vote is saved.")
-                if v2.button("👎 Not really", key=f"down_{k}"):
-                    save_vote(r["subject_code"], pick, "down", took)
-                    st.toast("Thanks, your vote is saved.")
+    if not gaps:
+        st.markdown("<span class='muted'>Nothing missing: you already have every skill on the list.</span>",
+                    unsafe_allow_html=True)
+    else:
+        f_level, f_cost = st.columns([3, 2], gap="large")
+        levels = f_level.multiselect("Self-study level", list(backend.LEVELS), default=list(backend.LEVELS),
+                                     key="level_filter")
+        cost_choice = f_cost.radio("Self-study cost", list(backend.COST_CHOICES), index=1, horizontal=True,
+                                   key="cost_filter")
+        for i, s in enumerate(gaps):
+            label = s["skill_label"]
+            with st.expander(f"{label} · {s['status']}", expanded=i == 0):
+                says = ("The ad says" if ss.role == "job" else "Employers say" if counted
+                        else "Why it is a core skill")
+                st.markdown(f"**{says}** <div class='quote'>{s['ad_evidence']}</div>", unsafe_allow_html=True)
+                if s["status"] == "partial":
+                    st.markdown(f"**Your resume says** <div class='quote subject'>{s['resume_evidence']}</div>",
+                                unsafe_allow_html=True)
+                if s["emerging"]:
+                    st.markdown("<span class='pill new'>✦ outside ESCO</span> <span class='muted'>no ESCO concept "
+                                "yet; kept and tracked as an emerging skill</span>", unsafe_allow_html=True)
+                uts_col, self_col = st.columns(2, gap="large")
+                with uts_col:
+                    show_uts(label, res)
+                with self_col:
+                    show_self_study(label, levels, backend.COST_CHOICES[cost_choice], target_role)
+        st.caption("Learn at UTS: subjects whose Handbook text names or closely matches the skill; your vote helps "
+                   "us check they really teach it. Self-study: easiest and shortest first, at most three.")
+
+    if target_role:
+        st.divider()
+        st.markdown("#### Certifications worth having")
+        certs = backend.certifications(target_role)
+        if certs:
+            st.markdown("\n".join(f"- {cert_line(c)}" for c in certs), unsafe_allow_html=True)
+            st.caption("Foundational first, then associate, professional and expert. Exam price for one attempt, "
+                       "from the vendor's page. A \"hot\" tag appears once live Australian ads have been counted.")
+        else:
+            st.markdown("<span class='muted'>No certification in our list for this role yet.</span>",
+                        unsafe_allow_html=True)
 
     with st.expander("All recommended subjects"):
         for r in res["recommendations"]:
             st.markdown(f"**{r['subject_code']} {r['subject_name']}** · score {r['score']:.2f} · "
-                        f"covers {', '.join(lc(c) for c in r['covers'])} · [Handbook]({r['source_url']})")
+                        f"covers {', '.join(lc(c) for c in r['covers']) or 'no gap itself: a prerequisite'} · "
+                        f"[Handbook]({r['source_url']})")
 
     st.markdown(
         f"<p class='engine'>Engine: {ss.engine}. Skills matched with our {backend.dictionary_size()}-skill dictionary; "
-        "subjects matched on Handbook learning objectives, topics and descriptions. "
+        "subjects matched on Handbook learning objectives, assessments, topics and descriptions. "
         "Results are suggestions, not advice.</p>", unsafe_allow_html=True)
