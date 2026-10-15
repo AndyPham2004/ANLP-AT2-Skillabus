@@ -33,9 +33,11 @@ from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-PREREQUISITES_CSV = ROOT / "data" / "processed" / "prerequisites.csv"
-OFFERINGS_CSV = ROOT / "data" / "processed" / "offerings.csv"
+from . import paths
+
+ROOT = paths.ROOT
+PREREQUISITES_CSV = paths.PREREQUISITES
+OFFERINGS_CSV = paths.OFFERINGS
 HOME_COURSE = "C04372"
 MAX_NEEDS = 2              # at most this many prerequisites are added for one subject
 SESSIONS = ("Autumn", "Spring")

@@ -7,7 +7,7 @@ before normalisation):
      "sentence": "Strong programming experience with Python and SQL."}
 
 `text`      the words as they appear in the ad or resume
-`canonical` the skill name in data/processed/skills_seed_v2.csv, or None when the
+`canonical` the skill name in data/1_knowledge/skills/skills_seed_v2.csv, or None when the
             mention is not in the dictionary (tier 2 candidates, emerging skills)
 `method`    which tier found it: dictionary, ner, llm
 `sentence`  the full sentence, kept as the evidence the app shows
@@ -24,9 +24,10 @@ from __future__ import annotations
 import csv
 import re
 from functools import lru_cache
-from pathlib import Path
 
-SEED_CSV = Path(__file__).resolve().parents[2] / "data" / "processed" / "skills_seed_v2.csv"
+from . import paths
+
+SEED_CSV = paths.SKILLS_SEED
 METHODS = ("dictionary", "ner", "llm")
 SPACY_MODEL = "en_core_web_sm"
 

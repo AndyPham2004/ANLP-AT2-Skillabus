@@ -27,9 +27,10 @@ except Exception:
 
 import backend  # noqa: E402
 import chat  # noqa: E402
+from skillabus import paths  # noqa: E402  (backend puts src/ on sys.path)
 
-MOCK = ROOT / "app" / "mock"
-FEEDBACK_CSV = ROOT / "data" / "processed" / "feedback.csv"
+MOCK = paths.SAMPLES
+FEEDBACK_CSV = paths.FEEDBACK
 INK, BLUE, COPPER, PARTIAL, MUTED = "#0b1a2e", "#1f4e8c", "#c2410c", "#e9a27a", "#5b6678"
 LAYER_LABEL = {
     "learning_objective": ("Learning objective", "taught and assessed"),
@@ -353,6 +354,6 @@ elif ss.step == "results":
                         f"covers {', '.join(lc(c) for c in r['covers'])} · [Handbook]({r['source_url']})")
 
     st.markdown(
-        f"<p class='engine'>Engine: {ss.engine}. Skills matched with our 138-skill dictionary; "
+        f"<p class='engine'>Engine: {ss.engine}. Skills matched with our {backend.dictionary_size()}-skill dictionary; "
         "subjects matched on Handbook learning objectives, topics and descriptions. "
         "Results are suggestions, not advice.</p>", unsafe_allow_html=True)

@@ -8,7 +8,7 @@
    that skill. Above the threshold, the row counts as evidence.
 
 Pick each threshold where the pairs above it are right and the pairs below it are wrong.
-Do not use the labelled test sets (data/labels/) for this: they are for the evaluation.
+Do not use the labelled test sets (data/4_evaluation/labels/) for this: they are for the evaluation.
 """
 
 import sys

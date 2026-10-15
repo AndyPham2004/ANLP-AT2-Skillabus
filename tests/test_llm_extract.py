@@ -68,6 +68,40 @@ def test_second_run_uses_the_cache(tmp_path, monkeypatch):
     assert first == second and client.calls == 1
 
 
+def test_no_key_and_no_cache_raises_runtime_error(tmp_path, monkeypatch):
+    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    try:
+        llm_extract.extract_llm(AD)
+    except RuntimeError as error:
+        assert "OPENAI_API_KEY" in str(error)
+    else:
+        raise AssertionError("expected RuntimeError")
+    assert not list(tmp_path.iterdir())   # nothing cached
+
+
+def test_no_key_still_reads_the_cache(tmp_path, monkeypatch):
+    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
+    first = llm_extract.extract_llm(AD, client=FakeClient([{"text": "SQL", "kind": "hard"}]))
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    assert llm_extract.extract_llm(AD) == first
+
+
+def test_reads_the_evaluation_cache_but_writes_only_the_runtime_cache(tmp_path, monkeypatch):
+    runtime, evaluation = tmp_path / "runtime", tmp_path / "evaluation"
+    monkeypatch.setattr(llm_extract, "CACHE_DIR", runtime)
+    monkeypatch.setattr(llm_extract, "EVAL_CACHE_DIR", evaluation)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    name = llm_extract._cache_name(mask_pii(AD))
+    evaluation.mkdir()
+    (evaluation / name).write_text(json.dumps([{"text": "SQL", "kind": "hard"}]), encoding="utf-8")
+    assert [m["text"] for m in llm_extract.extract_llm(AD)] == ["SQL"]   # no key needed: committed answer
+    assert not runtime.exists()                                           # reading writes nothing
+    client = FakeClient([{"text": "Python", "kind": "hard"}])
+    assert [m["text"] for m in llm_extract.extract_llm(AD.replace("SQL", "Go"), client=client)] == ["Python"]
+    assert sorted(p.parent.name for p in tmp_path.rglob("*.json")) == ["evaluation", "runtime"]
+
+
 def test_bad_json_returns_nothing(tmp_path, monkeypatch):
     monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
     client = FakeClient([])
