@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 AD = (ROOT / "tests/fixtures/ad_rw_2026-09-23.txt").read_text(encoding="utf-8")
 RESUME = (ROOT / "tests/fixtures/resume_synthetic.txt").read_text(encoding="utf-8")
 CONTRACT_KEYS = {"skill_id", "skill_label", "status", "demand_pct", "demand_pct_2026",
-                 "emerging", "ad_evidence", "resume_evidence"}
+                 "demand_source", "demand_period", "emerging", "ad_evidence", "resume_evidence"}
 
 
 def mention(text, canonical=None, sentence=None, **extra):
@@ -135,7 +135,8 @@ def role_file(monkeypatch):
 def test_roles_come_from_the_role_file(role_file):
     from skillabus.match import roles
     assert [r["role"] for r in roles()] == ["Data Scientist", "Data Engineer", "ML Engineer"]
-    assert roles()[1] == {"role": "Data Engineer", "n_ads": 4438, "source": "Australian", "period": "2023"}
+    assert roles()[1] == {"role": "Data Engineer", "n_ads": 4438,                # source and period from the file
+                          "source": "lukebarousse/data_jobs (2023, Australia)", "period": "2023"}
     assert roles()[0]["n_ads"] == 3204          # Data Scientist stays on the full-text Seek ads
 
 
@@ -232,3 +233,39 @@ def test_dictionary_skills_sharing_an_esco_concept_are_not_the_same_skill():
     ad = [mention("PyTorch", "PyTorch", **shared), mention("Tableau", "Tableau", **shared)]
     resume = [mention("matplotlib", "matplotlib", **shared), mention("Power BI", "Power BI", **shared)]
     assert status(match(ad, resume)) == {"PyTorch": "missing", "Tableau": "missing"}
+
+
+# ------------------------------------------- demand belongs to the role (C2b, review #83)
+
+def test_role_rows_carry_the_role_s_source_and_period(role_file):
+    from skillabus.match import match_role
+    engineer = match_role(extract(RESUME), "Data Engineer")
+    assert {(s["demand_source"], s["demand_period"]) for s in engineer} == {
+        ("lukebarousse/data_jobs (2023, Australia)", "2023")}
+    assert all(s["demand_pct_2026"] is None for s in engineer)      # the 2026 sample has data roles only
+    scientist = match_role(extract(RESUME))
+    assert {(s["demand_source"], s["demand_period"]) for s in scientist} == {("Seek", "2019-22")}
+    ad = match(extract(AD), extract(RESUME))
+    assert {s["demand_source"] for s in ad} == {"Seek"}
+
+
+def test_partial_credit_and_soft_skills_follow_the_given_demand():
+    from skillabus.match import _related
+    resume = {"PyTorch": [], "TensorFlow": []}
+    by_seek = _related("Deep learning", resume)
+    assert by_seek in resume
+    other = next(k for k in resume if k != by_seek)
+    assert _related("Deep learning", resume, {other: 50.0}) == other    # the role's shares decide
+    ad = extract(AD)
+    assert soft_skills(ad) == ["Teamwork", "Problem solving"]
+    assert soft_skills(ad, {"Problem solving": 40.0, "Teamwork": 10.0}) == ["Problem solving", "Teamwork"]
+
+
+def test_period_is_read_from_the_file():
+    from skillabus.match import _period, _where
+    assert _period({"source": "lukebarousse/data_jobs (2023, Australia)"}) == "2023"
+    assert _period({"source": "Adzuna", "period": "2026-10"}) == "2026-10"
+    assert _period({"source": "Seek 2019 to 2022"}) == "2019-2022"
+    assert _period({"source": ""}) == ""
+    assert _where("lukebarousse/data_jobs (2023, Australia)") == "Australian"
+    assert _where("Adzuna (2026)") == "Adzuna"

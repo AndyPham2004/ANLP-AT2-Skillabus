@@ -1,4 +1,4 @@
-# Test fixture in the shape of data/processed/role_profiles.csv (#65). Numbers are made up.
+# Test fixture in the shape of data/2_demand/role_profiles.csv (paths.ROLE_PROFILES) (#65). Numbers are made up.
 role,skill,category,n_ads,pct_ads,pct_low,pct_high,total_ads,source
 Data Engineer,SQL,Programming,3107,70.0,68.6,71.3,4438,"lukebarousse/data_jobs (2023, Australia)"
 Data Engineer,Python,Programming,2663,60.0,58.5,61.4,4438,"lukebarousse/data_jobs (2023, Australia)"
