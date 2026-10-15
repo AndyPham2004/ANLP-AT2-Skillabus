@@ -14,7 +14,7 @@ Shapes are fixed by docs/data_contract.md section 3. Two notes on that contract:
     ("C04380|C04379"), because the contract's other rule - one row per piece of
     text - forbids repeating the same sentence once per course. Filter with
     `df.course.str.contains("C04372")`, not `==`.
-  * The output has NO leading comment line. `data/processed/skills_seed_v2.csv`
+  * The output has NO leading comment line. `data/1_knowledge/skills/skills_seed_v2.csv`
     has one, and because the file also contains a literal `C#`, reading it with
     `pandas.read_csv(..., comment="#")` silently truncates that row to `C` with
     no aliases. Provenance for this file lives in the companion .md instead.
@@ -29,16 +29,18 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]          # data-eda/
-REPO = ROOT.parent                                  # the Skillabus repo
-DEFAULT_SUBJECTS = ROOT / "data" / "raw" / "uts_subjects_2026.csv"
-DEFAULT_ASSESSMENTS = REPO / "data" / "labels" / "subject_content.csv"
-DEFAULT_SCRAPED_ASSESSMENTS = REPO / "data" / "processed" / "assessments_scraped.csv"
-DEFAULT_OUT = REPO / "data" / "processed" / "subject_profiles.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_SUBJECTS = paths.UTS_SUBJECTS_RAW
+DEFAULT_ASSESSMENTS = paths.SUBJECT_CONTENT      # hand-collected rows, optional
+DEFAULT_SCRAPED_ASSESSMENTS = paths.ASSESSMENTS_SCRAPED
+DEFAULT_OUT = paths.SUBJECT_PROFILES
 
 COLUMNS = ["subject_code", "subject_name", "course", "layer", "text", "source_url", "collected_by"]
 
@@ -185,7 +187,7 @@ def load_assessments(paths: list[Path] | Path) -> pd.DataFrame:
         df = pd.read_csv(path, dtype=str).fillna("")
         missing = [c for c in ("subject_code", "layer", "text") if c not in df.columns]
         if missing:
-            raise SystemExit(f"{path} is missing columns {missing}; see data/labels/README.md")
+            raise SystemExit(f"{path} is missing columns {missing}; see data/1_knowledge/uts/README.md")
         df = df[df["layer"].astype(str).str.strip().str.lower() == "assessment"].copy()
         df["text"] = df["text"].map(clean).map(drop_ai_policy)   # encoding damage and AI-use policy sentences
         df = df[df["text"].str.len() > 0]
@@ -295,7 +297,7 @@ def main() -> None:
     if not len(df[df.layer == "assessment"]):
         log.info("")
         log.info("No assessment layer: run data-eda/src/scrape_assessments.py, or drop hand-collected")
-        log.info("rows into data/labels/subject_content.csv, and re-run.")
+        log.info("rows into data/1_knowledge/uts/subject_content.csv, and re-run.")
 
 
 if __name__ == "__main__":

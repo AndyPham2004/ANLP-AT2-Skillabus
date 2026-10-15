@@ -1,8 +1,8 @@
-"""Build data/processed/external_courses.csv + external_courses.md from the downloaded official pages.
+"""Build data/1_knowledge/learning_resources/external_courses.csv + .md from the downloaded official pages.
 
-Text is taken verbatim: by block index from dl/<slug>.html (same parser as totext.py), from the
-HTML-escaped JSON the Google Skills / Hugging Face pages embed, or pasted from the rendered page
-text (Kaggle, dbt Learn, tensorflow.org, which only render in a browser).
+Text is taken verbatim: by block index from data/raw/external_courses_pages/<slug>.html (not in git;
+same parser as totext.py), from the HTML-escaped JSON the Google Skills / Hugging Face pages embed,
+or pasted from the rendered page text (Kaggle, dbt Learn, tensorflow.org, which only render in a browser).
 """
 import csv
 import html as htmlmod
@@ -13,10 +13,10 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-HERE = Path(__file__).resolve().parent
-DL = HERE / "dl"
-ROOT = Path(r"C:\MDSI\03.Applied NLP\assessments\at2")
-PROC = ROOT / "data" / "processed"
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DL = paths.EXTERNAL_PAGES_RAW
 DATE = "2026-10-13"
 COLLECTED_BY = "Claude (web)"
 
@@ -469,16 +469,16 @@ for c in C:
         rows.append([c["code"], c["name"], "external", "weekly_topic", m, c["url"], COLLECTED_BY, c["provider"], c["cost"], DATE])
     c["n_desc"], c["n_mod"] = len(desc), len(mods)
 
-out_csv = PROC / "external_courses.csv"
+out_csv = paths.EXTERNAL_COURSES
 with open(out_csv, "w", encoding="utf-8", newline="") as fh:
     w = csv.writer(fh)
     w.writerow(["subject_code", "subject_name", "course", "layer", "text", "source_url", "collected_by", "provider", "cost", "date_checked"])
     w.writerows(rows)
 
 # ----------------------------------------------------------------------------- coverage (same matcher as step 1)
-with open(PROC / "skills_seed_v2.csv", encoding="utf-8", newline="") as f:
+with open(paths.SKILLS_SEED, encoding="utf-8", newline="") as f:
     skills = [s for s in csv.DictReader([ln for ln in f if not ln.startswith("#")]) if s["category"] != "Professional"]
-with open(PROC / "uncovered_skills_2026-10-13.csv", encoding="utf-8", newline="") as f:
+with open(paths.SKILLS_NOT_TAUGHT, encoding="utf-8", newline="") as f:
     unc = list(csv.DictReader(f))
 uncovered = [r["skill"] for r in unc if r["covered_by_uts"] == "n"]
 
@@ -524,7 +524,7 @@ md.append("| Codes | `EXT-<PROVIDER>-<slug>`, `course` = `external` |")
 md.append("| Layers | `description` = one row per sentence of the course's own description; `weekly_topic` = one row per module / lesson / chapter / section title, copied verbatim |")
 md.append("| Cost | `free`, `free-to-audit` (Coursera), `paid` (none used) |\n")
 md.append("## How it was built\n")
-md.append("1. `uncovered_skills_2026-10-13.csv`: the 126 non-Professional dictionary skills (`skills_seed_v2.csv`) were matched\n"
+md.append("1. `skills_not_taught_by_uts.csv`: the 126 non-Professional dictionary skills (`skills_seed_v2.csv`) were matched\n"
           "   against every row of `subject_profiles.csv` (6,848 rows, 360 subjects) as whole phrases, case-insensitive,\n"
           "   canonical name or any alias (`(?<![A-Za-z0-9])phrase(?![A-Za-z0-9])`). 54 skills matched no subject; they are\n"
           "   sorted by `pct_ads` of `skill_counts_v2.csv` (the 2019-22 Seek share) and followed by the 19 covered skills\n"
@@ -578,7 +578,7 @@ md.append("- Documentation tutorials (PyTorch, TensorFlow, Keras, NumPy, scikit-
           "  Jenkins, Django, FastAPI, Flask, Streamlit, MLflow, Kubeflow, Terraform, AWS, Elastic, Cassandra, Hive, Dask,\n"
           "  Polars, OpenCV, NLTK, D3, Plotly, Scala 3 Book) have no cost; their \"modules\" are the tutorial's own section\n"
           "  or chapter titles.")
-md.append("- `pct_2019_22` in `uncovered_skills_2026-10-13.csv` is `pct_ads` from `skill_counts_v2.csv`; the column of the same\n"
+md.append("- `pct_2019_22` in `skills_not_taught_by_uts.csv` is `pct_ads` from `skill_counts_v2.csv`; the column of the same\n"
           "  name in `skill_counts_2026.csv` differs slightly (e.g. Python 82.8 vs 84.5, Scala 15.1 vs 16.4), a different\n"
           "  matcher run. The task said to sort by the v2 file, so that is what is stored.")
 md.append("- The step-1 matcher is case-insensitive as instructed, so a few *covered* verdicts rest on common words: `Go`\n"
@@ -593,5 +593,5 @@ md.append("- 56 courses rather than the 25-40 aimed for: 54 skills had no UTS su
 md.append("- Pages that only render in a browser were read with Playwright (Kaggle Learn blocks urllib with reCAPTCHA, dbt Learn\n"
           "  and tensorflow.org serve their content by script). juliaacademy.com timed out; learning.qlik.com returned 403.")
 md.append("- Read with `dtype=str`; the file has no leading `#` line.")
-(PROC / "external_courses.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+(paths.EXTERNAL_COURSES_MD).write_text("\n".join(md) + "\n", encoding="utf-8")
 print("wrote", out_csv, "and external_courses.md")

@@ -1,10 +1,11 @@
 ================================================================================
  HOW TO USE THE DATA  --  MDSI Skills Map (36118 AT2)
  Written for teammates. Every count was read off the file, not a description page.
- Folder: data-eda/data/raw/     Manifest with provenance: DATASETS.md
+ Folder: data/raw/ (repo root, not in git)   Manifest with provenance: DATASETS.md
 ================================================================================
 
- CLEANED VERSIONS (9 Oct): data-eda/data/clean/ - read its README.txt first.
+ CLEANED VERSIONS (9 Oct): under data/ since 15 Oct (map: data/README.md) - read
+ data/2_demand/ads/CLEANING_NOTES.txt first.
  Labelling, resumes and ESCO lookups should come from there, not from raw/.
 
  QUICK ANSWER: WHICH FILE DO I WANT?
@@ -16,7 +17,7 @@
    Check a finding holds ................. jobs_us_linkedin_2023-2024.csv
    A sample student profile .............. resumes_us_2021.csv
    Name real employers / market size ..... jobs_au_adzuna_2026.csv
-   Current-era (2024 / 2026) ads ......... clean/jobs_au_recent_2024-2026_clean.csv
+   Current-era (2024 / 2026) ads ......... data/2_demand/ads/jobs_au_recent_2024-2026_clean.csv
    Sanity-check our extractor ............ jobs_au_seek_datascience_2019-2022_authorflags.csv
 
 
@@ -35,7 +36,7 @@ WHAT   Seek Australia ads whose title contains "Data Scientist". Full ad text,
 COLS   ad_id, title, advertiser, company, listingDate, state, city,
        salary_string, description, source
 USE    The block 5 chart. Any statement about what the Australian market wants.
-       python src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id
+       python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id
 AVOID  Do not claim it is current. See the 2019-2022 warning in section 5.
 
 --------------------------------------------------------------------------------
@@ -128,8 +129,8 @@ KEY    altLabels is populated for 99.9% of rows and is NEWLINE-separated, not
        comma. It is what makes the whole idea work: the concept
        "Python (computer programming)" carries the plain alt-label "Python",
        which is how academic phrasing and industry phrasing meet.
-USE    NORMALISATION, not extraction. Extract with config/skills_seed.csv (tuned
-       to how ads actually write), then map onto ESCO for a stable identifier.
+USE    NORMALISATION, not extraction. Extract with the dictionary in
+       data/1_knowledge/skills/ (tuned to how ads actually write), then map onto ESCO for a stable identifier.
        python src/map_to_esco.py --show-unmapped
 AVOID  Do not string-match ESCO labels against raw ad text. They are verbose and
        formal ("use Python (computer programming)") in a way job ads never are.
@@ -201,14 +202,14 @@ ETHICS Process in memory, do not commit resumes to the repo, and mask personal
     whitespace put back, so real mentions were welded to the next word:
     "...Power BI and TableauSuperior analytical skills...". Word boundaries
     correctly refuse those, so counts on the raw text miss them.
-    FIXED in data/clean/jobs_au_seek_datascientist_2019-2022_clean.csv
+    FIXED in data/2_demand/ads/jobs_au_seek_datascientist_2019-2022_clean.csv
     (src/clean_seek.py): a join is split only where the desktop rendering of
     the same ad shows a break, so "JavaScript" is never split. On the clean
     text Python is 84.5% (raw 82.8%) and SQL 57.0% (raw 56.8%); no skill
     goes down and the ranking is unchanged (rho 0.9996). Some joins cannot
     be recovered because both renderings are glued, which is why SQL moves
     less than the 365 mentions measured against the author's flags suggest.
-    The poster and data/processed/skill_counts_v2.csv still use the raw text.
+    The poster and data/2_demand/skill_counts_v2.csv still use the raw text.
 
  1. THE AUSTRALIAN ADS ARE 2019-2022.
     No LLM, RAG, prompt engineering or LangChain appears, because those tools
@@ -231,7 +232,7 @@ ETHICS Process in memory, do not commit resumes to the repo, and mask personal
     on disk. The team plan's example figures ("Python 71%, SQL 64%") were
     placeholders. The real numbers are Python 83%, SQL 57%, n = 3,204.
 
- 5. R AND Go ARE UNDER-COUNTED BY DESIGN in config/skills_seed.csv. A bare "R"
+ 5. R AND Go ARE UNDER-COUNTED BY DESIGN in the dictionary. A bare "R"
     matches "R&D" and a bare "Go" matches the verb, so we only catch explicit
     forms (R programming, RStudio, golang). R's true share is higher than we
     report. Disclose it or improve the pattern - do not quietly publish it.
@@ -242,17 +243,17 @@ ETHICS Process in memory, do not commit resumes to the repo, and mask personal
 ================================================================================
 
    src/extract_skills.py    ads -> skill counts + an (ad, skill) long table
-   src/chart_top15.py       the block 5 chart, 300 dpi, A0 column at 1:1
-   src/chart_sources.py     the block 3 source cards
    src/map_to_esco.py       our dictionary -> ESCO concept URIs
    src/scrape_handbook.py   UTS subjects + learning outcomes
    src/fetch_ats.py         live Australian ads, full text
    src/fetch_adzuna.py      Australian ads, TRUNCATED text
-   src/source_counts.py     row counts for every file in data/raw
+   The poster's chart_top15.py (block 5), chart_sources.py (block 3) and
+   source_counts.py (row counts) are frozen in archive/poster_AT2A/scripts/.
 
-   config/skills_seed.csv   133 skills with aliases. MEANT TO BE EDITED - add
-                            anything the ads say that it misses.
-   config/skill_to_esco.csv the mapping, produced by map_to_esco.py
+   data/1_knowledge/skills/original/skills_seed.csv    133 skills with aliases
+   data/1_knowledge/skills/original/skill_to_esco.csv  the mapping, by map_to_esco.py
+   The app's dictionary is data/1_knowledge/skills/skills_seed_v2.csv. MEANT TO BE
+   EDITED - add anything the ads say that it misses, through a pull request.
 
    pip install -r requirements.txt
 ================================================================================

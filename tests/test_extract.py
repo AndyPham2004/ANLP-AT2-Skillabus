@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+from skillabus import paths
 from skillabus.extract import extract, load_dictionary, split_sentences
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,7 +21,7 @@ def candidates(text):
 
 
 def poster_gap():
-    with open(ROOT / "data/processed/gap.csv", encoding="utf-8") as f:
+    with open(paths.POSTER_GAP, encoding="utf-8") as f:   # archive/poster_AT2A/data/gap.csv
         return list(csv.DictReader(line for line in f if not line.startswith("#")))
 
 

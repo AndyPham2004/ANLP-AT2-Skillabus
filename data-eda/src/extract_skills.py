@@ -1,29 +1,35 @@
 """Dictionary-based skill extraction from job advertisement text.
 
-Reads a CSV of job ads, matches every alias in config/skills_seed.csv against the
-ad text, and writes two outputs:
+Reads a CSV of job ads, matches every alias in data/1_knowledge/skills/original/skills_seed.csv
+(or --seed) against the ad text, and writes two outputs to data/runtime/extract_skills/:
 
-  outputs/skill_counts.csv   one row per skill: how many ads mention it (feeds poster block 5)
-  outputs/ad_skill_long.csv  one row per (ad, skill) pair (feeds C's matching step)
+  skill_counts.csv   one row per skill: how many ads mention it (fed poster block 5)
+  ad_skill_long.csv  one row per (ad, skill) pair (fed C's matching step)
+
+The poster run's two files are frozen in archive/poster_AT2A/data/. recount_recent.py,
+count_glassdoor_au.py and notebooks/vt_eda.py import build_patterns() and extract() from here.
 
 This is the "traditional" arm of the traditional-vs-neural comparison the brief
 rewards. It is deliberately simple and fully inspectable: every match traces back
 to a literal string in the seed dictionary.
 
-Usage:
-    python src/extract_skills.py --input data/raw/postings.csv --text-col description
+Usage (from the repo root):
+    python data-eda/src/extract_skills.py --input data/raw/postings.csv --text-col description
 """
 
 import argparse
 import logging
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SEED = ROOT / "config" / "skills_seed.csv"
-DEFAULT_OUT = ROOT / "outputs"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_SEED = paths.SKILLS_SEED_V1
+DEFAULT_OUT = paths.RUNTIME / "extract_skills"   # scratch: the poster outputs are frozen in the archive
 
 # Characters that may not sit directly beside a match. Unlike \b this tolerates
 # aliases ending in punctuation, so "c++" and "c#" match but "c++x" does not.
@@ -37,7 +43,7 @@ log = logging.getLogger("extract_skills")
 
 def build_patterns(seed_path):
     """Compile one regex per skill from its pipe-separated literal aliases."""
-    # data/processed/skills_seed_v2.csv opens with a "# ..." provenance line. Skip that
+    # data/1_knowledge/skills/skills_seed_v2.csv opens with a "# ..." provenance line. Skip that
     # line only: comment="#" would also cut the C# row down to "C".
     with open(seed_path, encoding="utf-8") as f:
         has_comment = f.readline().startswith("#")

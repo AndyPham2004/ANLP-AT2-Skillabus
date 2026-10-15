@@ -2,7 +2,7 @@
 
 > Draft by Van Thong (with Claude), updated 14 Oct 2026. Every number below comes from
 > `notebooks/vt_eda.ipynb`, which runs on committed files only, or from the file named next
-> to it. The script behind each file is named in `data-eda/data/clean/README.txt` and
+> to it. The script behind each file is named in `data/2_demand/ads/CLEANING_NOTES.txt` and
 > `data/README.md`. The 2026 job-board sample is final as of the last fetch on 14 Oct;
 > a second fetch that evening found no new data role.
 
@@ -29,7 +29,7 @@ every source and what it is used for.
 | ESCO v1.2.1 (European Commission, 2025) | 13,960 skills, 100,135 labels | 2025 | normalisation vocabulary |
 | O\*NET 31.0 (National Center for O\*NET Development, 2026) | 8,753 tool names | 2026 | tools ESCO lacks |
 
-Skills are first found with a 148-skill dictionary (`data/processed/skills_seed_v2.csv`)
+Skills are first found with a 148-skill dictionary (`data/1_knowledge/skills/skills_seed_v2.csv`)
 written from the way ads phrase things, so "power bi", "powerbi" and "Power BI" are one skill.
 Ten tool rows (Kafka, Linux, Jira, SAP and others) were added on 14 Oct for the IT roles; none
 of them reaches 5% of the Seek ads, so the demand ranking is unchanged.
@@ -101,7 +101,7 @@ The poster feedback pointed out that learning objectives alone miss what a subje
 teaches. Each subject is therefore split into one row per piece of text, labelled by layer
 (Table 3.2), so a recommendation can quote the exact sentence and say where it came from.
 
-**Table 3.2.** Subject profiles (`data/processed/subject_profiles.csv`, 6,853 rows, 360 subjects).
+**Table 3.2.** Subject profiles (`data/1_knowledge/uts/subject_profiles.csv`, 6,853 rows, 360 subjects).
 
 | Layer | Rows | Subjects | Source |
 |---|---|---|---|
@@ -128,7 +128,7 @@ subjects can rank low for lack of text rather than lack of content.
 
 ## 3.5 What the market asks for
 
-![Top technical skills](../../data-eda/outputs/figures/fig1_top_skills.png)
+![Top technical skills](../figures/fig1_top_skills.png)
 
 *Figure 3.1. Share of the 3,204 Seek ads naming each technical skill.*
 
@@ -137,7 +137,7 @@ After them only predictive modelling passes 30%, and 24 technical skills appear 
 10% of ads. A typical ad names eight technical skills (interquartile range 5–11), and 32% ask
 for all of Python, SQL and statistics. Communication appears in 30% of ads, more often than
 any technical skill outside the top five. The app's demand figures
-(`data/processed/skill_counts_v2.csv`) are the poster's counts on the uncleaned text; they are
+(`data/2_demand/skill_counts_v2.csv`) are the poster's counts on the uncleaned text; they are
 within 1.7 points of Figure 3.1 and rank skills the same way (rank correlation 0.9991 over
 the 123 technical skills named in both; notebook section 3).
 
@@ -150,7 +150,7 @@ mostly disagree in one direction: for 3,348 of the author's 3,734 extra positive
 does not appear in the ad at all (their R flag fires on 70% of ads). Our own misses were
 mainly the welded words fixed in section 3.3. This measures agreement, not accuracy;
 accuracy comes from the hand-labelled test set in section 6. Its two annotators labelled the
-same 20 ads independently (`data/labels/ad_skills.csv`) and agree with a Cohen's kappa of 0.856
+same 20 ads independently (`data/4_evaluation/labels/ad_skills.csv`) and agree with a Cohen's kappa of 0.856
 on dictionary skills (20 ads × 148 skills, 2,960 items) and 0.686 when free-text labels are
 included (4,580 items), computed with the evaluation harness's `annotator_agreement` (notebook
 section 4).
@@ -173,10 +173,10 @@ changes: the January 2024 sample is mostly data engineers and analysts.
 ## 3.7 Recent ads and the LLM shift
 
 The plan asked for about 150 Australian ads from 2026. Seek, LinkedIn and Indeed forbid
-scraping, so we listed 206 candidate employers (`data-eda/config/ats_candidates.csv`) and probed
+scraping, so we listed 206 candidate employers (`data/2_demand/collection/ats_candidates.csv`) and probed
 their boards on five public job-board APIs: 94 boards at 89 employers answered with jobs
-(`data-eda/data/clean/ats_probe_2026-10-13.csv`), and 65 boards, mostly those with Australian
-roles (`data-eda/config/ats_companies.csv`), were fetched on 14 Oct. A 2026 ad counts only if its
+(`data/2_demand/collection/ats_probe_2026-10-13.csv`), and 65 boards, mostly those with Australian
+roles (`data/2_demand/collection/ats_companies.csv`), were fetched on 14 Oct. A 2026 ad counts only if its
 title is a data role (sales roles that sell analytics are excluded), it was posted within 60
 days of the day it was fetched, and its employer has not already given three in the same
 group (data scientists, or other data roles). Twelve older
@@ -184,9 +184,9 @@ ads, kept open for months, were dropped this way. The sample is 22 ads: 9 data-s
 titles from 5 employers, the like-for-like group for the Seek file, and 13 other data roles.
 Adzuna adds 32 roles, but its API cuts every description at 500 characters, so they are
 excluded from skill shares. All periods use the same dictionary, cleaning and code
-(`data/processed/skill_counts_2026.csv`).
+(`data/2_demand/skill_counts_2026.csv`).
 
-![LLM-era skills over time](../../data-eda/outputs/figures/fig2_llm_trend.png)
+![LLM-era skills over time](../figures/fig2_llm_trend.png)
 
 *Figure 3.2. Australian data ads naming an LLM-era skill, with 95% Wilson intervals (n = 3,204; 122; 9; 22).*
 
@@ -220,7 +220,7 @@ these are the skills normalisation tags as emerging (section 4).
 **Roles beyond Data Scientist.** The Seek file has Data Scientist titles only. For six other
 roles (data engineer, data analyst, software, business analyst, cloud and machine-learning
 engineer) the app uses a 2023 dataset of 10,925 Australian postings whose author lists the
-tools each ad names (`data/processed/role_profiles.csv`). Data engineers ask most for SQL
+tools each ad names (`data/2_demand/role_profiles.csv`). Data engineers ask most for SQL
 (69%), Python (57%), Azure (43%) and AWS (42%); cloud engineers for Azure (42%), AWS (38%) and
 Terraform (20%). The lists hold tools only, so concepts such as machine learning never
 appear, and Data Scientist keeps the Seek profile. The dataset's own extractor also counts the
@@ -228,7 +228,7 @@ English word "go" as the Go language, so Go is counted only from "golang".
 
 ## 3.8 Market against curriculum
 
-![Market demand against the UTS curriculum](../../data-eda/outputs/figures/fig3_subject_coverage.png)
+![Market demand against the UTS curriculum](../figures/fig3_subject_coverage.png)
 
 *Figure 3.3. The 25 most-demanded technical skills (share of the 3,204 Seek ads), coloured by
 whether any of the 360 UTS subjects names them.*

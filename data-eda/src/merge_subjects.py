@@ -6,8 +6,8 @@ rows are merged on subject_code: the first non-empty value wins for every column
 order; a later file only fills gaps.
 
 Usage (from the repo root):
-    python data-eda/src/merge_subjects.py --out data-eda/data/raw/uts_subjects_2026.csv \
-        data-eda/data/raw/uts_subjects_2026_batch1.csv data-eda/data/raw/uts_subjects_2026_batch2.csv
+    python data-eda/src/merge_subjects.py --out data/raw/uts_subjects_2026.csv \
+        data/raw/uts_subjects_2026_batch1.csv data/raw/uts_subjects_2026_batch2.csv
 """
 
 from __future__ import annotations

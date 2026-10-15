@@ -43,15 +43,18 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_IN = ROOT / "data" / "raw" / "resumes_us_2021.csv"
-DEFAULT_OUT = ROOT / "data" / "clean" / "resumes_us_2021_clean.csv"
-SKILL_SEED = ROOT / "config" / "skills_seed.csv"
-ONET_TOOLS = ROOT / "data" / "raw" / "taxonomy_onet_v31" / "software_skills.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_IN = paths.RESUMES_RAW
+DEFAULT_OUT = paths.RESUMES
+SKILL_SEED = paths.SKILLS_SEED_V1
+ONET_TOOLS = paths.ONET_TOOLS_RAW
 
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 # Tight on purpose: a looser pattern matched date ranges like "2012 - 12". Spaces around a

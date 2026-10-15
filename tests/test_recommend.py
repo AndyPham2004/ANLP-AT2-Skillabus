@@ -1,7 +1,7 @@
 """Tests for recommend() and the learning path. Run: pytest tests/
 
 They read tests/fixtures/subject_profiles_sample.csv: the 2026 Handbook rows of the 19 MDSI
-subjects and 12 others, taken from app/mock/subject_layers.csv.
+subjects and 12 others, taken from the 3 Oct mock (archive/mock_2026-10-03/subject_layers.csv).
 """
 from pathlib import Path
 
@@ -60,7 +60,7 @@ def test_no_gaps_and_bad_inputs():
     with pytest.raises(ValueError):
         recommend([gap("Deep learning")], PROFILES, method="bm25")
     with pytest.raises(FileNotFoundError):
-        recommend([gap("Deep learning")], "data/processed/no_such_file.csv", method="keyword")
+        recommend([gap("Deep learning")], "data/1_knowledge/uts/no_such_file.csv", method="keyword")
 
 
 # ---------------------------------------------------------------------------- evidence

@@ -1,8 +1,9 @@
 """Which Australian employers can we reach through a public ATS job-board API, and how many
 data-scientist ads do they have open right now?
 
-Reads config/ats_candidates.csv (one row per company, a slug guess per platform; blank = not
-tried), hits each platform's public listing endpoint, and writes data/clean/ats_probe_<date>.csv
+Reads data/2_demand/collection/ats_candidates.csv (one row per company, a slug guess per platform;
+blank = not tried), hits each platform's public listing endpoint, and writes
+data/2_demand/collection/ats_probe_<date>.csv
 with one row per (company, platform): status, total ads, Australian ads, Australian data roles,
 Australian data-scientist roles. No key, no login; these endpoints exist to render the
 companies' own careers pages (see fetch_ats.py).
@@ -17,6 +18,7 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import sys
 import time
 from datetime import date
 from pathlib import Path
@@ -27,7 +29,9 @@ import requests
 from build_recent_sample import DATA_TITLE
 from fetch_ats import AU_PATTERN, HEADERS, fetch_ashby, fetch_greenhouse, fetch_lever, fetch_smartrecruiters, fetch_workable, to_text
 
-ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
 DS_TITLE = re.compile(r"data scien|applied scien|research scien|machine learning|\bML\b|AI scientist", re.I)
 BARE_AI = re.compile(r"\bAI\b", re.I)
 PLATFORMS = ("greenhouse", "lever", "smartrecruiters", "ashby", "workable")
@@ -88,10 +92,10 @@ def probe(session, platform: str, slug: str) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--candidates", type=Path, default=ROOT / "config" / "ats_candidates.csv")
+    parser.add_argument("--candidates", type=Path, default=paths.ATS_CANDIDATES)
     parser.add_argument("--only", nargs="*", default=None, help="company names to probe")
     parser.add_argument("--delay", type=float, default=0.8)
-    parser.add_argument("--out", type=Path, default=ROOT / "data" / "clean" / f"ats_probe_{date.today().isoformat()}.csv")
+    parser.add_argument("--out", type=Path, default=paths.COLLECTION / f"ats_probe_{date.today().isoformat()}.csv")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 

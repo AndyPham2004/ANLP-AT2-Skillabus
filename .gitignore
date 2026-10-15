@@ -1,8 +1,8 @@
-# Raw datasets: re-download, see data/README.md
+# Only data/ holds data (layout of 15 Oct 2026, data/README.md). Not committed:
+# downloads, re-download as data/README.md says
 data/raw/
-# Van Thong's data folder: cleaned data is committed, raw downloads are not
-data-eda/data/*
-!data-eda/data/clean/
+# written while the app and pipeline run: votes, GPT and Lightcast caches, vector indexes
+data/runtime/
 *.zip
 *.parquet
 *.csv.gz
@@ -18,8 +18,7 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# Model caches, vector stores
-models/
+# Vector stores
 *.faiss
 *.index
 
@@ -29,6 +28,8 @@ models/
 Thumbs.db
 .DS_Store
 desktop.ini
+# understand-anything knowledge graph (Claude tooling, local only)
+.ua/
 
 # Quan's own files: poster prompts, design guides, Vietnamese notes, Claude Code notes
 private/
@@ -36,9 +37,10 @@ CLAUDE.md
 .claude/settings.local.json
 !.env.example
 
-# Votes written by the app during testing
-data/processed/feedback.csv
-
-# LLM and Lightcast response caches. The 30 GPT-4o-mini files for the evaluation sets are committed with
-# `git add -f` (data/cache/llm_extract/README.md); files the app writes for user ads and resumes stay ignored.
+# Old places of local data, before 15 Oct 2026. Still ignored so nothing left there is committed by
+# mistake; move it as the layout PR says (raw -> data/raw/, caches and votes -> data/runtime/), then
+# delete these lines after the 17 Oct submission.
+data-eda/data/
+models/
 data/cache/
+data/processed/feedback.csv

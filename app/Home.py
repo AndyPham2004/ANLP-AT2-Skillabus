@@ -27,9 +27,10 @@ except Exception:
 
 import backend  # noqa: E402
 import chat  # noqa: E402
+from skillabus import paths  # noqa: E402  (backend puts src/ on sys.path)
 
-MOCK = ROOT / "app" / "mock"
-FEEDBACK_CSV = ROOT / "data" / "processed" / "feedback.csv"
+MOCK = paths.SAMPLES
+FEEDBACK_CSV = paths.FEEDBACK
 INK, BLUE, COPPER, PARTIAL, MUTED = "#0b1a2e", "#1f4e8c", "#c2410c", "#e9a27a", "#5b6678"
 LAYER_LABEL = {
     "learning_objective": ("Learning objective", "taught and assessed"),

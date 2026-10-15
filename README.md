@@ -7,31 +7,36 @@ yet have, and which subject fills each gap. Poster title: *Syllabus to Seek*.
 
 | Part | Deliverable | Due |
 | --- | --- | --- |
-| AT2A | Digital poster: `poster/AT2A_Poster_Skillabus_A0.pdf` + the HTML source | 26 Sep 2026 |
+| AT2A | Digital poster: `archive/poster_AT2A/poster/AT2A_Poster_Skillabus_A0.pdf` + the HTML source | 26 Sep 2026 |
 | AT2B | Streamlit app + technical report (`app/`, `docs/`) | 17 Oct 2026 |
 
 ## Layout
 
 ```text
-poster/     AT2A_Poster_Skillabus.html         the poster (single source: layout + content)
-            AT2A_Poster_Skillabus_A0.pdf       vector PDF for Canvas, 1189 x 841 mm
-            AT2A_Poster_Skillabus_preview.png  quick preview
-            figures/uts_logo.png
-src/        export_poster.py   HTML -> PDF + PNG with headless Chrome
-            skillabus/         the pipeline: extract, normalise, match, recommend, rag, evaluate
-data/       raw/               not committed; Van Thong's data-eda folder goes in raw/data-eda/
-            processed/         skills_seed_v2.csv (the one dictionary), skill_counts_v2.csv,
-                               top_skills.csv, gap.csv: the numbers behind poster blocks 5, 6, 7
-            labels/            hand-made test sets, with column templates
-            README.md          every source with a link
+app/        Streamlit app (AT2B); app/mock/ holds only the sample ad and resume
+src/        skillabus/         the pipeline: extract, normalise, match, recommend, rag, evaluate;
+                               paths.py declares every path the code uses
+            make_qr.py         QR code for the deployed app (docs/deploy.md)
+tests/      pytest, with small fixtures
+data/       1_knowledge/       what the app looks up: skill dictionary, ESCO, UTS subjects, outside courses
+            2_demand/          what employers ask for: skill counts, role profiles, cleaned ads
+            3_tuning/          which threshold was set on which data
+            4_evaluation/      test labels, the inputs they were made on, results, the GPT cache
+            5_crosscheck/      other platforms and markets, ESCO coverage
+            raw/, runtime/     not committed: downloads; votes, caches and indexes the app writes
+            README.md          the map (every file, who made it, how to rebuild it) and every source
+data-eda/   Van Thong's scripts that collect and clean the data (code only)
+notebooks/  exploration, <initials>_<topic>.ipynb; vt_eda is the EDA
 docs/       team_plan.md       AT2B tasks, owners, reviewers, milestones
-            plan/              gantt.html and tasks_by_person.html (open in a browser)
             data_contract.md   the JSON/CSV shapes between pipeline and app
+            deploy.md          putting the app on Streamlit Community Cloud
             report/            the technical report, one file per section
-            handoffs/          what each teammate delivered for the poster, with figures
-notebooks/  exploration only, <initials>_<topic>.ipynb
-app/        Streamlit app (AT2B)
+            figures/           the EDA figures the report uses
+            notes/             working notes and plans (gantt.html, tasks_by_person.html: open in a browser)
+archive/    frozen: the AT2A poster with its data and handoffs, the 3 Oct mock (archive/README.md)
 ```
+
+Only `data/` holds data, and every path the code uses comes from `src/skillabus/paths.py`.
 
 ## Working on AT2B
 
@@ -52,7 +57,8 @@ streamlit run app/Home.py
 
 It works without any key: the analysis falls back to `app/baseline.py` (dictionary + keyword
 match) until the stages in `src/skillabus/` are implemented, and the chat shows Handbook passages
-instead of a written answer until `OPENAI_API_KEY` is set. Screens: `docs/wireframes/`.
+instead of a written answer until `OPENAI_API_KEY` is set. Screens: `docs/wireframes/`. To put it
+online, see [docs/deploy.md](docs/deploy.md).
 
 ## Using the app
 
@@ -107,15 +113,7 @@ Australian Data Scientist ads; other roles and the 2026 sample are described in
 
 ## Rebuild the poster
 
-```powershell
-python src/export_poster.py     # writes the PDF and PNG next to the HTML
-```
-
-Edit `poster/AT2A_Poster_Skillabus.html` directly; charts are plain HTML bars whose
-widths and labels come from `data/processed/`. Rules the team follows: under 800
-words, body text 24 pt or more, two fonts (IBM Plex Sans, IBM Plex Serif for
-quotes), two colours plus ink, direct labels, every chart captioned with source
-and n.
+The AT2A poster is frozen in [`archive/poster_AT2A/`](archive/README.md) with the data behind each block; `python archive/poster_AT2A/tools/export_poster.py` rebuilds its PDF.
 
 ## Team
 

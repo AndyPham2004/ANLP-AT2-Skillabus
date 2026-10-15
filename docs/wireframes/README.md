@@ -20,7 +20,7 @@ Run it yourself: `streamlit run app/Home.py`.
 | Layer label on every piece of subject evidence | Marker: Handbook learning objectives alone miss what is taught. Topics and (soon) assessments count too, and the label says how strong the evidence is |
 | Shortest path, weighted by employer demand | The innovation: no existing tool turns a skill gap into a short list of specific subjects |
 | "✦ new" tag on LLMs and generative AI, with the 2023-24 US figure in the caption | Marker: how are emerging skills handled? They are kept and flagged, not dropped because ESCO and the 2019-22 ads predate them |
-| Thumbs up/down with "I've taken it" | Marker: validate the subject-skill mappings. Votes go to `data/processed/feedback.csv` |
+| Thumbs up/down with "I've taken it" | Marker: validate the subject-skill mappings. Votes go to `data/runtime/feedback.csv` |
 | One number first, few words, poster colours | Marker: the poster was text-dense. The app leads with the answer |
 | "Engine: baseline / pipeline" line | Honest about which method produced the result while the pipeline is being built |
 | Resume never stored or sent to the LLM | Ethics block on the poster |

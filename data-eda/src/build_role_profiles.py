@@ -13,7 +13,7 @@ Steps:
   2. Seven roles; the senior titles fold into their role:
        Data Engineer (+ Senior), Data Analyst (+ Senior), Data Scientist (+ Senior),
        Software Engineer, Business Analyst, Cloud Engineer, Machine Learning Engineer.
-  3. Each tool name -> a skill of data/processed/skills_seed_v2.csv: by canonical name or
+  3. Each tool name -> a skill of data/1_knowledge/skills/skills_seed_v2.csv: by canonical name or
      alias, or through TOKEN_MAP for the dataset's bare names ("shell", "word").
      Unmapped names are counted in the log and left out. "go" is dropped as well: the
      dataset's extractor counts the English word (Go in 9% of Data Analyst ads), so Go
@@ -21,7 +21,7 @@ Steps:
   4. Per role and skill: ads naming it, share of the role's ads that name any tool, and
      the 95% Wilson interval.
 
-Output: data/processed/role_profiles.csv
+Output: data/2_demand/role_profiles.csv
     role, skill, category, n_ads, pct_ads, pct_low, pct_high, total_ads, source
 
 Usage (from the repo root):
@@ -35,6 +35,7 @@ import argparse
 import ast
 import csv
 import logging
+import sys
 from collections import Counter
 from pathlib import Path
 
@@ -42,11 +43,12 @@ import pandas as pd
 
 from recount_recent import wilson
 
-ROOT = Path(__file__).resolve().parents[1]          # data-eda/
-REPO = ROOT.parent
-DEFAULT_DATA = ROOT / "data" / "raw" / "data_jobs_hf" / "data_jobs.csv"
-SEED = REPO / "data" / "processed" / "skills_seed_v2.csv"
-OUT = REPO / "data" / "processed" / "role_profiles.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_DATA = paths.DATA_JOBS_RAW
+SEED = paths.SKILLS_SEED
+OUT = paths.ROLE_PROFILES
 SOURCE = "lukebarousse/data_jobs (2023, Australia)"
 
 ROLES = {

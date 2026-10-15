@@ -79,11 +79,10 @@ and Phuong Nhi**.
 | `demand_pct_2026` | Same over the 2026 sample; `null` until that sample exists |
 | `layer` | `learning_objective`, `assessment`, `weekly_topic`, `description` (strongest first) |
 
-## 3. Subject profiles: `data/processed/subject_profiles.csv`
+## 3. Subject profiles: `data/1_knowledge/uts/subject_profiles.csv`
 
-One row per piece of subject text. Until Van Thong's file lands, `app/mock/subject_layers.csv`
-has the same columns built from the Handbook alone (learning objectives, topics, description;
-no assessments yet), by `app/mock/build_mock.py`.
+One row per piece of subject text. The 3 Oct mock with the same columns, built from the Handbook
+alone (learning objectives, topics, description; no assessments), is frozen in `archive/mock_2026-10-03/`.
 
 | Column | Example |
 |---|---|
@@ -106,6 +105,6 @@ share the `subject_code` key:
 | `offerings.csv` | one teaching period × mode | `teaching_period` ("Autumn Session"), `mode` |
 | `external_courses.csv` | one sentence or module of an outside course | same 7 columns as the profiles, `subject_code` = `EXT-<provider>-<slug>`, `course` = `external`, plus `provider`, `cost` (free / free-to-audit / paid), `date_checked` |
 
-## 4. Feedback votes: `data/processed/feedback.csv` (written by the app)
+## 4. Feedback votes: `data/runtime/feedback.csv` (written by the app, not in git)
 
 `timestamp, subject_code, skill_label, vote (up|down), has_taken_subject (y|n)`. No names.

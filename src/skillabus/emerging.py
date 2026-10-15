@@ -47,14 +47,13 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from . import paths
 from .extract import load_dictionary
 
-ROOT = Path(__file__).resolve().parents[2]
-CLEAN = ROOT / "data-eda" / "data" / "clean"
-OLD_CSV = CLEAN / "jobs_au_seek_datascientist_2019-2022_clean.csv"
-NEW_CSV = CLEAN / "jobs_au_recent_2024-2026_clean.csv"
-ESCO_CSV = CLEAN / "esco_label_lookup.csv"
-OUT_CSV = ROOT / "data" / "processed" / "emerging_candidates.csv"
+OLD_CSV = paths.SEEK_ADS
+NEW_CSV = paths.RECENT_ADS
+ESCO_CSV = paths.ESCO_LABEL_LOOKUP
+OUT_CSV = paths.EMERGING_CANDIDATES
 
 METHODS = ("ngram", "spacy", "llm")
 MAX_N = 3              # longest n-gram
@@ -331,7 +330,7 @@ def main() -> None:
     if "llm" in methods:
         try:
             from dotenv import load_dotenv
-            load_dotenv(ROOT / ".env")
+            load_dotenv(paths.ENV_FILE)
         except ImportError:
             pass
         if not os.getenv("OPENAI_API_KEY"):

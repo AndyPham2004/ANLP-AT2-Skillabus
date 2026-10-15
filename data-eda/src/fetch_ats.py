@@ -28,20 +28,23 @@ cross-checks the LinkedIn corpus, not as a replacement for it.
 
 Usage:
     python src/fetch_ats.py --australia-only
-    python src/fetch_ats.py --companies config/ats_companies.csv
+    python src/fetch_ats.py --companies ../data/2_demand/collection/ats_companies.csv
 """
 
 import argparse
 import html as html_lib
 import logging
 import re
+import sys
 import time
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
 GREENHOUSE = "https://boards-api.greenhouse.io/v1/boards/{slug}/jobs"
 LEVER = "https://api.lever.co/v0/postings/{slug}"
 SMARTRECRUITERS = "https://api.smartrecruiters.com/v1/companies/{slug}/postings"
@@ -210,10 +213,10 @@ AU_PATTERN = re.compile(
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--companies", default=ROOT / "config" / "ats_companies.csv", type=Path)
+    parser.add_argument("--companies", default=paths.ATS_COMPANIES, type=Path)
     parser.add_argument("--australia-only", action="store_true",
                         help="keep only roles whose location looks Australian")
-    parser.add_argument("--out", default=ROOT / "data" / "raw" / "ats_ads.csv", type=Path)
+    parser.add_argument("--out", default=paths.RAW / "ats_ads.csv", type=Path)
     parser.add_argument("--delay", type=float, default=0.8)
     parser.add_argument("--insecure", action="store_true")
     args = parser.parse_args()

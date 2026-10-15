@@ -28,7 +28,7 @@ Streamlit Community Cloud, free, deploys from the private GitHub repo. About 10 
 
 - Set a spending limit on the OpenAI key (Settings → Limits). GPT-4o-mini costs a fraction of a
   cent per analysis; a limit of USD 10 is plenty.
-- Votes go to `data/processed/feedback.csv` on the cloud machine, which is wiped on every
+- Votes go to `data/runtime/feedback.csv` on the cloud machine, which is wiped on every
   redeploy. Download it from the app's machine before redeploying, or ask testers to vote in one
   session. (A shared store is a later improvement.)
 - The app is public by link. Tell testers to use the sample resume or their own without contact

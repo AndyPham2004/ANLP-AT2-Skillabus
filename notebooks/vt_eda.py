@@ -15,10 +15,10 @@
 #
 # 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 14 Oct 2026
 #
-# **Runs on committed files only** (`data-eda/data/clean/`, `data-eda/outputs/`,
-# `data/processed/`), so it works on a fresh clone. Raw downloads are not needed; each
+# **Runs on committed files only** (everything under `data/`; every path comes from
+# `src/skillabus/paths.py`), so it works on a fresh clone. Raw downloads are not needed; each
 # section names the script that built its input. Figures for the report are written to
-# `data-eda/outputs/figures/`.
+# `docs/figures/`.
 #
 # Each section answers a question the app depends on:
 #
@@ -45,14 +45,15 @@ import numpy as np
 import pandas as pd
 
 REPO = Path.cwd().parent if Path.cwd().name == "notebooks" else Path.cwd()
-DE = REPO / "data-eda"
-CLEAN, OUT, PROC = DE / "data" / "clean", DE / "outputs", REPO / "data" / "processed"
-FIG = OUT / "figures"
-FIG.mkdir(parents=True, exist_ok=True)
-sys.path.insert(0, str(DE / "src"))
+sys.path.insert(0, str(REPO / "src"))
+sys.path.insert(0, str(REPO / "data-eda" / "src"))
 logging.getLogger("extract_skills").setLevel(logging.WARNING)
 
 from extract_skills import build_patterns, extract  # noqa: E402
+from skillabus import paths  # noqa: E402  (every data path in one place)
+
+FIG = paths.FIGURES
+FIG.mkdir(parents=True, exist_ok=True)
 
 pd.set_option("display.max_colwidth", 80)
 pd.set_option("display.width", 140)
@@ -67,7 +68,7 @@ plt.rcParams.update({
     "savefig.bbox": "tight",
 })
 
-SEED = PROC / "skills_seed_v2.csv"          # the one dictionary the app uses
+SEED = paths.SKILLS_SEED                    # the one dictionary the app uses
 patterns = build_patterns(SEED)
 seed = pd.read_csv(SEED, skiprows=1)         # skiprows, not comment="#": the file contains C#
 cat = seed.set_index("canonical").category
@@ -102,13 +103,13 @@ def spearman(a: pd.Series, b: pd.Series) -> tuple[float, int]:
 # ## 1. What data do we have?
 
 # %%
-seek = pd.read_csv(CLEAN / "jobs_au_seek_datascientist_2019-2022_clean.csv", parse_dates=["listingDate"])
-recent = pd.read_csv(CLEAN / "jobs_au_recent_2024-2026_clean.csv")
-resumes = pd.read_csv(CLEAN / "resumes_us_2021_clean.csv")
-esco = pd.read_csv(CLEAN / "esco_skills_clean.csv")
-lookup = pd.read_csv(CLEAN / "esco_label_lookup.csv")
-label_sample = pd.read_csv(CLEAN / "seek_label_sample_200.csv")
-profiles = pd.read_csv(PROC / "subject_profiles.csv", dtype={"subject_code": str})
+seek = pd.read_csv(paths.SEEK_ADS, parse_dates=["listingDate"])
+recent = pd.read_csv(paths.RECENT_ADS)
+resumes = pd.read_csv(paths.RESUMES)
+esco = pd.read_csv(paths.ESCO_SKILLS_CLEAN)
+lookup = pd.read_csv(paths.ESCO_LABEL_LOOKUP)
+label_sample = pd.read_csv(paths.LABEL_SAMPLE)
+profiles = pd.read_csv(paths.SUBJECT_PROFILES, dtype={"subject_code": str})
 
 inventory = pd.DataFrame([
     ("Seek Data Scientist ads", len(seek), "2019-22", "demand_pct (main demand)", "clean_seek.py"),
@@ -119,14 +120,14 @@ inventory = pd.DataFrame([
     ("ESCO skill concepts", len(esco), "v1.2.1", "normalise()", "clean_esco.py"),
     ("ESCO label lookup rows", len(lookup), "v1.2.1", "normalise()", "clean_esco.py"),
     ("Label sample (ads)", len(label_sample), "2019-22", "extraction test set", "make_label_sample.py"),
-    ("Skill dictionary", len(seed), "v2", "extract() tier 1", "data/processed/"),
-    ("Prerequisite items", len(pd.read_csv(PROC / "prerequisites.csv", dtype=str)), "2026",
+    ("Skill dictionary", len(seed), "v2", "extract() tier 1", "data/1_knowledge/skills/"),
+    ("Prerequisite items", len(pd.read_csv(paths.PREREQUISITES, dtype=str)), "2026",
      "recommend(): order, anti-requisites", "scrape_requisites.py"),
-    ("Teaching sessions", len(pd.read_csv(PROC / "offerings.csv", dtype=str)), "2026",
+    ("Teaching sessions", len(pd.read_csv(paths.OFFERINGS, dtype=str)), "2026",
      "recommend(): when a subject runs", "scrape_requisites.py"),
-    ("Role profile rows", len(pd.read_csv(PROC / "role_profiles.csv")), "2023, 7 roles",
+    ("Role profile rows", len(pd.read_csv(paths.ROLE_PROFILES)), "2023, 7 roles",
      "role picker, match()", "build_role_profiles.py"),
-    ("External course rows", len(pd.read_csv(PROC / "external_courses.csv", dtype=str)), "Oct 2026, 56 courses",
+    ("External course rows", len(pd.read_csv(paths.EXTERNAL_COURSES, dtype=str)), "Oct 2026, 56 courses",
      "recommend() tier 2", "external/ (Quan)"),
 ], columns=["data", "rows", "period", "used by", "built by"])
 inventory
@@ -188,8 +189,8 @@ print(joins.value_counts().head(15).to_dict())
 # 133-skill dictionary as the poster so the comparison is like for like:
 
 # %%
-poster = pd.read_csv(OUT / "skill_counts_PRIMARY.csv").set_index("skill").pct_ads   # raw text, Sept
-clean_133 = skill_shares(seek.assign(ad_id=seek.ad_id), pats=build_patterns(DE / "config" / "skills_seed.csv"))
+poster = pd.read_csv(paths.SKILL_COUNTS_PRIMARY).set_index("skill").pct_ads   # raw text, Sept
+clean_133 = skill_shares(seek.assign(ad_id=seek.ad_id), pats=build_patterns(paths.SKILLS_SEED_V1))
 delta = (clean_133.reindex(poster.index).fillna(0) - poster).round(1)
 rho, n = spearman(poster, clean_133)
 print(f"rank correlation raw vs clean: {rho:.4f} over {n} skills")
@@ -214,11 +215,11 @@ print(f"technical skills in >=20% of ads: {(tech.pct >= 20).sum()}  |  in >=10%:
 tech.head(15).round(1)
 
 # %% [markdown]
-# The app's demand figures, `data/processed/skill_counts_v2.csv` (counted on the raw text in
+# The app's demand figures, `data/2_demand/skill_counts_v2.csv` (counted on the raw text in
 # September), against Figure 3.1 (clean text): technical skills named in both.
 
 # %%
-v2 = pd.read_csv(PROC / "skill_counts_v2.csv").set_index("skill").pct_ads
+v2 = pd.read_csv(paths.SKILL_COUNTS).set_index("skill").pct_ads
 shared_v2 = [s for s in tech.index if v2.get(s, 0) > 0]
 rho_v2 = np.corrcoef(v2[shared_v2].rank(), tech.pct[shared_v2].rank())[0, 1]
 print(f"skill_counts_v2 vs Figure 3.1: rank correlation {rho_v2:.4f} over {len(shared_v2)} technical skills; "
@@ -271,7 +272,7 @@ print(f"ads asking for Python AND SQL AND statistics: {100 * len(core) / len(see
 # not accuracy.
 
 # %%
-agree = pd.read_csv(OUT / "extractor_agreement.csv")
+agree = pd.read_csv(paths.EXTRACTOR_AGREEMENT)
 print(f"median kappa {agree.kappa.median():.3f} over {len(agree)} tools; "
       f"{(agree.kappa >= 0.6).sum()} at 0.60 or above (substantial)")
 agree[["skill", "ours_pct", "theirs_pct", "agreement_pct", "kappa", "ours_only", "theirs_only"]]
@@ -282,7 +283,7 @@ agree[["skill", "ours_pct", "theirs_pct", "agreement_pct", "kappa", "ours_only",
 # term is not in the ad at all (their flag cannot be right).
 
 # %%
-parts = pd.read_csv(OUT / "extractor_agreement_decomposed.csv")
+parts = pd.read_csv(paths.EXTRACTOR_AGREEMENT_DECOMPOSED)
 print(f"their extra positives with the term absent from the ad: "
       f"{parts.absent_their_fp.sum():,} of {parts.theirs_only.sum():,}")
 parts
@@ -296,18 +297,17 @@ demand.loc[demand.index.isin(["R", "Go", "Artificial intelligence"]), ["pct"]].r
 
 # %% [markdown]
 # **Two people labelling the same ads.** The 20 `double_label = y` ads were labelled by
-# Hoai Thuong and Van Thong independently (`data/labels/ad_skills.csv`, #55 and #85). Cohen's
+# Hoai Thuong and Van Thong independently (`data/4_evaluation/labels/ad_skills.csv`, #55 and #85). Cohen's
 # kappa with the evaluation harness's own function, every (ad, skill) pair one item. The
-# harness command `python -m skillabus.evaluate kappa data/labels/ad_skills.csv
-# data/labels/ad_skills.csv --a-name hoaithuongnguyen-uts --b-name tompham9016 --dictionary
-# data/processed/skills_seed_v2.csv` gives the "all labels" row; the "dictionary skills" row
+# harness command `python -m skillabus.evaluate kappa data/4_evaluation/labels/ad_skills.csv
+# data/4_evaluation/labels/ad_skills.csv --a-name hoaithuongnguyen-uts --b-name tompham9016 --dictionary
+# data/1_knowledge/skills/skills_seed_v2.csv` gives the "all labels" row; the "dictionary skills" row
 # keeps only labels that are dictionary skills, since free-text labels cannot match between
 # two people's wording.
 
 # %%
-sys.path.insert(0, str(REPO / "src"))
 from skillabus import evaluate as ev  # noqa: E402
-LAB = str(REPO / "data" / "labels" / "ad_skills.csv")
+LAB = str(paths.AD_SKILLS)
 ann_a, ann_b = ev.load_ad_skills(LAB, "hoaithuongnguyen-uts"), ev.load_ad_skills(LAB, "tompham9016")
 both_ads = sorted(set(ann_a) & set(ann_b))
 dict_set = set(ev.load_dictionary(str(SEED)))
@@ -326,16 +326,16 @@ pd.DataFrame(rows, columns=["labels compared", "ads", "items", "kappa", "both", 
 # the method. Each comparison changes something different.
 
 # %%
-p133 = build_patterns(DE / "config" / "skills_seed.csv")
-li_us = pd.read_csv(OUT / "skill_counts_linkedin_us.csv").set_index("skill").pct_ads
-gd_au = pd.read_csv(OUT / "skill_counts_glassdoor_au_2022.csv").set_index("skill").pct_ads
+p133 = build_patterns(paths.SKILLS_SEED_V1)
+li_us = pd.read_csv(paths.SKILL_COUNTS_LINKEDIN_US).set_index("skill").pct_ads
+gd_au = pd.read_csv(paths.SKILL_COUNTS_GLASSDOOR_AU).set_index("skill").pct_ads
 jan24 = recent[(recent.period == "2024-01") & recent.full_text]
 li_au24 = skill_shares(jan24, pats=p133)
 checks = []
 for name, s, n, changes in [
-    ("Glassdoor Australia, 2022", gd_au, int(pd.read_csv(OUT / "skill_counts_glassdoor_au_2022.csv").total_ads_in_sample[0]),
+    ("Glassdoor Australia, 2022", gd_au, int(pd.read_csv(paths.SKILL_COUNTS_GLASSDOOR_AU).total_ads_in_sample[0]),
      "platform only"),
-    ("LinkedIn US, 2023-24 (Data Scientist)", li_us, int(pd.read_csv(OUT / "skill_counts_linkedin_us.csv").total_ads_in_sample[0]),
+    ("LinkedIn US, 2023-24 (Data Scientist)", li_us, int(pd.read_csv(paths.SKILL_COUNTS_LINKEDIN_US).total_ads_in_sample[0]),
      "country and year"),
     ("LinkedIn Australia, Jan 2024 (data roles)", li_au24, len(jan24), "year and role mix"),
 ]:
@@ -346,7 +346,7 @@ pd.DataFrame(checks, columns=["compared with Seek AU 2019-22", "ads", "what diff
 # %% [markdown]
 # ## 6. What changed after 2022?
 #
-# `data/processed/skill_counts_2026.csv` (`recount_recent.py`): every skill in three
+# `data/2_demand/skill_counts_2026.csv` (`recount_recent.py`): every skill in three
 # periods, same method. Adzuna rows are excluded because the API cuts their text at
 # 500 characters. A 2026 job-board ad counts only if it is `in_sample` (posted within 60
 # days of its snapshot, at most 3 per employer and role group; `build_recent_sample.py`).
@@ -354,7 +354,7 @@ pd.DataFrame(checks, columns=["compared with Seek AU 2019-22", "ads", "what diff
 # other data roles. Both samples are small, so intervals are wide.
 
 # %%
-c26 = pd.read_csv(PROC / "skill_counts_2026.csv")
+c26 = pd.read_csv(paths.SKILL_COUNTS_2026)
 LLM = ["Large language models", "Generative AI", "Prompt engineering", "RAG",
        "LangChain", "Vector databases", "Hugging Face", "Transformers"]
 c26[c26.skill.isin(LLM)][["skill", "pct_2019_22", "pct_2024_01", "n_2026", "pct_2026",
@@ -438,7 +438,7 @@ new[new.sum(axis=1) > 0].assign(in_dictionary=lambda d: [t.lower() in in_dict fo
 # %% [markdown]
 # ## 7. What does the UTS curriculum cover?
 #
-# `data/processed/subject_profiles.csv` (`build_subject_profiles.py`): one row per
+# `data/1_knowledge/uts/subject_profiles.csv` (`build_subject_profiles.py`): one row per
 # learning objective, assessment task, weekly topic or description sentence.
 
 # %%
@@ -542,7 +542,7 @@ resumes[resumes.n_data_skills >= 2].category.value_counts().head(8).to_frame().T
 # ## 9. How far does ESCO reach?
 
 # %%
-mapping = pd.read_csv(DE / "config" / "skill_to_esco.csv")
+mapping = pd.read_csv(paths.SKILL_TO_ESCO_V1)
 mapped = (mapping.esco_uri.fillna("") != "").sum()
 amb = lookup[lookup.ambiguous]
 print(f"ESCO: {len(esco):,} concepts, {lookup.label.nunique():,} distinct labels")
