@@ -413,7 +413,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         runner = argparse.ArgumentParser(prog="python -m skillabus.evaluate --all")
         runner.add_argument("--all", action="store_true")
         runner.add_argument("--methods", default="dictionary,ner,llm", help="comma-separated extraction tiers to try")
-        runner.add_argument("--out", help="output folder (default data/processed)")
+        runner.add_argument("--out", help="output folder (default data/4_evaluation/results)")
         runner.add_argument("--gold-annotator", default="hoaithuongnguyen-uts", help="whose ad_skills.csv rows are the extraction gold set")
         ns = runner.parse_args(args_in)
         from .eval_run import run_all

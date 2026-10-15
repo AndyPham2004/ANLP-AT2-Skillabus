@@ -254,3 +254,15 @@ class EvalRunTables(unittest.TestCase):
         self.assertIn("| embed | not run |", text)
         self.assertIn("| tfidf | 1.000 | 0.500 |", text)
         self.assertIn("- Chat LLM judge: not run: no key", text)
+
+    def test_run_all_dictionary_tier_writes_the_tables(self):
+        """Smoke test on the committed labels: the run must reach the tables, not stop on a missing helper."""
+        import tempfile
+        from pathlib import Path
+        from skillabus import paths
+        from skillabus.eval_run import run_all
+        if not (paths.AD_SKILLS.exists() and paths.CV_JD_PAIRS.exists() and paths.SEEK_ADS.exists() and paths.RESUMES.exists()):
+            self.skipTest("labelled sets or their inputs are not in this checkout")
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(run_all(("dictionary",), tmp), 0)
+            self.assertIn("## Extraction (", (Path(tmp) / "eval_tables.md").read_text(encoding="utf-8"))

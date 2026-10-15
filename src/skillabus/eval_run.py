@@ -1,6 +1,6 @@
 """Run the whole evaluation and write the tables of report section 6. Owner: Hoai Thuong.
 
-    python -m skillabus.evaluate --all [--methods dictionary,ner,llm] [--out data/processed]
+    python -m skillabus.evaluate --all [--methods dictionary,ner,llm] [--out data/4_evaluation/results]
 
 For each extraction tier that can run here it writes <out>/eval_results.json (dictionary) or
 <out>/eval_results_<tier>.json, and one <out>/eval_tables.md with the tables of section 6. A tier that
@@ -19,14 +19,16 @@ import re
 from pathlib import Path
 
 from . import evaluate as ev
+from . import paths
 from .extract import extract
 from .match import match, rank_evidence
+from .normalise import normalise
 
-ROOT = Path(__file__).resolve().parents[2]
-ADS = ROOT / "data-eda/data/clean/jobs_au_seek_datascientist_2019-2022_clean.csv"
-RES = ROOT / "data-eda/data/clean/resumes_us_2021_clean.csv"
-DICT = ROOT / "data/processed/skills_seed_v2.csv"
-LAB = ROOT / "data/labels"
+ROOT = paths.ROOT
+ADS = paths.SEEK_ADS
+RES = paths.RESUMES
+DICT = paths.SKILLS_SEED
+LAB = paths.LABELS
 TIERS = ("dictionary", "ner", "llm")
 GOLD_ANNOTATOR = "hoaithuongnguyen-uts"   # whose ad_skills.csv rows are the extraction gold; the other annotator is for kappa only
 
@@ -37,6 +39,12 @@ def _table(path: Path, key: str, field: str) -> dict:
         return {r[key]: r[field] for r in csv.DictReader(f)}
 
 
+def _extract(text: str, method: str) -> list[dict]:
+    """extract() then normalise(), the way the app runs it (app/backend.py). Tiers 1 and 2 already set `canonical`;
+    tier 3 returns raw spans that only normalise() maps to dictionary names."""
+    return normalise(extract(text, method))
+
+
 def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
     """Extraction scores, matching (end to end and matching only) and evidence ranking for one tier."""
     ads, res = _table(ADS, "ad_id", "description"), _table(RES, "resume_id", "resume_text")
@@ -44,8 +52,9 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
     out: dict = {"method": method}
 
     gold = ev.load_ad_skills(str(LAB / "ad_skills.csv"), gold_annotator)   # one annotator: a second one's rows must not enlarge the gold set
-    pred = {ad: {ev.norm(m.get("canonical") or m.get("skill_label") or m["text"]) for m in extract(ads[ad], method)}
+    pred = {ad: {ev.norm(m.get("canonical") or m.get("skill_label") or m["text"]) for m in _extract(ads[ad], method)}
             for ad in gold}
+    out["n_ads"] = len(gold)
     out["extraction_all"] = ev.extraction_scores(gold, pred)
     out["extraction_dictionary_skills"] = ev.extraction_scores(ev.restrict_to(gold, dic), ev.restrict_to(pred, dic))
     out["extraction_errors"] = ev.extraction_errors(ev.restrict_to(gold, dic), ev.restrict_to(pred, dic))
@@ -61,19 +70,19 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
         g_status, p_status, cases, detail = {}, {}, [], []
         for pid, rs in by_pair.items():
             ad_id, rid = rs[0]["ad_id"], rs[0]["resume_id"]
-            res_sk = res_cache.setdefault(rid, extract(res[rid], method))
+            res_sk = res_cache.setdefault(rid, _extract(res[rid], method))
             if setting == "end_to_end":
-                ad_sk = extract(ads[ad_id], method)
+                ad_sk = _extract(ads[ad_id], method)
             else:
-                ad_sk = [{"text": canon[r["skill_label"]], "canonical": canon[r["skill_label"]], "method": "gold",
-                          "sentence": canon[r["skill_label"]]} for r in rs]
+                ad_sk = [{"text": canon.get(r["skill_label"], r["skill_label"]), "canonical": canon.get(r["skill_label"], r["skill_label"]), "method": "gold",
+                          "sentence": canon.get(r["skill_label"], r["skill_label"])} for r in rs]
             got = {ev.norm(x["skill_label"]): x["status"] for x in match(ad_sk, res_sk)}
             for r in rs:
                 k = (pid, r["skill_label"])
                 g_status[k] = r["gold_status"]
                 p_status[k] = got.get(r["skill_label"], "not_extracted")
                 if setting == "end_to_end" and r["gold_status"] in ("have", "partial") and r["resume_evidence_text"]:
-                    cases.append((rank_evidence(canon[r["skill_label"]], res[rid]), {r["resume_evidence_text"]}))
+                    cases.append((rank_evidence(canon.get(r["skill_label"], r["skill_label"]), res[rid]), {r["resume_evidence_text"]}))
                 if g_status[k] != p_status[k]:
                     detail.append({"pair": pid, "skill": r["skill_label"], "gold": g_status[k], "pred": p_status[k]})
         st = ev.status_scores(g_status, {k: ("missing" if v == "not_extracted" else v) for k, v in p_status.items()})
@@ -87,7 +96,7 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
 
 
 def kappa_result() -> dict | str:
-    """Kappa between two annotators in data/labels/ad_skills.csv, or the reason it cannot be computed.
+    """Kappa between two annotators in data/4_evaluation/labels/ad_skills.csv, or the reason it cannot be computed.
 
     "dictionary" restricts both sides to dictionary skills (every unlabelled dictionary skill counts as an agreed
     absence); "all" also counts free-text labels, which only one annotator may have written, so it is lower.
@@ -96,6 +105,8 @@ def kappa_result() -> dict | str:
     names = sorted({r.get("annotator", "").strip() for r in ev._rows(str(path)) if r.get("annotator", "").strip()})
     if len(names) < 2:
         return f"not run: ad_skills.csv has labels from {len(names)} annotator ({', '.join(names) or 'none'}); a second annotator's rows are needed (#63)"
+    if GOLD_ANNOTATOR in names:   # the gold annotator first, then the first other one, so a third file cannot change the pair
+        names = [GOLD_ANNOTATOR] + [n for n in names if n != GOLD_ANNOTATOR]
     a, b = ev.load_ad_skills(str(path), names[0]), ev.load_ad_skills(str(path), names[1])
     shared = sorted(set(a) & set(b))
     if not shared:
@@ -112,7 +123,7 @@ CODE = re.compile(r"(?<!\d)(\d{5})(?!\d)")
 
 
 def subject_result(methods=SUBJECT_METHODS) -> dict:
-    """Subject P@3 for each retrieval method on data/labels/skill_subject_pairs.csv.
+    """Subject P@3 for each retrieval method on data/4_evaluation/labels/skill_subject_pairs.csv.
 
     Each labelled skill is looked up with recommend.subject_evidence(); the subjects are taken best first, one per code.
     A method that cannot run here (no sentence-transformers) is listed under "skipped" with the reason.
@@ -128,7 +139,15 @@ def subject_result(methods=SUBJECT_METHODS) -> dict:
         except (RuntimeError, ImportError, OSError, ValueError) as error:
             out["skipped"][m] = f"{type(error).__name__}: {str(error).splitlines()[0][:120]}"
             continue
-        recs = {s: list(dict.fromkeys(e["subject_code"] for e in found.get(canon.get(s, s), []))) for s in skills}
+        recs = {}
+        for sk in skills:
+            by_name: dict[str, list[str]] = {}
+            for e in found.get(canon.get(sk, sk), []):   # one recommendation per subject name: some subjects are listed under several codes
+                by_name.setdefault(e["subject_name"].strip().casefold(), [])
+                if e["subject_code"] not in by_name[e["subject_name"].strip().casefold()]:
+                    by_name[e["subject_name"].strip().casefold()].append(e["subject_code"])
+            # the code that carries a label for this skill stands for the subject, else the first one
+            recs[sk] = [next((c for c in codes if (sk, c) in gold), codes[0]) for codes in by_name.values()]
         out["methods"][m] = {"with_partly": ev.subject_precision_at_k(recs, gold, 3, True),
                              "y_only": ev.subject_precision_at_k(recs, gold, 3, False)}
     return out
@@ -192,7 +211,9 @@ def _f(x) -> str:
 
 def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
     L = ["# Evaluation tables", "", "Generated by `python -m skillabus.evaluate --all`. Do not edit by hand.", ""]
-    L += ["## Extraction (20 labelled ads)", "", "| Tier | Scored on | P | R | F1 | TP / FP / FN |", "|---|---|---|---|---|---|"]
+    first_run = next((results[m] for m in TIERS if m in results), {})
+    n_ads, n_pairs = first_run.get("n_ads", "?"), first_run.get("n_pairs", "?")
+    L += [f"## Extraction ({n_ads} labelled ads)", "", "| Tier | Scored on | P | R | F1 | TP / FP / FN |", "|---|---|---|---|---|---|"]
     for m in TIERS:
         if m in results:
             for label, key in (("all skills", "extraction_all"), ("dictionary skills only", "extraction_dictionary_skills")):
@@ -200,7 +221,7 @@ def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
                 L.append(f"| {m} | {label} | {_f(e['precision'])} | {_f(e['recall'])} | {_f(e['f1'])} | {e['tp']} / {e['fp']} / {e['fn']} |")
         else:
             L.append(f"| {m} | not run | | | | {skipped.get(m, '')} |")
-    L += ["", "## Matching (45 CV-JD pairs)", "", "| Tier | Ad skills from | Accuracy | Macro F1 | have P / R | partial P / R | missing P / R |", "|---|---|---|---|---|---|---|"]
+    L += ["", f"## Matching ({n_pairs} CV-JD pairs)", "", "| Tier | Ad skills from | Accuracy | Macro F1 | have P / R | partial P / R | missing P / R |", "|---|---|---|---|---|---|---|"]
     for m in TIERS:
         if m in results:
             for label, key in (("extract()", "matching_end_to_end"), ("gold labels", "matching_matching_only")):
@@ -244,7 +265,7 @@ def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
 
 
 def run_all(methods=TIERS, out_dir: str | Path | None = None, gold_annotator: str | None = GOLD_ANNOTATOR) -> int:
-    out = Path(out_dir) if out_dir else ROOT / "data/processed"
+    out = Path(out_dir) if out_dir else paths.RESULTS
     out.mkdir(parents=True, exist_ok=True)
     results, skipped = {}, {}
     for m in methods:
@@ -263,7 +284,7 @@ def run_all(methods=TIERS, out_dir: str | Path | None = None, gold_annotator: st
     for key, name, fname, fn in (("subject", "Subject P@3", "skill_subject_pairs.csv", subject_result),
                                  ("chat", "Chat retrieval and judge", "chat_questions.csv", lambda: chat_result(openai_caller()))):
         if not (LAB / fname).exists():
-            other[name] = f"not run: data/labels/{fname} does not exist yet"
+            other[name] = f"not run: data/4_evaluation/labels/{fname} does not exist yet"
             continue
         try:
             other[key] = fn()

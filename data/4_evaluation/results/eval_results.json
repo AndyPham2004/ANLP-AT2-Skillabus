@@ -1,20 +1,21 @@
 {
  "method": "dictionary",
+ "n_ads": 20,
  "extraction_all": {
-  "precision": 0.8901734104046243,
+  "precision": 0.8651685393258427,
   "recall": 0.7096774193548387,
-  "f1": 0.7897435897435898,
+  "f1": 0.779746835443038,
   "tp": 154,
-  "fp": 19,
+  "fp": 24,
   "fn": 63,
   "n_ads": 20
  },
  "extraction_dictionary_skills": {
-  "precision": 0.8901734104046243,
+  "precision": 0.8651685393258427,
   "recall": 0.7096774193548387,
-  "f1": 0.7897435897435898,
+  "f1": 0.779746835443038,
   "tp": 154,
-  "fp": 19,
+  "fp": 24,
   "fn": 63,
   "n_ads": 20
  },
@@ -250,6 +251,11 @@
    "error": "false_positive"
   },
   {
+   "ad_id": "50449684",
+   "skill": "linux",
+   "error": "false_positive"
+  },
+  {
    "ad_id": "39372682",
    "skill": "business acumen",
    "error": "false_negative"
@@ -270,6 +276,11 @@
    "error": "false_negative"
   },
   {
+   "ad_id": "39372682",
+   "skill": "kafka",
+   "error": "false_positive"
+  },
+  {
    "ad_id": "52312136",
    "skill": "clustering",
    "error": "false_negative"
@@ -283,6 +294,16 @@
    "ad_id": "52312136",
    "skill": "r",
    "error": "false_negative"
+  },
+  {
+   "ad_id": "52312136",
+   "skill": "alteryx",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "52312136",
+   "skill": "microsoft office",
+   "error": "false_positive"
   },
   {
    "ad_id": "52312136",
@@ -425,6 +446,11 @@
    "error": "false_negative"
   },
   {
+   "ad_id": "40386941",
+   "skill": "react",
+   "error": "false_positive"
+  },
+  {
    "ad_id": "38644875",
    "skill": "hive",
    "error": "false_negative"
@@ -432,8 +458,8 @@
  ],
  "n_pairs": 45,
  "matching_end_to_end": {
-  "accuracy": 0.9128919860627178,
-  "macro_f1": 0.7491042476152661,
+  "accuracy": 0.9094076655052264,
+  "macro_f1": 0.7387265470385972,
   "per_class": {
    "have": {
     "precision": 0.9846153846153847,
@@ -444,30 +470,30 @@
     "fn": 17
    },
    "partial": {
-    "precision": 0.375,
+    "precision": 0.3333333333333333,
     "recall": 0.5,
-    "f1": 0.42857142857142855,
+    "f1": 0.4,
     "tp": 3,
-    "fp": 5,
+    "fp": 6,
     "fn": 3
    },
    "missing": {
-    "precision": 0.9112149532710281,
-    "recall": 0.975,
-    "f1": 0.9420289855072463,
-    "tp": 195,
+    "precision": 0.9107981220657277,
+    "recall": 0.97,
+    "f1": 0.9394673123486683,
+    "tp": 194,
     "fp": 19,
-    "fn": 5
+    "fn": 6
    }
   },
   "confusion": {
-   "missing->missing": 195,
+   "missing->missing": 194,
    "have->have": 64,
    "have->missing": 17,
+   "missing->partial": 6,
    "partial->have": 1,
    "partial->missing": 2,
-   "partial->partial": 3,
-   "missing->partial": 5
+   "partial->partial": 3
   },
   "n": 287,
   "n_not_predicted": 0
@@ -568,6 +594,12 @@
    "skill": "r",
    "gold": "missing",
    "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD12",
+   "skill": "data visualisation",
+   "gold": "missing",
+   "pred": "partial"
   },
   {
    "pair": "CVJD13",
@@ -899,13 +931,13 @@
   "k": 5,
   "p_at_k": 0.2,
   "hit_at_k": 0.9425287356321839,
-  "mrr": 0.8309386973180077,
+  "mrr": 0.8294061302681992,
   "n": 87,
   "n_skipped": 0
  },
  "matching_matching_only": {
-  "accuracy": 0.9303135888501742,
-  "macro_f1": 0.7772805399848911,
+  "accuracy": 0.926829268292683,
+  "macro_f1": 0.7677104624860327,
   "per_class": {
    "have": {
     "precision": 0.9714285714285714,
@@ -916,30 +948,30 @@
     "fn": 13
    },
    "partial": {
-    "precision": 0.36363636363636365,
+    "precision": 0.3333333333333333,
     "recall": 0.6666666666666666,
-    "f1": 0.4705882352941177,
+    "f1": 0.4444444444444444,
     "tp": 4,
-    "fp": 7,
+    "fp": 8,
     "fn": 2
    },
    "missing": {
-    "precision": 0.9466019417475728,
-    "recall": 0.975,
-    "f1": 0.9605911330049262,
-    "tp": 195,
+    "precision": 0.9463414634146341,
+    "recall": 0.97,
+    "f1": 0.9580246913580247,
+    "tp": 194,
     "fp": 11,
-    "fn": 5
+    "fn": 6
    }
   },
   "confusion": {
-   "missing->missing": 195,
+   "missing->missing": 194,
    "have->have": 68,
    "have->partial": 2,
+   "missing->partial": 6,
    "have->missing": 11,
    "partial->have": 2,
-   "partial->partial": 4,
-   "missing->partial": 5
+   "partial->partial": 4
   },
   "n": 287,
   "n_not_predicted": 0
@@ -949,6 +981,12 @@
    "pair": "CVJD06",
    "skill": "data visualisation",
    "gold": "have",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD12",
+   "skill": "data visualisation",
+   "gold": "missing",
    "pred": "partial"
   },
   {

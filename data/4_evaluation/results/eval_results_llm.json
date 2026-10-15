@@ -1,0 +1,833 @@
+{
+ "method": "llm",
+ "n_ads": 20,
+ "extraction_all": {
+  "precision": 0.5016501650165016,
+  "recall": 0.7004608294930875,
+  "f1": 0.5846153846153846,
+  "tp": 152,
+  "fp": 151,
+  "fn": 65,
+  "n_ads": 20
+ },
+ "extraction_dictionary_skills": {
+  "precision": 0.9101796407185628,
+  "recall": 0.7004608294930875,
+  "f1": 0.7916666666666666,
+  "tp": 152,
+  "fp": 15,
+  "fn": 65,
+  "n_ads": 20
+ },
+ "extraction_errors": [
+  {
+   "ad_id": "54948934",
+   "skill": "clustering",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "54948934",
+   "skill": "data visualisation",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "54948934",
+   "skill": "presentation skills",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "54948934",
+   "skill": "probability",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "54948934",
+   "skill": "stakeholder management",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50727502",
+   "skill": "agile",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50727502",
+   "skill": "cloud platforms",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50727502",
+   "skill": "presentation skills",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50727502",
+   "skill": "teamwork",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50727502",
+   "skill": "time series forecasting",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50727502",
+   "skill": "plotly",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "55520483",
+   "skill": "leadership",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55520483",
+   "skill": "python",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55520483",
+   "skill": "requirements gathering",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55520483",
+   "skill": "etl",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "55520483",
+   "skill": "statistics",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "53187210",
+   "skill": "business acumen",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53187210",
+   "skill": "leadership",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53187210",
+   "skill": "problem solving",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53187210",
+   "skill": "teamwork",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "39142341",
+   "skill": "communication",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "39142341",
+   "skill": "data privacy",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "39142341",
+   "skill": "machine learning",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55085339",
+   "skill": "predictive modelling",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55085339",
+   "skill": "teamwork",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "aws",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "gradient boosting",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "leadership",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "linear regression",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "logistic regression",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "predictive modelling",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "redshift",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "stakeholder management",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50014854",
+   "skill": "statistics",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "52727857",
+   "skill": "statistics",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38692371",
+   "skill": "artificial intelligence",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38692371",
+   "skill": "natural language processing",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "38692371",
+   "skill": "problem solving",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "38692371",
+   "skill": "statistics",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "52219256",
+   "skill": "problem solving",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "52219256",
+   "skill": "teamwork",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "52219256",
+   "skill": "statistics",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "50449684",
+   "skill": "presentation skills",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50449684",
+   "skill": "statistics",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "50449684",
+   "skill": "linux",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "39372682",
+   "skill": "business acumen",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "39372682",
+   "skill": "nosql",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "39372682",
+   "skill": "problem solving",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "39372682",
+   "skill": "kafka",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "52312136",
+   "skill": "clustering",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "52312136",
+   "skill": "data storytelling",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "52312136",
+   "skill": "excel",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "52312136",
+   "skill": "statistics",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38744632",
+   "skill": "predictive modelling",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38744632",
+   "skill": "recommender systems",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38744632",
+   "skill": "stakeholder management",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38744632",
+   "skill": "statistics",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "38680411",
+   "skill": "business acumen",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38680411",
+   "skill": "predictive modelling",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38680411",
+   "skill": "presentation skills",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "38680411",
+   "skill": "stakeholder management",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55489506",
+   "skill": "data modelling",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55489506",
+   "skill": "documentation",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55489506",
+   "skill": "git",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55489506",
+   "skill": "problem solving",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "55489506",
+   "skill": "artificial intelligence",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "business acumen",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "communication",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "data governance",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "data quality",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "data visualisation",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "machine learning",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "predictive modelling",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "stakeholder management",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "53894393",
+   "skill": "statistics",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "40386941",
+   "skill": "data cleaning",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "40386941",
+   "skill": "hypothesis testing",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "40386941",
+   "skill": "vba",
+   "error": "false_negative"
+  },
+  {
+   "ad_id": "40386941",
+   "skill": "react",
+   "error": "false_positive"
+  },
+  {
+   "ad_id": "40386941",
+   "skill": "statistics",
+   "error": "false_positive"
+  }
+ ],
+ "n_pairs": 45,
+ "matching_end_to_end": {
+  "accuracy": 0.9442508710801394,
+  "macro_f1": 0.7961980548187445,
+  "per_class": {
+   "have": {
+    "precision": 0.96,
+    "recall": 0.8888888888888888,
+    "f1": 0.923076923076923,
+    "tp": 72,
+    "fp": 3,
+    "fn": 9
+   },
+   "partial": {
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1": 0.5,
+    "tp": 3,
+    "fp": 3,
+    "fn": 3
+   },
+   "missing": {
+    "precision": 0.9514563106796117,
+    "recall": 0.98,
+    "f1": 0.9655172413793104,
+    "tp": 196,
+    "fp": 10,
+    "fn": 4
+   }
+  },
+  "confusion": {
+   "missing->missing": 196,
+   "have->have": 72,
+   "have->missing": 9,
+   "partial->have": 2,
+   "partial->missing": 1,
+   "partial->partial": 3,
+   "missing->partial": 3,
+   "missing->have": 1
+  },
+  "n": 287,
+  "n_not_predicted": 0
+ },
+ "matching_end_to_end_errors": [
+  {
+   "pair": "CVJD03",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD03",
+   "skill": "data privacy",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD04",
+   "skill": "vba",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD04",
+   "skill": "data cleaning",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD05",
+   "skill": "predictive modelling",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD06",
+   "skill": "data visualisation",
+   "gold": "have",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD08",
+   "skill": "logistic regression",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD10",
+   "skill": "predictive modelling",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD11",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD11",
+   "skill": "data quality",
+   "gold": "have",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD12",
+   "skill": "excel",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD16",
+   "skill": "logistic regression",
+   "gold": "have",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD17",
+   "skill": "vba",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD17",
+   "skill": "data cleaning",
+   "gold": "have",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD18",
+   "skill": "machine learning",
+   "gold": "have",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD18",
+   "skill": "data quality",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD20",
+   "skill": "predictive modelling",
+   "gold": "have",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD21",
+   "skill": "logistic regression",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD22",
+   "skill": "recommender systems",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD25",
+   "skill": "predictive modelling",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD26",
+   "skill": "statistics",
+   "gold": "partial",
+   "pred": "have"
+  },
+  {
+   "pair": "CVJD26",
+   "skill": "data visualisation",
+   "gold": "partial",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD28",
+   "skill": "predictive modelling",
+   "gold": "have",
+   "pred": "missing"
+  },
+  {
+   "pair": "CVJD28",
+   "skill": "statistics",
+   "gold": "partial",
+   "pred": "have"
+  },
+  {
+   "pair": "CVJD30",
+   "skill": "predictive modelling",
+   "gold": "have",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD32",
+   "skill": "python",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD37",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD37",
+   "skill": "vba",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD37",
+   "skill": "data cleaning",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD38",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD38",
+   "skill": "data visualisation",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD39",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD39",
+   "skill": "data quality",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD42",
+   "skill": "logistic regression",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD44",
+   "skill": "recommender systems",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD46",
+   "skill": "statistics",
+   "gold": "missing",
+   "pred": "have"
+  },
+  {
+   "pair": "CVJD47",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD47",
+   "skill": "etl",
+   "gold": "have",
+   "pred": "missing"
+  },
+  {
+   "pair": "CVJD47",
+   "skill": "data quality",
+   "gold": "missing",
+   "pred": "not_extracted"
+  },
+  {
+   "pair": "CVJD48",
+   "skill": "logistic regression",
+   "gold": "missing",
+   "pred": "not_extracted"
+  }
+ ],
+ "ad_skill_not_extracted": 32,
+ "ranking": {
+  "k": 5,
+  "p_at_k": 0.2,
+  "hit_at_k": 0.9425287356321839,
+  "mrr": 0.8294061302681992,
+  "n": 87,
+  "n_skipped": 0
+ },
+ "matching_matching_only": {
+  "accuracy": 0.9581881533101045,
+  "macro_f1": 0.8111394839299507,
+  "per_class": {
+   "have": {
+    "precision": 0.9743589743589743,
+    "recall": 0.9382716049382716,
+    "f1": 0.9559748427672956,
+    "tp": 76,
+    "fp": 2,
+    "fn": 5
+   },
+   "partial": {
+    "precision": 0.4,
+    "recall": 0.6666666666666666,
+    "f1": 0.5,
+    "tp": 4,
+    "fp": 6,
+    "fn": 2
+   },
+   "missing": {
+    "precision": 0.9798994974874372,
+    "recall": 0.975,
+    "f1": 0.9774436090225564,
+    "tp": 195,
+    "fp": 4,
+    "fn": 5
+   }
+  },
+  "confusion": {
+   "missing->missing": 195,
+   "have->have": 76,
+   "have->missing": 4,
+   "have->partial": 1,
+   "partial->have": 2,
+   "partial->partial": 4,
+   "missing->partial": 5
+  },
+  "n": 287,
+  "n_not_predicted": 0
+ },
+ "matching_matching_only_errors": [
+  {
+   "pair": "CVJD06",
+   "skill": "data visualisation",
+   "gold": "have",
+   "pred": "missing"
+  },
+  {
+   "pair": "CVJD24",
+   "skill": "statistics",
+   "gold": "have",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD26",
+   "skill": "statistics",
+   "gold": "partial",
+   "pred": "have"
+  },
+  {
+   "pair": "CVJD28",
+   "skill": "predictive modelling",
+   "gold": "have",
+   "pred": "missing"
+  },
+  {
+   "pair": "CVJD28",
+   "skill": "statistics",
+   "gold": "partial",
+   "pred": "have"
+  },
+  {
+   "pair": "CVJD30",
+   "skill": "predictive modelling",
+   "gold": "have",
+   "pred": "missing"
+  },
+  {
+   "pair": "CVJD37",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD38",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD38",
+   "skill": "data visualisation",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD39",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD40",
+   "skill": "machine learning",
+   "gold": "missing",
+   "pred": "partial"
+  },
+  {
+   "pair": "CVJD47",
+   "skill": "etl",
+   "gold": "have",
+   "pred": "missing"
+  }
+ ]
+}
