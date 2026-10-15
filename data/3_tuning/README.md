@@ -11,6 +11,7 @@ person in "Who".
 | Parameter | Value | Where | Set on | Date | Who |
 |---|---|---|---|---|---|
 | `ESCO_MIN_SIM`: nearest ESCO label counts if cosine at least | 0.82 (env `SKILLABUS_ESCO_MIN_SIM`) | `src/skillabus/normalise.py:42` | Judgement, not tuned. If tuned: a held-out set of ads, not the labelled test ads (plan T3) | 4 Oct | Quan |
+| `FUZZY_MIN`: the fuzzy-string mapper of the normalisation error table counts a match at | difflib ratio 0.85 | `notebooks/pn_normalisation_errors.py:53` | Judgement, set before the table was built and not changed since; a comparison baseline only, the pipeline does not use it | 14 Oct | Phuong Nhi |
 | Lightcast name must be this close to the phrase | `SequenceMatcher` ratio 0.6, or one contains the other | `src/skillabus/normalise.py:196` | Judgement; untested (no Lightcast credentials) | 4 Oct | Quan |
 | `MIN_SIM["embed"]`: an unnamed subject row counts as evidence above | 0.55 | `src/skillabus/recommend.py:46` | 22 data skills against the 429 Handbook rows of the 70-subject profiles, closest unnamed rows read by hand (`notebooks/pn_calibrate_matching.py`); at 0.50 about half were generic. To redo for IT skills (plan T1) | 8 Oct | Phuong Nhi |
 | `MIN_SIM["tfidf"]` | 0.35 | `src/skillabus/recommend.py:46` | Same reading: above it only rows sharing the skill's words | 8 Oct | Phuong Nhi |
