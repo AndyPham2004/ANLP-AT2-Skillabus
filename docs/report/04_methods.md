@@ -55,8 +55,9 @@ ESCO steps: ESCO v1.2.1 has no concept for them. Since c3d1ca4, dictionary skill
 only decides what the non-dictionary phrases are.
 
 **Error analysis.** We ran three mappers side by side on the 211 phrases (`notebooks/pn_normalisation_errors.py`) and
-judged every answer by hand (`data/processed/normalisation_errors.csv`, judgements in `exact_ok`, `fuzzy_ok`,
-`embed_ok`, `error_type`). A string-similarity mapper (difflib ratio ≥ 0.85) stands in for the fuzzy matching the frame
+judged every answer by hand (`data/4_evaluation/results/normalisation_errors.csv`, judgements in `exact_ok`,
+`fuzzy_ok`, `embed_ok`, `error_type`). The 2026 phrases come from the 22 full-text ads of the 13 Oct sample, before #87
+replaced it. A string-similarity mapper (difflib ratio ≥ 0.85) stands in for the fuzzy matching the frame
 lists as the middle option. Lightcast was not run (no API key), so every phrase it might have mapped is in "emerging".
 
 **Table 4.2** Mapping 211 non-dictionary phrases to ESCO.
@@ -117,8 +118,9 @@ Across the 652 same-category pairs, true substitutes scored lower than unrelated
 0.44, Airflow–MLflow 0.54), so no threshold separates them and the rule was dropped.
 
 **Demand.** A gap is weighted by its share of the 3,204 Seek Data Scientist ads (2019–22) + 1. Skills under 1% before
-2023 (large language models) use the lower end of the 95% Wilson interval of their 2026 share instead; skills already
-asked for keep their 2019–22 share, because the 2026 sample over-represents AI-titled roles.
+2023 (large language models) use the lower end of the 95% Wilson interval of their 2026 share instead, over all 22 data
+roles of the 2026 sample from 12 employers (9 of them data scientists; `pct_2026_all_low`), since a share of 9 moves 11
+points per ad. Skills already asked for keep their 2019–22 share, because the 2026 sample over-represents AI work.
 
 ## 4.5 Subject evidence: keyword → TF-IDF → embeddings
 

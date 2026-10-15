@@ -7,8 +7,8 @@ board. That makes it a platform check, not a trend point: if Seek's skill rankin
 were an artefact of how Seek ads are written, Glassdoor's would differ.
 
 Same title filter as build_recent_sample.py, same 133-skill dictionary as the
-September Seek counts (outputs/skill_counts_PRIMARY.csv), so the two are
-comparable. Writes outputs/skill_counts_glassdoor_au_2022.csv in the same shape.
+September Seek counts (data/5_crosscheck/skill_counts_PRIMARY.csv), so the two are
+comparable. Writes data/5_crosscheck/skill_counts_glassdoor_au_2022.csv in the same shape.
 
 Usage (from data-eda/):
     python src/count_glassdoor_au.py
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -25,10 +26,12 @@ import pandas as pd
 from build_recent_sample import DATA_TITLE
 from extract_skills import build_patterns, extract, summarise
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_IN = ROOT / "data" / "raw" / "glassdoor_au_2022"
-DEFAULT_SEED = ROOT / "config" / "skills_seed.csv"
-DEFAULT_OUT = ROOT / "outputs" / "skill_counts_glassdoor_au_2022.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_IN = paths.GLASSDOOR_RAW
+DEFAULT_SEED = paths.SKILLS_SEED_V1
+DEFAULT_OUT = paths.SKILL_COUNTS_GLASSDOOR_AU
 
 log = logging.getLogger("glassdoor")
 

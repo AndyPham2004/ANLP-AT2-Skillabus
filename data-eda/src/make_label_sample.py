@@ -17,13 +17,16 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_IN = ROOT / "data" / "clean" / "jobs_au_seek_datascientist_2019-2022_clean.csv"
-DEFAULT_OUT = ROOT / "data" / "clean" / "seek_label_sample_200.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_IN = paths.SEEK_ADS
+DEFAULT_OUT = paths.LABEL_SAMPLE
 SEED = 36118  # the subject code, so nobody wonders where the number came from
 
 

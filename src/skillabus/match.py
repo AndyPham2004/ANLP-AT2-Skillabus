@@ -26,13 +26,14 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
+from . import paths
 from .extract import _dictionary_hits, load_dictionary, split_sentences
 from .similarity import embed_documents, similarity, tfidf_similarity
 
-ROOT = Path(__file__).resolve().parents[2]
-COUNTS_CSV = ROOT / "data" / "processed" / "skill_counts_v2.csv"
-COUNTS_2026_CSV = ROOT / "data" / "processed" / "skill_counts_2026.csv"
-TOP_CSV = ROOT / "data" / "processed" / "top_skills.csv"
+ROOT = paths.ROOT
+COUNTS_CSV = paths.SKILL_COUNTS
+COUNTS_2026_CSV = paths.SKILL_COUNTS_2026
+TOP_CSV = paths.TOP_SKILLS
 N_ADS = 3204
 
 SOFT_CATEGORIES = {"Professional"}        # real skills, but they do not map to subjects
@@ -80,12 +81,14 @@ def _demand_2026() -> dict[str, float]:
 
 @lru_cache(maxsize=1)
 def demand_2026_low() -> dict[str, float]:
-    """Lower end of the 95% Wilson interval of the 2026 share. The 2026 sample is 22 ads, so a
-    share carries about +-20 points; recommend() weights gaps by this conservative value."""
+    """Lower end of the 95% Wilson interval of the 2026 share over all 22 in-sample data roles
+    (`pct_2026_all_low`), not the 9 data scientists: one ad moves a share of 9 by 11 points.
+    Even over 22 a share carries about +-20 points; recommend() weights gaps by this
+    conservative value."""
     if not COUNTS_2026_CSV.exists():
         return {}
-    return {row["skill"]: float(row["pct_2026_low"]) for row in _rows(COUNTS_2026_CSV)
-            if row.get("pct_2026_low") not in (None, "", "nan")}
+    return {row["skill"]: float(row["pct_2026_all_low"]) for row in _rows(COUNTS_2026_CSV)
+            if row.get("pct_2026_all_low") not in (None, "", "nan")}
 
 
 @lru_cache(maxsize=1)

@@ -1,11 +1,14 @@
-"""Print headings, paragraphs and list items of dl/<slug>.html in document order.
+"""Print headings, paragraphs and list items of data/raw/external_courses_pages/<slug>.html in document order.
 usage: python totext.py <slug> [maxlines] [--all]"""
 import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
-DL = Path(__file__).resolve().parent / "dl"
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DL = paths.EXTERNAL_PAGES_RAW
 BLOCK = {"h1", "h2", "h3", "h4", "h5", "p", "li", "dt", "dd", "title", "summary", "blockquote"}
 SKIP = {"script", "style", "noscript", "svg", "nav", "footer", "header"}
 

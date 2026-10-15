@@ -12,12 +12,15 @@ For each phrase, side by side:
     embed     closest ESCO preferred label by MiniLM cosine (newer; needs sentence-transformers)
     final     what normalise() returns: dictionary / esco_exact / esco_embed / lightcast / emerging
 
-Writes data/processed/normalisation_errors.csv with empty `judgement` and `error_type` columns
+Writes data/4_evaluation/results/normalisation_errors.csv with empty `judgement` and `error_type` columns
 to fill by hand (see ERROR_TYPES), then rerun with --summary to print the error table.
 
 Run from the repo root:
-    PYTHONPATH=src python notebooks/pn_normalisation_errors.py            # build the CSV
-    PYTHONPATH=src python notebooks/pn_normalisation_errors.py --summary  # after judging
+    python notebooks/pn_normalisation_errors.py            # build the CSV (overwrites the judgements)
+    python notebooks/pn_normalisation_errors.py --summary  # after judging
+
+The judged table in the repo was built on 14 Oct, on the 22 full-text 2026 ads of the 13 Oct sample;
+#87 replaced that sample on 14 Oct, so a rebuild gives different 2026 phrases and needs judging again.
 """
 
 from __future__ import annotations
@@ -28,12 +31,15 @@ import difflib
 from collections import Counter
 from pathlib import Path
 
-from skillabus.extract import extract
-from skillabus.normalise import _esco_labels, esco_nearest, key, normalise
+import sys
 
-ROOT = Path(__file__).resolve().parents[1]
-CLEAN = ROOT / "data-eda" / "data" / "clean"
-OUT = ROOT / "data" / "processed" / "normalisation_errors.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from skillabus import paths  # noqa: E402
+from skillabus.extract import extract  # noqa: E402
+from skillabus.normalise import _esco_labels, esco_nearest, key, normalise  # noqa: E402
+
+OUT = paths.RESULTS / "normalisation_errors.csv"
 FUZZY_MIN = 0.85
 EMBED_MIN = 0.82          # normalise.ESCO_MIN_SIM; reported, not tuned here
 
@@ -55,9 +61,9 @@ def _read(path: Path) -> list[dict]:
 
 def phrases() -> list[dict]:
     """Non-dictionary spaCy candidates from the two ad sets, one row per distinct phrase."""
-    ads = [("seek_test", r["ad_id"], r["description"]) for r in _read(CLEAN / "seek_label_sample_200.csv")
+    ads = [("seek_test", r["ad_id"], r["description"]) for r in _read(paths.LABEL_SAMPLE)
            if r.get("double_label") == "y"]
-    ads += [("2026", r["ad_id"], r["description"]) for r in _read(CLEAN / "jobs_au_recent_2024-2026_clean.csv")
+    ads += [("2026", r["ad_id"], r["description"]) for r in _read(paths.RECENT_ADS)
             if r.get("period", "").startswith("2026") and r.get("full_text") in ("True", "true", "1")]
     seen, out = set(), []
     for source, ad_id, text in ads:
@@ -94,7 +100,7 @@ def build() -> None:
         })
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(table[0]))
+        w = csv.DictWriter(f, fieldnames=list(table[0]), lineterminator="\n")
         w.writeheader()
         w.writerows(table)
     print(f"{len(table)} phrases ({Counter(r['source'] for r in table)}) -> {OUT}")
