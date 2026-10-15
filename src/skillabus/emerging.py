@@ -111,13 +111,16 @@ def _read(path: Path) -> list[dict]:
 
 def load_ads(period: str = "2026") -> list[Ad]:
     """period "2026" or "2024-01": the full-text ads of jobs_au_recent (Adzuna rows are cut at 500
-    characters, so left out); "2019-22": the 3,204 Seek Data Scientist ads."""
+    characters, so left out); for 2026 only the `in_sample` rows (posted within 60 days, capped per
+    employer: the 22 roles every 2026 number in the report uses, #87); "2019-22": the 3,204 Seek
+    Data Scientist ads."""
     if period == "2019-22":
         return [Ad(r["ad_id"], r.get("advertiser") or r.get("company") or "", r["description"] or "")
                 for r in _read(OLD_CSV)]
     rows = _read(NEW_CSV)
     return [Ad(r["ad_id"], r.get("company") or "", r["description"] or "")
-            for r in rows if r.get("period", "").startswith(period) and r.get("full_text") in ("True", "true", "1")]
+            for r in rows if r.get("period", "").startswith(period) and r.get("full_text") in ("True", "true", "1")
+            and r.get("in_sample", "True") in ("True", "true", "1", "")]
 
 
 def tokens(text: str) -> list[str]:
