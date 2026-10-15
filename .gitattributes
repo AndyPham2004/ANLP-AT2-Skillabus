@@ -1,3 +1,7 @@
 # Ad text contains line breaks inside quoted CSV fields. Without this, Windows checkouts
 # rewrite them to CRLF and teammates end up with different bytes for the same ad.
-data-eda/data/clean/*.csv -text
+# The cleaned files moved out of data-eda/data/clean/ on 15 Oct 2026; same rule at their new places.
+data/2_demand/ads/*.csv -text
+data/2_demand/collection/ats_probe_*.csv -text
+data/1_knowledge/taxonomies/*.csv -text
+data/4_evaluation/inputs/*.csv -text

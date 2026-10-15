@@ -1,0 +1,322 @@
+company,platform,slug,status,total,au,data_au,ds_au
+Canva,smartrecruiters,canva,ok,38,38,4,4
+SEEK,smartrecruiters,seek,ok,15,15,3,0
+Judo Bank,smartrecruiters,judobank,ok,19,19,0,0
+Eucalyptus,greenhouse,eucalyptus,ok,104,25,2,1
+Culture Amp,greenhouse,cultureamp,ok,35,16,4,2
+hipages Group,greenhouse,hipagesgroup,ok,4,4,0,0
+Prospa,greenhouse,prospa,ok,8,8,0,0
+Athena Home Loans,greenhouse,athena,ok,4,0,0,0
+Octopus Deploy,greenhouse,octopusdeploy,ok,3,1,0,0
+Mable,lever,mable,ok,11,11,0,0
+Deputy,lever,deputy,ok,8,6,1,0
+Immutable,lever,immutable,ok,3,2,0,0
+carsales,greenhouse,carsales,missing,0,0,0,0
+carsales,lever,carsales,missing,0,0,0,0
+carsales,smartrecruiters,carsales,ok,35,35,1,1
+carsales,ashby,carsales,missing,0,0,0,0
+carsales,workable,carsales,empty,0,0,0,0
+Xero,greenhouse,xero,missing,0,0,0,0
+Xero,lever,xero,missing,0,0,0,0
+Xero,smartrecruiters,xero,empty,0,0,0,0
+Xero,ashby,xero,ok,114,44,14,4
+Xero,workable,xero,empty,0,0,0,0
+Airwallex,greenhouse,airwallex,missing,0,0,0,0
+Airwallex,lever,airwallex,missing,0,0,0,0
+Airwallex,smartrecruiters,airwallex,empty,0,0,0,0
+Airwallex,ashby,airwallex,ok,519,39,4,0
+Airwallex,workable,airwallex,empty,0,0,0,0
+Block,greenhouse,block,ok,231,33,0,0
+Block,lever,block,missing,0,0,0,0
+Block,ashby,block,missing,0,0,0,0
+Zip,greenhouse,zip,missing,0,0,0,0
+Zip,lever,zip,missing,0,0,0,0
+Zip,smartrecruiters,zipco,empty,0,0,0,0
+Zip,ashby,zip,ok,121,4,0,0
+Zip,workable,zipco,missing,0,0,0,0
+Up,greenhouse,up,missing,0,0,0,0
+Up,lever,up,missing,0,0,0,0
+Up,ashby,up,ok,1,1,0,0
+Brighte,greenhouse,brighte,missing,0,0,0,0
+Brighte,lever,brighte,ok,3,3,0,0
+Brighte,smartrecruiters,brighte,empty,0,0,0,0
+Brighte,ashby,brighte,missing,0,0,0,0
+Brighte,workable,brighte,missing,0,0,0,0
+Rokt,greenhouse,rokt,missing,0,0,0,0
+Rokt,lever,rokt,missing,0,0,0,0
+Rokt,smartrecruiters,rokt,empty,0,0,0,0
+Rokt,ashby,rokt,missing,0,0,0,0
+Rokt,workable,rokt,ok,12,3,0,0
+Nearmap,greenhouse,nearmap,missing,0,0,0,0
+Nearmap,lever,nearmap,missing,0,0,0,0
+Nearmap,smartrecruiters,nearmap,ok,16,16,1,0
+Nearmap,ashby,nearmap,missing,0,0,0,0
+Nearmap,workable,nearmap,empty,0,0,0,0
+Propeller Aero,greenhouse,propeller,missing,0,0,0,0
+Propeller Aero,lever,propeller,missing,0,0,0,0
+Propeller Aero,smartrecruiters,propeller,empty,0,0,0,0
+Propeller Aero,ashby,propeller,missing,0,0,0,0
+Propeller Aero,workable,propeller,ok,27,8,0,0
+Buildkite,greenhouse,buildkite,ok,8,1,0,0
+Buildkite,lever,buildkite,missing,0,0,0,0
+Buildkite,smartrecruiters,buildkite,empty,0,0,0,0
+Buildkite,ashby,buildkite,missing,0,0,0,0
+Buildkite,workable,buildkite,empty,0,0,0,0
+Secure Code Warrior,greenhouse,securecodewarrior,missing,0,0,0,0
+Secure Code Warrior,lever,securecodewarrior,ok,5,2,0,0
+Secure Code Warrior,smartrecruiters,securecodewarrior,empty,0,0,0,0
+Secure Code Warrior,ashby,securecodewarrior,missing,0,0,0,0
+Secure Code Warrior,workable,securecodewarrior,missing,0,0,0,0
+SiteMinder,greenhouse,siteminder,missing,0,0,0,0
+SiteMinder,lever,siteminder,missing,0,0,0,0
+SiteMinder,smartrecruiters,siteminder,ok,3,3,0,0
+SiteMinder,ashby,siteminder,ok,30,1,0,0
+SiteMinder,workable,siteminder,empty,0,0,0,0
+Bugcrowd,greenhouse,bugcrowd,ok,7,0,0,0
+Bugcrowd,lever,bugcrowd,missing,0,0,0,0
+Bugcrowd,smartrecruiters,bugcrowd,empty,0,0,0,0
+Bugcrowd,ashby,bugcrowd,missing,0,0,0,0
+Bugcrowd,workable,bugcrowd,empty,0,0,0,0
+CoinJar,greenhouse,coinjar,missing,0,0,0,0
+CoinJar,lever,coinjar,missing,0,0,0,0
+CoinJar,smartrecruiters,coinjar,ok,2,2,0,0
+CoinJar,ashby,coinjar,missing,0,0,0,0
+CoinJar,workable,coinjar,ok,3,3,0,0
+Hatch,greenhouse,hatch,missing,0,0,0,0
+Hatch,lever,hatch,missing,0,0,0,0
+Hatch,smartrecruiters,hatch,empty,0,0,0,0
+Hatch,ashby,hatch,ok,8,0,0,0
+Hatch,workable,hatch,empty,0,0,0,0
+Spaceship,greenhouse,spaceship,ok,1,1,0,0
+Spaceship,lever,spaceship,missing,0,0,0,0
+Spaceship,smartrecruiters,spaceship,empty,0,0,0,0
+Spaceship,ashby,spaceship,missing,0,0,0,0
+Spaceship,workable,spaceship,missing,0,0,0,0
+Amber Electric,greenhouse,amber,missing,0,0,0,0
+Amber Electric,lever,amber,missing,0,0,0,0
+Amber Electric,smartrecruiters,amber,empty,0,0,0,0
+Amber Electric,ashby,amber,ok,21,0,0,0
+Amber Electric,workable,amber,empty,0,0,0,0
+Dovetail,greenhouse,dovetail,missing,0,0,0,0
+Dovetail,lever,dovetail,missing,0,0,0,0
+Dovetail,smartrecruiters,dovetail,empty,0,0,0,0
+Dovetail,ashby,dovetail,ok,9,5,0,0
+Dovetail,workable,dovetail,empty,0,0,0,0
+Vow,greenhouse,vow,missing,0,0,0,0
+Vow,lever,vow,missing,0,0,0,0
+Vow,smartrecruiters,vow,empty,0,0,0,0
+Vow,ashby,vow,ok,1,1,0,0
+Vow,workable,vow,empty,0,0,0,0
+Relevance AI,greenhouse,relevanceai,missing,0,0,0,0
+Relevance AI,lever,relevanceai,missing,0,0,0,0
+Relevance AI,smartrecruiters,relevanceai,empty,0,0,0,0
+Relevance AI,ashby,relevanceai,ok,1,1,1,0
+Relevance AI,workable,relevanceai,missing,0,0,0,0
+Sonder,greenhouse,sonder,missing,0,0,0,0
+Sonder,lever,sonder,missing,0,0,0,0
+Sonder,smartrecruiters,sonder,empty,0,0,0,0
+Sonder,ashby,sonder,ok,4,0,0,0
+Sonder,workable,sonder,empty,0,0,0,0
+Kogan,greenhouse,kogan,missing,0,0,0,0
+Kogan,lever,kogan,ok,22,22,2,1
+Kogan,smartrecruiters,kogan,empty,0,0,0,0
+Kogan,ashby,kogan,missing,0,0,0,0
+Kogan,workable,kogan,empty,0,0,0,0
+Who Gives A Crap,greenhouse,whogivesacrap,ok,8,5,0,0
+Who Gives A Crap,lever,whogivesacrap,missing,0,0,0,0
+Who Gives A Crap,smartrecruiters,whogivesacrap,empty,0,0,0,0
+Who Gives A Crap,ashby,whogivesacrap,missing,0,0,0,0
+Who Gives A Crap,workable,whogivesacrap,missing,0,0,0,0
+Prezzee,greenhouse,prezzee,ok,9,9,2,2
+Prezzee,lever,prezzee,missing,0,0,0,0
+Prezzee,smartrecruiters,prezzee,empty,0,0,0,0
+Prezzee,ashby,prezzee,missing,0,0,0,0
+Prezzee,workable,prezzee,empty,0,0,0,0
+Fathom,greenhouse,fathom,missing,0,0,0,0
+Fathom,lever,fathom,missing,0,0,0,0
+Fathom,smartrecruiters,fathom,empty,0,0,0,0
+Fathom,ashby,fathom,ok,1,0,0,0
+Fathom,workable,fathom,empty,0,0,0,0
+Freelancer,greenhouse,freelancer,missing,0,0,0,0
+Freelancer,lever,freelancer,missing,0,0,0,0
+Freelancer,smartrecruiters,freelancer,empty,0,0,0,0
+Freelancer,ashby,freelancer,missing,0,0,0,0
+Freelancer,workable,freelancer,ok,23,7,0,0
+Redbubble,greenhouse,redbubble,missing,0,0,0,0
+Redbubble,lever,redbubble,missing,0,0,0,0
+Redbubble,smartrecruiters,redbubble,ok,1,1,0,0
+Redbubble,ashby,redbubble,missing,0,0,0,0
+Redbubble,workable,redbubble,empty,0,0,0,0
+Bigtincan,greenhouse,bigtincan,missing,0,0,0,0
+Bigtincan,lever,bigtincan,missing,0,0,0,0
+Bigtincan,smartrecruiters,bigtincan,ok,1,1,0,0
+Bigtincan,ashby,bigtincan,missing,0,0,0,0
+Bigtincan,workable,bigtincan,empty,0,0,0,0
+Appen,greenhouse,appen,missing,0,0,0,0
+Appen,lever,appen,ok,57,0,0,0
+Appen,smartrecruiters,appen,ok,2,2,0,0
+Appen,ashby,appen,missing,0,0,0,0
+Appen,workable,appen,empty,0,0,0,0
+Megaport,greenhouse,megaport,missing,0,0,0,0
+Megaport,lever,megaport,ok,54,17,1,1
+Megaport,smartrecruiters,megaport,empty,0,0,0,0
+Megaport,ashby,megaport,missing,0,0,0,0
+Megaport,workable,megaport,empty,0,0,0,0
+Life360,greenhouse,life360,ok,14,0,0,0
+Life360,lever,life360,missing,0,0,0,0
+Life360,smartrecruiters,life360,empty,0,0,0,0
+Life360,ashby,life360,missing,0,0,0,0
+Life360,workable,life360,empty,0,0,0,0
+Quantium,greenhouse,quantium,ok,36,28,9,6
+Quantium,lever,quantium,missing,0,0,0,0
+Quantium,smartrecruiters,quantium,empty,0,0,0,0
+Quantium,ashby,quantium,missing,0,0,0,0
+Quantium,workable,quantium,missing,0,0,0,0
+Thoughtworks,greenhouse,thoughtworks,ok,36,2,1,0
+Thoughtworks,lever,thoughtworks,missing,0,0,0,0
+Thoughtworks,smartrecruiters,thoughtworks,empty,0,0,0,0
+Thoughtworks,ashby,thoughtworks,missing,0,0,0,0
+Thoughtworks,workable,thoughtworks,empty,0,0,0,0
+Versent,greenhouse,versent,missing,0,0,0,0
+Versent,lever,versent,missing,0,0,0,0
+Versent,smartrecruiters,versent,ok,2,2,0,0
+Versent,ashby,versent,missing,0,0,0,0
+Versent,workable,versent,empty,0,0,0,0
+Lyka,greenhouse,lyka,missing,0,0,0,0
+Lyka,lever,lyka,missing,0,0,0,0
+Lyka,smartrecruiters,lyka,empty,0,0,0,0
+Lyka,ashby,lyka,missing,0,0,0,0
+Lyka,workable,lyka,ok,21,21,2,0
+PEXA,greenhouse,pexa,missing,0,0,0,0
+PEXA,lever,pexa,ok,8,4,0,0
+PEXA,smartrecruiters,pexa,ok,3,3,0,0
+PEXA,ashby,pexa,missing,0,0,0,0
+PEXA,workable,pexa,missing,0,0,0,0
+Stripe,greenhouse,stripe,ok,722,12,0,0
+Stripe,lever,stripe,missing,0,0,0,0
+Stripe,ashby,stripe,missing,0,0,0,0
+Datadog,greenhouse,datadog,ok,433,12,0,0
+Datadog,lever,datadog,missing,0,0,0,0
+Datadog,ashby,datadog,missing,0,0,0,0
+Databricks,greenhouse,databricks,ok,896,24,1,0
+Databricks,lever,databricks,missing,0,0,0,0
+Databricks,ashby,databricks,missing,0,0,0,0
+Cloudflare,greenhouse,cloudflare,ok,435,0,0,0
+Cloudflare,lever,cloudflare,missing,0,0,0,0
+Cloudflare,ashby,cloudflare,missing,0,0,0,0
+Twilio,greenhouse,twilio,ok,146,2,0,0
+Twilio,lever,twilio,missing,0,0,0,0
+Twilio,ashby,twilio,missing,0,0,0,0
+MongoDB,greenhouse,mongodb,ok,395,10,0,0
+MongoDB,lever,mongodb,missing,0,0,0,0
+MongoDB,ashby,mongodb,missing,0,0,0,0
+Elastic,greenhouse,elastic,ok,403,5,0,0
+Elastic,lever,elastic,missing,0,0,0,0
+Elastic,ashby,elastic,missing,0,0,0,0
+GitLab,greenhouse,gitlab,ok,221,6,0,0
+GitLab,lever,gitlab,missing,0,0,0,0
+GitLab,ashby,gitlab,missing,0,0,0,0
+Dropbox,greenhouse,dropbox,ok,32,1,0,0
+Dropbox,lever,dropbox,missing,0,0,0,0
+Dropbox,ashby,dropbox,missing,0,0,0,0
+Figma,greenhouse,figma,ok,151,3,0,0
+Figma,lever,figma,missing,0,0,0,0
+Figma,ashby,figma,empty,0,0,0,0
+Airbnb,greenhouse,airbnb,ok,161,2,0,0
+Airbnb,lever,airbnb,missing,0,0,0,0
+Airbnb,ashby,airbnb,missing,0,0,0,0
+Squarespace,greenhouse,squarespace,ok,33,0,0,0
+Squarespace,lever,squarespace,missing,0,0,0,0
+Squarespace,ashby,squarespace,missing,0,0,0,0
+Snowflake,greenhouse,snowflake,missing,0,0,0,0
+Snowflake,lever,snowflake,missing,0,0,0,0
+Snowflake,ashby,snowflake,ok,359,8,0,0
+Okta,greenhouse,okta,ok,380,13,1,0
+Okta,lever,okta,missing,0,0,0,0
+Okta,ashby,okta,missing,0,0,0,0
+Wise,greenhouse,wise,ok,20,0,0,0
+Wise,lever,wise,missing,0,0,0,0
+Wise,ashby,wise,missing,0,0,0,0
+Deliveroo,greenhouse,deliveroo,ok,205,0,0,0
+Deliveroo,lever,deliveroo,missing,0,0,0,0
+Deliveroo,ashby,deliveroo,ok,9,0,0,0
+Intercom,greenhouse,intercom,ok,105,8,0,0
+Intercom,lever,intercom,missing,0,0,0,0
+Intercom,ashby,intercom,missing,0,0,0,0
+Miro,greenhouse,miro,missing,0,0,0,0
+Miro,lever,miro,missing,0,0,0,0
+Miro,ashby,miro,ok,24,0,0,0
+Notion,greenhouse,notion,missing,0,0,0,0
+Notion,lever,notion,missing,0,0,0,0
+Notion,ashby,notion,ok,130,1,0,0
+Anthropic,greenhouse,anthropic,ok,646,9,1,0
+Anthropic,lever,anthropic,missing,0,0,0,0
+Anthropic,ashby,anthropic,missing,0,0,0,0
+OpenAI,greenhouse,openai,missing,0,0,0,0
+OpenAI,lever,openai,missing,0,0,0,0
+OpenAI,ashby,openai,ok,809,9,1,0
+Scale AI,greenhouse,scaleai,ok,184,0,0,0
+Scale AI,lever,scaleai,missing,0,0,0,0
+Scale AI,ashby,scaleai,missing,0,0,0,0
+Cohere,greenhouse,cohere,missing,0,0,0,0
+Cohere,lever,cohere,missing,0,0,0,0
+Cohere,ashby,cohere,ok,118,0,0,0
+Snyk,greenhouse,snyk,missing,0,0,0,0
+Snyk,lever,snyk,missing,0,0,0,0
+Snyk,ashby,snyk,ok,22,0,0,0
+Sumo Logic,greenhouse,sumologic,ok,9,2,0,0
+Sumo Logic,lever,sumologic,missing,0,0,0,0
+Sumo Logic,ashby,sumologic,missing,0,0,0,0
+PagerDuty,greenhouse,pagerduty,ok,51,0,0,0
+PagerDuty,lever,pagerduty,missing,0,0,0,0
+PagerDuty,ashby,pagerduty,missing,0,0,0,0
+Grafana Labs,greenhouse,grafanalabs,ok,104,1,0,0
+Grafana Labs,lever,grafanalabs,missing,0,0,0,0
+Grafana Labs,ashby,grafanalabs,missing,0,0,0,0
+Vercel,greenhouse,vercel,ok,89,3,0,0
+Vercel,lever,vercel,missing,0,0,0,0
+Vercel,ashby,vercel,empty,0,0,0,0
+Netlify,greenhouse,netlify,ok,5,0,0,0
+Netlify,lever,netlify,missing,0,0,0,0
+Netlify,ashby,netlify,missing,0,0,0,0
+Algolia,greenhouse,algolia,ok,37,3,0,0
+Algolia,lever,algolia,missing,0,0,0,0
+Algolia,ashby,algolia,missing,0,0,0,0
+Plaid,greenhouse,plaid,missing,0,0,0,0
+Plaid,lever,plaid,missing,0,0,0,0
+Plaid,ashby,plaid,ok,121,0,0,0
+Brex,greenhouse,brex,ok,273,0,0,0
+Brex,lever,brex,missing,0,0,0,0
+Brex,ashby,brex,missing,0,0,0,0
+Ramp,greenhouse,ramp,missing,0,0,0,0
+Ramp,lever,ramp,missing,0,0,0,0
+Ramp,ashby,ramp,ok,164,0,0,0
+Gusto,greenhouse,gusto,ok,99,0,0,0
+Gusto,lever,gusto,missing,0,0,0,0
+Gusto,ashby,gusto,missing,0,0,0,0
+Carta,greenhouse,carta,ok,72,4,0,0
+Carta,lever,carta,missing,0,0,0,0
+Carta,ashby,carta,missing,0,0,0,0
+Faire,greenhouse,faire,ok,81,0,0,0
+Faire,lever,faire,missing,0,0,0,0
+Faire,ashby,faire,missing,0,0,0,0
+Lightspeed,greenhouse,lightspeed,missing,0,0,0,0
+Lightspeed,lever,lightspeed,missing,0,0,0,0
+Lightspeed,smartrecruiters,lightspeed,empty,0,0,0,0
+Lightspeed,ashby,lightspeed,ok,5,0,0,0
+Lightspeed,workable,lightspeed,empty,0,0,0,0
+Talent International,greenhouse,talent,ok,2,0,0,0
+Talent International,lever,talent,missing,0,0,0,0
+Talent International,smartrecruiters,talent,empty,0,0,0,0
+Talent International,ashby,talent,missing,0,0,0,0
+Talent International,workable,talent,empty,0,0,0,0
+Bupa,greenhouse,bupa,missing,0,0,0,0
+Bupa,lever,bupa,missing,0,0,0,0
+Bupa,smartrecruiters,bupa,empty,0,0,0,0
+Bupa,ashby,bupa,missing,0,0,0,0
+Bupa,workable,bupa,ok,15,0,0,0
+Latitude Financial,greenhouse,latitude,ok,37,0,0,0
+Latitude Financial,lever,latitude,missing,0,0,0,0
+Latitude Financial,smartrecruiters,latitude,empty,0,0,0,0
+Latitude Financial,ashby,latitude,missing,0,0,0,0
+Latitude Financial,workable,latitude,empty,0,0,0,0

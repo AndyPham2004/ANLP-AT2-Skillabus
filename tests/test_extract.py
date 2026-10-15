@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+from skillabus import paths
 from skillabus.extract import extract, load_dictionary, split_sentences
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,7 +21,7 @@ def candidates(text):
 
 
 def poster_gap():
-    with open(ROOT / "data/processed/gap.csv", encoding="utf-8") as f:
+    with open(paths.POSTER_GAP, encoding="utf-8") as f:   # archive/poster_AT2A/data/gap.csv
         return list(csv.DictReader(line for line in f if not line.startswith("#")))
 
 
@@ -119,8 +120,9 @@ def test_ner_keeps_every_tier_1_skill_of_the_ad():
 
 
 def test_ner_proposes_skills_outside_the_dictionary():
+    # Alteryx joined the dictionary on 14 Oct (#65), so only the other two are candidates.
     assert candidates("Experience with tools such as Alteryx, Dataiku and KNIME.") == {
-        "Alteryx", "Dataiku", "KNIME"}
+        "Dataiku", "KNIME"}
     assert candidates("Demonstrated experience in customer segmentation and Python.") == {
         "customer segmentation"}
     assert "data science" in candidates(AD)

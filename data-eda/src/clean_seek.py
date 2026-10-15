@@ -28,14 +28,17 @@ import argparse
 import html
 import logging
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_ADS = ROOT / "data" / "raw" / "jobs_au_seek_datascientist_2019-2022.csv"
-DEFAULT_SOURCE = ROOT / "data" / "raw" / "jobs_au_seek_datascience_2019-2022_authorflags.csv"
-DEFAULT_OUT = ROOT / "data" / "clean" / "jobs_au_seek_datascientist_2019-2022_clean.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_ADS = paths.SEEK_RAW
+DEFAULT_SOURCE = paths.SEEK_AUTHORFLAGS_RAW
+DEFAULT_OUT = paths.SEEK_ADS
 
 # A join is a lowercase letter, closing bracket or full stop running straight
 # into a capital: "PythonExcellent", "skills).You", "teams.Experience".

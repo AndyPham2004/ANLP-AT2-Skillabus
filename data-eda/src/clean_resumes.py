@@ -7,7 +7,8 @@ The Kaggle Resume Dataset (snehaanbhawal) already replaces employer names with
   * phone numbers, US and international -> [PHONE]  regex
   * URLs, including LinkedIn        -> [URL]     regex
   * person names                    -> [NAME]    spaCy NER, then filters (below),
-                                                 plus a regex for "Summary <Name> is a ..."
+                                                 plus regexes for "Summary <Name> is a ...",
+                                                 "Dr./Mr./Ms. <Name>" and "<Name>, RN" (#53)
 
 Why the name step needs filters. Resumes are written in capitalised fragments, and
 en_core_web_sm tags 16,447 PERSON spans across this set - mostly "Developed",
@@ -42,24 +43,39 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_IN = ROOT / "data" / "raw" / "resumes_us_2021.csv"
-DEFAULT_OUT = ROOT / "data" / "clean" / "resumes_us_2021_clean.csv"
-SKILL_SEED = ROOT / "config" / "skills_seed.csv"
-ONET_TOOLS = ROOT / "data" / "raw" / "taxonomy_onet_v31" / "software_skills.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_IN = paths.RESUMES_RAW
+DEFAULT_OUT = paths.RESUMES
+SKILL_SEED = paths.SKILLS_SEED_V1
+ONET_TOOLS = paths.ONET_TOOLS_RAW
 
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
-# Tight on purpose: a looser pattern matched date ranges like "2012 - 12".
-PHONE = re.compile(r"(?<!\d)(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]\d{4}(?!\d)"
+# Tight on purpose: a looser pattern matched date ranges like "2012 - 12". Spaces around a
+# separator are allowed, 3-3-4 digits still required: "(281) 491 - 3225", "(678)-898- 2283" (#53).
+PHONE = re.compile(r"(?<!\d)(?:\+?1[\s.-]?)?\(?\d{3}\)?\s*[.-]?\s*\d{3}\s*[\s.-]\s*\d{4}(?!\d)"
                    r"|\+\d{1,3}[\s.-]?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,6}(?!\d)")  # international
 URL = re.compile(r"https?://\s*\S+|www\.\S+|\b(?:linkedin|github)\.com/\S+", re.I)
 # Belt and braces for the one phrasing spaCy misses: "Summary Jane Citizen is a ...".
 SUMMARY_NAME = re.compile(
     r"(\bSummary\s+)[A-Z][a-z]+(?:\s+[A-Z]\.?)?\s+[A-Z][a-z]+(?=\s+(?:is|has|brings|was)\b)")
+# Referees and supervisors whose first name the first-name list lacks ("Dr. Suleman Lalani",
+# "Afsha Dawwa, RN"; #53): a name after a title, or before a nursing or academic credential.
+# "MD" is left out: in these resumes it is mostly Maryland ("Rockville, MD"). Software after
+# "Ms" (Ms Office, Ms Visual Basic) is not a name.
+_NAME_WORD = r"[A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)?"
+_NOT_NAME = (r"(?:Office|Word|Excel|Access|Project|Outlook|Sql|SQL|Visio|Power[Pp]oint|Share[Pp]oint"
+             r"|Publisher|Asp|Dynamics|Windows|Teams|Paint|Exchange|Navision|Money|Visual|Microsoft)")
+TITLED_NAME = re.compile(rf"\b((?:Dr|Mr|Mrs|Ms|Prof)\.?\s+)(?!{_NOT_NAME}\b)"
+                         rf"{_NAME_WORD}(?:\s+[A-Z]\.)?(?:\s+{_NAME_WORD}){{0,2}}")
+CREDENTIAL_NAME = re.compile(rf"\b(?!{_NOT_NAME}\b){_NAME_WORD}(?:\s+[A-Z]\.)?(?:\s+{_NAME_WORD}){{1,2}}"
+                             r"(?=\s*,\s*(?:RN|LVN|LPN|CCM|NP|PhD)\b)")
 
 NAME_SHAPE = re.compile(
     r"^[A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)?"            # first name, maybe hyphenated
@@ -170,10 +186,14 @@ def main() -> None:
     names = docs_with_names = 0
     if not args.no_ner:
         texts, names, docs_with_names = mask_names(texts)
-    summary_hits = 0
+    summary_hits = titled_hits = 0
     for i, t in enumerate(texts):
-        texts[i], n = SUMMARY_NAME.subn(r"\1[NAME]", t)
+        t, n = SUMMARY_NAME.subn(r"\1[NAME]", t)
         summary_hits += n
+        t, n1 = TITLED_NAME.subn(r"\1[NAME]", t)
+        t, n2 = CREDENTIAL_NAME.subn("[NAME]", t)
+        titled_hits += n1 + n2
+        texts[i] = t
 
     out = pd.DataFrame({"resume_id": raw.ID, "category": raw.Category, "resume_text": texts})
     hits = pd.DataFrame({k: out.resume_text.str.contains(v, case=False, regex=True)
@@ -193,6 +213,7 @@ def main() -> None:
         log.info("  masked name  %4d times in %4d resumes (de-identified, not anonymous)",
                  names, docs_with_names)
     log.info("  masked name  %4d more by the 'Summary <Name> is' rule", summary_hits)
+    log.info("  masked name  %4d more by the title / credential rules", titled_hits)
     log.info("")
     log.info("Data-relevant profiles (n_data_skills = how many of %d core data skills):",
              len(DATA_SKILLS))
