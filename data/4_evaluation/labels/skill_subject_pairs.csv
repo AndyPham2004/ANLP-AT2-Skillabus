@@ -32,3 +32,18 @@ ETL,94693,y,learning_objective,"Build simple data pipelines or ETLs in order to 
 ETL,32130,partly,weekly_topic,"Introduction to use generative AI in the data pipeline, understanding relevant data privacy, ethics, and governance",https://coursehandbook.uts.edu.au/subject/2026/32130,hoaithuongnguyen-uts
 Data cleaning,32130,y,weekly_topic,techniques for data cleaning,https://coursehandbook.uts.edu.au/subject/2026/32130,hoaithuongnguyen-uts
 Data cleaning,94689,n,description,Example of online self-study: data wrangling with pandas.,https://coursehandbook.uts.edu.au/subject/2026/94689,hoaithuongnguyen-uts
+Large language models,36118,y,weekly_topic,Large Language Models (LLMs),https://coursehandbook.uts.edu.au/subject/2026/36118,Akashtom98+Claude
+Large language models,43023,y,weekly_topic,Natural Language Processing & Large Language Models,https://coursehandbook.uts.edu.au/subject/2026/43023,Akashtom98+Claude
+Generative AI,43007,y,weekly_topic,Modern Generative AI,https://coursehandbook.uts.edu.au/subject/2026/43007,Akashtom98+Claude
+Clustering,36100,y,learning_objective,Utilize clustering and association rule analysis to extract insights from transdisciplinary data through innovative methods.,https://coursehandbook.uts.edu.au/subject/2026/36100,Akashtom98+Claude
+Hypothesis testing,36100,y,weekly_topic,"Incorporating hypothesis testing by formulating and testing hypotheses, interpreting p-values for conclusive insights, while cleaning, transforming, and summarizing data to ensure quality and integrity",https://coursehandbook.uts.edu.au/subject/2026/36100,Akashtom98+Claude
+Bayesian methods,36103,partly,weekly_topic,Bayesian method,https://coursehandbook.uts.edu.au/subject/2026/36103,Akashtom98+Claude
+Responsible AI,36121,y,learning_objective,Explore real-world applications of AI considering AI Ethics and Responsible AI Design.,https://coursehandbook.uts.edu.au/subject/2026/36121,Akashtom98+Claude
+AWS,42049,y,learning_objective,Identity and express where and how AWS services can be used to solve a business problem. (B.1),https://coursehandbook.uts.edu.au/subject/2026/42049,Akashtom98+Claude
+Docker,94692,y,learning_objective,"Work confidently in a Unix environment, including the use of Docker and Bash via a Command Line Interface.",https://coursehandbook.uts.edu.au/subject/2026/94692,Akashtom98+Claude
+Git,94692,y,description,"This subject offers a detailed exploration of programming languages for data analysis purpose, hands-on learning in Python, collaborative version control with Git, data management with SQL, and practical skills in UNIX systems and Docker containers for building efficient and reliable data products and services.",https://coursehandbook.uts.edu.au/subject/2026/94692,Akashtom98+Claude
+R,94692,y,learning_objective,"Participate in the development of data related projects using popular programming languages including Python, SQL and R.",https://coursehandbook.uts.edu.au/subject/2026/94692,Akashtom98+Claude
+Time series forecasting,37010,y,learning_objective,Apply econometric techniques to estimate popular models using financial time series.,https://coursehandbook.uts.edu.au/subject/2026/37010,Akashtom98+Claude
+Computer vision,41040,partly,weekly_topic,Computer vision,https://coursehandbook.uts.edu.au/subject/2026/41040,Akashtom98+Claude
+Recommender systems,32567,y,weekly_topic,Personalised recommender systems for business intelligence,https://coursehandbook.uts.edu.au/subject/2026/32567,Akashtom98+Claude
+Data storytelling,32558,y,learning_objective,Create value for an organisation by using visual storytelling with data. (D.1),https://coursehandbook.uts.edu.au/subject/2026/32558,Akashtom98+Claude
