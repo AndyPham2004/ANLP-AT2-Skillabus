@@ -23,13 +23,14 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 | `uts/offerings.csv` | One row per subject, teaching period and mode | Quan's session, 13 Oct | `python data-eda/src/scrape_requisites.py` |
 | `uts/assessments_scraped.csv` | Assessment tasks from the Handbook, before the merge into the profiles | Quan's session 13 Oct, Van Thong 14 Oct | `python data-eda/src/scrape_assessments.py` |
 | `uts/subjects_template.csv` | The column shape of `data/raw/uts_subjects_2026.csv`, for pasting a subject by hand | Van Thong | Template |
+| `uts/taught_skills_student_reported.csv` | Skills each UTS subject actually taught, **reported by students, not official**: one row per subject x skill, `subject_code, skill_id, skill, collected_by, period`. `skill` is a `skills_vocabulary.csv` label with its `skill_id` where one fits, else the student's own short name with `skill_id` empty. Van Thong: 9 MDSI subjects, 297 rows, Spring 2025 to Spring 2026, from his own Canvas module lists, schedules and assessment briefs (Claude proposed names from those pages and matched them to the vocabulary; he added, removed and confirmed each). Skill names only: no course text is stored | Each team member for the subjects they took (D10, #119) | By hand, one PR per person; append rows, keep `collected_by` |
 | `learning_resources/external_courses.csv` | 56 free or free-to-audit outside courses, one row per sentence or module; notes in `external_courses.md` | Quan's session 13 Oct, Van Thong 14 Oct | `python data-eda/src/external/build_external.py` (needs the saved pages in `data/raw/external_courses_pages/`) |
 | `learning_resources/certifications.csv` | 49 industry certifications for the 11 IT roles, with price, official page and a "hot" signal; notes in `certifications.md` | Quan's session 15 Oct (D11); Adzuna counts by Van Thong | Checked by hand on the vendors' pages; counts: `count_cert_mentions.py`, `count_cert_adzuna.py` |
 | `learning_resources/resources.csv` | **The self-study store** (D9): 248 resources, one row each, with level, format, hours, cost, certificate, skills, roles, url. Section below | Quan's session 15 Oct (D9); Akash and Van Thong check a sample | Collected by hand on the providers' pages |
 | `learning_resources/resource_modules.csv` | The text of the 192 resources added on 15 Oct (2,028 rows: one description, then module titles), same schema as `external_courses.csv` | Quan's session 15 Oct (D9) | By hand, with `resources.csv` |
 | `learning_resources/priority_skills.csv` | The 15 skills D9 covers first for each role (165 rows, 69 distinct skills), and where each list comes from | Quan's session 15 Oct (D9) | From `2_demand/role_profiles.csv`, `top_skills.csv`, and D4's O\*NET and ESCO rows for the four roles with no ad counts |
 
-Owner of the folder: Van Thong (data). Planned here: `uts/taught_skills_student_reported.csv` (D10).
+Owner of the folder: Van Thong (data). Student-reported subject skills (D10): `uts/taught_skills_student_reported.csv`, see the table.
 
 ## The skill vocabulary (plan D5)
 
