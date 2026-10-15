@@ -28,7 +28,7 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 | `learning_resources/certifications.csv` | 49 industry certifications for the 11 IT roles, with price, official page and a "hot" signal; notes in `certifications.md` | Quan's session 15 Oct (D11); Adzuna counts by Van Thong | Checked by hand on the vendors' pages; counts: `count_cert_mentions.py`, `count_cert_adzuna.py` |
 | `learning_resources/resources.csv` | **The self-study store** (D9): 248 resources, one row each, with level, format, hours, cost, certificate, skills, roles, url. Section below | Quan's session 15 Oct (D9); Akash and Van Thong check a sample | Collected by hand on the providers' pages |
 | `learning_resources/resource_modules.csv` | The text of the 192 resources added on 15 Oct (2,028 rows: one description, then module titles), same schema as `external_courses.csv` | Quan's session 15 Oct (D9) | By hand, with `resources.csv` |
-| `learning_resources/priority_skills.csv` | The 15 skills D9 covers first for each role (164 rows, 68 distinct skills), and where each list comes from | Quan's session 15 Oct (D9) | From `2_demand/role_profiles.csv`, `top_skills.csv`, and D4's O\*NET and ESCO rows for the four roles with no ad counts |
+| `learning_resources/priority_skills.csv` | The 15 skills D9 covers first for each role (165 rows, 69 distinct skills), and where each list comes from | Quan's session 15 Oct (D9) | From `2_demand/role_profiles.csv`, `top_skills.csv`, and D4's O\*NET and ESCO rows for the four roles with no ad counts |
 
 Owner of the folder: Van Thong (data). Planned here: `uts/taught_skills_student_reported.csv` (D10).
 
@@ -133,7 +133,7 @@ IT is a field people keep learning in, so the "Self-study" column next to "Learn
 wide, not only a patch for what UTS does not teach. `learning_resources/resources.csv` has 248 resources from 145
 providers: the 56 outside courses of 13 Oct and 192 added on 15 Oct.
 
-- **Wide:** every one of the 68 skills in `priority_skills.csv` (the top 15 of each of the 11 roles) has at least
+- **Wide:** every one of the 69 skills in `priority_skills.csv` (the top 15 of each of the 11 roles) has at least
   2 options and a beginner one; the median is 5 (only Airflow and Appium have exactly 2).
 - **Deep:** each resource records `level` (150 beginner, 81 intermediate, 17 advanced), `format` (128 course, 54
   tutorial, 33 official docs, 22 hands-on lab, 11 book), `hours`, `cost` (237 free, 9 free-to-audit, 2 paid, with
