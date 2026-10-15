@@ -6,8 +6,11 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 | File | What | Made by | Rebuild |
 |---|---|---|---|
 | `skills/skills_seed_v2.csv` | The one skill dictionary: 148 skills, `canonical, category, strict, aliases`. Starts with a `#` note: read with `skiprows=1`, never `comment="#"` (that cuts `C#` to `C`) | Van Thong's 133 rows + 5 generic rows (Quan, 25 Sep) + 10 tool rows (Van Thong, 14 Oct) | Edited by hand through a PR. To be replaced by `skills_vocabulary.csv` (plan D5) |
-| `skills/skills_vocabulary.csv` | The one vocabulary (plan D5): `skill_id` (`esco:<uri>` only for an exact ESCO match, else `skillabus:<slug>`), `esco_match` exact / close / broad (ESCO wider) / none, `aliases_ads` (only rows with aliases detect skills in ads), `used_for`, `why_added`. Part 1 so far: the 148 dictionary skills, 47 exact, 7 close, 90 broad, 4 none | Claude 15 Oct, Van Thong to check | `python data-eda/src/build_vocabulary.py` (`--check` says if it is stale) |
-| `skills/esco_link_review.csv` | The hand-checked ESCO link of each dictionary skill: old link, new link, `esco_match`, a note for every link that is not exact | Claude 15 Oct, Van Thong to check | Edit by hand, then rerun `build_vocabulary.py`; it refuses a URI not in ESCO, a label that is not ESCO's, or a known wrong link |
+| `skills/skills_vocabulary.csv` | **The one vocabulary** (plan D5), 503 rows: the 148 dictionary skills, 95 IT skills added from O\*NET, data_jobs and the 2026 ads, 211 ESCO core skills of the 11 roles, 49 certifications. Section below | Claude 15 Oct, Van Thong to check | `python data-eda/src/build_vocabulary.py` (`--check` says if it is stale) |
+| `skills/esco_link_review.csv` | The hand-checked ESCO link of each dictionary skill: old link, new link, `esco_match`, a note for every link that is not exact | Claude 15 Oct, Van Thong to check | Edit by hand, then rerun `build_vocabulary.py` |
+| `skills/added_skills.csv` | Candidate IT skills beyond the dictionary: ad-style aliases, ESCO link and note, origin. 123 rows; the builder keeps those that pass the ad rule | Claude 15 Oct, Van Thong to check | Edit by hand, then `build_vocabulary.py --recount` |
+| `skills/onet_tool_map.csv` | Each of the 79 O\*NET in-demand tools of the 11 roles -> a vocabulary label ("Amazon Web Services AWS software" -> AWS), or dropped with a reason. D6 maps the O\*NET rows of the demand table with it | Claude 15 Oct | By hand |
+| `skills/vocabulary_ad_counts.csv` | Distinct Australian ads naming each dictionary or candidate skill, by source, and their employers | `build_vocabulary.py --recount` | Needs the raw ATS ads in `data/raw/` (`--raw <folder>` reads them elsewhere) |
 | `skills/skill_to_esco.csv` | Dictionary skill -> ESCO concept, 132 rows (the wrong "SPARK" link removed) | Van Thong (`map_to_esco.py`), copied by Quan's 3 Oct mock builder | `python data-eda/src/map_to_esco.py` writes `original/skill_to_esco.csv`; drop the Spark row, copy here |
 | `skills/original/skills_seed.csv` | Van Thong's original 133-row dictionary: poster counts, resume cleaning, Glassdoor counts, EDA | Van Thong | Hand-edited; goes to `archive/dictionary_v1/` once D5 lands |
 | `skills/original/skill_to_esco.csv` | Its ESCO links, 133 rows | Van Thong | `python data-eda/src/map_to_esco.py` (needs `data/raw/taxonomy_esco_v1.2.1/`) |
@@ -26,6 +29,44 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 
 Owner of the folder: Van Thong (data). Planned here: `uts/taught_skills_student_reported.csv` (D10),
 `learning_resources/resources.csv` (D9).
+
+## The skill vocabulary (plan D5)
+
+`skills/skills_vocabulary.csv` replaces the dictionary plus its ESCO links once the pipeline reads it (plan C2;
+until then `skills_seed_v2.csv` and `skill_to_esco.csv` stay as they are). Columns: `skill_id, label, category,
+source, esco_uri, esco_label, esco_match, reviewed_by, aliases_ads, strict, used_for, why_added`.
+
+- **`skill_id`** is `esco:<uri>` (the data contract's form) only when `esco_match = exact`; otherwise
+  `skillabus:<slug>`. So Tableau and Power BI, which ESCO files under one "data visualisation software", keep two
+  ids and `match.py` never confuses them.
+- **`esco_match`** follows SKOS, the mapping relations ESCO itself uses: `exact` (same concept), `close` (near,
+  not the same), `broad` (ESCO has only a wider concept; it is still given), `none`. Strict: a tool under a generic
+  ESCO concept is `broad`. Links found wrong on 14 Oct are gone and refused by the builder (Transformers ->
+  "electrical machines", TensorFlow and Keras -> "computer vision", Spark -> the Java framework "SPARK").
+- **Only rows with `aliases_ads` detect skills in ads** (`used_for` has `extract`); ESCO labels never do.
+  `core_skill` = an essential ESCO skill of a role's occupation, or an O\*NET in-demand tool of a role.
+- **Parts.** (1) The 148 dictionary skills, labels and aliases unchanged: 47 exact, 7 close, 90 broad, 4 none.
+  Of the 47 links in `skill_to_esco.csv`, 38 are kept (28 exact, 8 broad, 2 close), 3 wrong ones dropped and 6
+  replaced by a better concept; the 97 skills without a link got one (17 exact, 4 close, 76 broad). (3) `added_skills.csv`: 123 candidates; 84 pass the **ad rule** (named in at least 3 distinct
+  Australian ads from at least 2 employers, counted with extract's tier-1 matcher, an employer's ads about its
+  own product not counted) and are used to detect; 11 O\*NET in-demand tools below it (Selenium, Appium, JMeter,
+  ServiceNow, Firewalls, ...) are core skills without aliases; 28 are left out. A new alias may not repeat or
+  contain another skill's alias (it would take that skill's mentions), so the dictionary's counts do not move.
+  (2) ESCO's essential skills of the 11 roles that no row above already is: 211 rows, no aliases; they include
+  ESCO's research items for data scientist ("apply for research funding"). (+) The 49 certifications of
+  `learning_resources/certifications.csv`, `strict = 1` so a certificate name cannot take a skill's mention,
+  exempt from the ad rule (ads rarely name certificates; their demand is D11's Adzuna count).
+- **Ads counted**: Seek 2019-22 (2,495 distinct texts of the 3,204 ads), the recent 2024-26 sample (192) and
+  the 2026 ATS fetches (575 after removing repeats): 3,262 ads. Rerun `--recount` after a new ATS fetch.
+- **For the report**: "Skillabus extends ESCO with **145** skills the Australian IT market asks for but ESCO
+  lacks" = vocabulary rows used for detection whose `esco_match` is `broad` or `none` and that pass the ad rule:
+  86 from the dictionary, 59 added for IT (O\*NET, data_jobs, 2026 ads, generative AI). Not counted: 11 `close`
+  rows, 49 certifications. The builder prints the sentence.
+
+```powershell
+python data-eda/src/build_vocabulary.py --recount --raw "C:/path/to/data/raw"   # after editing added_skills.csv
+python data-eda/src/build_vocabulary.py                                          # after editing a review file
+```
 
 ## Occupation skills per role (plan D4)
 

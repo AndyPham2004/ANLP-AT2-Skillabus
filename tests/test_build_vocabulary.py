@@ -161,13 +161,17 @@ def test_ads_fetched_twice_count_once(tmp_path):
     assert set(AD_SOURCES) >= set(corpus.source)
 
 
-def test_certifications_hook(tmp_path):
+def test_certifications_are_case_sensitive_extract_rows_exempt_from_the_ad_rule(tmp_path):
+    certs = read_table(paths.CERTIFICATIONS)
+    rows = VOCAB[VOCAB.category == "Certification"]
+    assert set(rows.label) == set(certs.cert) and (rows.strict == "1").all()
+    assert (rows.used_for == "extract").all() and rows.why_added.str.contains("exempt from the 3-ad rule").all()
+    assert BY_LABEL.loc["Cisco Certified Network Associate (CCNA)"].aliases_ads == "CCNA|Cisco Certified Network Associate"
     assert part_certifications(tmp_path / "missing.csv") == []
     f = tmp_path / "certifications.csv"
-    pd.DataFrame({"cert": ["AWS Certified Solutions Architect - Associate"], "vendor": ["AWS"]}).to_csv(f, index=False)
+    pd.DataFrame({"cert": ["Some Cert"], "vendor": ["X"]}).to_csv(f, index=False)
     (row,) = part_certifications(f)
-    assert (row["category"], row["used_for"], row["aliases_ads"]) == ("Certification", "certification", "")
-    assert row["skill_id"] == "skillabus:aws-certified-solutions-architect-associate"
+    assert (row["used_for"], row["aliases_ads"], row["skill_id"]) == ("certification", "", "skillabus:some-cert")
 
 
 def test_slugs_keep_plus_and_hash_apart():

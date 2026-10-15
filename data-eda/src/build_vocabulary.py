@@ -185,9 +185,10 @@ def _contains(longer: str, shorter: str, flags) -> bool:
     return re.search(rf"(?<![A-Za-z0-9]){re.escape(shorter)}(?![A-Za-z0-9])", longer, flags) is not None
 
 
-def check_new_aliases(rows: pd.DataFrame, new_labels: set[str]) -> list[str]:
+def check_new_aliases(rows: pd.DataFrame, new_labels: set[str], ignore: frozenset | set = frozenset()) -> list[str]:
     """A new alias must not repeat another skill's alias, or contain one: extract() tries the longest
-    alias first, so 'github actions' would take every 'GitHub Actions' mention away from Git."""
+    alias first, so 'github actions' would take every 'GitHub Actions' mention away from Git.
+    Aliases of the rows in `ignore` may hide each other (a more specific certificate)."""
     errors = []
     for strict in ("0", "1"):
         same = rows[rows.strict == strict]
@@ -197,7 +198,7 @@ def check_new_aliases(rows: pd.DataFrame, new_labels: set[str]) -> list[str]:
             if label not in new_labels:
                 continue
             for b, other in owned:
-                if other == label:
+                if other == label or (label in ignore and other in ignore):
                     continue
                 if a == b:
                     errors.append(f"{label}: alias {a!r} is also an alias of {other}")
@@ -302,7 +303,12 @@ def part2(essentials: dict, covered: set[str], label_of: dict) -> list[dict]:
 
 
 def part_certifications(path: Path) -> list[dict]:
-    """Certifications from plan D11 (cert, vendor, ...). Listed, not detected: ads rarely name them."""
+    """Certifications from plan D11 (certifications.csv: cert, vendor, roles, aliases_ads as a "; " list, ...).
+
+    Exempt from the ad rule: our ads rarely name a certificate (local_ads_mentions); its demand signal is
+    the Adzuna count D11 records. Aliases are case-sensitive (strict 1): ads write "CCNA", "AZ-104", and in
+    extract's case-sensitive pass a certificate name cannot take mentions from a skill ("AWS", "cloud").
+    """
     if not path.exists():
         log.info("no %s yet (plan D11): no Certification rows", path.name)
         return []
@@ -310,13 +316,17 @@ def part_certifications(path: Path) -> list[dict]:
     if "cert" not in certs:
         raise ValueError(f"{path.name} needs a 'cert' column")
     rows = []
-    for r in certs.drop_duplicates("cert").itertuples():
-        vendor = getattr(r, "vendor", "")
-        rows.append({"skill_id": f"skillabus:{vocab_slug(r.cert)}", "label": r.cert, "category": "Certification",
+    for r in certs.drop_duplicates("cert").to_dict("records"):
+        names = "|".join(a.strip() for a in r.get("aliases_ads", "").split(";") if a.strip())
+        vendor, roles, local = r.get("vendor", ""), r.get("roles", ""), r.get("local_ads_mentions", "")
+        why = f"Certification (plan D11){', ' + vendor if vendor else ''}{' for ' + roles if roles else ''}; not in ESCO"
+        if names:
+            why += ("; exempt from the 3-ad rule: our ads rarely name certificates"
+                    f"{f' (this one: {local})' if local else ''}, so its demand is the Adzuna count in {path.name}")
+        rows.append({"skill_id": f"skillabus:{vocab_slug(r['cert'])}", "label": r["cert"], "category": "Certification",
                      "source": "added", "esco_uri": "", "esco_label": "", "esco_match": "none",
-                     "reviewed_by": getattr(r, "collected_by", "") or "plan D11", "aliases_ads": "", "strict": "0",
-                     "used_for": "certification",
-                     "why_added": f"Certification{' by ' + vendor if vendor else ''} (plan D11); not in ESCO"})
+                     "reviewed_by": r.get("collected_by", "") or "Claude 15 Oct (plan D11)", "aliases_ads": names,
+                     "strict": "1", "used_for": "extract" if names else "certification", "why_added": why})
     return rows
 
 
@@ -356,8 +366,15 @@ def build(seed_path: Path = SEED, review_path: Path = REVIEW, esco_path: Path = 
     core = vocab.label.isin(onet_roles) | ((vocab.esco_match == "exact") & vocab.esco_uri.isin(essentials))
     vocab.loc[core & (vocab.used_for == "extract"), "used_for"] = "extract;core_skill"
     covered = set(vocab.esco_uri[vocab.esco_match == "exact"])
-    vocab = pd.concat([vocab, pd.DataFrame(part2(essentials, covered, label_of) + part_certifications(certs_path),
-                                           columns=COLUMNS)], ignore_index=True)
+    certs = pd.DataFrame(part_certifications(certs_path), columns=COLUMNS)
+    # A certificate must not hide a skill's alias; a longer certificate name may hide a shorter one
+    # ("CCNA Cybersecurity" is not "CCNA"), so certificates are checked against the skills only.
+    errors = check_new_aliases(pd.concat([every[["label", "strict", "aliases_ads"]], certs[["label", "strict", "aliases_ads"]]]),
+                               set(certs.label), ignore=set(certs.label))
+    if errors:
+        raise ValueError(f"{len(errors)} problem(s) with certificate aliases:\n  " + "\n  ".join(errors))
+    vocab = pd.concat([vocab, pd.DataFrame(part2(essentials, covered, label_of), columns=COLUMNS), certs],
+                      ignore_index=True)
     for col, key in (("skill_id", vocab.skill_id), ("label", vocab.label.str.casefold())):
         clash = vocab.label[key.duplicated(keep=False)].tolist()
         if clash:

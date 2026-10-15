@@ -21,7 +21,9 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | File | What | Made by | Rebuild |
 |---|---|---|---|
 | `1_knowledge/skills/skills_seed_v2.csv` | The one dictionary, 148 skills (starts with a `#` line: `skiprows=1`, not `comment="#"`, or `C#` becomes `C`) | Van Thong, Quan | By hand, through a PR |
-| `1_knowledge/skills/skills_vocabulary.csv`, `esco_link_review.csv` | One vocabulary, ESCO plus what ESCO lacks (D5; part 1 = the 148 dictionary skills); the hand-checked ESCO link of each | Claude, Van Thong to check | `python data-eda/src/build_vocabulary.py` after editing the review file |
+| `1_knowledge/skills/skills_vocabulary.csv` | The one vocabulary (D5): 148 dictionary skills, 95 added IT skills, 211 ESCO core skills, 49 certifications; `esco_match`, `used_for` | Claude, Van Thong to check | `python data-eda/src/build_vocabulary.py` |
+| `1_knowledge/skills/esco_link_review.csv`, `added_skills.csv`, `onet_tool_map.csv` | Its hand files: ESCO link per dictionary skill; candidate IT skills; O\*NET tool -> label | Claude, Van Thong to check | By hand, then the builder |
+| `1_knowledge/skills/vocabulary_ad_counts.csv` | Australian ads naming each skill, by source | Claude | `build_vocabulary.py --recount` (needs the raw ATS ads) |
 | `1_knowledge/skills/skill_to_esco.csv` | Dictionary skill -> ESCO concept, 132 rows | Van Thong, Quan | `data-eda/src/map_to_esco.py`, minus the Spark row |
 | `1_knowledge/skills/original/skills_seed.csv`, `skill_to_esco.csv` | Van Thong's 133-row original and its ESCO links | Van Thong | `data-eda/src/map_to_esco.py` |
 | `1_knowledge/taxonomies/esco_skills_clean.csv`, `esco_label_lookup.csv` | ESCO v1.2.1: 13,960 concepts; 100,886 (label, concept) rows | Van Thong | `python data-eda/src/clean_esco.py` |
