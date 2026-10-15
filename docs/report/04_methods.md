@@ -134,12 +134,15 @@ TF-IDF (unigrams and bigrams, cosine ≥ 0.35) as the traditional baseline, `all
 Handbook rows: at 0.55 the kept rows were mostly real paraphrases TF-IDF scored near zero ("Classification and
 prediction" for machine learning), while TF-IDF's extra matches shared misleading words ("Machine Translation" for machine
 learning). We rechecked the threshold on 15 Oct with 12 IT skills outside the test pairs (Java to Data security) over all
-6,853 rows (`data/3_tuning/t1_it_unnamed_rows.csv`, 55 closest non-naming rows judged by hand): all 7 rows at
-or above 0.55 were right, against 17 of the 19 judged at 0.50. All 7 are Data security rows from cybersecurity subjects;
-for the other 11 skills no row reaches 0.55. Tool names such as Kubernetes or Terraform never get there, because the Handbook describes concepts ("Automating Your Infrastructure"), so IT tools are found almost only when a
-row names them. Two failures show why we did not lower it: "CI/CD" lands on *Computational Intelligence* (an acronym
-clash) and Java on object-oriented programming in general. We kept 0.55. The deployed app runs TF-IDF (no PyTorch on the
-free host); section 6 reports both.
+6,853 rows (`data/3_tuning/t1_it_unnamed_rows.csv`: every non-naming row at cosine ≥ 0.50 and the closest ones down to
+0.40, 63 rows judged by hand). At 0.55, 6 of 6 rows are right; at 0.50, 24 of 25, with 18 more relevant rows. But 23 of
+those 25 rows are Data security rows from cybersecurity subjects: the other 11 skills give two (REST web services for API
+development, both right), and none reaches 0.55. Tool names such as Kubernetes or Terraform never get there, because the
+Handbook describes concepts ("Automating Your Infrastructure"), so IT tools are found almost only when a row names them.
+The IT rows alone would allow 0.50, but they rest on one skill, the threshold is one for all skills, and the data-skill
+check above found 0.50 too loose, so we kept 0.55. Below 0.50 the errors are clear: "CI/CD" lands on *Computational
+Intelligence* (an acronym clash, 0.48) and Java on object-oriented programming in general (0.50). The deployed app runs
+TF-IDF (no PyTorch on the free host); section 6 reports both.
 
 A row's score is its similarity (1.0 when it names the skill) times its layer weight (learning objective 1.0, assessment
 0.9, weekly topic 0.8, description 0.5). A subject's strength is its best row, +0.15 per further row (at most three),
