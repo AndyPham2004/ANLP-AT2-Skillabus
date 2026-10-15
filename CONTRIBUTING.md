@@ -25,20 +25,23 @@ gh pr create --fill --draft
 | Folder | What | Owner |
 |---|---|---|
 | `app/` | Streamlit app | Quan |
-| `src/skillabus/` | Reusable pipeline code (extract, normalise, match, recommend, rag, evaluate) | Quan (LLM extraction, normalise), Phuong Nhi, Van Thong, Hoai Thuong |
+| `src/skillabus/` | Reusable pipeline code (extract, normalise, match, recommend, rag, evaluate); `paths.py` declares every path | Quan (LLM extraction, normalise, paths), Phuong Nhi, Van Thong, Hoai Thuong |
 | `notebooks/` | Exploration only, named `<initials>_<topic>.ipynb` | anyone |
-| `data/processed/` | Small derived CSVs the app reads | Van Thong |
-| `data/labels/` | Hand-made test sets, one file per set, templates included | Akash, Hoai Thuong |
+| `data/` | All data, sorted by use (`1_knowledge/` ... `5_crosscheck/`); `data/README.md` names each file's owner | Van Thong |
+| `data/4_evaluation/labels/` | Hand-made test sets, one file per set, templates included | Akash, Hoai Thuong |
+| `data-eda/` | Scripts that collect and clean the data (code only) | Van Thong |
 | `docs/report/` | One Markdown file per report section | section owner |
-| `data/raw/` | Never committed | |
+| `data/raw/`, `data/runtime/` | Never committed (downloads; what the app writes) | |
+| `archive/` | Frozen: the AT2A poster and the 3 Oct mock; never edited | |
 
-Code that two people need goes in `src/skillabus/`, not in a notebook.
+Code that two people need goes in `src/skillabus/`, not in a notebook. Only `data/` holds data: take
+every path from `src/skillabus/paths.py` (add a constant there for a new file), never type `data/...` in code.
 
 ## 3. Data
 
 - **Never commit `data/raw/`**, resumes, or anything with names, emails or phone numbers.
 - Committed files stay under 5 MB. Bigger: share on the team drive and say where in `data/README.md`.
-- Label files follow the templates in `data/labels/` exactly: same columns, same order, UTF-8.
+- Label files follow the templates in `data/4_evaluation/labels/` exactly: same columns, same order, UTF-8.
   Do not edit someone else's label file; open an issue instead.
 - Every number in the report names the file and script that produced it.
 

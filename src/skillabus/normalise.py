@@ -1,7 +1,7 @@
 """Map raw skill mentions to ESCO, then Lightcast, else tag as emerging. Owner: Quan.
 
 For each mention, in order (first hit wins):
-1. dictionary   our 138-row alias list (skills_seed_v2.csv) -> canonical name, ESCO link if Van Thong made one
+1. dictionary   our alias list (skills_seed_v2.csv) -> canonical name, ESCO link if Van Thong made one
 2. esco_exact   the phrase (or its canonical name) equals an ESCO preferred or alternative label
 3. esco_embed   nearest ESCO preferred label by sentence embedding, if cosine >= ESCO_MIN_SIM
    (a dictionary skill still unmatched here keeps vocab "seed", id seed:<slug>)
@@ -23,22 +23,23 @@ import os
 import pickle
 import re
 from functools import lru_cache
-from pathlib import Path
 
 import pandas as pd
 
+from . import paths
 from .text import read_csv_skipping_notes, slug
 
-ROOT = Path(__file__).resolve().parents[2]
-SEED_CSV = ROOT / "data/processed/skills_seed_v2.csv"
-ESCO_LINKS_CSV = ROOT / "data/processed/skill_to_esco.csv"
-# Van Thong's cleaned ESCO file is in git (data-eda/, PR #44); the raw download is only on his machine.
-ESCO_CLEAN_CSV = ROOT / "data-eda/data/clean/esco_skills_clean.csv"
-ESCO_SKILLS_CSV = ROOT / "data/raw/data-eda/data/raw/taxonomy_esco_v1.2.1/skills_en.csv"
-INDEX_DIR = ROOT / "models" / "esco"
-LIGHTCAST_CACHE = ROOT / "data" / "cache" / "lightcast"
+SEED_CSV = paths.SKILLS_SEED
+ESCO_LINKS_CSV = paths.SKILL_TO_ESCO
+# Van Thong's cleaned ESCO file is in git (PR #44); the raw download is only in data/raw/.
+ESCO_CLEAN_CSV = paths.ESCO_SKILLS_CLEAN
+ESCO_SKILLS_CSV = paths.ESCO_RAW
+INDEX_DIR = paths.ESCO_INDEX
+LIGHTCAST_CACHE = paths.LIGHTCAST_CACHE
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-ESCO_MIN_SIM = float(os.getenv("SKILLABUS_ESCO_MIN_SIM", "0.82"))  # tune on the labelled ads
+# Set by judgement, not tuned (data/3_tuning/README.md). If it is tuned, use a held-out set of ads,
+# never the labelled ads: they are the test set.
+ESCO_MIN_SIM = float(os.getenv("SKILLABUS_ESCO_MIN_SIM", "0.82"))
 NOT_IN_ESCO = {"Generative AI", "Large language models"}
 # ESCO concepts that share a name with a data skill but mean something else. Checked by hand:
 # "SPARK" is a Java web micro-framework, not Apache Spark (ESCO has no Apache Spark concept).

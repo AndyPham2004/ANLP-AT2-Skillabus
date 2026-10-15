@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import io
 import re
+import sys
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -17,11 +18,15 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-SEED_CSV = ROOT / "data/processed/skills_seed_v2.csv"
-COUNTS_CSV = ROOT / "data/processed/skill_counts_v2.csv"
-TOP_CSV = ROOT / "data/processed/top_skills.csv"
-ESCO_CSV = ROOT / "data/processed/skill_to_esco.csv"
-PROFILES = [ROOT / "data/processed/subject_profiles.csv", ROOT / "app/mock/subject_layers.csv"]
+if str(ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(ROOT / "src"))
+from skillabus import paths  # noqa: E402
+
+SEED_CSV = paths.SKILLS_SEED
+COUNTS_CSV = paths.SKILL_COUNTS
+TOP_CSV = paths.TOP_SKILLS
+ESCO_CSV = paths.SKILL_TO_ESCO
+PROFILES_CSV = paths.SUBJECT_PROFILES
 
 MDSI = "C04372"
 SOFT_CATEGORIES = {"Professional"}
@@ -98,7 +103,7 @@ def resources() -> Resources:
     if ESCO_CSV.exists():
         e = pd.read_csv(ESCO_CSV, dtype=str).dropna(subset=["esco_uri"])
         esco = {r.canonical: f"esco:{r.esco_uri}" for _, r in e.iterrows()}
-    layers = pd.read_csv(next(p for p in PROFILES if p.exists()), dtype=str).fillna("")
+    layers = pd.read_csv(PROFILES_CSV, dtype=str).fillna("")
     role = tuple(_read_noted(TOP_CSV).skill)
     return Resources(regex, category, demand, esco, layers, role)
 

@@ -25,12 +25,14 @@ Usage:
 import argparse
 import logging
 import re
+import sys
 import unicodedata
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 log = logging.getLogger("map_to_esco")
@@ -85,9 +87,9 @@ def build_esco_index(esco_path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--seed", default=ROOT / "config" / "skills_seed.csv", type=Path)
-    parser.add_argument("--esco", default=ROOT / "data" / "raw" / "taxonomy_esco_v1.2.1" / "skills_en.csv", type=Path)
-    parser.add_argument("--out", default=ROOT / "config" / "skill_to_esco.csv", type=Path)
+    parser.add_argument("--seed", default=paths.SKILLS_SEED_V1, type=Path)
+    parser.add_argument("--esco", default=paths.ESCO_RAW, type=Path)
+    parser.add_argument("--out", default=paths.SKILL_TO_ESCO_V1, type=Path)
     parser.add_argument("--show-unmapped", action="store_true")
     args = parser.parse_args()
 

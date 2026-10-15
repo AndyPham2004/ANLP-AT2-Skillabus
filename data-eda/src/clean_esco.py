@@ -21,13 +21,16 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_IN = ROOT / "data" / "raw" / "taxonomy_esco_v1.2.1" / "skills_en.csv"
-DEFAULT_OUT = ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_IN = paths.ESCO_RAW
+DEFAULT_OUT = paths.TAXONOMIES
 
 log = logging.getLogger("clean_esco")
 

@@ -4,12 +4,13 @@ python src/make_qr.py https://skillabus.streamlit.app   ->  docs/report/figures/
 """
 
 import sys
-from pathlib import Path
 
 import qrcode
 from qrcode.constants import ERROR_CORRECT_M
 
-OUT = Path(__file__).resolve().parents[1] / "docs" / "report" / "figures" / "qr_app.png"
+from skillabus import paths  # python src/make_qr.py puts src/ on sys.path
+
+OUT = paths.REPORT_FIGURES / "qr_app.png"
 
 
 def main(url: str) -> None:

@@ -28,16 +28,19 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_ADS = ROOT / "data" / "raw" / "jobs_au_seek_datascientist_2019-2022.csv"
-DEFAULT_FLAGS = ROOT / "data" / "raw" / "jobs_au_seek_datascience_2019-2022_authorflags.csv"
-DEFAULT_LONG = ROOT / "outputs" / "ad_skill_long.csv"
-DEFAULT_OUT = ROOT / "outputs" / "extractor_agreement.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_ADS = paths.SEEK_RAW
+DEFAULT_FLAGS = paths.SEEK_AUTHORFLAGS_RAW
+DEFAULT_LONG = paths.POSTER_AD_SKILL_LONG   # the poster run of extract_skills.py, frozen in the archive
+DEFAULT_OUT = paths.EXTRACTOR_AGREEMENT     # also writes extractor_agreement_decomposed.csv next to it
 
 # Their flag column -> our canonical skill. Only tools both extractors cover.
 PAIRS = {

@@ -35,14 +35,15 @@ from pathlib import Path
 
 import numpy as np
 
+from . import paths
 from .extract import _dictionary_hits, load_dictionary
 from .match import demand_2026_low, skill_query
 from .requisites import Rules, enrolment, load_rules, schedule, sessions_offered
 from .similarity import best_method, similarity
 
-ROOT = Path(__file__).resolve().parents[2]
-# Van Thong's four-layer file when it exists, else the Handbook-only file from app/mock.
-PROFILE_PATHS = (ROOT / "data" / "processed" / "subject_profiles.csv", ROOT / "app" / "mock" / "subject_layers.csv")
+ROOT = paths.ROOT
+# Van Thong's four-layer file (committed). The Handbook-only mock of 3 Oct is in archive/mock_2026-10-03/.
+PROFILE_PATHS = (paths.SUBJECT_PROFILES,)
 
 METHODS = ("keyword", "tfidf", "embed")
 # Stronger evidence first: taught and assessed > graded > covered in class > mentioned.
@@ -63,7 +64,7 @@ COVER_RATIO = 0.60          # a subject covers a skill if it is at least this st
 SUBJECTS_PER_SKILL = 5      # and is among this many strongest subjects for it
 MAX_PATH = 3
 MAX_SUBJECTS = 10           # recommendations returned: the path first, then the next best
-EXTERNAL_CSV = ROOT / "data" / "processed" / "external_courses.csv"
+EXTERNAL_CSV = paths.EXTERNAL_COURSES
 MAX_OUTSIDE = 3             # outside courses in the second tier
 MAX_OUTSIDE_SHOWN = 6       # outside recommendations returned
 
@@ -179,9 +180,9 @@ NEW_SKILL_PCT = 1.0  # below this share of the 2019-22 ads, a skill counts as ne
 def _weight(gap: dict) -> float:
     """Market demand behind a gap: the 2019-22 share (3,204 ads). For a skill that barely existed
     then (LLMs are 0%), the 2026 share instead, by the lower end of its 95% interval, since the
-    2026 sample is only 22 ads from 8 employers. Skills that were already asked for keep their
-    2019-22 share: the 2026 sample over-represents AI-titled roles ("Artificial intelligence"
-    91%), so it would outweigh 3,204 ads. +1 so a skill at 0% still counts for something."""
+    2026 sample is only 22 data roles from 12 employers (9 of them data scientists). Skills that
+    were already asked for keep their 2019-22 share: the 2026 sample over-represents AI work
+    ("Artificial intelligence" in 86% of the 22), so it would outweigh 3,204 ads. +1 so a skill at 0% still counts for something."""
     old = gap.get("demand_pct") or 0.0
     if old < NEW_SKILL_PCT:
         old = max(old, demand_2026_low().get(gap["skill_label"], 0.0))
