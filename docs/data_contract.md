@@ -103,17 +103,17 @@ and Phuong Nhi**.
 
 | Field | Values |
 |---|---|
-| `mode` | The ad id for a single ad, or `role-<slug>` when the target is a role (top skills over all ads) |
+| `mode` | The ad id for a single ad, or `role-<slug>` when the target is a role (top skills over all ads); `none` for the empty result of a role the baseline cannot stand in for |
 | `status` | `have`, `partial`, `missing` |
 | `ad_evidence` | The ad sentence naming the skill; in role mode, a demand sentence ("Asked for in 72% of ...") |
 | `emerging` | `true` when the skill has no ESCO concept (vocab `lightcast` or `emerging`, e.g. LLMs, generative AI, agentic AI); the app flags them with ✦ |
 | `found_by` | Optional: `llm` when only the GPT-4o-mini tier found the skill |
 | `score` | Subject score scaled so the best subject is 1.0 |
-| `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3 |
+| `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3. For the four roles with core skills only, every gap has `demand_pct` null and weighs 1, so `learning_path.demand_covered_pct` is the share of core gaps covered |
 | `demand_pct` | Share of the ads behind `demand_source` that mention the skill: for an ad and for Data Scientist, the 3,204 Seek ads 2019-22 (`skill_counts_v2.csv`); for another role, that role's own ads (`role_profiles.csv`). `null` for a core skill of a role with no Australian ad counts (below) |
 | `demand_pct_2026` | Same over the 2026 data-role sample, for an ad and for Data Scientist only; `null` for other roles (the sample has data roles only) and for a skill the sample lacks. Only a gap with a 2026 share falls back on it when its `demand_pct` is under 1% |
 | `demand_source`, `demand_period` | Where `demand_pct` comes from, read from the file: `Seek` / `2019-22`, or a role file's `source` and `period` (the years in `source` when the file has no `period` column), e.g. `lukebarousse/data_jobs (2023, Australia)` / `2023`. For the app's caption |
-| `role` | Role mode: the target role, a `role` of `role_occupations.csv` (11 roles); `null` for a pasted ad |
+| `role` | Result level, not a skill row. Role mode: the target role, a `role` of `role_occupations.csv` (11 roles); `null` for a pasted ad |
 | `core_source` | Only for the four roles with no Australian ad counts (QA/Test Engineer, DevOps/SRE, Network/Systems Administrator, Cybersecurity Analyst), whose skills are their core skills (`app/backend.py`, `core_skills()`): `onet` (an O*NET in-demand tool, through `onet_tool_map.csv`) or `esco` (an essential ESCO skill in ESCO's digital collection), O*NET first, at most 15; `status` is `have` or `missing`; `demand_source` and `demand_period` are `null` |
 | `layer` | `learning_objective`, `assessment`, `weekly_topic`, `description` (strongest first) |
 | `match` | `named` (the row names the skill) or `similar` (TF-IDF or embedding similarity only) |

@@ -156,6 +156,7 @@ def core_skills(role: str, resume_skills: list[dict], top_n: int = MAX_CORE_SKIL
             "skill_id": c["skill_id"], "skill_label": c["label"],
             "status": "have" if sentence else "missing",
             "demand_pct": None, "demand_pct_2026": None,      # no Australian ad counts for this role
+            "demand_source": None, "demand_period": None,
             "emerging": False, "ad_evidence": c["why"], "resume_evidence": sentence,
             "core_source": c["source"],
         })
