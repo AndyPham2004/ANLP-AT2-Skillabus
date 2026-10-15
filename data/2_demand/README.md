@@ -1,15 +1,16 @@
 # 2_demand: what employers ask for
 
-Market demand by skill (and, from `role_profiles.csv`, by role), plus the cleaned ads it is counted on
-and the lists used to collect them. Code takes these paths from `src/skillabus/paths.py`. Commands run
+Market demand by role and skill (`role_skill_demand.csv`, one table for every source), plus the cleaned ads
+it is counted on and the lists used to collect them. Code takes these paths from `src/skillabus/paths.py`. Commands run
 from the repo root.
 
 | File | What | Made by | Rebuild |
 |---|---|---|---|
-| `skill_counts_v2.csv` | Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` reads `pct_ads` as `demand_pct` | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
-| `skill_counts_2026.csv` | Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
-| `top_skills.csv` | The 15 most-asked technical skills, the Data Scientist role profile (`match.role_profile`) | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
-| `role_profiles.csv` | Tool profiles of 7 data and IT roles (data_jobs 2023, Apache-2.0), 441 rows; notes in `role_profiles.md` | Van Thong | `python data-eda/src/build_role_profiles.py` |
+| `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, 1,659 rows, every source counted with the one vocabulary. Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
+| `skill_counts_v2.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` reads `pct_ads` as `demand_pct` | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
+| `skill_counts_2026.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
+| `top_skills.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** The 15 most-asked technical skills, the Data Scientist role profile (`match.role_profile`) | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
+| `role_profiles.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Tool profiles of 7 data and IT roles (data_jobs 2023, Apache-2.0), 441 rows; notes in `role_profiles.md` | Van Thong | `python data-eda/src/build_role_profiles.py` |
 | `skills_not_taught_by_uts.csv` | 73 skills: 54 that no UTS subject names, plus 19 named but asked for in 10%+ of 2026 ads (was `uncovered_skills_2026-10-13.csv`) | Quan's session, 13 Oct | Recompute after the vocabulary (D5) and the IT subjects (D8) |
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
@@ -28,6 +29,115 @@ with a 95% Wilson interval. `match.py` reads `pct_2026` as `demand_pct_2026` (tr
 `match.demand_2026_low`). **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
 5, so one ad moves a data-scientist share by 11 points. Show 2026 as "n of 9", not as a bare percentage.
 
-Owner of the folder: Van Thong. Planned here (plan D1, D6, D13): `roles.csv`, `role_skill_demand.csv`
-(one table for every source; then `skill_counts_*`, `top_skills.csv` and `role_profiles.*` go to
-`archive/demand_files_v1/`), `role_outlook.csv`.
+Owner of the folder: Van Thong. Planned here (plan D1, D13): `roles.csv`, `role_outlook.csv`. Once the app
+reads `role_skill_demand.csv` (plan C2, after 17 Oct), `skill_counts_*`, `top_skills.csv` and `role_profiles.*`
+go to `archive/demand_files_v1/`.
+
+## The demand table (plan D6): `role_skill_demand.csv`
+
+One table for every demand source, long format, one row per role, skill, source and period. Rebuild with
+`python data-eda/src/build_role_skill_demand.py` (reads `data/raw/jobs_au_datajobs_2023.parquet`, or
+`data/raw/data_jobs_hf/data_jobs.csv`; `--raw <folder>` reads another checkout's; `--check` exits 1 if the
+committed file is out of date). The build log prints a per-role, per-source summary, the role_profiles
+comparison and every unmapped tool name.
+
+| Column | Meaning |
+|---|---|
+| `role`, `role_family` | One of the 11 roles of `1_knowledge/taxonomies/role_occupations.csv` and its family, or `Data roles (mixed)` (`Data & AI`, below) |
+| `skill_id`, `skill` | The skill's id and label in `1_knowledge/skills/skills_vocabulary.csv`; every row's skill is in the vocabulary |
+| `source`, `period` | Where the row comes from, and when (for a taxonomy: its release) |
+| `text_type` | `full_text` (ad text), `tool_list` (a list of tool names, no text), `taxonomy` (no counts) |
+| `n_ads`, `total_ads` | Ads naming the skill at least once; the ads of that role, source and period. Blank for `taxonomy` |
+| `pct`, `pct_low`, `pct_high` | `100 * n_ads / total_ads` (1 decimal) and its 95% Wilson interval (`recount_recent.wilson`). Blank for `taxonomy` |
+| `importance` | `essential` / `optional` (ESCO), `in_demand` (O\*NET); blank for counted rows |
+
+Not in it yet: **`pct_required`** (plan D14, required vs preferred), which waits for the flag under review in
+#109; the raw 2026 job-board fetches (601 + 234 ads), until they are classified by role (plan D2); ASC rows.
+
+| `source` | `period` | `text_type` | Roles | Ads | Rows | A share is |
+|---|---|---|---|---|---|---|
+| `seek_2019_22` | `2019-22` | full_text | Data Scientist | 3,204 | 197 | Seek Data Scientist ads whose cleaned text names the skill |
+| `data_jobs_2023` | `2023` | tool_list | the 7 roles of `role_profiles.csv` | 263 (ML Engineer) to 4,438 (Data Engineer) | 576 | the role's Australian ads whose tool list names the tool |
+| `recent_2024_26` | `2024-01`, `2026` | full_text | `Data roles (mixed)` | 122, 22 | 149 + 74 | in-sample full-text ads of `ads/jobs_au_recent_2024-2026_clean.csv` naming the skill |
+| `esco_occupation` | `v1.2.1` | taxonomy | all 11 | | 456 | (no share) ESCO lists the skill as essential or optional for the role's occupation |
+| `onet` | `v31.0` | taxonomy | all 11 | | 207 | (no share) O\*NET marks the tool In Demand for the role's occupation |
+
+How each source is counted:
+
+- **Full text** (`seek_2019_22`, `recent_2024_26`): every vocabulary row used for detection (`used_for` has
+  `extract`, 281 rows: the 148 dictionary skills, 84 added IT skills, 49 certifications) is matched with
+  `extract.py`'s tier-1 matcher (`build_vocabulary.skill_hits`), so the table follows the app's matching
+  rules. One of them: the longest alias at each place wins, so "SQL Server" counts as SQL Server and not
+  also as SQL, "Google Cloud" not also as Cloud platforms, "Azure ML" not also as Azure, "Generative AI" not
+  also as AI. Van Thong's `extract_skills.py`, which made the superseded files, counted both.
+- **`recent_2024_26`: one role at a time only with 30 ads (plan D15).** The file's `role_group` is
+  `data scientist` or `data role` (a mix of engineers and analysts). A role group that names one of the 11
+  roles gets its own block for a period only with at least 30 ads; every other ad of the period is counted
+  under `Data roles (mixed)`. Today no block qualifies (January 2024: 11 data scientists, 111 other data
+  roles; 2026: 9 and 13), so each period is one mixed block, the same ads as `skill_counts_2026.csv`'s
+  `pct_2024_01` (122) and `pct_2026_all` (22). Its 9-ad Data Scientist share (`pct_2026`) has no row here.
+  `2026` = the September and October 2026 job-board fetches together. No role is guessed for an ad.
+- **`data_jobs_2023`**: the Australian rows, de-duplication and title map of `build_role_profiles.py`
+  (senior titles fold into their role), and its denominator: the role's ads naming at least one tool (9,234
+  of 10,925 ads). Each tool name maps to a vocabulary label: the 148 dictionary rows exactly as
+  `build_role_profiles.py` maps them (name, alias, its `TOKEN_MAP`), then the vocabulary's other tool rows by
+  label or alias (Confluence, Splunk, DynamoDB, Angular, Spring, HTML, ...), then five spellings in
+  `EXTRA_TOKEN_MAP` (`no-sql` -> NoSQL; `redhat`, `centos`, `debian`, `suse` -> Linux). Not counted:
+  `go`, `flow` (as before) and the bare letter `c`, which the dataset's matcher also finds in ordinary text
+  (Business Analyst ads "name" it nearly as often as Data Scientist ads; likely "C-level"). **Unmapped:**
+  74 names, 1,222 mentions, none of them a vocabulary skill: express 126, vmware 116, atlassian 96 (Jira
+  counts only Jira), perl 81, chef 67, sheets 50, notion 39, aurora 34, slack 33, unity 32, yarn 27,
+  spreadsheet 25, unify 25, vb.net 21, asp.net 21, ... (all in the build log). VMware and Perl are real
+  tools the vocabulary lacks (candidates for `added_skills.csv`); Express, Chef, Unity, Notion, Slack are as
+  likely English words as tools.
+- **`esco_occupation`**: each role's ESCO occupation (`role_occupations.csv`), its essential and optional
+  skills from `occupation_skills.csv`. The ESCO concept URI is the vocabulary's `skill_id` (`esco:<uri>`);
+  the vocabulary holds every essential skill (plan D5, part 2), so all 317 essential rows are here, and 139
+  of the 399 optional ones; the other 260 optional skills are not in the vocabulary and stay only in
+  `occupation_skills.csv`.
+- **`onet`**: the In Demand tools of each role's O\*NET occupation, mapped to a label with
+  `1_knowledge/skills/onet_tool_map.csv`. Several tools can map to one label (Excel, Outlook, PowerPoint ->
+  Microsoft Office) and give one row: 229 tool rows -> 207. eMASS is dropped there (a US defence system).
+  Software Engineer and DevOps/SRE share one O\*NET occupation (15-1252.00), so their rows are the same.
+
+**Shares from different sources are not comparable**, even for the same role and skill. Compare a skill's
+rank within one source; across sources compare ranks (plan D7), not percentages, and caption every number
+with source, period, n and text type.
+
+- *What is read.* A full-text share counts every way an ad names a skill, concepts included (machine learning,
+  communication). A tool-list share counts only the tool names another extractor (the dataset author's)
+  pulled out: no concept ever appears, and each tool is matched by different rules. R is the clearest case:
+  12% of Seek Data Scientist ads (the vocabulary only accepts "R" in context, "R programming", "Python and
+  R") against 32% of data_jobs Data Scientist ads (the bare token "r").
+- *What is divided by.* Seek counts every ad; data_jobs only ads with a tool list (an empty list means the
+  extractor found nothing, not that the ad asks for nothing).
+- *Who is counted.* The recent blocks mix data engineers, analysts and scientists; Seek is Data Scientist
+  titles only.
+- *When and where.* 2019-22 Seek, 2023 Google Jobs, January 2024 LinkedIn, 2026 public job boards of tech
+  employers.
+- *Taxonomy rows are not demand.* They say what a classification lists for the occupation (ESCO is
+  European, O\*NET American), with no count; the app shows them as "core skills" for the roles without
+  Australian ads (QA/Test Engineer, DevOps/SRE, Network/Systems Administrator, Cybersecurity Analyst).
+
+Checks (`tests/test_role_skill_demand.py`; numbers of 15 Oct):
+
+- **data_jobs against `role_profiles.csv`**: the 7 denominators are equal (Data Engineer 4,438, Data
+  Analyst 1,362, Software Engineer 1,198, Data Scientist 1,047, Business Analyst 576, Cloud Engineer 350,
+  ML Engineer 263). 435 of its 441 role x skill rows have the same count; the other 6 gain a few ads from
+  `EXTRA_TOKEN_MAP`: Linux (Cloud Engineer 60 -> 62, Data Engineer 305 -> 306, Software Engineer 184 -> 187)
+  and NoSQL (Data Engineer 339 -> 350, Data Scientist 43 -> 44, Software Engineer 53 -> 56); at most 0.6
+  point. 135 role x skill rows are new: vocabulary tools the dictionary lacked, the largest Angular 5.7%,
+  Confluence 5.1%, Spring 4.9% and HTML 4.2% of Software Engineer ads.
+- **Seek against `skill_counts_v2.csv`** (148 dictionary skills, Data Scientist). Rule: within 0.1 point;
+  or, if not, equal within 0.1 to `skill_counts_2026.csv`'s `pct_2019_22` (the same ads, cleaned, the same
+  aliases) and higher, so the gap is the text cleaning; or lower because of the longest-alias rule above.
+  Result: 120 within 0.1; 26 higher by 0.2 to 1.7 points because `skill_counts_v2.csv` was counted on the raw
+  text with welded words ("TableauSuperior"): Python 82.8 -> 84.5, Communication 28.3 -> 30.0, Scala 15.1 ->
+  16.4, Predictive modelling 30.1 -> 31.1, Data visualisation 25.3 -> 26.2, AWS 21.7 -> 22.3, Tableau 18.9
+  -> 19.4, Spark 25.6 -> 26.1, and 18 more by 0.2 to 0.4; 2 lower by the longest-alias rule: SQL 56.8 -> 56.3,
+  Cloud platforms 25.1 -> 23.6. None because of the vocabulary: its 148 dictionary aliases are unchanged, and
+  counting with only those 148 rows gives the same numbers, so the new rows take no mention from them.
+- **recent against `skill_counts_2026.csv`**: 2026, all 148 within 0.1; January 2024, 145, and SQL -4.1,
+  Cloud platforms -1.6, Artificial intelligence -0.8 points (longest alias).
+- The committed Seek, recent and taxonomy rows equal a rebuild from the committed files; the data_jobs rows
+  too when `data/raw/` has the data_jobs file (else that test skips; `--check` covers it).

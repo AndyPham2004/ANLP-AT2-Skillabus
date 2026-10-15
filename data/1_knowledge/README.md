@@ -71,9 +71,11 @@ python data-eda/src/build_vocabulary.py                                         
 
 ## Occupation skills per role (plan D4)
 
-The app's "core skills" for a role, and the `taxonomy` rows of the demand table (plan 4.3), come
-from here. Built by Quan's session on 15 Oct; Van Thong's `2_demand/roles.csv` (D1) starts from
-`role_occupations.csv`. Rebuild (needs `data/raw/taxonomy_esco_v1.2.1/`, `taxonomy_onet_v31/`,
+The app's "core skills" for a role, and the `taxonomy` rows of the demand table
+`2_demand/role_skill_demand.csv` (plan D6), come from here: the ESCO rows whose skill is in the vocabulary
+(every essential skill; 139 of the 399 optional ones) and the O\*NET rows mapped through
+`skills/onet_tool_map.csv`. ASC rows are not in that table. Built by Quan's session on 15 Oct; Van
+Thong's `2_demand/roles.csv` (D1) starts from `role_occupations.csv`. Rebuild (needs `data/raw/taxonomy_esco_v1.2.1/`, `taxonomy_onet_v31/`,
 `taxonomy_asc_australia/`; `--raw <folder>` reads them from another checkout):
 
 ```powershell
