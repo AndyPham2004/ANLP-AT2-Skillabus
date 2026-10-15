@@ -44,6 +44,18 @@ TAXONOMIES = KNOWLEDGE / "taxonomies"
 ESCO_SKILLS_CLEAN = TAXONOMIES / "esco_skills_clean.csv"
 ESCO_LABEL_LOOKUP = TAXONOMIES / "esco_label_lookup.csv"
 
+# Skills each IT role's occupation requires (plan D4): python data-eda/src/build_occupation_skills.py
+ROLE_OCCUPATIONS = TAXONOMIES / "role_occupations.csv"    # 11 roles -> ESCO / O*NET / ASC occupation
+OCCUPATION_SKILLS = TAXONOMIES / "occupation_skills.csv"  # long: role x source x skill
+ESCO_OCCUPATIONS_RAW = RAW / "taxonomy_esco_v1.2.1" / "occupations_en.csv"
+ESCO_OCCUPATION_SKILLS_RAW = RAW / "taxonomy_esco_v1.2.1" / "occupationSkillRelations_en.csv"
+ESCO_DIGITAL_RAW = RAW / "taxonomy_esco_v1.2.1" / "digitalSkillsCollection_en.csv"
+ONET_OCCUPATIONS_RAW = RAW / "taxonomy_onet_v31" / "occupation_data.csv"
+ASC_RAW = RAW / "taxonomy_asc_australia"                  # Australian Skills Classification v1.0, CC BY 4.0
+ASC_OCCUPATIONS_RAW = ASC_RAW / "Occupation_Descriptions.csv"
+ASC_CORE_COMPETENCIES_RAW = ASC_RAW / "Core_competencies.csv"
+ASC_TECH_TOOLS_RAW = ASC_RAW / "Technology_tools.csv"
+
 UTS = KNOWLEDGE / "uts"
 SUBJECT_PROFILES = UTS / "subject_profiles.csv"
 PREREQUISITES = UTS / "prerequisites.csv"
@@ -132,6 +144,7 @@ POSTER_AD_SKILL_LONG = POSTER_DATA / "ad_skill_long.csv"
 # Committed files the code reads: tests/test_paths.py checks each one exists.
 COMMITTED = (
     SKILLS_SEED, SKILL_TO_ESCO, SKILLS_SEED_V1, SKILL_TO_ESCO_V1, ESCO_SKILLS_CLEAN, ESCO_LABEL_LOOKUP,
+    ROLE_OCCUPATIONS, OCCUPATION_SKILLS,
     SUBJECT_PROFILES, PREREQUISITES, OFFERINGS, ASSESSMENTS_SCRAPED, SUBJECTS_TEMPLATE, EXTERNAL_COURSES,
     EXTERNAL_COURSES_MD, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS, ROLE_PROFILES, SKILLS_NOT_TAUGHT,
     SEEK_ADS, RECENT_ADS, ATS_COMPANIES, ATS_CANDIDATES, EMERGING_CANDIDATES, AD_SKILLS, CV_JD_PAIRS,
