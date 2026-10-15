@@ -76,6 +76,9 @@ EXTERNAL_COURSES = LEARNING_RESOURCES / "external_courses.csv"
 EXTERNAL_COURSES_MD = LEARNING_RESOURCES / "external_courses.md"
 CERTIFICATIONS = LEARNING_RESOURCES / "certifications.csv"    # 49 industry certifications, 11 IT roles, "hot" signal (D11)
 CERTIFICATIONS_MD = LEARNING_RESOURCES / "certifications.md"
+RESOURCES = LEARNING_RESOURCES / "resources.csv"                # every self-study resource: level, format, hours, cost (D9)
+RESOURCE_MODULES = LEARNING_RESOURCES / "resource_modules.csv"  # text rows of the D9 resources, same schema as external_courses.csv
+PRIORITY_SKILLS = LEARNING_RESOURCES / "priority_skills.csv"    # the top 15 skills of each role that D9 covers
 
 # ------------------------------------------------------------------ 2_demand
 SKILL_COUNTS = DEMAND / "skill_counts_v2.csv"             # 3,204 Seek Data Scientist ads 2019-22
@@ -118,11 +121,8 @@ LLM_CACHE_EVAL = EVALUATION / "llm_cache"                 # the 30 committed GPT
 SKILL_COUNTS_PRIMARY = CROSSCHECK / "skill_counts_PRIMARY.csv"
 SKILL_COUNTS_LINKEDIN_US = CROSSCHECK / "skill_counts_linkedin_us.csv"
 SKILL_COUNTS_GLASSDOOR_AU = CROSSCHECK / "skill_counts_glassdoor_au_2022.csv"
-AU_VS_US = CROSSCHECK / "au_vs_us_comparison.csv"
 EXTRACTOR_AGREEMENT = CROSSCHECK / "extractor_agreement.csv"
 EXTRACTOR_AGREEMENT_DECOMPOSED = CROSSCHECK / "extractor_agreement_decomposed.csv"
-SOURCE_COUNTS = CROSSCHECK / "source_counts.csv"
-ESCO_COVERAGE = CROSSCHECK / "esco_coverage"
 
 # ------------------------------------------------------------------ raw (not in git; data/README.md says where each comes from)
 ESCO_RAW = RAW / "taxonomy_esco_v1.2.1" / "skills_en.csv"
@@ -163,11 +163,11 @@ COMMITTED = (
     ADDED_SKILLS, ONET_TOOL_MAP, VOCAB_AD_COUNTS,
     ESCO_SKILLS_CLEAN, ESCO_LABEL_LOOKUP, ROLE_OCCUPATIONS, OCCUPATION_SKILLS,
     SUBJECT_PROFILES, PREREQUISITES, OFFERINGS, ASSESSMENTS_SCRAPED, SUBJECTS_TEMPLATE, EXTERNAL_COURSES,
-    EXTERNAL_COURSES_MD, CERTIFICATIONS, CERTIFICATIONS_MD, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS,
+    EXTERNAL_COURSES_MD, CERTIFICATIONS, CERTIFICATIONS_MD, RESOURCES, RESOURCE_MODULES, PRIORITY_SKILLS, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS,
     ROLE_PROFILES, ROLE_SKILL_DEMAND, SKILLS_NOT_TAUGHT, SEEK_ADS, RECENT_ADS, ATS_COMPANIES, ATS_CANDIDATES, EMERGING_CANDIDATES, AD_SKILLS, CV_JD_PAIRS,
     SKILL_SUBJECT_PAIRS, CHAT_QUESTIONS, LABEL_SAMPLE, RESUMES, LLM_CACHE_EVAL, SKILL_COUNTS_PRIMARY,
-    SKILL_COUNTS_LINKEDIN_US, SKILL_COUNTS_GLASSDOOR_AU, AU_VS_US, EXTRACTOR_AGREEMENT,
-    EXTRACTOR_AGREEMENT_DECOMPOSED, SOURCE_COUNTS, ESCO_COVERAGE, SAMPLE_AD, SAMPLE_RESUME, FIGURES,
+    SKILL_COUNTS_LINKEDIN_US, SKILL_COUNTS_GLASSDOOR_AU, EXTRACTOR_AGREEMENT,
+    EXTRACTOR_AGREEMENT_DECOMPOSED, SAMPLE_AD, SAMPLE_RESUME, FIGURES,
     POSTER_GAP, POSTER_AD_SKILL_LONG,
 )
 # Written while the app or pipeline runs; .gitignore keeps all of it out of git.
