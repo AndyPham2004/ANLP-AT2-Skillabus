@@ -11,9 +11,12 @@
 
 3. T1 (plan of 14 Oct): the same check for IT skills. Part 2 was set on 8 Oct with 22 data
    skills; IT skills (Kubernetes, Terraform, React) are worded differently in the Handbook.
-   --it writes, for 12 IT skills, the closest subject rows that do NOT name the skill, with an
-   empty `relevant` column to fill by hand (y: the row teaches the skill or a direct part of it;
-   n: it does not). --it-summary prints, for each cut, how many rows above it are relevant.
+   --it writes, for 12 IT skills, the subject rows that do NOT name the skill: every one at
+   cosine >= 0.50, and the closest ones down to 0.40 (at most 15 per skill), with a `relevant`
+   column to fill by hand (y: the row teaches the skill or a direct part of it; n: it does not).
+   Scores keep 5 decimals, enough to compare them with a cut as recommend() does.
+   A rerun keeps the judgements already made (matched on skill, subject, layer and text).
+   --it-summary prints, for each cut, how many rows above it are relevant.
    None of the 12 skills is in the skill-subject test pairs (skill_subject_pairs.csv).
 
 Pick each threshold where the pairs above it are right and the pairs below it are wrong.
@@ -31,6 +34,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 import numpy as np  # noqa: E402
 
+from skillabus import paths  # noqa: E402
 from skillabus.extract import load_dictionary  # noqa: E402
 from skillabus.match import NOT_TRANSFERABLE  # noqa: E402
 from skillabus.recommend import MIN_SIM, PROFILE_PATHS, _query, load_profiles  # noqa: E402
@@ -49,8 +53,9 @@ CHECK_PAIRS = [("Tableau", "Power BI"), ("Tableau", "Excel"), ("Tableau", "matpl
 # T1: IT skills, none of them in data/4_evaluation/labels/skill_subject_pairs.csv
 IT_SKILLS = ["Java", "JavaScript", "React", "Linux", "Git", "Docker", "Kubernetes", "CI/CD", "Terraform",
              "Kafka", "API development", "Data security"]
-IT_ROWS = ROOT / "data" / "3_tuning" / "t1_it_unnamed_rows.csv"
-IT_FLOOR, IT_PER_SKILL = 0.40, 15         # rows at or above the floor, at most this many per skill
+IT_ROWS = paths.T1_IT_ROWS
+IT_ALL = 0.50                             # every unnamed row at or above this is written
+IT_FLOOR, IT_PER_SKILL = 0.40, 15         # below it: the closest rows down to the floor, at most this many per skill
 CUTS = (0.45, 0.50, 0.55, 0.60, 0.65, 0.70)
 
 
@@ -104,31 +109,45 @@ def it_rows() -> None:
     texts = [row["text"] for row in rows]
     emb = similarity([_query(k) for k in IT_SKILLS], texts, "embed")
     tfidf = similarity([_query(k) for k in IT_SKILLS], texts, "tfidf")
+    def _id(r: dict) -> tuple:
+        return r["skill"], r["subject_code"], r["layer"], r["text"]
+
+    judged = {}
+    if IT_ROWS.exists():                  # keep the judgements of an earlier run
+        with open(IT_ROWS, encoding="utf-8", newline="") as f:
+            judged = {_id(r): (r["relevant"], r["note"]) for r in csv.DictReader(f) if r.get("relevant")}
     out = []
     for i, skill in enumerate(IT_SKILLS):
         n_named = sum(skill in hits for hits in named)
-        unnamed = [j for j in np.argsort(-emb[i]) if skill not in named[j] and emb[i, j] >= IT_FLOOR][:IT_PER_SKILL]
+        order = [j for j in np.argsort(-emb[i], kind="stable") if skill not in named[j] and emb[i, j] >= IT_FLOOR]
+        unnamed = [j for j in order if emb[i, j] >= IT_ALL]
+        unnamed += [j for j in order if emb[i, j] < IT_ALL][: max(0, IT_PER_SKILL - len(unnamed))]
         print(f"{skill:<16} rows naming it {n_named:>4} | unnamed rows >= {IT_FLOOR}: {len(unnamed)}"
               + "".join(f" | >= {c}: {int(((emb[i] >= c) & np.array([skill not in h for h in named])).sum())}"
                         for c in (0.5, 0.55, 0.6)))
         for j in unnamed:
             row = rows[j]
-            out.append({"skill": skill, "embed": round(float(emb[i, j]), 3), "tfidf": round(float(tfidf[i, j]), 3),
-                        "subject_code": row["subject_code"], "subject_name": row.get("subject_name", ""),
-                        "layer": row["layer"], "text": row["text"], "relevant": "", "note": ""})
+            new = {"skill": skill, "embed": round(float(emb[i, j]), 5), "tfidf": round(float(tfidf[i, j]), 3),
+                   "subject_code": row["subject_code"], "subject_name": row.get("subject_name", ""),
+                   "layer": row["layer"], "text": row["text"], "relevant": "", "note": ""}
+            new["relevant"], new["note"] = judged.get(_id(new), ("", ""))
+            out.append(new)
     IT_ROWS.parent.mkdir(parents=True, exist_ok=True)
     with open(IT_ROWS, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(out[0]), lineterminator="\n")
         w.writeheader()
         w.writerows(out)
+    kept = sum(bool(r["relevant"]) for r in out)
     print(f"\n{len(out)} rows from {path.relative_to(ROOT)} ({len(rows)} rows), model {EMBED_MODEL} -> {IT_ROWS.relative_to(ROOT)}")
+    print(f"{kept} judgements kept from the earlier run, {len(out) - kept} rows to judge")
 
 
 def it_summary() -> None:
     """T1: for each cut, the judged rows above it and how many are relevant."""
     with open(IT_ROWS, encoding="utf-8", newline="") as f:
-        judged = [r for r in csv.DictReader(f) if r["relevant"] in ("y", "n")]
-    print(f"{len(judged)} judged rows, {sum(r['relevant'] == 'y' for r in judged)} relevant\n")
+        table = list(csv.DictReader(f))
+    judged = [r for r in table if r["relevant"] in ("y", "n")]
+    print(f"{len(judged)} of {len(table)} rows judged, {sum(r['relevant'] == 'y' for r in judged)} relevant\n")
     print(f"{'cut':>5} {'above':>6} {'relevant':>9} {'precision':>10} {'relevant below':>15}")
     for cut in CUTS:
         above = [r for r in judged if float(r["embed"]) >= cut]
@@ -136,11 +155,12 @@ def it_summary() -> None:
         below = sum(r["relevant"] == "y" for r in judged if float(r["embed"]) < cut)
         prec = f"{right / len(above):.2f}" if above else "-"
         print(f"{cut:>5} {len(above):>6} {right:>9} {prec:>10} {below:>15}")
-    print("\nper skill at the current cut", MIN_SIM["embed"])
-    for skill in IT_SKILLS:
-        above = [r for r in judged if r["skill"] == skill and float(r["embed"]) >= MIN_SIM["embed"]]
-        if above:
-            print(f"  {skill:<16} {sum(r['relevant'] == 'y' for r in above)}/{len(above)}")
+    for cut in (0.50, MIN_SIM["embed"]):
+        print(f"\nper skill at {cut}")
+        for skill in IT_SKILLS:
+            above = [r for r in judged if r["skill"] == skill and float(r["embed"]) >= cut]
+            if above:
+                print(f"  {skill:<16} {sum(r['relevant'] == 'y' for r in above)}/{len(above)}")
 
 
 if __name__ == "__main__":

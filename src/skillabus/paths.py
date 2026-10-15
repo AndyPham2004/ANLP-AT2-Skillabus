@@ -10,7 +10,7 @@ Scripts outside src/ (data-eda/src/*.py, notebooks/) first put src/ on sys.path,
 
     data/1_knowledge/   what the app looks up: skills, taxonomies, UTS subjects, outside courses
     data/2_demand/      what employers ask for: counts, role profiles, cleaned ads, collection lists
-    data/3_tuning/      README only: which threshold was set on which data
+    data/3_tuning/      which threshold was set on which data (README), and the rows judged to set it
     data/4_evaluation/  test labels, the inputs they were made on, results, the committed GPT cache
     data/5_crosscheck/  other markets and platforms, ESCO coverage
     data/raw/           downloads (not in git)
@@ -73,6 +73,9 @@ ATS_CANDIDATES = COLLECTION / "ats_candidates.csv"
 
 EMERGING = DEMAND / "emerging"
 EMERGING_CANDIDATES = EMERGING / "emerging_candidates.csv"
+
+# ------------------------------------------------------------------ 3_tuning
+T1_IT_ROWS = TUNING / "t1_it_unnamed_rows.csv"            # T1: unnamed subject rows for 12 IT skills, judged by hand
 
 # ------------------------------------------------------------------ 4_evaluation
 LABELS = EVALUATION / "labels"
@@ -138,7 +141,7 @@ COMMITTED = (
     SKILL_SUBJECT_PAIRS, CHAT_QUESTIONS, LABEL_SAMPLE, RESUMES, LLM_CACHE_EVAL, SKILL_COUNTS_PRIMARY,
     SKILL_COUNTS_LINKEDIN_US, SKILL_COUNTS_GLASSDOOR_AU, AU_VS_US, EXTRACTOR_AGREEMENT,
     EXTRACTOR_AGREEMENT_DECOMPOSED, SOURCE_COUNTS, ESCO_COVERAGE, SAMPLE_AD, SAMPLE_RESUME, FIGURES,
-    POSTER_GAP, POSTER_AD_SKILL_LONG,
+    POSTER_GAP, POSTER_AD_SKILL_LONG, T1_IT_ROWS,
 )
 # Written while the app or pipeline runs; .gitignore keeps all of it out of git.
 NOT_IN_GIT = (RAW, RUNTIME)
