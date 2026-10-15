@@ -133,7 +133,13 @@ TF-IDF (unigrams and bigrams, cosine ≥ 0.35) as the traditional baseline, `all
 (cosine ≥ 0.55) as the newer method. The embedding threshold was set by reading the closest non-naming rows on 429
 Handbook rows: at 0.55 the kept rows were mostly real paraphrases TF-IDF scored near zero ("Classification and
 prediction" for machine learning), while TF-IDF's extra matches shared misleading words ("Machine Translation" for machine
-learning). The deployed app runs TF-IDF (no PyTorch on the free host); section 6 reports both.
+learning). We rechecked the threshold on 15 Oct with 12 IT skills outside the test pairs (Java to Data security) over all
+6,853 rows (`data/3_tuning/t1_it_unnamed_rows.csv`, 55 closest non-naming rows judged by hand): every row at or above 0.55
+was right (7 of 7), against 17 of the 19 judged at 0.50 (Data security has 23 there; its 15 closest were judged). The cost is recall: tool names such as Kubernetes or Terraform never reach
+0.55, because the Handbook describes concepts ("Automating Your Infrastructure"), so IT tools are found almost only when a
+row names them. Two failures show why we did not lower it: "CI/CD" lands on *Computational Intelligence* (an acronym
+clash) and Java on object-oriented programming in general. We kept 0.55. The deployed app runs TF-IDF (no PyTorch on the
+free host); section 6 reports both.
 
 A row's score is its similarity (1.0 when it names the skill) times its layer weight (learning objective 1.0, assessment
 0.9, weekly topic 0.8, description 0.5). A subject's strength is its best row, +0.15 per further row (at most three),
