@@ -1,0 +1,166 @@
+role,rank,skill,basis
+Business Analyst,1,SQL,role_profiles (data_jobs 2023)
+Business Analyst,2,Excel,role_profiles (data_jobs 2023)
+Business Analyst,3,Power BI,role_profiles (data_jobs 2023)
+Business Analyst,4,Python,role_profiles (data_jobs 2023)
+Business Analyst,5,Tableau,role_profiles (data_jobs 2023)
+Business Analyst,6,Microsoft Office,role_profiles (data_jobs 2023)
+Business Analyst,7,AWS,role_profiles (data_jobs 2023)
+Business Analyst,8,Azure,role_profiles (data_jobs 2023)
+Business Analyst,9,R,role_profiles (data_jobs 2023)
+Business Analyst,10,SAP,role_profiles (data_jobs 2023)
+Business Analyst,11,SQL Server,role_profiles (data_jobs 2023)
+Business Analyst,12,Oracle,role_profiles (data_jobs 2023)
+Business Analyst,13,Jira,role_profiles (data_jobs 2023)
+Business Analyst,14,Redshift,role_profiles (data_jobs 2023)
+Business Analyst,15,SAS,role_profiles (data_jobs 2023)
+Cloud Engineer,1,Azure,role_profiles (data_jobs 2023)
+Cloud Engineer,2,AWS,role_profiles (data_jobs 2023)
+Cloud Engineer,3,Python,role_profiles (data_jobs 2023)
+Cloud Engineer,4,SQL,role_profiles (data_jobs 2023)
+Cloud Engineer,5,Terraform,role_profiles (data_jobs 2023)
+Cloud Engineer,6,Shell scripting,role_profiles (data_jobs 2023)
+Cloud Engineer,7,Linux,role_profiles (data_jobs 2023)
+Cloud Engineer,8,Windows,role_profiles (data_jobs 2023)
+Cloud Engineer,9,Kubernetes,role_profiles (data_jobs 2023)
+Cloud Engineer,10,Git,role_profiles (data_jobs 2023)
+Cloud Engineer,11,Java,role_profiles (data_jobs 2023)
+Cloud Engineer,12,Google Cloud,role_profiles (data_jobs 2023)
+Cloud Engineer,13,Docker,role_profiles (data_jobs 2023)
+Cloud Engineer,14,JavaScript,role_profiles (data_jobs 2023)
+Cloud Engineer,15,SQL Server,role_profiles (data_jobs 2023)
+Data Analyst,1,SQL,role_profiles (data_jobs 2023)
+Data Analyst,2,Python,role_profiles (data_jobs 2023)
+Data Analyst,3,Power BI,role_profiles (data_jobs 2023)
+Data Analyst,4,Excel,role_profiles (data_jobs 2023)
+Data Analyst,5,Tableau,role_profiles (data_jobs 2023)
+Data Analyst,6,R,role_profiles (data_jobs 2023)
+Data Analyst,7,Azure,role_profiles (data_jobs 2023)
+Data Analyst,8,SQL Server,role_profiles (data_jobs 2023)
+Data Analyst,9,AWS,role_profiles (data_jobs 2023)
+Data Analyst,10,Snowflake,role_profiles (data_jobs 2023)
+Data Analyst,11,Microsoft Office,role_profiles (data_jobs 2023)
+Data Analyst,12,SAS,role_profiles (data_jobs 2023)
+Data Analyst,13,Oracle,role_profiles (data_jobs 2023)
+Data Analyst,14,SAP,role_profiles (data_jobs 2023)
+Data Analyst,15,Jira,role_profiles (data_jobs 2023)
+Data Engineer,1,SQL,role_profiles (data_jobs 2023)
+Data Engineer,2,Python,role_profiles (data_jobs 2023)
+Data Engineer,3,Azure,role_profiles (data_jobs 2023)
+Data Engineer,4,AWS,role_profiles (data_jobs 2023)
+Data Engineer,5,Spark,role_profiles (data_jobs 2023)
+Data Engineer,6,Databricks,role_profiles (data_jobs 2023)
+Data Engineer,7,Java,role_profiles (data_jobs 2023)
+Data Engineer,8,SQL Server,role_profiles (data_jobs 2023)
+Data Engineer,9,Snowflake,role_profiles (data_jobs 2023)
+Data Engineer,10,Git,role_profiles (data_jobs 2023)
+Data Engineer,11,Power BI,role_profiles (data_jobs 2023)
+Data Engineer,12,Scala,role_profiles (data_jobs 2023)
+Data Engineer,13,Kafka,role_profiles (data_jobs 2023)
+Data Engineer,14,Airflow,role_profiles (data_jobs 2023)
+Data Engineer,15,Redshift,role_profiles (data_jobs 2023)
+Machine Learning Engineer,1,Python,role_profiles (data_jobs 2023)
+Machine Learning Engineer,2,SQL,role_profiles (data_jobs 2023)
+Machine Learning Engineer,3,AWS,role_profiles (data_jobs 2023)
+Machine Learning Engineer,4,PyTorch,role_profiles (data_jobs 2023)
+Machine Learning Engineer,5,TensorFlow,role_profiles (data_jobs 2023)
+Machine Learning Engineer,6,Java,role_profiles (data_jobs 2023)
+Machine Learning Engineer,7,Azure,role_profiles (data_jobs 2023)
+Machine Learning Engineer,8,Google Cloud,role_profiles (data_jobs 2023)
+Machine Learning Engineer,9,Linux,role_profiles (data_jobs 2023)
+Machine Learning Engineer,10,Git,role_profiles (data_jobs 2023)
+Machine Learning Engineer,11,Kubernetes,role_profiles (data_jobs 2023)
+Machine Learning Engineer,12,Docker,role_profiles (data_jobs 2023)
+Machine Learning Engineer,13,Spark,role_profiles (data_jobs 2023)
+Machine Learning Engineer,14,R,role_profiles (data_jobs 2023)
+Machine Learning Engineer,15,scikit-learn,role_profiles (data_jobs 2023)
+Software Engineer,1,AWS,role_profiles (data_jobs 2023)
+Software Engineer,2,Python,role_profiles (data_jobs 2023)
+Software Engineer,3,Java,role_profiles (data_jobs 2023)
+Software Engineer,4,SQL,role_profiles (data_jobs 2023)
+Software Engineer,5,Azure,role_profiles (data_jobs 2023)
+Software Engineer,6,JavaScript,role_profiles (data_jobs 2023)
+Software Engineer,7,Git,role_profiles (data_jobs 2023)
+Software Engineer,8,Linux,role_profiles (data_jobs 2023)
+Software Engineer,9,Kubernetes,role_profiles (data_jobs 2023)
+Software Engineer,10,React,role_profiles (data_jobs 2023)
+Software Engineer,11,Docker,role_profiles (data_jobs 2023)
+Software Engineer,12,Google Cloud,role_profiles (data_jobs 2023)
+Software Engineer,13,Terraform,role_profiles (data_jobs 2023)
+Software Engineer,14,C#,role_profiles (data_jobs 2023)
+Software Engineer,15,Shell scripting,role_profiles (data_jobs 2023)
+Data Scientist,1,Python,top_skills (Seek 2019-22)
+Data Scientist,2,Machine learning,top_skills (Seek 2019-22)
+Data Scientist,3,SQL,top_skills (Seek 2019-22)
+Data Scientist,4,Statistics,top_skills (Seek 2019-22)
+Data Scientist,5,Predictive modelling,top_skills (Seek 2019-22)
+Data Scientist,6,Spark,top_skills (Seek 2019-22)
+Data Scientist,7,Data visualisation,top_skills (Seek 2019-22)
+Data Scientist,8,Cloud platforms,top_skills (Seek 2019-22)
+Data Scientist,9,Artificial intelligence,top_skills (Seek 2019-22)
+Data Scientist,10,AWS,top_skills (Seek 2019-22)
+Data Scientist,11,Optimisation,top_skills (Seek 2019-22)
+Data Scientist,12,Tableau,top_skills (Seek 2019-22)
+Data Scientist,13,Hadoop,top_skills (Seek 2019-22)
+Data Scientist,14,Natural language processing,top_skills (Seek 2019-22)
+Data Scientist,15,Deep learning,top_skills (Seek 2019-22)
+QA/Test Engineer,1,AWS,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,2,JMeter,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,3,Appium,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,4,Jira,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,5,C#,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,6,C++,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,7,Git,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,8,JavaScript,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,9,Jenkins,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,10,Linux,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,11,Azure,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,12,Excel,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,13,Microsoft Office,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,14,Playwright,"core skills (O*NET in-demand, ESCO essential digital)"
+QA/Test Engineer,15,Java,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,1,AWS,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,2,Kafka,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,3,Jira,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,4,C,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,5,C#,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,6,C++,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,7,CSS,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,8,Docker,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,9,Git,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,10,Go,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,11,Angular,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,12,HTML,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,13,Terraform,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,14,JavaScript,"core skills (O*NET in-demand, ESCO essential digital)"
+DevOps/SRE,15,Jenkins,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,1,AWS,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,2,Ansible,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,3,Shell scripting,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,4,Firewalls,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,5,Linux,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,6,Active Directory,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,7,Azure,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,8,Excel,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,9,Microsoft Office,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,10,SharePoint,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,11,Windows,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,12,Python,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,13,ServiceNow,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,14,SQL,"core skills (O*NET in-demand, ESCO essential digital)"
+Network/Systems Administrator,15,administer ICT system,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,1,AWS,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,2,Firewalls,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,3,Linux,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,4,Azure,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,5,Excel,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,6,Microsoft Office,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,7,Shell scripting,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,8,MITRE ATT&CK,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,9,Python,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,10,Splunk,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,11,Nessus,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,12,attack vectors,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,13,cyber security,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,14,collect cyber defence data,"core skills (O*NET in-demand, ESCO essential digital)"
+Cybersecurity Analyst,15,cyber attack counter-measures,"core skills (O*NET in-demand, ESCO essential digital)"
