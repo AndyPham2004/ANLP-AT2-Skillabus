@@ -94,15 +94,16 @@ skill): on whole ads, the benefits and hiring sections of company career sites, 
 almost any word look new. Rise is the weighted log-odds of the 2026 ads against the 3,204 Seek ads with an informative
 Dirichlet prior (Monroe, Colaresi & Quinn, 2008), with pseudo-counts floored at 0.5 so a phrase absent before 2023 is not
 penalised for its zero (without the floor, 3 of 22 ads against 0 of 3,204 scored z = 1.0). A candidate must have z ≥ 1.96,
-appear in at least 3 ads from at least 2 employers (one employer posted most of the sample), and be neither a dictionary
+appear in at least 3 ads from at least 2 employers (so one employer's boilerplate cannot qualify), and be neither a dictionary
 alias nor an ESCO label. A short, hand-made list of career-site words ("thrive", "hiring") is removed; it was made from the
 n-gram output, not from a test set.
 
-On the 22 full-text 2026 ads **[rerun on the #87 sample]**, n-grams surface *workflows, prompt, agents, observability,
-ai tools, ai agents, ai-native, llm-as-judge, evaluation frameworks* among remaining generic words; spaCy keeps only two
-phrases, because most tools it finds appear in a single ad. With the 124 LinkedIn ads of January 2024 added, spaCy finds
-tool names (Fivetran, Matillion, NiFi, KServe, Seldon, Neo4j), but that sample is mostly data engineers, so a change of
-role mix is mixed with a change over time. Precision@20 of each method, judged by hand, is in section 6 **[eval]**.
+On the 22 in-sample 2026 roles from 12 employers (#87), n-grams surface *workflows, using ai, ai capabilities, product
+engineering* and *agentic*, but most of their top 50 is still career-site prose (*fostering, modern, genuine*); spaCy keeps
+five phrases, two of them absent from every 2019–22 ad (*agentic workflows*, *Claude*), because most tools it finds appear
+in a single ad. With the 122 LinkedIn ads of January 2024 added (144 ads), spaCy finds tool names (Fivetran, Matillion,
+Glue, Flink, NiFi, KServe, Seldon), but that sample is mostly data engineers, so a change of role mix is mixed with a
+change over time. Precision@20 of each method, judged by hand, is in section 6 **[eval]**; the GPT tier is **[Quan]**.
 
 ## 4.4 Matching: have, partial, missing
 
