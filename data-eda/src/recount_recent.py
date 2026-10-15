@@ -1,6 +1,6 @@
 """Count every dictionary skill in 2019-22, January 2024 and 2026, with the same method.
 
-Writes data/processed/skill_counts_2026.csv, the file match.py reads for
+Writes data/2_demand/skill_counts_2026.csv, the file match.py reads for
 `demand_pct_2026` (data contract section 2). One row per skill in
 skills_seed_v2.csv:
 
@@ -41,18 +41,20 @@ from __future__ import annotations
 import argparse
 import logging
 import math
+import sys
 from pathlib import Path
 
 import pandas as pd
 
 from extract_skills import build_patterns, extract
 
-ROOT = Path(__file__).resolve().parents[1]          # data-eda/
-REPO = ROOT.parent
-DEFAULT_SEEK = ROOT / "data" / "clean" / "jobs_au_seek_datascientist_2019-2022_clean.csv"
-DEFAULT_RECENT = ROOT / "data" / "clean" / "jobs_au_recent_2024-2026_clean.csv"
-DEFAULT_SEED = REPO / "data" / "processed" / "skills_seed_v2.csv"
-DEFAULT_OUT = REPO / "data" / "processed" / "skill_counts_2026.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+DEFAULT_SEEK = paths.SEEK_ADS
+DEFAULT_RECENT = paths.RECENT_ADS
+DEFAULT_SEED = paths.SKILLS_SEED
+DEFAULT_OUT = paths.SKILL_COUNTS_2026
 
 LLM_ERA = ["Large language models", "Generative AI", "Prompt engineering", "RAG",
            "LangChain", "Vector databases", "Hugging Face", "Transformers"]

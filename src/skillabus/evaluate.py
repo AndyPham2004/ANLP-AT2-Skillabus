@@ -1,14 +1,14 @@
 """Scores for the four stages: extraction P/R/F1, matching P@5 + MRR, subject P@3, chat 1-5. Owner: Hoai Thuong.
 
 Standard library only, so it runs on a fresh clone. Input shapes follow docs/data_contract.md and the
-label templates in data/labels/. Every function takes plain dicts and lists; nothing here calls the
+label templates in data/4_evaluation/labels/. Every function takes plain dicts and lists; nothing here calls the
 pipeline or an API, so the harness can be tested before the pipeline exists.
 
 Also here: Cohen's kappa between two annotators (task "label 20 ads like Akash").
 
 Command line (numbers for the report; the report names this file as the script):
     python -m skillabus.evaluate kappa  A.csv B.csv --a-name "Hoai Thuong" --b-name Akash \
-        --dictionary data/processed/skills_seed_v2.csv
+        --dictionary data/1_knowledge/skills/skills_seed_v2.csv
     python -m skillabus.evaluate extraction gold.csv pred.json [--method dictionary]
 """
 from __future__ import annotations
@@ -50,7 +50,7 @@ def _rows(path: str) -> list[dict]:
 
 
 def load_dictionary(path: str) -> list[str]:
-    """Canonical skill names (normalised) from data/processed/skills_seed_v2.csv."""
+    """Canonical skill names (normalised) from data/1_knowledge/skills/skills_seed_v2.csv."""
     return sorted({norm(r["canonical"]) for r in _rows(path) if r.get("canonical")})
 
 

@@ -89,7 +89,7 @@ serves one of them:
 | Date | Milestone | Done when |
 |---|---|---|
 | 4 Oct | **M0 Contract** | Data contract merged; first 50 labelled ads in |
-| 6 Oct | **M1 Inputs** | All test sets and raw subject content in `data/labels/` |
+| 6 Oct | **M1 Inputs** | All test sets and raw subject content in `data/labels/` (now `data/4_evaluation/labels/`) |
 | 7 Oct | **M2 Pipeline** | Ad + resume in, gap JSON out, end to end |
 | 8 Oct | **M3 App on mock data** | Every screen clickable |
 | 11 Oct | **M4 App on real data + evaluation** | Deployed link; metrics table filled |
@@ -101,7 +101,7 @@ If a test set is late, it shrinks; nothing else waits for it.
 ## Replan of 12 Oct 2026 (after the 16 merges)
 
 The tables above are the 3 Oct plan; most of it is on `main`. What each person does from 13 Oct is in
-[docs/plan/ideas_2026-10-12.md](plan/ideas_2026-10-12.md) section 7, approved by Quan on 12 Oct, and in
+[docs/notes/ideas_2026-10-12.md](notes/ideas_2026-10-12.md) section 7, approved by Quan on 12 Oct, and in
 issues #57-#79. In one line each:
 
 | Who | 13-16 Oct |

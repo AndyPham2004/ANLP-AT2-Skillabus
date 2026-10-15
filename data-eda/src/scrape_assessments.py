@@ -15,7 +15,7 @@ Usage (from the repo root):
     python data-eda/src/scrape_assessments.py                 # all subjects in uts_subjects_2026.csv
     python data-eda/src/scrape_assessments.py --codes 36118   # a few
 
-Writes data/processed/assessments_scraped.csv in the subject_profiles.csv shape
+Writes data/1_knowledge/uts/assessments_scraped.csv in the subject_profiles.csv shape
 (layer = assessment, collected_by = "script (handbook)"); build_subject_profiles.py merges it.
 """
 
@@ -26,16 +26,18 @@ import html
 import json
 import logging
 import re
+import sys
 import time
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-ROOT = Path(__file__).resolve().parents[1]           # data-eda/
-REPO = ROOT.parent
-SUBJECTS = ROOT / "data" / "raw" / "uts_subjects_2026.csv"
-OUT = REPO / "data" / "processed" / "assessments_scraped.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+SUBJECTS = paths.UTS_SUBJECTS_RAW
+OUT = paths.ASSESSMENTS_SCRAPED
 BASE = "https://coursehandbook.uts.edu.au"
 HEADERS = {"User-Agent": "Mozilla/5.0 (UTS 36118 student project)"}
 NEXT_DATA = re.compile(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>', re.S)

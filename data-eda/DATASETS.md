@@ -9,9 +9,9 @@ page. Verified 23 September 2026.
 |---|---|---|---|---|
 | `jobs_au_seek_datascientist_2019-2022.csv` | **3,204** | full, ~2.8k chars | 2019–2022 | **PRIMARY — the block 5 chart.** Data Scientist titles only |
 | `jobs_au_seek_datascience_2019-2022.csv` | 3,895 | full | 2019–2022 | all data-ish roles; superset of the above |
-| `jobs_au_seek_datascience_2019-2022_authorflags.csv` | 3,902 | full | 2019–2022 | superset carrying the author's own 25 tool flags. **Our external validation set** — joins to the primary on `ad_id == jobId`, all 3,204. See `outputs/extractor_agreement.csv` |
+| `jobs_au_seek_datascience_2019-2022_authorflags.csv` | 3,902 | full | 2019–2022 | superset carrying the author's own 25 tool flags. **Our external validation set** — joins to the primary on `ad_id == jobId`, all 3,204. See `data/5_crosscheck/extractor_agreement.csv` |
 | `jobs_au_ats_2026.csv` | 234 | full, ~6.2k | Sept 2026 | first job-board snapshot (23 Sep); Greenhouse/Lever/SmartRecruiters, 12 employers |
-| `ats_ads_2026-MM-DD.csv` | 595 (14 Oct), 592 (14 Oct evening, `_pm`) | full | Oct 2026 | one snapshot per daily run of `fetch_ats.py --australia-only` over the 65 boards in `config/ats_companies.csv`; Greenhouse, Lever, SmartRecruiters, Ashby, Workable. Not committed |
+| `ats_ads_2026-MM-DD.csv` | 595 (14 Oct), 592 (14 Oct evening, `_pm`) | full | Oct 2026 | one snapshot per daily run of `fetch_ats.py --australia-only` over the 65 boards in `data/2_demand/collection/ats_companies.csv`; Greenhouse, Lever, SmartRecruiters, Ashby, Workable. Not committed |
 | `jobs_au_adzuna_2026.csv` | 50 | **capped at 500 chars** | Sept 2026 | employers, volume, geography only |
 
 ## Job advertisements — international
@@ -19,7 +19,7 @@ page. Verified 23 September 2026.
 | File | Rows | Text | Period | Notes |
 |---|---|---|---|---|
 | `jobs_us_linkedin_2023-2024.csv` | 123,849 | full, ~3.4k | 2023–24 | 1,355 data roles. **99.9% US** — only 131 AU rows |
-| `data_jobs_hf/data_jobs.csv` | 785,741 (**12,955 AU**) | **none**: a list of tool names per ad | 2023 | Luke Barousse, [`lukebarousse/data_jobs`](https://huggingface.co/datasets/lukebarousse/data_jobs) on Hugging Face. **Licence: Apache-2.0** (dataset card, checked 14 Oct 2026). Collected from Google Jobs search results; we publish only per-role shares (`data/processed/role_profiles.csv`), no posting. 10 data/IT title classes from the author's BERT classifier. Its tool extractor counts the English word "go" as Go — dropped. Added 14 Oct 2026 for #65 |
+| `data_jobs_hf/data_jobs.csv` | 785,741 (**12,955 AU**) | **none**: a list of tool names per ad | 2023 | Luke Barousse, [`lukebarousse/data_jobs`](https://huggingface.co/datasets/lukebarousse/data_jobs) on Hugging Face. **Licence: Apache-2.0** (dataset card, checked 14 Oct 2026). Collected from Google Jobs search results; we publish only per-role shares (`data/2_demand/role_profiles.csv`), no posting. 10 data/IT title classes from the author's BERT classifier. Its tool extractor counts the English word "go" as Go — dropped. Added 14 Oct 2026 for #65 |
 | `linkedin_mappings/skills.csv` | 35 | — | — | **NOT skills** — 35 broad job functions (IT, SALE, MNFC) |
 
 ## Skills taxonomies
@@ -87,7 +87,7 @@ All Australian job data was checked for synthetic content before use:
    ("...Power BI and TableauSuperior analytical skills..."). Our word boundaries
    correctly refuse these, which means **every percentage in this folder is a
    slight under-count**: 365 mentions across 11 tools, about +3pp on Python and
-   SQL. Measured in `outputs/extractor_agreement_decomposed.csv`.
+   SQL. Measured in `data/5_crosscheck/extractor_agreement_decomposed.csv`.
 
 ## Known limitation to state on the poster
 
@@ -95,10 +95,11 @@ The primary Australian corpus is **2019–2022**, which predates the LLM stack �
 RAG, prompt engineering, LangChain or vector databases will appear. That absence is
 a property of the sampling window, not of the Australian market. Say so plainly.
 
-## Cleaned versions — `data/clean/` (9 Oct 2026)
+## Cleaned versions (9 Oct 2026)
 
-Raw files are never edited; the cleaned copies are rebuilt by scripts. Full notes in
-`data/clean/README.txt`.
+Raw files are never edited; the cleaned copies are rebuilt by scripts. Since 15 Oct they are in
+`data/`: the ads in `data/2_demand/ads/`, the label sample and resumes in `data/4_evaluation/inputs/`,
+the ESCO files in `data/1_knowledge/taxonomies/`. Full notes in `data/2_demand/ads/CLEANING_NOTES.txt`.
 
 | File | Rows | Script | What changed |
 |---|---|---|---|

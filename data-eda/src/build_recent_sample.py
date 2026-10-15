@@ -38,9 +38,9 @@ job-board rows (issue #64) three more rules apply before a row counts:
 The same role seen in several snapshots is kept once, from the latest snapshot; a role
 re-posted under a new id is kept once, from the newest posting.
 
-Usage (from data-eda/):
-    python src/build_recent_sample.py                       # Sept file + every ats_ads_2026-*.csv
-    python src/build_recent_sample.py --ats data/raw/jobs_au_ats_2026.csv data/raw/ats_ads_2026-10-14.csv
+Usage (from the repo root):
+    python data-eda/src/build_recent_sample.py              # Sept file + every ats_ads_2026-*.csv
+    python data-eda/src/build_recent_sample.py --ats data/raw/jobs_au_ats_2026.csv data/raw/ats_ads_2026-10-14.csv
 """
 
 from __future__ import annotations
@@ -48,16 +48,19 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data" / "raw"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+RAW = paths.RAW
 SEPT_ATS = RAW / "jobs_au_ats_2026.csv"
 DEFAULT_ADZUNA = RAW / "jobs_au_adzuna_2026.csv"
 DEFAULT_LINKEDIN = RAW / "linkedin_datascience_2024"
-DEFAULT_OUT = ROOT / "data" / "clean" / "jobs_au_recent_2024-2026_clean.csv"
+DEFAULT_OUT = paths.RECENT_ADS
 
 # One filter for every source, so the periods are comparable. No bare "AI": it let
 # "Senior Graphic AI Designer" and "AI Video Lead" in (#64).

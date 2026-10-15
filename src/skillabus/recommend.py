@@ -25,13 +25,14 @@ from pathlib import Path
 
 import numpy as np
 
+from . import paths
 from .extract import _dictionary_hits, load_dictionary
 from .match import demand_2026_low, skill_query
 from .similarity import best_method, similarity
 
-ROOT = Path(__file__).resolve().parents[2]
-# Van Thong's four-layer file when it exists, else the Handbook-only file from app/mock.
-PROFILE_PATHS = (ROOT / "data" / "processed" / "subject_profiles.csv", ROOT / "app" / "mock" / "subject_layers.csv")
+ROOT = paths.ROOT
+# Van Thong's four-layer file (committed). The Handbook-only mock of 3 Oct is in archive/mock_2026-10-03/.
+PROFILE_PATHS = (paths.SUBJECT_PROFILES,)
 
 METHODS = ("keyword", "tfidf", "embed")
 # Stronger evidence first: taught and assessed > graded > covered in class > mentioned.

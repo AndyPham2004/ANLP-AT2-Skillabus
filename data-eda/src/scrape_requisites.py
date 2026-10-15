@@ -16,8 +16,8 @@ Usage (from the repo root):
     python data-eda/src/scrape_requisites.py                # all subjects in uts_subjects_2026.csv
     python data-eda/src/scrape_requisites.py --codes 36118  # a few
 
-Writes data/processed/prerequisites.csv (one row per rule item) and
-data/processed/offerings.csv (one row per session x mode, from the subjects file).
+Writes data/1_knowledge/uts/prerequisites.csv (one row per rule item) and
+data/1_knowledge/uts/offerings.csv (one row per session x mode, from the subjects file).
 """
 
 from __future__ import annotations
@@ -26,17 +26,19 @@ import argparse
 import html as html_lib
 import logging
 import re
+import sys
 import time
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-ROOT = Path(__file__).resolve().parents[1]           # data-eda/
-REPO = ROOT.parent
-SUBJECTS = ROOT / "data" / "raw" / "uts_subjects_2026.csv"
-OUT_PREREQ = REPO / "data" / "processed" / "prerequisites.csv"
-OUT_OFFER = REPO / "data" / "processed" / "offerings.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
+SUBJECTS = paths.UTS_SUBJECTS_RAW
+OUT_PREREQ = paths.PREREQUISITES
+OUT_OFFER = paths.OFFERINGS
 EVOP = "https://studentforms.uts.edu.au/evop/access/search.cfm?subjectcode={code}"
 HEADERS = {"User-Agent": "Mozilla/5.0 (UTS 36118 student project)"}
 
