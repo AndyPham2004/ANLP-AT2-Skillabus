@@ -34,6 +34,9 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | `1_knowledge/uts/assessments_scraped.csv` | Assessment tasks before the merge | Quan, Van Thong | `python data-eda/src/scrape_assessments.py` |
 | `1_knowledge/uts/subjects_template.csv`, `subject_content_TEMPLATE.csv` | Templates for adding a subject or subject rows by hand | Van Thong, Quan | Templates |
 | `1_knowledge/learning_resources/external_courses.csv` (+ `.md`) | 56 free outside courses, 1,167 rows | Quan, Van Thong | `python data-eda/src/external/build_external.py` |
+| `1_knowledge/learning_resources/resources.csv` | The self-study store (D9): 248 resources with level, format, hours, cost, certificate, skills, roles | Quan's session (D9) | By hand |
+| `1_knowledge/learning_resources/resource_modules.csv` | Description and module titles of the 192 resources added 15 Oct, for matching | Quan's session (D9) | By hand |
+| `1_knowledge/learning_resources/priority_skills.csv` | The top 15 skills of each role that D9 covers | Quan's session (D9) | From the demand files and D4 |
 | `1_knowledge/learning_resources/certifications.csv` (+ `.md`) | 49 industry certifications for the 11 IT roles: price, official page, "hot" signal (D11) | Quan, Van Thong (Adzuna counts) | By hand; `count_cert_mentions.py`, `count_cert_adzuna.py` |
 | `2_demand/skill_counts_v2.csv` | Every dictionary skill over 3,204 Seek ads 2019-22 (the app's `demand_pct`) | Quan, Van Thong | `data-eda/src/extract_skills.py` with this dictionary |
 | `2_demand/skill_counts_2026.csv` | The same in 2019-22, Jan 2024 and 2026, with 95% intervals | Van Thong | `python data-eda/src/recount_recent.py` |
