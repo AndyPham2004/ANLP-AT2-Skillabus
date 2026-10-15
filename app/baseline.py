@@ -175,6 +175,9 @@ def recommend(gaps: list[dict], exclude: set[str]) -> tuple[list[dict], dict]:
             100 * sum(s["demand_pct"] for s in gaps if s["skill_label"] in closed) / raw_total, 1),
         "plan": [{"subject_code": c, "session": "", "offered": [], "after": [], "unverified": False} for c in path],
         "dropped": [],
+        "outside": {"courses": [], "gaps_closed": 0, "gaps_open_before": len(uncovered), "still_open": sorted(uncovered),
+                    "demand_covered_pct": round(100 * sum(s["demand_pct"] for s in gaps if s["skill_label"] in closed)
+                                                / raw_total, 1)},
     }
     # Shown: the path first, then each gap's two strongest subjects (so a 0%-demand skill like
     # LLMs still gets its evidence), then the best of the rest up to MAX_SUBJECTS.

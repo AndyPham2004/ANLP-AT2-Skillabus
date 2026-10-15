@@ -34,6 +34,7 @@ def sample_data(monkeypatch):
     monkeypatch.setattr(requisites_module, "PREREQUISITES_CSV", ROOT / "tests/fixtures/prerequisites_sample.csv")
     monkeypatch.setattr(requisites_module, "OFFERINGS_CSV", ROOT / "tests/fixtures/offerings_sample.csv")
     monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: DEMAND_2026_LOW)
+    monkeypatch.setattr(recommend_module, "EXTERNAL_CSV", ROOT / "tests/fixtures/external_courses_sample.csv")
 
 
 def gap(label, demand=10.0, demand_2026=None):
@@ -54,7 +55,7 @@ def covering(result, label):
 def test_result_follows_the_data_contract(method):
     gaps = poster_gaps()
     result = recommend(gaps, PROFILES, method=method)
-    assert set(result) == {"recommendations", "learning_path"}
+    assert set(result) == {"recommendations", "learning_path", "outside_recommendations"}
     labels = {g["skill_label"] for g in gaps}
     for rec in result["recommendations"]:
         assert {"subject_code", "subject_name", "source_url", "score", "covers", "evidence", "needs", "offered",
@@ -66,7 +67,7 @@ def test_result_follows_the_data_contract(method):
                    and e["text"] for e in rec["evidence"])
     assert max(rec["score"] for rec in result["recommendations"]) == 1.0
     path = result["learning_path"]
-    assert set(path) == {"subjects", "gaps_closed", "gaps_total", "demand_covered_pct", "plan", "dropped"}
+    assert set(path) == {"subjects", "gaps_closed", "gaps_total", "demand_covered_pct", "plan", "dropped", "outside"}
     assert len(path["subjects"]) <= MAX_PATH and path["gaps_total"] == len(gaps)
     assert sorted(step["subject_code"] for step in path["plan"]) == sorted(path["subjects"])
     assert all({"subject_code", "subject_name", "reason", "covers"} == set(d) for d in path["dropped"])
@@ -74,8 +75,9 @@ def test_result_follows_the_data_contract(method):
 
 
 def test_no_gaps_and_bad_inputs():
-    assert recommend([], PROFILES) == {"recommendations": [], "learning_path": {
-        "subjects": [], "gaps_closed": 0, "gaps_total": 0, "demand_covered_pct": 0.0, "plan": [], "dropped": []}}
+    assert recommend([], PROFILES) == {"recommendations": [], "outside_recommendations": [], "learning_path": {
+        "subjects": [], "gaps_closed": 0, "gaps_total": 0, "demand_covered_pct": 0.0, "plan": [], "dropped": [],
+        "outside": {"courses": [], "gaps_closed": 0, "gaps_open_before": 0, "still_open": [], "demand_covered_pct": 0.0}}}
     with pytest.raises(ValueError):
         recommend([gap("Deep learning")], PROFILES, method="bm25")
     with pytest.raises(FileNotFoundError):
@@ -196,6 +198,31 @@ def test_a_step_with_a_prerequisite_is_valued_per_place():
     assert learning_path(covers, weight, {}, max_subjects=1,
                          needs=lambda code, done: needs[code] - done)["subjects"] == ["S1"]
     assert learning_path(covers, weight, {}, needs=lambda code, done: None)["subjects"] == []
+
+
+# ------------------------------------------------------------------ second tier: outside
+
+def test_outside_courses_close_what_the_uts_path_leaves_open():
+    """Large language models: no UTS subject a new MDSI student can take; the Hugging Face course."""
+    result = recommend(poster_gaps(), PROFILES, method="keyword", start=START)
+    path, outside = result["learning_path"], result["learning_path"]["outside"]
+    assert outside["gaps_open_before"] == 1 and outside["courses"] == ["EXT-HF-LLM"]
+    assert outside["still_open"] == [] and path["demand_covered_pct"] < outside["demand_covered_pct"] == 100.0
+    first = result["outside_recommendations"][0]
+    assert (first["subject_code"], first["cost"], first["covers"]) == ("EXT-HF-LLM", "free", ["Large language models"])
+    assert {"provider", "cost", "source_url", "evidence", "score"} <= set(first)
+    # Outside courses only see the open gaps: none of them covers a skill the UTS path closed.
+    closed_by_uts = {k for r in result["recommendations"] if r["subject_code"] in path["subjects"] for k in r["covers"]}
+    assert not closed_by_uts & {k for r in result["outside_recommendations"] for k in r["covers"]}
+
+
+def test_at_most_three_outside_courses_and_none_without_the_file():
+    gaps = [gap(label, 0.0) for label in ("Large language models", "PyTorch", "scikit-learn", "Prompt engineering")]
+    outside = recommend(gaps, PROFILES, method="keyword", start=START)["learning_path"]["outside"]
+    assert 1 <= len(outside["courses"]) <= 3
+    none = recommend(poster_gaps(), PROFILES, method="keyword", start=START, external_csv="")
+    assert none["outside_recommendations"] == [] and none["learning_path"]["outside"]["courses"] == []
+    assert none["learning_path"]["outside"]["demand_covered_pct"] == none["learning_path"]["demand_covered_pct"]
 
 
 def test_greedy_takes_the_largest_uncovered_demand_first():
