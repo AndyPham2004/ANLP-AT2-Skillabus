@@ -44,3 +44,6 @@ data-eda/data/
 models/
 data/cache/
 data/processed/feedback.csv
+
+# rebuilds of the judged normalisation table: unjudged, and the sentences keep recruiter names
+data/4_evaluation/results/normalisation_errors_rebuild.csv

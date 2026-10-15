@@ -13,7 +13,7 @@ method adds and where it fails. Table 4.1 is the frame; the subsections give the
 |---|---|---|---|---|---|
 | Extraction | Dictionary lookup (148 skills) | + spaCy rules, + GPT-4o-mini | 20 labelled ads, P/R/F1 | spaCy: candidates that are not skills ("Social Club") | Finds plurals and tools outside the dictionary |
 | Normalisation | ESCO exact label + aliases | + fuzzy string, + MiniLM embedding, "emerging" label | 211 non-dictionary phrases, hand-judged | "data extraction" → ESCO *information extraction* | Maps paraphrases; keeps skills ESCO lacks |
-| Emerging skills | Added to the dictionary by hand | n-grams → spaCy → GPT, weighted log-odds | Hand-judged top 20 per method | Boilerplate that rises with career-site ads | Finds new terms (*llm-as-judge*) without a person noticing first |
+| Emerging skills | Added to the dictionary by hand | n-grams → spaCy → GPT, weighted log-odds | Hand-judged top 20 per method | Boilerplate that rises with career-site ads | Finds new terms (*agentic workflows*) without a person noticing first |
 | Matching | Exact skill identity | + umbrella rule for "partial" | 45 CV–JD pairs, accuracy, macro F1 | — (rule-based) | Credits part of a broad skill |
 | Subject evidence | Keyword (alias) match | + TF-IDF, + sentence embeddings | Skill–subject pairs, P@3 | Generic sentences ("key concepts and algorithms") | Finds subjects that teach a skill without naming it |
 | Learning path | Top subject per gap | Greedy cover with prerequisites, sessions, outside courses | Demand closed by the path | A prerequisite chain longer than two subjects | Fewest subjects, ones the student can enrol in |
@@ -41,8 +41,8 @@ outside the dictionary from noun chunks after a cue ("experience with", "such as
 verbatim in the text and its evidence sentence is cut from the text, so the model cannot invent skills or quotes.
 Contact details are masked before the call, and responses are cached, so the evaluation re-runs at no cost.
 
-On the 20 labelled ads, tier 2 adds recall for little precision on dictionary skills (F1 0.790 → 0.809 with the 138-skill
-dictionary **[eval: rerun with 148]**). Its new candidates are the weak point: of 211 distinct non-dictionary phrases it
+On the 20 labelled ads, tier 2 adds recall for little precision on dictionary skills (F1 0.780 → 0.799 with the current
+dictionary, #56 table of 15 Oct). Its new candidates are the weak point: of 211 distinct non-dictionary phrases it
 proposed on test and 2026 ads, 69 (33%) are not skills at all: employers ("Canva", "Bankwest"), perks ("Volunteer Days"),
 job titles ("Product Managers") and one recruiter's name. Section 4.2 measures normalisation on these same phrases.
 
@@ -56,32 +56,34 @@ only decides what the non-dictionary phrases are.
 
 **Error analysis.** We ran three mappers side by side on the 211 phrases (`notebooks/pn_normalisation_errors.py`) and
 judged every answer by hand (`data/4_evaluation/results/normalisation_errors.csv`, judgements in `exact_ok`,
-`fuzzy_ok`, `embed_ok`, `error_type`). The 2026 phrases come from the 22 full-text ads of the 13 Oct sample, before #87
-replaced it. A string-similarity mapper (difflib ratio ≥ 0.85) stands in for the fuzzy matching the frame
+`fuzzy_ok`, `embed_ok`, `error_type`). The 2026 phrases come from the 22 full-text ads, from 8 employers, of the 10 Oct sample
+(738726c), not the 22 in-sample roles of sections 4.3 and 4.4; the script rebuilds the table from that file with `--ads`. A string-similarity mapper (difflib ratio ≥ 0.85) stands in for the fuzzy matching the frame
 lists as the middle option. Lightcast was not run (no API key), so every phrase it might have mapped is in "emerging".
 
 **Table 4.2** Mapping 211 non-dictionary phrases to ESCO.
 
 | | Exact label | Fuzzy string (≥ 0.85) | Embedding (≥ 0.82) |
 |---|---|---|---|
-| Phrases mapped | 11 | 24 | 14 |
-| Right concept | 11 | 12 | 11 |
-| Precision | 1.00 | 0.50 | 0.79 |
-| Mapped beyond exact | — | 13, of which 1 right | 6, of which 3 right |
+| Phrases mapped | 12 | 24 | 14 |
+| Right concept | 12 | 12 | 10 |
+| Precision | 1.00 | 0.50 | 0.71 |
+| Mapped beyond exact | — | 13, of which 1 right | 5, of which 1 right |
 
-Exact matching is never wrong but maps only 11 of the 142 real skills. Fuzzy matching doubles that by matching letters,
+Exact matching is never wrong but maps only 12 of the 142 real skills. Fuzzy matching doubles that by matching letters,
 not meaning: gRPC became *gel permeation chromatography*, ECS *European Train Control System*, Canva *Canvas* (a learning
 management system). The embedding is right more often, and its errors are of a subtler kind: "service-oriented
 architecture" → *service-oriented modelling* is right, but "data extraction" → *information extraction* moves an ETL step
 into NLP, and "customer analytics" → *marketing analytics* and "accessibility guidelines" → *develop strategies for
-accessibility* are a broader concept. Its true gain is therefore 3 phrases out of 142, which is why the final pipeline
-keeps the high threshold rather than lowering it.
+accessibility* are a broader concept. With the exact column built as the pipeline's exact step (filler words dropped), the embedding answers 5 phrases beyond
+it and 1 is right (service-oriented architecture): its true gain is 1 phrase out of 142, and these are exactly the 5
+phrases it answers in the pipeline. 58 of these phrases come from the test ads, so the threshold stays as set on 4 Oct and is not
+changed on these results.
 
 The final answers, by error type: 125 right (of which 110 correctly left "emerging"), 69 not a skill (an extraction error,
 not a normalisation one), 14 missed, 2 too broad, 1 wrong sense. The 14 misses are mostly spans with an extra word that
-hides an ESCO concept ("clear communication", "especially mathematics", "data analytics workflows") and one just under
-the threshold ("market reporting", 0.80). The "emerging" class is doing its job: ESCO has no concept for DuckDB,
-Langfuse, RLHF, KServe or Claude Code, and forcing them onto the nearest label (DuckDB → *breed ducks*, 0.56) would be
+hides an ESCO concept ("clear communication", "especially mathematics", "data analytics workflows") and two just under
+the threshold ("market reporting", 0.80; "Compliance", 0.798). The "emerging" class is doing its job: ESCO has no concept for DuckDB,
+Langfuse, RLHF or Claude Code, and forcing them onto the nearest label (DuckDB → *breed ducks*, 0.56) would be
 worse than keeping them unmapped.
 
 ## 4.3 Emerging-skill detection
@@ -171,11 +173,11 @@ score are dropped, and GPT-4o-mini answers from them with citations.
 
 | Stage | Metric | Test set | Result (section 6) |
 |---|---|---|---|
-| Extraction | Precision, recall, F1 | 20 labelled Seek ads, 217 labels | F1 0.790 (dictionary), 0.809 (spaCy) **[eval: 148]**; LLM **[eval]** |
+| Extraction | Precision, recall, F1 | 20 labelled Seek ads, 217 labels | F1 0.780 (dictionary), 0.799 (spaCy), #56 15 Oct; LLM **[eval]** |
 | Normalisation | Precision per mapper, error types | 211 non-dictionary phrases | Table 4.2 |
 | Emerging skills | Precision@20 per method, by hand | 2026 ads vs 2019–22 | **[eval]** |
-| Matching | Status accuracy, macro F1 | 45 CV–JD pairs, 287 rows | 0.930, 0.777 |
-| Evidence ranking | Hit@5, MRR | 87 have/partial rows | 0.943, 0.831 |
+| Matching | Status accuracy, macro F1 | 45 CV–JD pairs, 287 rows | 0.927, 0.768 (#56, 15 Oct) |
+| Evidence ranking | Hit@5, MRR | 87 have/partial rows | 0.943, 0.829 (#56, 15 Oct) |
 | Subjects | P@3 | Skill–subject pairs (#73) | **[eval]** |
 | Chat | LLM-as-judge, 1–5 | Chat questions (#73) | **[eval]** |
 
