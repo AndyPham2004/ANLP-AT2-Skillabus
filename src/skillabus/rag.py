@@ -16,13 +16,13 @@ retrieve(question, k) returns up to k passages, best first:
 The first four are the keys app/chat.py already reads; `source` is formatted the way its
 TF-IDF fallback formats it ("36118 Applied Natural Language Processing (topic)").
 
-Corpus. data/processed/subject_profiles.csv: one row per learning objective, weekly topic or
+Corpus. data/1_knowledge/uts/subject_profiles.csv: one row per learning objective, weekly topic or
 description sentence. With sources=("subjects", "ads") it also searches sentences from the
 cleaned Seek ads that name a dictionary skill, for "what do employers say about X" questions;
 that is off by default because the chat answers from the Handbook.
 
-Index. *.faiss and models/ are gitignored, so the embedding index is built on first use and
-the vectors cached in models/rag/ (rebuilt automatically when the corpus changes).
+Index. data/runtime/ is gitignored, so the embedding index is built on first use and the
+vectors cached in data/runtime/cache/rag/ (rebuilt automatically when the corpus changes).
 `python -m skillabus.rag build` builds it ahead of time.
 
 Three things on top of plain similarity search:
@@ -41,16 +41,16 @@ import hashlib
 import os
 import re
 from functools import lru_cache
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
-PROFILES_CSV = ROOT / "data" / "processed" / "subject_profiles.csv"
-SEEK_CSV = ROOT / "data-eda" / "data" / "clean" / "jobs_au_seek_datascientist_2019-2022_clean.csv"
-SEED_CSV = ROOT / "data" / "processed" / "skills_seed_v2.csv"
-CACHE_DIR = ROOT / "models" / "rag"
+from . import paths
+
+PROFILES_CSV = paths.SUBJECT_PROFILES
+SEEK_CSV = paths.SEEK_ADS
+SEED_CSV = paths.SKILLS_SEED
+CACHE_DIR = paths.RAG_INDEX
 
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"     # same as normalise.py
 MIN_SCORE = {"embed": 0.30, "tfidf": 0.05}
@@ -69,7 +69,7 @@ SENTENCE = re.compile(r"(?<=[.!?])\s+|\n+|\s*•\s*")
 
 # ------------------------------------------------------------------------------- corpus
 def _skill_pattern() -> re.Pattern:
-    """Any alias in the 138-skill dictionary, as one case-insensitive pattern."""
+    """Any alias in the skill dictionary (skills_seed_v2.csv), as one case-insensitive pattern."""
     with open(SEED_CSV, encoding="utf-8") as f:
         has_comment = f.readline().startswith("#")
     seed = pd.read_csv(SEED_CSV, skiprows=1 if has_comment else 0, dtype=str)  # not comment="#": C#
@@ -238,7 +238,7 @@ def build(sources: tuple[str, ...] = ("subjects",), method: str | None = None) -
 
 
 # Hand-picked questions whose right subject is not in doubt. A smoke test, not the
-# evaluation: the 30 reference questions in data/labels/chat_questions.csv are for that.
+# evaluation: the 30 reference questions in data/4_evaluation/labels/chat_questions.csv are for that.
 SANITY = [
     ("Which subject teaches deep learning?", {"94691"}),
     ("Where can I learn natural language processing?", {"36118"}),

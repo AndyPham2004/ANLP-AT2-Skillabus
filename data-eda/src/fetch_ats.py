@@ -28,20 +28,23 @@ cross-checks the LinkedIn corpus, not as a replacement for it.
 
 Usage:
     python src/fetch_ats.py --australia-only
-    python src/fetch_ats.py --companies config/ats_companies.csv
+    python src/fetch_ats.py --companies ../data/2_demand/collection/ats_companies.csv
 """
 
 import argparse
 import html as html_lib
 import logging
 import re
+import sys
 import time
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
 GREENHOUSE = "https://boards-api.greenhouse.io/v1/boards/{slug}/jobs"
 LEVER = "https://api.lever.co/v0/postings/{slug}"
 SMARTRECRUITERS = "https://api.smartrecruiters.com/v1/companies/{slug}/postings"
@@ -168,18 +171,52 @@ def fetch_smartrecruiters(session, slug, company, insecure, au_only=True, delay=
     return rows
 
 
+# Cities and the unambiguous state codes only. "WA", "SA", "NT" and "ACT" matched Seattle, WA and
+# San Antonio in global boards (Anthropic's board counted 190 "Australian" ads on 13 Oct 2026);
+# Perth, Adelaide, Darwin and Canberra cover those states instead.
+ASHBY = "https://api.ashbyhq.com/posting-api/job-board/{slug}"
+WORKABLE = "https://apply.workable.com/api/v1/widget/accounts/{slug}"
+
+
+def fetch_ashby(session, slug, company, insecure):
+    r = session.get(ASHBY.format(slug=slug), headers=HEADERS, timeout=30, verify=not insecure)
+    if r.status_code != 200:
+        log.warning("ashby/%s -> HTTP %s", slug, r.status_code)
+        return []
+    return [{
+        "ad_id": f"as-{j.get('id')}", "source": "ashby", "title": j.get("title", ""), "company": company or slug,
+        "location": j.get("location", ""), "created": j.get("publishedAt", ""),
+        "description": to_text(j.get("descriptionHtml") or j.get("descriptionPlain")), "redirect_url": j.get("jobUrl", ""),
+    } for j in r.json().get("jobs", [])]
+
+
+def fetch_workable(session, slug, company, insecure):
+    r = session.get(WORKABLE.format(slug=slug), params={"details": "true"}, headers=HEADERS, timeout=30,
+                    verify=not insecure)
+    if r.status_code != 200:
+        log.warning("workable/%s -> HTTP %s", slug, r.status_code)
+        return []
+    return [{
+        "ad_id": f"wk-{j.get('shortcode')}", "source": "workable", "title": j.get("title", ""), "company": company or slug,
+        "location": ", ".join(filter(None, [j.get("city"), j.get("state"), j.get("country")])),
+        "created": j.get("published_on", ""), "description": to_text(j.get("description")), "redirect_url": j.get("url", ""),
+    } for j in r.json().get("jobs", [])]
+
+
+FETCHERS = {"greenhouse": fetch_greenhouse, "lever": fetch_lever, "ashby": fetch_ashby, "workable": fetch_workable}
+
 AU_PATTERN = re.compile(
-    r"austral|sydney|melbourne|brisbane|perth|adelaide|canberra|hobart|darwin"
-    r"|nsw|vic|qld|\bwa\b|\bsa\b|\bact\b|\bnt\b|\btas\b", re.I
+    r"austral|sydney|melbourne|brisbane|perth|adelaide|canberra|hobart|darwin|gold coast|newcastle"
+    r"|wollongong|geelong|townsville|cairns|\bnsw\b|\bvic\b|\bqld\b|\btas\b|\bau\b", re.I
 )
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--companies", default=ROOT / "config" / "ats_companies.csv", type=Path)
+    parser.add_argument("--companies", default=paths.ATS_COMPANIES, type=Path)
     parser.add_argument("--australia-only", action="store_true",
                         help="keep only roles whose location looks Australian")
-    parser.add_argument("--out", default=ROOT / "data" / "raw" / "ats_ads.csv", type=Path)
+    parser.add_argument("--out", default=paths.RAW / "ats_ads.csv", type=Path)
     parser.add_argument("--delay", type=float, default=0.8)
     parser.add_argument("--insecure", action="store_true")
     args = parser.parse_args()
@@ -196,10 +233,11 @@ def main():
         if c.platform == "smartrecruiters":
             got = fetch_smartrecruiters(session, c.slug, name, args.insecure,
                                         au_only=args.australia_only, delay=args.delay / 3)
-        elif c.platform == "greenhouse":
-            got = fetch_greenhouse(session, c.slug, name, args.insecure)
+        elif c.platform in FETCHERS:
+            got = FETCHERS[c.platform](session, c.slug, name, args.insecure)
         else:
-            got = fetch_lever(session, c.slug, name, args.insecure)
+            log.warning("%s: unknown platform %r, skipped", c.slug, c.platform)
+            got = []
         log.info("%-11s %-16s %3d jobs", c.platform, c.slug, len(got))
         rows.extend(got)
         time.sleep(args.delay)

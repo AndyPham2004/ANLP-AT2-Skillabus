@@ -107,3 +107,8 @@ def subjects() -> list[tuple[str, str]]:
     lay = baseline.resources().layers
     pairs = lay[["subject_code", "subject_name"]].drop_duplicates().sort_values("subject_code")
     return list(pairs.itertuples(index=False, name=None))
+
+
+def dictionary_size() -> int:
+    """Number of canonical skills in skills_seed_v2.csv, for the footer (148 on 14 Oct 2026; never hard-code it)."""
+    return len(baseline.resources().category)

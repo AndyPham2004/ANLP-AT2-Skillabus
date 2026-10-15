@@ -1,5 +1,11 @@
 # Role B — Data and EDA
 
+> **Written for the AT2A poster (22 Sep 2026).** Since 15 Oct the data lives in the repo's `data/`
+> folder (the map is `data/README.md`) and `data-eda/` holds only code. `data/raw/` below is the repo's
+> `data/raw/`; `config/` became `data/1_knowledge/skills/original/` and `data/2_demand/collection/`;
+> `outputs/` became `data/5_crosscheck/` and `archive/poster_AT2A/data/`. The poster-only scripts
+> (`source_counts.py`, `chart_top15.py`, `chart_sources.py`) are frozen in `archive/poster_AT2A/scripts/`.
+
 Your part of the MDSI Skills Map poster (36118 AT2A). Owns poster **block 3 (Data
 sources)** and **block 5 (What the market asks for)**, plus the raw data every
 other lane depends on.
@@ -150,7 +156,7 @@ Lever       https://api.lever.co/v0/postings/{slug}?mode=json
 python src/fetch_ats.py --australia-only
 ```
 
-Verified working, 8 Australian employers in `config/ats_companies.csv`: **81
+Verified working, 8 Australian employers in `data/2_demand/collection/ats_companies.csv`: **81
 Australian roles, median description 6,422 characters** against Adzuna's flat 500.
 
 **But only ~22 are data roles**, so this cannot carry block 5 either. Its job is to
@@ -158,7 +164,7 @@ Australian roles, median description 6,422 characters** against Adzuna's flat 50
 skills hold on an Australian sample" is a strong sentence, and it is the honest use
 of an n this size.
 
-To grow it, add slugs to `config/ats_companies.csv`. Most probes 404 (Canva and
+To grow it, add slugs to `data/2_demand/collection/ats_companies.csv`. Most probes 404 (Canva and
 Atlassian are not on either platform), so verify before adding:
 
 ```bash
@@ -201,14 +207,14 @@ python src/fetch_adzuna.py --what "data scientist" "data analyst" --where Sydney
 **Block 3 numbers** — counts rows in everything you actually downloaded:
 
 ```bash
-python src/source_counts.py
+python archive/poster_AT2A/scripts/source_counts.py   # frozen with the poster
 ```
 
-**Skill extraction** — writes `outputs/ad_skill_long.csv` (this is C's file) and
-`outputs/skill_counts.csv`:
+**Skill extraction** — writes `ad_skill_long.csv` (this is C's file) and `skill_counts.csv`
+to `data/runtime/extract_skills/`; the poster run's copies are in `archive/poster_AT2A/data/`:
 
 ```bash
-python src/extract_skills.py --input data/raw/ads.csv --text-col description
+python data-eda/src/extract_skills.py --input data/raw/ads.csv --text-col description
 ```
 
 Useful flags: `--filter-col location --filter-contains Australia` to restrict
@@ -218,7 +224,7 @@ your file has a real identifier.
 **Block 5 chart** — 300 dpi PNG, sized for one A0 column at 1:1:
 
 ```bash
-python src/chart_top15.py --source "LinkedIn postings 2023-24" --exclude-category Professional
+python archive/poster_AT2A/scripts/chart_top15.py --source "LinkedIn postings 2023-24" --exclude-category Professional
 ```
 
 The `--source` string is what prints in the caption, so name the corpus the counts
@@ -278,7 +284,7 @@ To **C**, by end of Wed 23:
 - [ ] `data/raw/ads.csv` — job ads, text column named, geography stated
 - [x] `data/raw/uts_subjects.csv` — **done**, 11 MDSI subjects, 56 learning outcomes
 - [ ] one sample resume
-- [ ] `outputs/ad_skill_long.csv` — ad-to-skill pairs, if extraction is already running
+- [ ] `ad_skill_long.csv` (now `archive/poster_AT2A/data/`) — ad-to-skill pairs, if extraction is already running
 
 To **A**, by 18:00 Thu 24:
 - [ ] `block5_top_skills.png`, 300 dpi, A's colours, no legend, labels horizontal
@@ -290,19 +296,23 @@ To **A**, by 18:00 Thu 24:
 
 ## 8. Layout
 
+Since 15 Oct 2026 (code only here; every path comes from `src/skillabus/paths.py`):
+
 ```
 data-eda/
-├── config/
-│   ├── skills_seed.csv        133 skills with aliases; edit freely
-│   ├── subjects_template.csv  the shape C needs for handbook data
-│   └── ats_companies.csv      verified Greenhouse/Lever employer slugs
-├── data/raw/                  your downloads go here (do not commit)
-├── outputs/                   generated CSVs and PNGs
-└── src/
-    ├── source_counts.py       block 3 numbers
-    ├── extract_skills.py      dictionary extraction → C's input + block 5 input
-    └── chart_top15.py         block 5 chart
+├── src/                       collect, clean and count
+│   ├── extract_skills.py      dictionary extraction; recount_recent.py and the EDA import it
+│   └── external/              outside-course pages -> data/1_knowledge/learning_resources/
+├── DATASETS.md                every raw file: rows, period, licence
+└── HOW_TO_USE_DATA.txt        which file answers which question
+
+data/raw/                                    your downloads go here (never committed)
+data/1_knowledge/skills/original/            skills_seed.csv (133 skills), skill_to_esco.csv
+data/1_knowledge/uts/subjects_template.csv   the shape C needs for handbook data
+data/2_demand/collection/                    ats_companies.csv, ats_candidates.csv, probe results
+data/5_crosscheck/                           counts on other platforms and markets
+archive/poster_AT2A/                         the poster's outputs and scripts (block 3, block 5)
 ```
 
-`skills_seed.csv` is meant to be edited. Add anything the ads mention that it
-misses — that editing pass is itself a finding worth a sentence in block 5.
+The dictionary the app uses is `data/1_knowledge/skills/skills_seed_v2.csv` (these 133 rows plus
+later additions). Add anything the ads mention that it misses there, through a pull request.

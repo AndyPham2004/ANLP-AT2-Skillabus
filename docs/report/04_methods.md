@@ -72,8 +72,8 @@ learning–artificial intelligence 0.70), so no threshold separates them (`noteb
 
 **Demand.** Each skill carries the share of the 3,204 Seek Data Scientist ads (2019–22) that name it, and its share
 of the 2026 sample (`skill_counts_2026.csv`, section 3). Skills that appeared after 2022, such as large language models,
-sit at 0% in the older ads. The 2026 sample is only 22 full-text ads from 8 employers, so a 2026 share carries about
-±20 points. The weight of a gap is therefore `max(share 2019–22, lower end of the 95% Wilson interval of the 2026 share)
+sit at 0% in the older ads. The 2026 sample is only 22 ads from 12 employers (9 of them data scientists), so a 2026
+share carries about ±20 points even over all 22, which is the share the weight reads (`pct_2026_all_low`). The weight of a gap is therefore `max(share 2019–22, lower end of the 95% Wilson interval of the 2026 share)
 + 1`: a new skill counts by the most it can be relied on to be, not by its point value, and the +1 keeps a 0% skill in play.
 
 ## 4.4 Subject evidence: keyword → TF-IDF → embeddings

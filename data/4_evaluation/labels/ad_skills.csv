@@ -1,0 +1,535 @@
+ad_id,skill_label,in_dictionary,evidence_text,annotator
+54948934,Python,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,R,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,SQL,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,SAS,y,"Python, R, SQL or SAS",hoaithuongnguyen-uts
+54948934,Machine learning,y,"machine learning, pattern matching",hoaithuongnguyen-uts
+54948934,Statistics,y,multivariate statistics,hoaithuongnguyen-uts
+54948934,Probability,y,statistics and probability modelling,hoaithuongnguyen-uts
+54948934,Time series forecasting,y,forecasting,hoaithuongnguyen-uts
+54948934,Data visualisation,y,visualisation,hoaithuongnguyen-uts
+54948934,Sentiment analysis,y,sentiment analysis,hoaithuongnguyen-uts
+54948934,Clustering,y,cluster analysis,hoaithuongnguyen-uts
+54948934,Deep learning,y,neural networks,hoaithuongnguyen-uts
+54948934,Predictive modelling,y,predictive modelling techniques,hoaithuongnguyen-uts
+54948934,Presentation skills,y,Presenting and communicating analysis to senior and non-technical audiences,hoaithuongnguyen-uts
+54948934,Communication,y,Excellent oral and written communication skills,hoaithuongnguyen-uts
+54948934,Stakeholder management,y,engage with a range of internal and external stakeholders,hoaithuongnguyen-uts
+50727502,Artificial intelligence,y,Artificial Intelligence techniques such as machine learning,hoaithuongnguyen-uts
+50727502,Machine learning,y,machine learning,hoaithuongnguyen-uts
+50727502,Time series forecasting,y,Experience working with time-series data,hoaithuongnguyen-uts
+50727502,Python,y,writing high quality Python code,hoaithuongnguyen-uts
+50727502,NumPy,y,NumPy,hoaithuongnguyen-uts
+50727502,scikit-learn,y,scikit-learn,hoaithuongnguyen-uts
+50727502,pandas,y,pandas,hoaithuongnguyen-uts
+50727502,JavaScript,y,JavaScript,hoaithuongnguyen-uts
+50727502,R,y,JavaScript / R / SQL,hoaithuongnguyen-uts
+50727502,SQL,y,JavaScript / R / SQL,hoaithuongnguyen-uts
+50727502,Power BI,y,PowerBI,hoaithuongnguyen-uts
+50727502,Tableau,y,Tableau,hoaithuongnguyen-uts
+50727502,Data visualisation,y,Expertise in data visualisation libraries,hoaithuongnguyen-uts
+50727502,Cloud platforms,y,public cloud and on-premises environments,hoaithuongnguyen-uts
+50727502,Agile,y,apply agile practices,hoaithuongnguyen-uts
+50727502,Communication,y,Excellent interpersonal and communication skills,hoaithuongnguyen-uts
+50727502,Teamwork,y,working in a team environment,hoaithuongnguyen-uts
+50727502,Presentation skills,y,delivering presentations,hoaithuongnguyen-uts
+55520483,R,y,R/Python,hoaithuongnguyen-uts
+55520483,Python,y,R/Python,hoaithuongnguyen-uts
+55520483,Predictive modelling,y,build predictive models,hoaithuongnguyen-uts
+55520483,Problem solving,y,Outstanding problem solving skills,hoaithuongnguyen-uts
+55520483,Leadership,y,Lead a small team,hoaithuongnguyen-uts
+55520483,Data warehousing,y,development of the data warehouse,hoaithuongnguyen-uts
+55520483,Requirements gathering,y,Translate business needs into analytics requirements,hoaithuongnguyen-uts
+53187210,Problem solving,y,willingness to solve problems,hoaithuongnguyen-uts
+53187210,Teamwork,y,work in a small team environment,hoaithuongnguyen-uts
+53187210,Leadership,y,guide and mentor co-workers,hoaithuongnguyen-uts
+53187210,Business acumen,y,design a data driven solution,hoaithuongnguyen-uts
+39142341,R,y,"R, Python, Scala",hoaithuongnguyen-uts
+39142341,Python,y,"R, Python, Scala",hoaithuongnguyen-uts
+39142341,Scala,y,"R, Python, Scala",hoaithuongnguyen-uts
+39142341,Machine learning,y,privacy-preserving machine learning techniques,hoaithuongnguyen-uts
+39142341,Data privacy,y,privacy-preserving machine learning,hoaithuongnguyen-uts
+39142341,Data cleaning,y,Data wrangling with complex datasets,hoaithuongnguyen-uts
+39142341,Communication,y,Excellent written and oral communication skills,hoaithuongnguyen-uts
+55085339,SQL,y,"Experience with SQL, R and Python",hoaithuongnguyen-uts
+55085339,R,y,"Experience with SQL, R and Python",hoaithuongnguyen-uts
+55085339,Python,y,"Experience with SQL, R and Python",hoaithuongnguyen-uts
+55085339,Communication,y,Strong verbal communication skills,hoaithuongnguyen-uts
+55085339,Problem solving,y,A problem-solving mindset,hoaithuongnguyen-uts
+55085339,Teamwork,y,A team player,hoaithuongnguyen-uts
+55085339,Predictive modelling,y,credit risk modelling,hoaithuongnguyen-uts
+50014854,Machine learning,y,statistical and machine learning models,hoaithuongnguyen-uts
+50014854,Random forest,y,Random Forests,hoaithuongnguyen-uts
+50014854,Gradient boosting,y,GBM,hoaithuongnguyen-uts
+50014854,XGBoost,y,xGBoost,hoaithuongnguyen-uts
+50014854,Logistic regression,y,Linear & Logistics Regression,hoaithuongnguyen-uts
+50014854,Linear regression,y,Linear & Logistics Regression,hoaithuongnguyen-uts
+50014854,Support vector machines,y,Support Vector Machines,hoaithuongnguyen-uts
+50014854,Clustering,y,Clustering,hoaithuongnguyen-uts
+50014854,SQL,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,SAS,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,R,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,Python,y,"SQL, SAS, R or Python",hoaithuongnguyen-uts
+50014854,Redshift,y,AWS Redshift,hoaithuongnguyen-uts
+50014854,AWS,y,AWS Redshift,hoaithuongnguyen-uts
+50014854,Hadoop,y,Hadoop and Spark,hoaithuongnguyen-uts
+50014854,Spark,y,Hadoop and Spark,hoaithuongnguyen-uts
+50014854,Leadership,y,leading and mentoring teams,hoaithuongnguyen-uts
+50014854,Stakeholder management,y,Managing both internal and external stakeholders,hoaithuongnguyen-uts
+50014854,Predictive modelling,y,developing predictive models,hoaithuongnguyen-uts
+50014854,Deep learning,y,Neural Networks,hoaithuongnguyen-uts
+52727857,Python,y,writing production code using Python,hoaithuongnguyen-uts
+52727857,Feature engineering,y,feature engineering,hoaithuongnguyen-uts
+52727857,Machine learning,y,machine learning,hoaithuongnguyen-uts
+52727857,Deep learning,y,deep learning,hoaithuongnguyen-uts
+52727857,SQL,y,SQL and NoSQL database technologies,hoaithuongnguyen-uts
+52727857,NoSQL,y,NoSQL database technologies,hoaithuongnguyen-uts
+52727857,MLOps,y,MLOps/DevOps approaches,hoaithuongnguyen-uts
+52727857,Azure,y,Azure (preferred),hoaithuongnguyen-uts
+52727857,AWS,y,AWS,hoaithuongnguyen-uts
+52727857,Google Cloud,y,GCP,hoaithuongnguyen-uts
+52727857,Hadoop,y,Hadoop,hoaithuongnguyen-uts
+52727857,Spark,y,Spark,hoaithuongnguyen-uts
+52727857,Statistics,y,statistical and machine learning modelling,hoaithuongnguyen-uts
+52727857,Artificial intelligence,y,Artificial Intelligence,hoaithuongnguyen-uts
+38692371,Machine learning,y,machine learning,hoaithuongnguyen-uts
+38692371,Data visualisation,y,data visualisation,hoaithuongnguyen-uts
+38692371,R,y,"R, Python, Scala",hoaithuongnguyen-uts
+38692371,Python,y,"R, Python, Scala",hoaithuongnguyen-uts
+38692371,Scala,y,"R, Python, Scala",hoaithuongnguyen-uts
+38692371,SQL,y,"SQL, Spark",hoaithuongnguyen-uts
+38692371,Spark,y,"SQL, Spark",hoaithuongnguyen-uts
+38692371,Data cleaning,y,Strong skills in data wrangling,hoaithuongnguyen-uts
+38692371,Communication,y,highly developed oral and written communication skills,hoaithuongnguyen-uts
+38692371,Artificial intelligence,y,artificial intelligence,hoaithuongnguyen-uts
+52219256,Communication,y,proficient written communication skills,hoaithuongnguyen-uts
+52219256,Problem solving,y,can problem solve,hoaithuongnguyen-uts
+52219256,Teamwork,y,collaborate well with other colleagues,hoaithuongnguyen-uts
+50449684,SQL,y,"SQL, Python, GCP, Tableau, Linux",hoaithuongnguyen-uts
+50449684,Python,y,"SQL, Python, GCP, Tableau, Linux",hoaithuongnguyen-uts
+50449684,Google Cloud,y,GCP,hoaithuongnguyen-uts
+50449684,Tableau,y,Tableau,hoaithuongnguyen-uts
+50449684,Machine learning,y,machine learning models,hoaithuongnguyen-uts
+50449684,Hadoop,y,"Hadoop, Spark",hoaithuongnguyen-uts
+50449684,Spark,y,"Hadoop, Spark",hoaithuongnguyen-uts
+50449684,Deep learning,y,deep learning techniques,hoaithuongnguyen-uts
+50449684,Statistics,y,statistical analysis tools,hoaithuongnguyen-uts
+50449684,Problem solving,y,Strong problem-solving skills,hoaithuongnguyen-uts
+50449684,Shell scripting,y,bash,hoaithuongnguyen-uts
+50449684,Presentation skills,y,Presenting the analytics solutions,hoaithuongnguyen-uts
+39372682,Scala,y,Scala,hoaithuongnguyen-uts
+39372682,Spark,y,Spark,hoaithuongnguyen-uts
+39372682,Redshift,y,Redshift,hoaithuongnguyen-uts
+39372682,MongoDB,y,MongoDB,hoaithuongnguyen-uts
+39372682,NoSQL,y,NoSQL Databases,hoaithuongnguyen-uts
+39372682,Machine learning,y,Experience with Machine Learning,hoaithuongnguyen-uts
+39372682,R,y,"R, Python or Scala",hoaithuongnguyen-uts
+39372682,Python,y,"R, Python or Scala",hoaithuongnguyen-uts
+39372682,Deep learning,y,Deep Learning,hoaithuongnguyen-uts
+39372682,Stakeholder management,y,Stakeholder Engagement,hoaithuongnguyen-uts
+39372682,Communication,y,Strong Communication skills,hoaithuongnguyen-uts
+39372682,Business acumen,y,Strong Business Awareness,hoaithuongnguyen-uts
+39372682,Statistics,y,Statistical Analysis,hoaithuongnguyen-uts
+39372682,Problem solving,y,passionate about solving problem,hoaithuongnguyen-uts
+52312136,Python,y,Python/SQL/R,hoaithuongnguyen-uts
+52312136,SQL,y,Python/SQL/R,hoaithuongnguyen-uts
+52312136,R,y,Python/SQL/R,hoaithuongnguyen-uts
+52312136,BigQuery,y,big query,hoaithuongnguyen-uts
+52312136,Machine learning,y,Machine Learning/Supervised and Unsupervised techniques,hoaithuongnguyen-uts
+52312136,Data visualisation,y,data visualisation techniques,hoaithuongnguyen-uts
+52312136,Plotly,y,Plotly,hoaithuongnguyen-uts
+52312136,matplotlib,y,matplotlib,hoaithuongnguyen-uts
+52312136,Excel,y,MS Excel,hoaithuongnguyen-uts
+52312136,Tableau,y,Tableau,hoaithuongnguyen-uts
+52312136,Looker,y,Looker,hoaithuongnguyen-uts
+52312136,Communication,y,Excellent written & verbal communication skills,hoaithuongnguyen-uts
+52312136,Data storytelling,y,tell the story of data,hoaithuongnguyen-uts
+52312136,Clustering,y,segmentations,hoaithuongnguyen-uts
+52312136,Statistics,y,Statistical,hoaithuongnguyen-uts
+38744632,Recommender systems,y,recommendation systems,hoaithuongnguyen-uts
+38744632,Machine learning,y,machine learning,hoaithuongnguyen-uts
+38744632,R,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,SQL,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,Python,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,Spark,y,R/SQL/Python/Spark,hoaithuongnguyen-uts
+38744632,Scala,y,Scala,hoaithuongnguyen-uts
+38744632,Communication,y,Very strong communication & presentation skills,hoaithuongnguyen-uts
+38744632,Presentation skills,y,communication & presentation skills,hoaithuongnguyen-uts
+38744632,Google Cloud,y,GCP (Google Cloud Platform),hoaithuongnguyen-uts
+38744632,AWS,y,AWS,hoaithuongnguyen-uts
+38744632,Azure,y,Azure,hoaithuongnguyen-uts
+38744632,Keras,y,keras,hoaithuongnguyen-uts
+38744632,TensorFlow,y,TensorFlow,hoaithuongnguyen-uts
+38744632,Stakeholder management,y,liaising with key business stakeholders,hoaithuongnguyen-uts
+38744632,Predictive modelling,y,propensity models,hoaithuongnguyen-uts
+38680411,R,y,r or python,hoaithuongnguyen-uts
+38680411,Python,y,r or python,hoaithuongnguyen-uts
+38680411,Communication,y,Strong communication skills,hoaithuongnguyen-uts
+38680411,Business acumen,y,Strong understanding of business,hoaithuongnguyen-uts
+38680411,Presentation skills,y,Presenting to senior stakeholders,hoaithuongnguyen-uts
+38680411,Stakeholder management,y,Presenting to senior stakeholders,hoaithuongnguyen-uts
+38680411,Predictive modelling,y,"? credit scoring, behavioural scoring, scorecard development",hoaithuongnguyen-uts
+55489506,Machine learning,y,machine learning and other predictive models,hoaithuongnguyen-uts
+55489506,Predictive modelling,y,predictive models,hoaithuongnguyen-uts
+55489506,Statistics,y,statistical methods,hoaithuongnguyen-uts
+55489506,Python,y,Python projects,hoaithuongnguyen-uts
+55489506,Documentation,y,document development efforts,hoaithuongnguyen-uts
+55489506,Project management,y,project management skills,hoaithuongnguyen-uts
+55489506,Data modelling,y,manage data structure designs,hoaithuongnguyen-uts
+55489506,Problem solving,y,strong attention to detail,hoaithuongnguyen-uts
+55489506,Git,y,peer review process,hoaithuongnguyen-uts
+50056288,Python,y,"Python, C, Matlab, R",hoaithuongnguyen-uts
+50056288,MATLAB,y,Matlab,hoaithuongnguyen-uts
+50056288,R,y,"Matlab, R",hoaithuongnguyen-uts
+50056288,Machine learning,y,Machine Learning (neural networks),hoaithuongnguyen-uts
+50056288,Deep learning,y,neural networks,hoaithuongnguyen-uts
+50056288,Problem solving,y,Problem solving and troubleshooting skills,hoaithuongnguyen-uts
+50056288,Azure,y,Microsoft Azure,hoaithuongnguyen-uts
+53894393,SAS,y,"SAS, SQL, Python/R or Tableau",hoaithuongnguyen-uts
+53894393,SQL,y,"SAS, SQL, Python/R or Tableau",hoaithuongnguyen-uts
+53894393,Python,y,Python/R,hoaithuongnguyen-uts
+53894393,R,y,Python/R,hoaithuongnguyen-uts
+53894393,Tableau,y,Tableau,hoaithuongnguyen-uts
+53894393,Machine learning,y,supervised/unsupervised machine learning,hoaithuongnguyen-uts
+53894393,ETL,y,Implement ETL,hoaithuongnguyen-uts
+53894393,Data governance,y,Uplift governance and quality,hoaithuongnguyen-uts
+53894393,Data quality,y,governance and quality of data,hoaithuongnguyen-uts
+53894393,Data visualisation,y,data manipulation and visualisation,hoaithuongnguyen-uts
+53894393,Problem solving,y,problem-solving skills,hoaithuongnguyen-uts
+53894393,Stakeholder management,y,build strong stakeholder relationships,hoaithuongnguyen-uts
+53894393,Communication,y,excellent interpersonal skills,hoaithuongnguyen-uts
+53894393,Business acumen,y,business acumen,hoaithuongnguyen-uts
+53894393,Predictive modelling,y,decision models,hoaithuongnguyen-uts
+40386941,Python,y,"Python, SQL, React",hoaithuongnguyen-uts
+40386941,SQL,y,"Python, SQL, React",hoaithuongnguyen-uts
+40386941,Machine learning,y,machine learning techniques/algorithms,hoaithuongnguyen-uts
+40386941,Excel,y,Advanced skills in excel,hoaithuongnguyen-uts
+40386941,VBA,y,macros,hoaithuongnguyen-uts
+40386941,Hadoop,y,Hadoop,hoaithuongnguyen-uts
+40386941,Hive,y,Hive,hoaithuongnguyen-uts
+40386941,Data cleaning,y,"cleanse, integrate and evaluate large data sets",hoaithuongnguyen-uts
+40386941,Hypothesis testing,y,validating hypotheses,hoaithuongnguyen-uts
+38644875,R,y,R programming,hoaithuongnguyen-uts
+38644875,Python,y,Python,hoaithuongnguyen-uts
+38644875,Scala,y,"R, Python or Scala",hoaithuongnguyen-uts
+38644875,Machine learning,y,Machine learning,hoaithuongnguyen-uts
+38644875,Artificial intelligence,y,AI,hoaithuongnguyen-uts
+38644875,Hive,y,"Hive, Spark or Map R",hoaithuongnguyen-uts
+38644875,Spark,y,"Hive, Spark or Map R",hoaithuongnguyen-uts
+54948934,Python,y,"Advanced programming skills (Python, R, SQL or SAS) Appointments are subject to reference",tompham9016
+54948934,R,y,"Advanced programming skills (Python, R, SQL or SAS) Appointments are subject to reference che",tompham9016
+54948934,SQL,y,"Advanced programming skills (Python, R, SQL or SAS) Appointments are subject to reference checks",tompham9016
+54948934,SAS,y,"Advanced programming skills (Python, R, SQL or SAS) Appointments are subject to reference checks",tompham9016
+54948934,data processing,n,"Data processing, data analyses, modelling, machine learning and/or forecasting to sup",tompham9016
+54948934,Machine learning,y,"ues including — but not limited to — data/text mining, machine learning, pattern matching, forecasting, visualisation, semanti",tompham9016
+54948934,Predictive modelling,y,"y applying mathematics, statistics, data mining and/or predictive modelling techniques to gain insights, predict behaviours/outcom",tompham9016
+54948934,Probability,y,"Integrating methods from mathematics, statistics and probability modelling using specialised programming languages, too",tompham9016
+54948934,Data modelling,y,"hin BOCSAR a small team of officers undertakes complex modelling and forecasting, including development of simulation m",tompham9016
+54948934,Statistics,y,n and annual leave loading About usThe Bureau of Crime Statistics and Research (BOCSAR) is a business unit within Depart,tompham9016
+54948934,Sentiment analysis,y,"tching, forecasting, visualisation, semantic analysis, sentiment analysis, network and cluster analysis, multivariate statistics",tompham9016
+54948934,Clustering,y,"on, semantic analysis, sentiment analysis, network and cluster analysis, multivariate statistics, graph analysis, sim",tompham9016
+54948934,data mining,n,"ent and effective by applying mathematics, statistics, data mining and/or predictive modelling techniques to gain insight",tompham9016
+54948934,Data visualisation,y,"ning, machine learning, pattern matching, forecasting, visualisation, semantic analysis, sentiment analysis, network and cl",tompham9016
+54948934,semantic analysis,n,"earning, pattern matching, forecasting, visualisation, semantic analysis, sentiment analysis, network and cluster analysis, mul",tompham9016
+54948934,Deep learning,y,"graph analysis, simulation, complex event processing, neural networks Preparing justice policy simulations and forecasting o",tompham9016
+54948934,simulation,n,"ex modelling and forecasting, including development of simulation models, to assess the impact of changes in one part of",tompham9016
+54948934,complex event processing,n,"multivariate statistics, graph analysis, simulation, complex event processing, neural networks Preparing justice policy simulations",tompham9016
+54948934,Presentation skills,y,"t, and reports explaining and interpreting the results Presenting and communicating analysis to senior and non-technical audiences to build their u",tompham9016
+54948934,Communication,y,kers in solving real-world problems Excellent oral and written communication skills to effectively engage with a range of internal,tompham9016
+54948934,Stakeholder management,y,pert advice across the data science domain to internal stakeholders Essential requirements of the role Tertiary qualificat,tompham9016
+50727502,Machine learning,y,"You’ll use Artificial Intelligence techniques such as machine learning, to develop and deploy models and digital products in",tompham9016
+50727502,Artificial intelligence,y,"You’ll use Artificial Intelligence techniques such as machine learning, to develop and de",tompham9016
+50727502,Agile,y,You’ll apply agile practices that provide a foundation for iterative prod,tompham9016
+50727502,Time series forecasting,y,"Experience working with time-series data3+ years professional experience developing, deplo",tompham9016
+50727502,MLOps,y,"l Intelligence techniques such as machine learning, to develop and deploy models and digital products in real-time production environme",tompham9016
+50727502,Cloud platforms,y,"developing, deploying and maintaining models in public cloud and on-premises environments3+ years professional expe",tompham9016
+50727502,Python,y,s3+ years professional experience writing high quality Python code with expert level knowledge of the scientific sta,tompham9016
+50727502,NumPy,y,"e with expert level knowledge of the scientific stack (NumPy, SciPy, scikit-learn, pandas etc)Expertise in other re",tompham9016
+50727502,scikit-learn,y,"level knowledge of the scientific stack (NumPy, SciPy, scikit-learn, pandas etc)Expertise in other relevant computing lang",tompham9016
+50727502,SciPy,n,"expert level knowledge of the scientific stack (NumPy, SciPy, scikit-learn, pandas etc)Expertise in other relevant",tompham9016
+50727502,pandas,y,"e of the scientific stack (NumPy, SciPy, scikit-learn, pandas etc)Expertise in other relevant computing languages (e",tompham9016
+50727502,JavaScript,y,JavaScript / R / SQL)Expertise in data visualisation libraries an,tompham9016
+50727502,R,y,JavaScript / R / SQL)Expertise in data visualisation libraries and pr,tompham9016
+50727502,SQL,y,JavaScript / R / SQL)Expertise in data visualisation libraries and products,tompham9016
+50727502,Data visualisation,y,JavaScript / R / SQL)Expertise in data visualisation libraries and products (e,tompham9016
+50727502,Power BI,y,PowerBI / Dash / Shiny / Tableau / Spotfire)Expertise in DevOp,tompham9016
+50727502,Tableau,y,PowerBI / Dash / Shiny / Tableau / Spotfire)Expertise in DevOps,tompham9016
+50727502,Plotly,y,PowerBI / Dash / Shiny / Tableau / Spotfire)Expertise in DevOps,tompham9016
+50727502,Shiny,n,PowerBI / Dash / Shiny / Tableau / Spotfire)Expertise in DevOps,tompham9016
+50727502,Spotfire,n,PowerBI / Dash / Shiny / Tableau / Spotfire)Expertise in DevOps,tompham9016
+50727502,DevOps,n,werBI / Dash / Shiny / Tableau / Spotfire)Expertise in DevOps,tompham9016
+50727502,Interpersonal skills,n,"Excellent interpersonal and communication skills (written and verbal), includi",tompham9016
+50727502,Communication,y,"Excellent interpersonal and communication skills (written and verbal), including working in a team envi",tompham9016
+50727502,Presentation skills,y,"including working in a team environment, delivering presentations and translating technical concepts into business value",tompham9016
+50727502,Teamwork,y,"d communication skills (written and verbal), including working in a team environment, delivering presentations and translating technical co",tompham9016
+50727502,Business acumen,y,duals who are committed to team success and delivering business value,tompham9016
+50727502,workflow automation,n,"s efficiently and effectively through standardisation, workflow automation and continuous improvement",tompham9016
+50727502,standardisation,n,"o deliver projects efficiently and effectively through standardisation, workflow automation and continuous improvement",tompham9016
+55520483,Business acumen,y,Translate business needs into analytics requirements and a roadmap of spe,tompham9016
+55520483,Predictive modelling,y,Operationalise predictive models by working with the business to implement outputs into,tompham9016
+55520483,Data warehousing,y,rnal and external data and lead the development of the data warehouse,tompham9016
+55520483,ETL,y,Work with the data engineer to create data pipelines from both internal and external data and lead the deve,tompham9016
+55520483,Leadership,y,"Lead a small team with responsibility for team outputs, learning, develo",tompham9016
+55520483,R,y,"edge and experience in several languages, for instance R/PythonProven ability to build predictive models that a",tompham9016
+55520483,Python,y,"ge and experience in several languages, for instance R/PythonProven ability to build predictive models that are adopted by",tompham9016
+55520483,Problem solving,y,models that are adopted by the organisationOutstanding problem solving skills including the ability to work with ambiguitySuc,tompham9016
+55520483,Work with ambiguity,n,blem solving skills including the ability to work with ambiguitySuccessful management of a small team or unitAppropriate tertiary,tompham9016
+53187210,Leadership,y,An ability to guide and mentor co-workers is essential,tompham9016
+53187210,Problem solving,y,A curiosity and a willingness to solve problems is essential to this role,tompham9016
+53187210,design data driven solution,n,"Experience in helping a business design a data driven solution, as opposed to just building fr",tompham9016
+53187210,Strong technical skills,n,"my, the role would suit someone willing to apply their strong technical skills to manipulate and present data in a way that drives va",tompham9016
+39142341,deliver data science solutions,n,Delivering data science solutions to improve business outcomes,tompham9016
+39142341,privacy-preserving machine learning,n,Good knowledge of privacy-preserving machine learning techniques,tompham9016
+39142341,Machine learning,y,Good knowledge of privacy-preserving machine learning techniques,tompham9016
+39142341,R,y,"R, Python, Scala",tompham9016
+39142341,Python,y,"R, Python, Scala",tompham9016
+39142341,Scala,y,"R, Python, Scala",tompham9016
+39142341,Data cleaning,y,"Data wrangling with complex datasets on large, distributed databases",tompham9016
+39142341,Communication,y,Excellent written and oral communication skills,tompham9016
+55085339,data science,n,"ion, financial management, compliance & regulation and data science and analytics",tompham9016
+55085339,analytics,n,the market leading actuarial consulting and strategic analytics firm in Australia and New Zealand,tompham9016
+55085339,credit risk modelling,n,"Previous experience in credit risk modelling, pricing and data analytics",tompham9016
+55085339,pricing,n,"pricing and customer & product insights, automation, risk & ca",tompham9016
+55085339,data interrogation,n,Strong skills in data interrogation and a strong technical foundation across analytics tec,tompham9016
+55085339,SQL,y,"Experience with SQL, R and Python",tompham9016
+55085339,R,y,"Experience with SQL, R and Python",tompham9016
+55085339,Python,y,"Experience with SQL, R and Python",tompham9016
+55085339,Communication,y,Strong verbal communication skills and a passion for consulting,tompham9016
+55085339,Problem solving,y,A problem-solving mindset,tompham9016
+55085339,Teamwork,y,A team player who is keen to collaborate with clients and teams,tompham9016
+50014854,Leadership,y,Experience in leading and mentoring teams of data scientists,tompham9016
+50014854,Predictive modelling,y,"7 to 10 years’ experience developing predictive models in commercial environments, preferably exposure to Sal",tompham9016
+50014854,classification,n,"ta mining techniques as well as the use of predictive, classification and alternate analytic algorithms for modelling and se",tompham9016
+50014854,segmentation,n,on and alternate analytic algorithms for modelling and segmentation,tompham9016
+50014854,quality control,n,Ensure quality control and oversight of model outputs within the customer pro,tompham9016
+50014854,Stakeholder management,y,Managing both internal and external stakeholders for the successful launch of new product features,tompham9016
+50014854,Machine learning,y,"and maintain state of the art advanced statistical and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to dri",tompham9016
+50014854,Random forest,y,"advanced statistical and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to drive marketing strategies and",tompham9016
+50014854,Gradient boosting,y,"ical and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to drive marketing strategies and tactical execu",tompham9016
+50014854,XGBoost,y,"and machine learning models (GLM, Random Forests, GBM, xGBoost, etc) to drive marketing strategies and tactical execu",tompham9016
+50014854,Linear regression,y,"Linear & Logistics Regression, Decision Trees, Random forests",tompham9016
+50014854,Logistic regression,y,"Linear & Logistics Regression, Decision Trees, Random forests, Markov Cha",tompham9016
+50014854,Markov Chains,n,"Logistics Regression, Decision Trees, Random forests, Markov Chains, Support Vector Machines, Neural Networks, Clustering",tompham9016
+50014854,Support vector machines,y,"ession, Decision Trees, Random forests, Markov Chains, Support Vector Machines, Neural Networks, Clustering, Principal Component Anal",tompham9016
+50014854,Deep learning,y,"andom forests, Markov Chains, Support Vector Machines, Neural Networks, Clustering, Principal Component Analysis, Factor Anal",tompham9016
+50014854,Clustering,y,"rkov Chains, Support Vector Machines, Neural Networks, Clustering, Principal Component Analysis, Factor Analysis, etc",tompham9016
+50014854,Principal Component Analysis,n,"Support Vector Machines, Neural Networks, Clustering, Principal Component Analysis, Factor Analysis, etc",tompham9016
+50014854,Factor Analysis,n,"al Networks, Clustering, Principal Component Analysis, Factor Analysis, etc",tompham9016
+50014854,Decision Trees,n,"Linear & Logistics Regression, Decision Trees, Random forests, Markov Chains, Support Vector Machine",tompham9016
+50014854,big data,n,cts on time within scope with an in-depth knowledge of big data and cutting-edge data mining techniques as well as the,tompham9016
+50014854,developing class-leading algorithms,n,Experience in developing class-leading algorithms to drive commercial outcomes,tompham9016
+50014854,data manipulation,n,"stical and machine learning modelling, with experience manipulating and ‘making sense’ of big data from disparate systems",tompham9016
+50014854,SQL,y,"SQL, SAS, R or Python",tompham9016
+50014854,SAS,y,"SQL, SAS, R or Python",tompham9016
+50014854,Python,y,"SQL, SAS, R or Python",tompham9016
+50014854,R,y,"SQL, SAS, R or Python",tompham9016
+50014854,AWS,y,exposure to AWS Redshift or Teradata preferred,tompham9016
+50014854,Teradata,n,exposure to AWS Redshift or Teradata preferred,tompham9016
+50014854,Hadoop,y,"Exposure to Big Data platforms, such as Hadoop and Spark",tompham9016
+50014854,Spark,y,"Exposure to Big Data platforms, such as Hadoop and Spark",tompham9016
+52727857,Business acumen,y,Advising clients to help solve real-life business problems across diverse industries through use of data,tompham9016
+52727857,implementing analytical solutions,n,ng track record in understanding business problems and implementing analytical solutions 3 – 5 years relevant work experience with data analyti,tompham9016
+52727857,Machine learning,y,"team of data technologists (Artificial Intelligence / Machine Learning / Deep Learning), designers, developers and management",tompham9016
+52727857,Statistics,y,"d, analytics and AI technologies Performing “hands on” statistical and machine learning modelling, computations, and data",tompham9016
+52727857,data engineering,n,"ical and machine learning modelling, computations, and data engineering Involvement in identifying trends and innovation in de",tompham9016
+52727857,Deep learning,y,"ologists (Artificial Intelligence / Machine Learning / Deep Learning), designers, developers and management consultants cou",tompham9016
+52727857,identifying trends and innovation,n,"ing, computations, and data engineering Involvement in identifying trends and innovation in deep learning, machine learning and related technol",tompham9016
+52727857,Feature engineering,y,"5 years relevant work experience with data analytics, feature engineering and model development using market leading machine lea",tompham9016
+52727857,model development,n,"xperience with data analytics, feature engineering and model development using market leading machine learning and deep learnin",tompham9016
+52727857,Python,y,techniques Expertise in writing production code using Python Fluency in data querying and manipulation using cloud,tompham9016
+52727857,data querying,n,ise in writing production code using Python Fluency in data querying and manipulation using cloud-based SQL and NoSQL datab,tompham9016
+52727857,data manipulation,n,duction code using Python Fluency in data querying and manipulation using cloud-based SQL and NoSQL database technologies,tompham9016
+52727857,NoSQL,y,ta querying and manipulation using cloud-based SQL and NoSQL database technologies Experience in utilising modern M,tompham9016
+52727857,cloud-based SQL,n,Python Fluency in data querying and manipulation using cloud-based SQL and NoSQL database technologies Experience in utilisin,tompham9016
+52727857,MLOps,y,L database technologies Experience in utilising modern MLOps/DevOps approaches to manage and deploy models at scale,tompham9016
+52727857,DevOps,n,base technologies Experience in utilising modern MLOps/DevOps approaches to manage and deploy models at scale on Azu,tompham9016
+52727857,Azure,y,"Ops approaches to manage and deploy models at scale on Azure (preferred), AWS or GCP",tompham9016
+52727857,AWS,y,"anage and deploy models at scale on Azure (preferred), AWS or GCP",tompham9016
+52727857,Google Cloud,y,"nd deploy models at scale on Azure (preferred), AWS or GCP",tompham9016
+52727857,Hadoop,y,"Experience with Big Data analytics, including Hadoop, Spark, graph analytics would be desirable",tompham9016
+52727857,Spark,y,"Experience with Big Data analytics, including Hadoop, Spark, graph analytics would be desirable",tompham9016
+52727857,graph analytics,n,"ence with Big Data analytics, including Hadoop, Spark, graph analytics would be desirable",tompham9016
+38692371,Machine learning,y,"will apply advanced data science techniques including machine learning, graph analytics, data visualisation and text mining t",tompham9016
+38692371,graph analytics,n,"ed data science techniques including machine learning, graph analytics, data visualisation and text mining to identify patter",tompham9016
+38692371,Data visualisation,y,"echniques including machine learning, graph analytics, data visualisation and text mining to identify patterns and predict outco",tompham9016
+38692371,Natural language processing,y,"hine learning, graph analytics, data visualisation and text mining to identify patterns and predict outcomes from large d",tompham9016
+38692371,Predictive modelling,y,visualisation and text mining to identify patterns and predict outcomes from large datasets,tompham9016
+38692371,Leadership,y,"insights across a broad range of datasets, and take a leadership role for projects which solve important business probl",tompham9016
+38692371,Problem solving,y,"e projects involving research and analysis, high level problem solving and the formation of sound judgements",tompham9016
+38692371,MLOps,y,"They will initiate, design, develop, implement, deploy, test and evaluate models to provide actionable insights across a broad range of",tompham9016
+38692371,Communication,y,You have highly developed oral and written communication skills and can easily develop and maintain effective w,tompham9016
+38692371,R,y,"R, Python, Scala Strong skills in data wrangling with co",tompham9016
+38692371,Python,y,"R, Python, Scala Strong skills in data wrangling with complex da",tompham9016
+38692371,Scala,y,"R, Python, Scala Strong skills in data wrangling with complex datasets",tompham9016
+38692371,SQL,y,"Strong skills in data wrangling with complex datasets (SQL, Spark) Candidates must be Australian citizens to appl",tompham9016
+38692371,Spark,y,"g skills in data wrangling with complex datasets (SQL, Spark) Candidates must be Australian citizens to apply, and",tompham9016
+52219256,risk management,n,Risk Management is responsible for protecting the Group's and Bankwest,tompham9016
+52219256,Communication,y,"rn and be part of a highly engaged teamHave proficient written communication skills, can problem solve and collaborate well with ot",tompham9016
+52219256,Problem solving,y,"teamHave proficient written communication skills, can problem solve and collaborate well with other colleaguesCan th",tompham9016
+52219256,Teamwork,y,"nt written communication skills, can problem solve and collaborate well with other colleaguesCan think creatively, handle change and deadlinesAre on",tompham9016
+52219256,data analysis,n,"t university and through on the job training toPerform data analysis to monitor, measure, and manage risksAssist in develop",tompham9016
+50449684,Machine learning,y,ust advanced analytics and developing new cutting-edge machine learning models and data-driven tools to support our ongoing da,tompham9016
+50449684,Optimisation,y,"ng data strategy and drive future business performance Optimising and evolving the current models and analytics solutions that are in production, taking",tompham9016
+50449684,Presentation skills,y,"actful and aligned to business objectives and strategy Presenting the analytics solutions, models and insights to a range of business stakeholde",tompham9016
+50449684,Teamwork,y,s stakeholders and contributing to strategic decisions Collaborating with engineering and product development teams Your background,tompham9016
+50449684,SQL,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
+50449684,Python,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
+50449684,Google Cloud,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
+50449684,Tableau,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
+50449684,Linux,y,"SQL, Python, GCP, Tableau, Linux The ideal candidate",tompham9016
+50449684,Statistics,y,Experience with open source machine learning or statistical analysis tools in conjunction with data engineering experience,tompham9016
+50449684,Financial Analysis,n,"stics, Finance or Commerce with in-depth experience in Financial Analysis",tompham9016
+50449684,data engineering,n,"ning or statistical analysis tools in conjunction with data engineering experience, including SQL & structured or unstructured",tompham9016
+50449684,Node,n,"ng data pipelines involving any combination of Python, Node, bash, and Linux command-line tools is a bonus Good un",tompham9016
+50449684,Shell scripting,y,"a pipelines involving any combination of Python, Node, bash, and Linux command-line tools is a bonus Good understa",tompham9016
+50449684,Hadoop,y,"ing and working experience with big data technologies (Hadoop, Spark, etc) Good, in-depth, understanding and extensi",tompham9016
+50449684,Spark,y,"working experience with big data technologies (Hadoop, Spark, etc) Good, in-depth, understanding and extensive prac",tompham9016
+50449684,big data,n,"a bonus Good understanding and working experience with big data technologies (Hadoop, Spark, etc) Good, in-depth, unde",tompham9016
+50449684,Deep learning,y,"use of mathematical, statistical, machine learning and deep learning techniques Strong problem-solving skills with an empha",tompham9016
+50449684,Problem solving,y,machine learning and deep learning techniques Strong problem-solving skills with an emphasis on product delivery Please app,tompham9016
+39372682,big data,n,g company with a global reach that builds cutting-edge big data products for companies for analytics and consumer insi,tompham9016
+39372682,Scala,y,ve experience with some leading Big Data technologies (Scala being one of the leading technologies that we work wit,tompham9016
+39372682,Spark,y,"You will also work with Spark and Redshift, and we want you to be adaptable to learn",tompham9016
+39372682,Redshift,y,"You will also work with Spark and Redshift, and we want you to be adaptable to learning new techn",tompham9016
+39372682,NoSQL,y,"The role will also involve working with our NoSQL Databases (MongoDB), as you will be working with Petab",tompham9016
+39372682,MongoDB,y,"le will also involve working with our NoSQL Databases (MongoDB), as you will be working with Petabyte datasets",tompham9016
+39372682,Machine learning,y,"ommercial experience as Data Scientist Experience with Machine Learning Big Data - Scala (preferred), Spark, Kafka, Redshift E",tompham9016
+39372682,Kafka,y,"Machine Learning Big Data - Scala (preferred), Spark, Kafka, Redshift Experience with R, Python or Scala is Desira",tompham9016
+39372682,R,y,"la (preferred), Spark, Kafka, Redshift Experience with R, Python or Scala is Desirable Strong Business Awarenes",tompham9016
+39372682,Python,y,"preferred), Spark, Kafka, Redshift Experience with R, Python or Scala is Desirable Strong Business Awareness Positi",tompham9016
+39372682,Business acumen,y,"Experience with R, Python or Scala is Desirable Strong Business Awareness Positive Approach Extremely passionate about",tompham9016
+39372682,Problem solving,y,s Positive Approach Extremely passionate about solving problem Experience writing Algorithms Deep Learning Stakeholde,tompham9016
+39372682,Deep learning,y,te about solving problem Experience writing Algorithms Deep Learning Stakeholder Engagement Strong Communication skills IT',tompham9016
+39372682,Stakeholder management,y,ng problem Experience writing Algorithms Deep Learning Stakeholder Engagement Strong Communication skills IT'S NICE TO HAVEStatistic,tompham9016
+39372682,Communication,y,Algorithms Deep Learning Stakeholder Engagement Strong Communication skills IT'S NICE TO HAVEStatistical Analysis Master's or PhD,tompham9016
+52312136,deliver solutions,n,rience working as a Data Scientist Proven track record delivering Data Science solutions with extremely large customer datasets Experience buil,tompham9016
+52312136,big data,n,en track record delivering Data Science solutions with extremely large customer datasets Experience building and deploying models and segmentat,tompham9016
+52312136,segmentations,n,datasets Experience building and deploying models and segmentations High quality coding experience across Python/SQL/R Exp,tompham9016
+52312136,MLOps,y,ions with extremely large customer datasets Experience building and deploying models and segmentations High quality coding experience acros,tompham9016
+52312136,Python,y,nd segmentations High quality coding experience across Python/SQL/R Expert in large scale data prep and manipulation,tompham9016
+52312136,R,y,"tions High quality coding experience across Python/SQL/R Expert in large scale data prep and manipulation, idea",tompham9016
+52312136,SQL,y,"entations High quality coding experience across Python/SQL/R Expert in large scale data prep and manipulation, id",tompham9016
+52312136,BigQuery,y,"large scale data prep and manipulation, ideally using big query Working knowledge of many standard and cutting-edge St",tompham9016
+52312136,data manipulation,n,"cross Python/SQL/R Expert in large scale data prep and manipulation, ideally using big query Working knowledge of many sta",tompham9016
+52312136,Statistics,y,"ata Science, Computer Science, Engineering, Economics, Statistics, Mathematics or Actuarial Studies 3+ years’ experience",tompham9016
+52312136,Predictive modelling,y,nowledge of many standard and cutting-edge Statistical/Predictive/Machine Learning/Supervised and Unsupervised technique,tompham9016
+52312136,Machine learning,y,many standard and cutting-edge Statistical/Predictive/Machine Learning/Supervised and Unsupervised techniques A strong user o,tompham9016
+52312136,Supervised and Unsupervised,n,d cutting-edge Statistical/Predictive/Machine Learning/Supervised and Unsupervised techniques A strong user of data visualisation techniq,tompham9016
+52312136,Data visualisation,y,upervised and Unsupervised techniques A strong user of data visualisation techniques to tell the story of data,tompham9016
+52312136,Plotly,y,"Tools including (but not limited to) Plotly, ggplot2, matplotlib, MS Excel, MS PowerPoint, Tableau",tompham9016
+52312136,ggplot2,n,"Tools including (but not limited to) Plotly, ggplot2, matplotlib, MS Excel, MS PowerPoint, Tableau Ability",tompham9016
+52312136,matplotlib,y,"Tools including (but not limited to) Plotly, ggplot2, matplotlib, MS Excel, MS PowerPoint, Tableau Ability to communica",tompham9016
+52312136,Excel,y,"g (but not limited to) Plotly, ggplot2, matplotlib, MS Excel, MS PowerPoint, Tableau Ability to communicate well an",tompham9016
+52312136,Powerpoint,n,"limited to) Plotly, ggplot2, matplotlib, MS Excel, MS PowerPoint, Tableau Ability to communicate well and discuss compl",tompham9016
+52312136,Tableau,y,"artners with leading edge software platforms including Tableau, Alteryx, Collibra, Snowflake and Salesforce",tompham9016
+52312136,Communication,y,Looker is highly desirable Excellent written & verbal communication skills are essential If you fit the description and are a pas,tompham9016
+38744632,recommendation systems,n,scientist for a rewarding 6-month contract working on recommendation systems and machine learning to optimise marketing & business,tompham9016
+38744632,Machine learning,y,6-month contract working on recommendation systems and machine learning to optimise marketing & business decisions for million,tompham9016
+38744632,data mining,n,"You will bring strong modelling, data mining and machine learning experience to the team, preferabl",tompham9016
+38744632,propensity models,n,th some exposure to recommendation engines or building propensity models,tompham9016
+38744632,Statistics,y,"round, ideally PhD level or Masters, in a mathematics, statistics, machine learning or scientific field (including compu",tompham9016
+38744632,Communication,y,"mmercial analytics/data science experience Very strong communication & presentation skills with business stakeholders, peer",tompham9016
+38744632,Presentation skills,y,"cs/data science experience Very strong communication & presentation skills with business stakeholders, peers and data engineering",tompham9016
+38744632,Stakeholder management,y,work as well as scoping and liaising with key business stakeholders,tompham9016
+38744632,R,y,"R/SQL/Python/Spark (Scala, SparklyR, PySpark) - with an",tompham9016
+38744632,Python,y,"R/SQL/Python/Spark (Scala, SparklyR, PySpark) - with an appetite to",tompham9016
+38744632,SQL,y,"R/SQL/Python/Spark (Scala, SparklyR, PySpark) - with an appe",tompham9016
+38744632,Scala,y,"R/SQL/Python/Spark (Scala, SparklyR, PySpark) - with an appetite to learn and us",tompham9016
+38744632,SparklyR,n,"R/SQL/Python/Spark (Scala, SparklyR, PySpark) - with an appetite to learn and use cutting",tompham9016
+38744632,Spark,y,"R/SQL/Python/Spark (Scala, SparklyR, PySpark) - with an appetite to learn and use cutting-edge tool",tompham9016
+38744632,production experience,n,Production experience - e,tompham9016
+38744632,big data,n,Big data experience is beneficial – e,tompham9016
+38744632,Google Cloud,y,"GCP (Google Cloud Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLli",tompham9016
+38744632,AWS,y,"GCP (Google Cloud Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why",tompham9016
+38744632,Azure,y,"GCP (Google Cloud Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why this rol",tompham9016
+38744632,Keras,y,"GCP (Google Cloud Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why this role is different",tompham9016
+38744632,TensorFlow,y,"Google Cloud Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why this role is different",tompham9016
+38744632,SparkMLlib,n,"Platform), AWS / Azure / Spark / keras / TensorFlow / SparkMLlib Why this role is different",tompham9016
+38744632,Teamwork,y,grade models/recommendation systems/propensity models as part of a team,tompham9016
+38680411,R,y,Solid expereince with r or python,tompham9016
+38680411,Python,y,Solid expereince with r or python,tompham9016
+38680411,Communication,y,Strong communication skills with the ability to influence others,tompham9016
+38680411,PD,n,"Experience with PD, LGD and EAD through modelling or validation will be h",tompham9016
+38680411,LGD,n,"Experience with PD, LGD and EAD through modelling or validation will be highly",tompham9016
+38680411,EAD,n,"Experience with PD, LGD and EAD through modelling or validation will be highly favoure",tompham9016
+38680411,Business acumen,y,"Strong understanding of business, credit scoring, behavioural scoring, scorecard develo",tompham9016
+38680411,credit scoring,n,"Strong understanding of business, credit scoring, behavioural scoring, scorecard development and monito",tompham9016
+38680411,behavioural scoring,n,"Strong understanding of business, credit scoring, behavioural scoring, scorecard development and monitoring",tompham9016
+38680411,scorecard development,n,"ding of business, credit scoring, behavioural scoring, scorecard development and monitoring",tompham9016
+38680411,credit risk,n,This big four Bank are seeking and credit risk analytics manager to join a high profile team within t,tompham9016
+38680411,Stakeholder management,y,credit risk portfolios trends and presenting to senior stakeholders,tompham9016
+38680411,Presentation skills,y,ing on the health of credit risk portfolios trends and presenting to senior stakeholders,tompham9016
+55489506,Predictive modelling,y,pointData is an Australian owned and based predictive analytics company that provides superior property and planning a,tompham9016
+55489506,Leadership,y,"Formulate and lead analytical studies against large data-setsDesign, implement and validate",tompham9016
+55489506,Statistics,y,models to deliver commercial outcomesDevelop and apply statistical methods for analysis and validationPlan and carry out,tompham9016
+55489506,data collection,n,"methods for analysis and validationPlan and carry out data collection, conversion and processing pipelinesDesign and employ",tompham9016
+55489506,processing pipelines,n,"tionPlan and carry out data collection, conversion and processing pipelinesDesign and employ systems related to data sto",tompham9016
+55489506,Machine learning,y,"against large data-setsDesign, implement and validate machine learning and other predictive models to deliver commercial outc",tompham9016
+55489506,data storage,n,"ocessing pipelinesDesign and employ systems related to data storage, automation, delivery and validationSupport software d",tompham9016
+55489506,automation,n,"inesDesign and employ systems related to data storage, automation, delivery and validationSupport software development w",tompham9016
+55489506,software development,n,"al capabilities via data engineering, data science and software development",tompham9016
+55489506,Python,y,validationSupport software development with a focus on Python projectsKey Requirements,tompham9016
+55489506,automated valuation models,n,years of experienceAbility to deliver fit for purpose automated valuation models across Australian States and Territories where data is,tompham9016
+55489506,Project management,y,"ited rework requirementsExceptional organisational and project management skills, ability to manage multiple projects, ability t",tompham9016
+55489506,attention to detail,n,"ltiple projects, ability to meet deadlines, and strong attention to detailRelevant tertiary qualification and/or indust",tompham9016
+55489506,meet deadlines,n,"kills, ability to manage multiple projects, ability to meet deadlines, and strong attention to detailRelevant tertiary quali",tompham9016
+55489506,manage multiple projects,n,"ganisational and project management skills, ability to manage multiple projects, ability to meet deadlines, and strong attention to de",tompham9016
+50056288,mathematical models,n,you will work on a project involving the conversion of mathematical models and functions to training algorithms for our neural ne,tompham9016
+50056288,Deep learning,y,rs into efficient code Experience in Machine Learning (neural networks)Extra Skills and Experience of Interest,tompham9016
+50056288,Optimisation,y,You will be responsible for this conversion and its optimization,tompham9016
+50056288,Python,y,"Strong programming ability (Python, C, Matlab, R",tompham9016
+50056288,MATLAB,y,"Strong programming ability (Python, C, Matlab, R",tompham9016
+50056288,R,y,"Strong programming ability (Python, C, Matlab, R",tompham9016
+50056288,C,n,"Strong programming ability (Python, C, Matlab, R",tompham9016
+50056288,Data modelling,y,Modelling experience Problem solving and troubleshooting skills,tompham9016
+50056288,Problem solving,y,Modelling experience Problem solving and troubleshooting skills Experience in converting ma,tompham9016
+50056288,Machine learning,y,thematical operators into efficient code Experience in Machine Learning (neural networks)Extra Skills and Experience of Intere,tompham9016
+50056288,Azure,y,Microsoft Azure MEDITECH,tompham9016
+53894393,data analysis,n,"As a Data Scientist, you will undertake extensive data analysis to identify root causes to complex business problems a",tompham9016
+53894393,Problem solving,y,"bly within the financial services industryAnalytical & problem-solving skills to understand the complexity of our data, and s",tompham9016
+53894393,ETL,y,"nnovative trends in the field of data scienceImplement ETL (Extract, Transform, Load) processes to import from ex",tompham9016
+53894393,Data governance,y,"processes to import from existing data sourcesUplift governance and quality of data and analytical models, standards a",tompham9016
+53894393,Data quality,y,"processes to import from existing data sourcesUplift governance and quality of data and analytical models, standards and controlsUplift te",tompham9016
+53894393,automation,n,"d analytical models, standards and controlsUplift test automation capabilities to increase speed to market, quality and",tompham9016
+53894393,forensic capability,n,Recommend pathways to optimiseBuild forensic capability to assure configurations are aligned to customer outco,tompham9016
+53894393,data science,n,"ledge and experience with tools and techniques used in data science, analysis, data manipulation and visualisation (e",tompham9016
+53894393,data manipulation,n,"h tools and techniques used in data science, analysis, data manipulation and visualisation (e",tompham9016
+53894393,Data visualisation,y,"used in data science, analysis, data manipulation and visualisation (e",tompham9016
+53894393,SAS,y,"SAS, SQL, Python/R or Tableau",tompham9016
+53894393,SQL,y,"SAS, SQL, Python/R or Tableau",tompham9016
+53894393,R,y,"SAS, SQL, Python/R or Tableau",tompham9016
+53894393,Tableau,y,"SAS, SQL, Python/R or Tableau",tompham9016
+53894393,supervised/unsupervised,n,"supervised/unsupervised machine learning), and its use in business contexts",tompham9016
+53894393,Machine learning,y,"supervised/unsupervised machine learning), and its use in business contexts",tompham9016
+53894393,interpersonal skills,n,suring a high level of accuracyYou will have excellent interpersonal skills and the ability to build strong stakeholder relationsh,tompham9016
+53894393,Stakeholder management,y,t interpersonal skills and the ability to build strong stakeholder relationships both internally and externallyYou’re not,tompham9016
+53894393,high level of accuracy,n,"mendationsThorough approach to detail, ensuring a high level of accuracyYou will have excellent interpersonal skills and the ab",tompham9016
+40386941,data analysis,n,and service teams to identify questions and issues for data analysis and experiments,tompham9016
+40386941,big data,n,ross-business approach and strategic/tactical plan for big data initiatives,tompham9016
+40386941,ETL,y,"ftware programs, algorithms and automated processes to cleanse, integrate and evaluate large data sets from multiple data sources",tompham9016
+40386941,data science,n,"Learning, adopting and leveraging data science best practice to delivery quantitative improvements to",tompham9016
+40386941,providing insight,n,"ta tools and techniques for the purposes of analysing, providing insight and validating hypotheses",tompham9016
+40386941,validating hypotheses,n,"s for the purposes of analysing, providing insight and validating hypotheses",tompham9016
+40386941,Translating analytical insights,n,"Translating analytical insights into concrete, actionable recommendations for business",tompham9016
+40386941,Python,y,"ll have experience with software and languages such as Python, SQL, React",tompham9016
+40386941,SQL,y,"experience with software and languages such as Python, SQL, React",tompham9016
+40386941,React,y,"ience with software and languages such as Python, SQL, React",tompham9016
+40386941,Machine learning,y,You will be able to demonstrate an understanding of machine learning techniques/algorithms and common data science tool-kit,tompham9016
+40386941,data manipulation,n,"A proven ability to manipulate and analyse complex, high-volume, high dimensional dat",tompham9016
+40386941,Excel,y,"Advanced skills in excel, including macros",tompham9016
+40386941,Hadoop,y,"analysis tools and big data technologies (Map/Reduce, Hadoop, Hive, etc), is desirable",tompham9016
+40386941,Map/Reduce,n,"Knowledge of analysis tools and big data technologies (Map/Reduce, Hadoop, Hive, etc), is desirable",tompham9016
+40386941,Hive,y,"s tools and big data technologies (Map/Reduce, Hadoop, Hive, etc), is desirable",tompham9016
+38644875,Advanced analytics,n,tist you will working in a data team to introduce more advanced analytics capability to the area and the project,tompham9016
+38644875,R,y,R programming - Python - AI - Machine learning - Data ScienceYour ne,tompham9016
+38644875,Python,y,R programming - Python - AI - Machine learning - Data ScienceYour new company,tompham9016
+38644875,Scala,y,"Experience in R, Python or Scala",tompham9016
+38644875,Machine learning,y,R programming - Python - AI - Machine learning - Data ScienceYour new company You will be working for,tompham9016
+38644875,Hive,y,"Experience in Hive, Spark or Map R would also be desirable",tompham9016
+38644875,Spark,y,"Experience in Hive, Spark or Map R would also be desirable",tompham9016
+38644875,Map R,n,"Experience in Hive, Spark or Map R would also be desirable",tompham9016
+38644875,ETL,y,The ability to extract data from complex data sets,tompham9016
+38644875,MLOps,y,"The role will also be involved in implementing, deploying, testing and evaluating statistical and machine learning models to identify pa",tompham9016
+38644875,Statistics,y,"ved in implementing, deploying, testing and evaluating statistical and machine learning models to identify patterns, pred",tompham9016
+38644875,Predictive modelling,y,"ical and machine learning models to identify patterns, predict outcomes and provide actionable insights across linked",tompham9016
+38644875,Artificial intelligence,y,R programming - Python - AI - Machine learning - Data ScienceYour new company You,tompham9016

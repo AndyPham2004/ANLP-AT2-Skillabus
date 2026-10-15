@@ -208,6 +208,13 @@ class Agreement(unittest.TestCase):
 
 
 class Files(unittest.TestCase):
+    def test_unsure_mark_is_dropped_from_ad_skill_labels(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "ad_skills.csv")
+            _write(path, "ad_id,skill_label,in_dictionary,evidence_text,annotator\n"
+                         "ad1,?Telecommunications,n,?telco experience,Akash\nad1, ? SQL,y,sql,Akash\n")
+            self.assertEqual(ev.load_ad_skills(path), {"ad1": {"telecommunications", "sql"}})
+
     def test_loaders_and_cli_kappa(self):
         with tempfile.TemporaryDirectory() as tmp:
             header = "ad_id,skill_label,in_dictionary,evidence_text,annotator\n"

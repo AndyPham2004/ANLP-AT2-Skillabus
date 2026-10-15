@@ -32,13 +32,16 @@ Usage:
 import argparse
 import logging
 import os
+import sys
 import time
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
 ENDPOINT = "https://api.adzuna.com/v1/api/jobs/{country}/search/{page}"
 MAX_PER_PAGE = 50  # Adzuna caps a page at 50 results
 
@@ -107,7 +110,7 @@ def main():
     parser.add_argument("--delay", type=float, default=1.2, help="seconds between calls")
     parser.add_argument("--app-id", default=os.environ.get("ADZUNA_APP_ID"))
     parser.add_argument("--app-key", default=os.environ.get("ADZUNA_APP_KEY"))
-    parser.add_argument("--out", default=ROOT / "data" / "raw" / "adzuna_ads.csv", type=Path)
+    parser.add_argument("--out", default=paths.RAW / "adzuna_ads.csv", type=Path)
     parser.add_argument("--insecure", action="store_true")
     args = parser.parse_args()
 

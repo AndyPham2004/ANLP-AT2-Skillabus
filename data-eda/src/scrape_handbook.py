@@ -19,6 +19,7 @@ Two modes:
     python src/scrape_handbook.py --codes 36118 36103 36106 --year 2026
 
 Output: data/raw/uts_subjects.csv
+Columns added 13 Oct 2026: sessions, modes (from the offering list).
 """
 
 import argparse
@@ -26,13 +27,16 @@ import html as html_lib
 import json
 import logging
 import re
+import sys
 import time
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))  # repo src/, for skillabus.paths
+from skillabus import paths  # noqa: E402
+
 BASE = "https://coursehandbook.uts.edu.au"
 NEXT_DATA = re.compile(
     r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>', re.S
@@ -119,6 +123,10 @@ def parse_subject(payload, year):
         if clean(o.get("description"))
     )
 
+    offerings = [o for o in (payload.get("offering") or []) if str(o.get("offered", "true")).lower() != "false"]
+    sessions = sorted({o.get("teaching_period", "") for o in offerings if o.get("teaching_period")})
+    modes = sorted({o.get("mode", "") for o in offerings if o.get("mode")})
+
     return {
         "subject_code": payload.get("code", ""),
         "subject_name": payload.get("title", ""),
@@ -132,6 +140,8 @@ def parse_subject(payload, year):
         "topics": clean(payload.get("learning_approach")),
         "teaching_strategies": clean(payload.get("teaching_strategies")),
         "requisites": clean(payload.get("requisite_detail")),
+        "sessions": "|".join(sessions),
+        "modes": "|".join(modes),
         "handbook_url": f"{BASE}/subject/{year}/{payload.get('code', '')}",
     }
 
@@ -142,7 +152,7 @@ def main():
                         help="one or more course codes, e.g. C04372 C04380 C04295")
     parser.add_argument("--codes", nargs="*", default=None, help="explicit subject codes")
     parser.add_argument("--year", default="2026", help="handbook year (or 'current')")
-    parser.add_argument("--out", default=ROOT / "data" / "raw" / "uts_subjects.csv", type=Path)
+    parser.add_argument("--out", default=paths.RAW / "uts_subjects.csv", type=Path)
     parser.add_argument("--delay", type=float, default=0.7, help="seconds between requests")
     parser.add_argument("--list-only", action="store_true", help="print codes and stop")
     parser.add_argument("--insecure", action="store_true",
@@ -202,7 +212,7 @@ def main():
     print(f"Subjects with zero learning outcomes: {(df['n_outcomes'] == 0).sum()}")
     if failed:
         print(f"FAILED ({len(failed)}): {', '.join(failed)}")
-        print("Retry these, or paste them by hand into config/subjects_template.csv.")
+        print("Retry these, or paste them by hand into data/1_knowledge/uts/subjects_template.csv.")
     print("\n" + df[["subject_code", "subject_name", "credit_points", "n_outcomes"]].to_string(index=False))
 
 

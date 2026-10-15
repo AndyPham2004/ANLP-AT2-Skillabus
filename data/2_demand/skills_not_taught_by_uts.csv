@@ -1,0 +1,74 @@
+skill,category,pct_2019_22,pct_2026,covered_by_uts
+Scala,Programming,15.1,0.0,n
+Google Cloud,Cloud,8.6,18.2,n
+TensorFlow,Deep learning,7.2,0.0,n
+Redshift,Cloud,5.8,4.5,n
+Econometrics,Statistics,5.1,0.0,n
+XGBoost,Machine learning,4.8,0.0,n
+SQL Server,Databases,4.1,0.0,n
+scikit-learn,Machine learning,3.9,0.0,n
+Qlik,Visualisation,3.7,4.5,n
+Keras,Deep learning,3.2,0.0,n
+NumPy,Data wrangling,3.1,0.0,n
+PyTorch,Deep learning,3.0,4.5,n
+Plotly,Visualisation,2.6,0.0,n
+Gradient boosting,Machine learning,2.5,0.0,n
+SageMaker,Cloud,2.5,0.0,n
+CI/CD,Engineering,2.4,18.2,n
+BigQuery,Cloud,2.1,13.6,n
+Julia,Programming,1.9,0.0,n
+Kubernetes,Engineering,1.4,4.5,n
+VBA,Programming,1.2,0.0,n
+D3.js,Visualisation,1.2,0.0,n
+API development,Engineering,0.8,0.0,n
+Azure ML,Cloud,0.7,0.0,n
+Elasticsearch,Databases,0.7,9.1,n
+Jenkins,Engineering,0.5,0.0,n
+Django,Engineering,0.5,0.0,n
+MLflow,Engineering,0.4,0.0,n
+Kubeflow,Engineering,0.4,0.0,n
+spaCy,NLP,0.3,0.0,n
+Looker,Visualisation,0.3,0.0,n
+dbt,Engineering,0.3,18.2,n
+Flask,Engineering,0.3,0.0,n
+LightGBM,Machine learning,0.2,0.0,n
+BERT,NLP,0.2,0.0,n
+NLTK,NLP,0.2,0.0,n
+Named entity recognition,NLP,0.2,0.0,n
+OpenCV,Computer vision,0.2,0.0,n
+Vertex AI,Cloud,0.2,0.0,n
+Cassandra,Databases,0.2,0.0,n
+Redis,Databases,0.2,4.5,n
+Hive,Data wrangling,0.1,0.0,n
+Dask,Data wrangling,0.1,0.0,n
+Hyperparameter tuning,Machine learning,0.1,0.0,n
+Terraform,Engineering,0.1,0.0,n
+Polars,Data wrangling,0.0,0.0,n
+CatBoost,Machine learning,0.0,0.0,n
+Hugging Face,NLP,0.0,0.0,n
+Transformers,NLP,0.0,0.0,n
+RAG,NLP,0.0,0.0,n
+Prompt engineering,NLP,0.0,18.2,n
+LangChain,NLP,0.0,0.0,n
+Vector databases,NLP,0.0,0.0,n
+FastAPI,Engineering,0.0,0.0,n
+Streamlit,Engineering,0.0,0.0,n
+Python,Programming,82.8,63.6,y
+SQL,Programming,56.8,50.0,y
+Spark,Data wrangling,25.6,13.6,y
+Databricks,Data wrangling,4.0,18.2,y
+Large language models,NLP,0.0,36.4,y
+AWS,Cloud,21.7,31.8,y
+Azure,Cloud,12.5,13.6,y
+Data warehousing,Databases,4.1,13.6,y
+Tableau,Visualisation,18.9,13.6,y
+Data visualisation,Visualisation,25.3,18.2,y
+ETL,Engineering,10.1,36.4,y
+Statistics,Statistics,56.1,22.7,y
+A/B testing,Statistics,3.6,31.8,y
+Data quality,Governance,3.8,13.6,y
+Responsible AI,Governance,0.1,13.6,y
+Machine learning,Machine learning,72.2,31.8,y
+Artificial intelligence,Machine learning,22.5,90.9,y
+Generative AI,NLP,0.0,22.7,y
+Cloud platforms,Cloud,25.1,45.5,y

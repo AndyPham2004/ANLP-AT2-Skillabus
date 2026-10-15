@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from skillabus import paths
 from skillabus.extract import extract
 import skillabus.similarity as similarity_module
 from skillabus.match import (match, rank_evidence, role_profile, score_matrix, skill_overlap,
@@ -38,8 +39,8 @@ def test_gap_result_follows_the_data_contract():
 
 
 def test_reproduces_the_poster_gap_chart():
-    """data/processed/gap.csv: 8 technical skills, the resume covers Python and SQL."""
-    with open(ROOT / "data/processed/gap.csv", encoding="utf-8") as f:
+    """archive/poster_AT2A/data/gap.csv: 8 technical skills, the resume covers Python and SQL."""
+    with open(paths.POSTER_GAP, encoding="utf-8") as f:
         gap = list(csv.DictReader(line for line in f if not line.startswith("#")))
     skills = match(extract(AD), extract(RESUME))
     assert {s["skill_label"]: s["demand_pct"] for s in skills} == {r["skill"]: float(r["pct_ads"]) for r in gap}
