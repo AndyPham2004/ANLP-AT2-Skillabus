@@ -13,7 +13,7 @@
 # %% [markdown]
 # # Skillabus: exploratory data analysis
 #
-# 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 14 Oct 2026
+# 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 16 Oct 2026
 #
 # **Runs on committed files only** (everything under `data/`; every path comes from
 # `src/skillabus/paths.py`), so it works on a fresh clone. Raw downloads are not needed; each
@@ -31,7 +31,8 @@
 # 7. What does the UTS curriculum cover?
 # 8. Are the resumes usable?
 # 9. How far does ESCO reach?
-# 10. What this means for the app
+# 10. Where does each of the 11 IT roles get its demand from?
+# 11. What this means for the app
 
 # %%
 import logging
@@ -121,7 +122,7 @@ inventory = pd.DataFrame([
     ("ESCO label lookup rows", len(lookup), "v1.2.1", "normalise()", "clean_esco.py"),
     ("Label sample (ads)", len(label_sample), "2019-22", "extraction test set", "make_label_sample.py"),
     ("Skill dictionary", len(seed), "v2", "extract() tier 1", "data/1_knowledge/skills/"),
-    ("Prerequisite items", len(pd.read_csv(paths.PREREQUISITES, dtype=str)), "2026",
+    ("Prerequisite rows", len(pd.read_csv(paths.PREREQUISITES, dtype=str)), "2026",
      "recommend(): order, anti-requisites", "scrape_requisites.py"),
     ("Teaching sessions", len(pd.read_csv(paths.OFFERINGS, dtype=str)), "2026",
      "recommend(): when a subject runs", "scrape_requisites.py"),
@@ -129,8 +130,30 @@ inventory = pd.DataFrame([
      "role picker, match()", "build_role_profiles.py"),
     ("External course rows", len(pd.read_csv(paths.EXTERNAL_COURSES, dtype=str)), "Oct 2026, 56 courses",
      "recommend() tier 2", "external/ (Quan)"),
+    # Added 15 Oct for the 11 IT roles (plan D4-D11); section 10 looks at them.
+    ("Skill vocabulary", len(pd.read_csv(paths.SKILLS_VOCABULARY, dtype=str)), "15 Oct 2026",
+     "replaces the dictionary (D5)", "build_vocabulary.py"),
+    ("Role x skill demand rows", len(pd.read_csv(paths.ROLE_SKILL_DEMAND)), "2019-26, 11 roles",
+     "the one demand table (D6)", "build_role_skill_demand.py"),
+    ("Role occupation rows", len(pd.read_csv(paths.ROLE_OCCUPATIONS)), "ESCO, O*NET, ASC",
+     "11 roles -> occupations (D4)", "build_occupation_skills.py"),
+    ("Occupation skill rows", len(pd.read_csv(paths.OCCUPATION_SKILLS)), "ESCO, O*NET, ASC",
+     "core skills per role (D4)", "build_occupation_skills.py"),
+    ("Certifications", len(pd.read_csv(paths.CERTIFICATIONS)), "Oct 2026", "certifications per role (D11)", "by hand"),
+    ("Self-study resources", len(pd.read_csv(paths.RESOURCES)), "Oct 2026", "self-study column (D9)", "by hand"),
+    ("Student-reported taught skills", len(pd.read_csv(paths.UTS / "taught_skills_student_reported.csv")),
+     "2025-26", "what subjects taught (D10)", "by hand, from Canvas"),
 ], columns=["data", "rows", "period", "used by", "built by"])
 inventory
+
+# %%
+# The prerequisite file mixes three kinds of row: requisite items, anti-requisites, and one empty
+# row for each subject with no rule. The report cites them separately.
+req = pd.read_csv(paths.PREREQUISITES, dtype=str, keep_default_na=False)
+rq, anti = req[req.kind == "requisite"], req[req.kind == "antirequisite"]
+print(f"requisite items: {(rq.item != '').sum():,} for {rq[rq.item != ''].subject_code.nunique()} subjects; "
+      f"subjects with no rule: {(rq.item == '').sum()}; "
+      f"anti-requisite rows: {len(anti)} for {anti.subject_code.nunique()} subjects")
 
 # %% [markdown]
 # ### The main corpus: 3,204 Seek Data Scientist ads
@@ -486,6 +509,23 @@ sparkplus = profiles[profiles.text.str.contains(r"(?i)sparkplus")]
 print(f"subjects naming the SPARKPlus peer-review tool: {sparkplus.subject_code.nunique()}; "
       f"subjects the extractor reads as Apache Spark: {sorted(long_prof[long_prof.skill == 'Spark'].subject_code.unique())}")
 
+# %% [markdown]
+# The Handbook is not the whole curriculum. Students report what their subjects actually
+# taught (plan D10, `taught_skills_student_reported.csv`, skill names only, from Canvas). How
+# many of the skills the Handbook never names do those reports cover? So far the file holds
+# one student's nine MDSI subjects, so this is a lower bound on what UTS teaches.
+
+# %%
+taught = pd.read_csv(paths.UTS / "taught_skills_student_reported.csv", dtype=str, keep_default_na=False)
+print(f"student-reported rows: {len(taught)} for {taught.subject_code.nunique()} subjects "
+      f"from {taught.collected_by.nunique()} student(s)")
+reported = set(taught.skill)
+filled = unnamed_tech[unnamed_tech.canonical.isin(reported)]
+print(f"technical skills the Handbook never names but a student reports as taught: "
+      f"{len(filled)} of {len(unnamed_tech)}")
+print("most demanded of them:", list(tech[tech.index.isin(filled.canonical)].head(10).index))
+print("still unreported:", list(tech[tech.index.isin(unnamed_tech.canonical) & ~tech.index.isin(reported)].head(8).index))
+
 # %%
 d = top25.iloc[::-1]
 fig, ax = plt.subplots(figsize=(7.2, 7))
@@ -554,7 +594,77 @@ probe = ["sql", "python (computer programming)", "machine learning", "deep learn
 lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "ambiguous"]]
 
 # %% [markdown]
-# ## 10. What this means for the app
+# ## 10. Where does each of the 11 IT roles get its demand from?
+#
+# From 15 Oct the app covers 11 IT roles in five families (plan D4-D6), not only Data
+# Scientist. Every role's demand is in one table, `role_skill_demand.csv` (role x skill x source
+# x period, all skills on the new vocabulary). Its sources differ in kind (full ad text, tool
+# lists, occupation taxonomies), so a share is only read next to its source, period, n and text
+# type.
+
+# %%
+demand = pd.read_csv(paths.ROLE_SKILL_DEMAND)
+role_occ = pd.read_csv(paths.ROLE_OCCUPATIONS)
+family = role_occ.drop_duplicates("role").set_index("role").role_family
+ad_rows = demand[demand.role.isin(family.index) & (demand.text_type != "taxonomy")]
+# Full text beats a tool list when a role has both (Data Scientist: Seek 2019-22).
+best = (ad_rows.assign(_r=ad_rows.text_type.map({"full_text": 0, "tool_list": 1}))
+        .sort_values(["role", "_r"]).groupby("role").first())
+taxonomy = demand[demand.text_type == "taxonomy"].groupby(["role", "source"]).size().unstack(fill_value=0)
+matches = role_occ.pivot_table(index="role", columns="source", values="match", aggfunc="first")
+role_table = (pd.DataFrame({"family": family})
+              .join(best[["source", "period", "text_type", "total_ads"]])
+              .join(taxonomy.rename(columns={"esco_occupation": "esco_rows", "onet": "onet_rows"}))
+              .join(matches.add_prefix("match_")))
+role_table["total_ads"] = role_table.total_ads.astype("Int64")
+print(f"{len(role_table)} roles: {(role_table.text_type == 'full_text').sum()} with full-text Australian ads, "
+      f"{(role_table.text_type == 'tool_list').sum()} with tool lists only, "
+      f"{role_table.text_type.isna().sum()} with occupation taxonomies only")
+print("occupation links (exact / close / broad):",
+      {s: role_occ[role_occ.source == s].match.value_counts().to_dict() for s in ("esco", "onet", "asc")})
+role_table.sort_values("family")
+
+# %%
+# The top skills of each role from its best source. A taxonomy does not rank skills, so the
+# taxonomy-only roles show their row counts and the O*NET in-demand tools no other role lists.
+onet = demand[demand.source == "onet"]
+roles_per_tool = onet.groupby("skill").role.nunique()
+for role, r in role_table.sort_values("family").iterrows():
+    if pd.notna(r.source):
+        top = ad_rows[(ad_rows.role == role) & (ad_rows.source == r.source)].nlargest(5, "pct")
+        print(f"{role:30} {r.source} (n = {r.total_ads:,}): "
+              + ", ".join(f"{s} {p:.0f}%" for s, p in zip(top.skill, top.pct)))
+    else:
+        t = demand[(demand.role == role) & (demand.text_type == "taxonomy")]
+        own = sorted(s for s in t[t.source == "onet"].skill if roles_per_tool[s] == 1)
+        print(f"{role:30} taxonomy only: ESCO {(t.importance == 'essential').sum()} essential + "
+              f"{(t.importance == 'optional').sum()} optional, O*NET {(t.source == 'onet').sum()} in-demand; "
+              f"tools only this role lists: {own[:6]}")
+
+# %% [markdown]
+# **The vocabulary (D5).** ESCO is the base; the team adds the skills ESCO lacks or names only
+# as a wider concept. The report's headline count is the vocabulary builder's own: detection
+# skills whose ESCO link is "broad" or "none" and that at least 3 Australian ads from at least 2
+# employers name (`vocabulary_ad_counts.csv`).
+
+# %%
+import build_vocabulary  # noqa: E402  (data-eda/src)
+
+vocab = pd.read_csv(paths.SKILLS_VOCABULARY, dtype=str, keep_default_na=False)
+head = build_vocabulary.headline(vocab, build_vocabulary.load_counts(build_vocabulary.COUNTS))
+kinds = vocab.category.map(lambda c: c if c in ("ESCO core skill", "Certification") else "skill or tool")
+print(f"vocabulary: {len(vocab)} rows {kinds.value_counts().to_dict()}; "
+      f"in the old dictionary: {vocab.label.isin(seed.canonical).sum()}")
+print("ESCO link:", vocab.esco_match.value_counts().to_dict())
+print(f"skills the Australian ads ask for that ESCO lacks: {head['n']} "
+      f"({head['dictionary']} from the dictionary, {head['added']} added for IT)")
+certs, store = pd.read_csv(paths.CERTIFICATIONS), pd.read_csv(paths.RESOURCES)
+print(f"certifications: {len(certs)} from {certs.vendor.nunique()} vendors; Adzuna counts filled: "
+      f"{certs.au_ads_count.notna().sum()}")
+print(f"self-study resources: {len(store)} from {store.provider.nunique()} providers; cost {store.cost.value_counts().to_dict()}")
+
+# %% [markdown]
+# ## 11. What this means for the app
 #
 # | # | Finding | Evidence | For the app |
 # |---|---|---|---|
@@ -565,13 +675,15 @@ lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "amb
 # | 4 | The 2019-22 corpus predates LLMs | LLM-era skills in 1 of 3,204 ads -> 2.5% (Jan 2024) -> 7 of 9 data-scientist ads and 9 of 22 data roles (2026); rises within non-AI titles too | show the trend; flag LLM skills as emerging |
 # | 5 | 2026 is small and tech-heavy | 22 ads in the sample (60-day, 3 per employer), 9 of them data scientists; one ad = 11 points | keep 2019-22 as the weight; show 2026 as "n of 9" |
 # | 6 | Other roles need another source | the Seek corpus is Data Scientist titles only; 2023 tool lists (10,925 AU postings) give 6 more roles | role profiles from role_profiles.csv, tools only; Data Scientist keeps Seek |
-# | 7 | The curriculum names most demand | 24 of the top 25 technical skills named by at least one of 360 subjects, 15 in MDSI; Scala in none; Spark, Hadoop only in 94693 | named is not taught in depth; external courses cover the 62 skills no subject names |
+# | 7 | The curriculum names most demand | 24 of the top 25 technical skills named by at least one of 360 subjects, 15 in MDSI; Scala in none; Spark, Hadoop only in 94693; one student's reports cover 28 of the 61 technical skills the Handbook never names (section 7) | named is not taught in depth; external courses cover the 62 skills no subject names; add students' reports as a second source of what is taught |
 # | 8 | Subject text is uneven | assessment layer for 326 of 360 subjects; 9 MDSI subjects have no topic list, 3 have description only | thin subjects rank low for lack of text, not content |
 # | 9 | Few resumes look like data profiles | 125 of 2,481 with 2+ data skills; none in a data category | draw CV-JD pairs from those 125 only |
-# | 10 | ESCO reaches little of the modern stack | 36% of our dictionary maps; 716 ambiguous labels incl. "sql" | normalise() needs the emerging tag and a tie-break for ambiguous labels |
+# | 10 | ESCO reaches little of the modern stack | 36% of our dictionary maps; 716 ambiguous labels incl. "sql"; 145 skills Australian ads ask for are missing from ESCO or only broad there (section 10) | normalise() needs the emerging tag and a tie-break for ambiguous labels; the vocabulary keeps ESCO as the base and adds the rest with a reason |
+# | 11 | Eleven roles, three kinds of evidence | Data Scientist has full-text ads (Seek); 6 roles have 2023 tool lists; 4 have occupation taxonomies only (section 10) | show source, period, n and text type with every share; no percentage bars for the four taxonomy-only roles |
 #
 # **Limitations to state in the report:** the main corpus is 2019-22 (Feb 2019 to
-# Jan 2022), Data Scientist titles only, and 22% re-listings; the 2026 sample is 22 ads (9 data scientists from 5 employers);
+# Jan 2022), Data Scientist titles only, and 22% re-listings; six other roles rest on 2023 tool lists and four on
+# taxonomies only; the 2026 sample is 22 ads (9 data scientists from 5 employers);
 # resumes are US 2021 and de-identified rather than anonymous; subject profiles come
 # from the public handbook and are uneven; matching is by keyword; ESCO coverage of the modern
 # stack is low.

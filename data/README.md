@@ -103,8 +103,8 @@ Notes for anyone citing these:
   A CC BY 4.0 grant cannot be withdrawn for copies already obtained under it, so the 2021 copy stays
   usable with that attribution, but it cannot be re-downloaded and it is five years old.
 - Resumes are de-identified, not anonymous: emails, phones, URLs and 1,146 person names are
-  masked, but a name in capitals or a lone first name can survive. Mask again with spaCy
-  before sending any resume text to an LLM.
+  masked, but a name in capitals or a lone first name can survive. Known gap: the app's
+  `mask_pii()` masks emails, URLs and phone numbers before any LLM call, but not names.
 
 Rebuild the cleaned files (needs `data/raw/`):
 

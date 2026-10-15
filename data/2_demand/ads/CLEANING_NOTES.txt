@@ -109,8 +109,10 @@ resumes_us_2021_clean.csv                       2,481 resumes   src/clean_resume
  O*NET tool name. Skill counts are unchanged after masking (Java 301 -> 301,
  Oracle 577 -> 577, Spring Boot 2 -> 2). About half the masked spans are real
  names; the rest are harmless phrases ("Dean List").
- STILL NOT ANONYMOUS: a name in capitals or a lone first name can survive. The
- app must still mask with spaCy before any LLM call (ethics section).
+ STILL NOT ANONYMOUS: a name in capitals or a lone first name can survive.
+ Known gap: the app's mask_pii() masks emails, URLs and phone numbers before any
+ LLM call, but not names (these test resumes are already de-identified; a
+ user's own resume is not).
 
  THERE IS NO DATA-SCIENCE CATEGORY among the 24 (IT, chef, advocate, ...).
  n_data_skills = how many of python, sql, machine learning, statistics, data
