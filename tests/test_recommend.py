@@ -3,7 +3,7 @@
 They read tests/fixtures/subject_profiles_sample.csv: the 2026 Handbook rows of the 19 MDSI
 subjects and 12 others, taken from the 3 Oct mock (archive/mock_2026-10-03/subject_layers.csv),
 and the prerequisites and teaching periods of the same 31 subjects (prerequisites_sample.csv,
-offerings_sample.csv, cut from the 13 Oct scrape). Demand weights are pinned, so the tests do not
+offerings_sample.csv, re-cut from the scrape of #98). Demand weights are pinned, so the tests do not
 move when skill_counts_2026.csv is rebuilt.
 """
 from pathlib import Path
@@ -17,7 +17,7 @@ import skillabus.similarity as similarity_module
 from skillabus.extract import extract
 from skillabus.match import match
 from skillabus.recommend import MAX_PATH, _weight, learning_path, recommend, subject_evidence
-from skillabus.requisites import Rules
+from skillabus.requisites import Rules, enrolment, load_rules
 from skillabus.similarity import embeddings_available
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -172,6 +172,16 @@ def test_a_prerequisite_is_added_before_the_subject(monkeypatch):
     assert path["subjects"] == ["36106", "94691"]
     assert [(s["subject_code"], s["session"], s["after"]) for s in path["plan"]] == [
         ("36106", "Autumn 2027", []), ("94691", "Autumn 2028", ["36106"])]     # 94691 runs in Autumn only
+
+
+def test_an_antirequisite_list_closes_on_any_one_subject():
+    """Regression (#82 review): 32130's anti-requisites print as "(1 AND 2 AND 3)" (31250 and two
+    offshore copies of 32130), so all three can never be taken; 31250 alone must close it."""
+    rules = load_rules()                                  # the fixture files, via sample_data
+    assert enrolment("32130", {"31250"}, rules)["reason"] == "antirequisite: already took 31250"
+    path = recommend(poster_gaps(), PROFILES, method="keyword", exclude={"31250"}, start=START)["learning_path"]
+    assert "32130" not in path["subjects"]
+    assert "32130" in [d["subject_code"] for d in path["dropped"]]
 
 
 def test_without_requisite_data_every_subject_is_open():

@@ -3,7 +3,8 @@ from datetime import date
 
 import pytest
 
-from skillabus.requisites import _parse, enrolment, load_rules, next_session, schedule
+from skillabus import paths
+from skillabus.requisites import _parse, antirequisite_clash, enrolment, load_rules, next_session, schedule
 
 HEADER = "subject_code,kind,rule,item,type,requisite_code,requisite_text,evop_found,source_url\n"
 
@@ -98,3 +99,28 @@ def test_next_session():
     assert next_session(date(2026, 10, 13)) == ("Autumn", 2027)
     assert next_session(date(2027, 1, 20)) == ("Autumn", 2027)
     assert next_session(date(2027, 5, 1)) == ("Spring", 2027)
+
+
+# ------------------------------------------------- real data (#98's corrected prerequisites.csv)
+
+@pytest.fixture(scope="module")
+def real_rules():
+    return load_rules(paths.PREREQUISITES, paths.OFFERINGS)
+
+
+@pytest.mark.parametrize("code, taken, status", [
+    ("32513", {"36106"}, "open"),      # 13 Oct scrape listed 32513's prerequisites as its anti-requisites
+    ("32513", {"31005"}, "closed"),    # its real anti-requisite (live page, 14 Oct)
+    ("36106", {"36113"}, "closed"),
+    ("36106", {"36114"}, "closed"),
+    ("32130", {"31250"}, "closed"),    # one item of a "(1 AND 2 AND 3)" list is enough
+])
+def test_real_antirequisites(real_rules, code, taken, status):
+    assert enrolment(code, taken, real_rules)["status"] == status
+
+
+def test_no_subject_is_ruled_out_by_its_own_prerequisite(real_rules):
+    """The #81 parser bug in one line: an anti-requisite list must never repeat the subject's requisites."""
+    clashes = [(code, item.code) for code, rule in real_rules.requisite.items() for item in rule.items.values()
+               if item.code and antirequisite_clash(code, {item.code}, real_rules)]
+    assert clashes == []
