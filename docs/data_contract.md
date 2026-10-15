@@ -40,6 +40,8 @@ and Phuong Nhi**.
       "status": "missing",
       "demand_pct": 72.2,
       "demand_pct_2026": 80.0,
+      "demand_source": "Seek",
+      "demand_period": "2019-22",
       "emerging": false,
       "ad_evidence": "Implement and evaluate advanced machine learning ...",
       "resume_evidence": null
@@ -108,8 +110,9 @@ and Phuong Nhi**.
 | `found_by` | Optional: `llm` when only the GPT-4o-mini tier found the skill |
 | `score` | Subject score scaled so the best subject is 1.0 |
 | `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3 |
-| `demand_pct` | Share of the 3,204 Seek ads 2019-22 that mention the skill (`skill_counts_v2.csv`) |
-| `demand_pct_2026` | Same over the 2026 sample; `null` until that sample exists |
+| `demand_pct` | Share of the ads behind `demand_source` that mention the skill: for an ad and for Data Scientist, the 3,204 Seek ads 2019-22 (`skill_counts_v2.csv`); for another role, that role's own ads (`role_profiles.csv`) |
+| `demand_pct_2026` | Same over the 2026 data-role sample, for an ad and for Data Scientist only; `null` for other roles (the sample has data roles only) and for a skill the sample lacks. Only a gap with a 2026 share falls back on it when its `demand_pct` is under 1% |
+| `demand_source`, `demand_period` | Where `demand_pct` comes from, read from the file: `Seek` / `2019-22`, or a role file's `source` and `period` (the years in `source` when the file has no `period` column), e.g. `lukebarousse/data_jobs (2023, Australia)` / `2023`. For the app's caption |
 | `layer` | `learning_objective`, `assessment`, `weekly_topic`, `description` (strongest first) |
 | `match` | `named` (the row names the skill) or `similar` (TF-IDF or embedding similarity only) |
 | `needs` | Prerequisites the student has not taken yet (at most two, each open now); `[]` = can enrol now, unless `unverified` is true (no record on the access-conditions site, so "no prerequisite" is not confirmed). A recommended subject may still need them; the path adds them before it |
