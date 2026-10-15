@@ -13,20 +13,22 @@ and Phuong Nhi**.
   "skill_label": "deep learning",
   "vocab": "esco",
   "method": "dictionary",
-  "sentence": "In-depth knowledge of deep learning, Generative AI and other advanced AI technologies."
+  "sentence": "In-depth knowledge of deep learning, Generative AI and other advanced AI technologies.",
+  "requirement": "required"
 }
 ```
 
 | Field | Values |
 |---|---|
-| `skill_id` | `esco:<uri>`, `lightcast:<id>`, `emerging:<slug>` when neither vocabulary has it, or `seed:<slug>` for a dictionary skill (`skills_seed_v2.csv`) not yet linked to ESCO |
-| `vocab` | `esco`, `seed` (a dictionary skill ESCO words differently), `lightcast`, `emerging` |
-| `canonical` | The dictionary name (`skills_seed_v2.csv`) when the phrase is one of its aliases, else `null`; used for demand lookups. Set by `extract()` (tiers 1-2, including forms the alias list lacks, such as "REST APIs"); `normalise()` keeps it and fills it only when it is missing |
+| `skill_id` | For a vocabulary skill (`data/1_knowledge/skills_vocabulary.csv`), its `skill_id` column: the ESCO id when `esco_match` is `exact`, else `skillabus:<slug>`. Outside the vocabulary: `esco:<uri>`, `lightcast:<id>`, or `emerging:<slug>` when neither vocabulary has it |
+| `vocab` | `esco`, `seed` (a vocabulary skill whose ESCO match is close or broad, so it keeps its own `skillabus:` id), `lightcast`, `emerging` (includes vocabulary skills ESCO lacks: `esco_match` = `none`) |
+| `canonical` | The vocabulary `label` (rows with `extract` in `used_for`) when the phrase is one of its `aliases_ads`, else `null`; used for demand lookups. Set by `extract()` (tiers 1-2, including forms the alias list lacks, such as "REST APIs"); `normalise()` keeps it and fills it only when it is missing |
 | `how` | Which normalisation step matched: `dictionary`, `esco_exact`, `esco_embed`, `lightcast`, `emerging` |
 | `similarity` | Cosine to the ESCO label for `esco_embed`, else `null` |
 | `kind` | LLM tier only: `hard` or `soft` |
 | `method` | `dictionary`, `ner`, `llm` |
 | `sentence` | The full sentence the skill came from; this is the evidence shown in the app |
+| `requirement` | `required`, `preferred`, or `""` when the ad does not say (D14). From a cue in the sentence ("must", "essential" / "desirable", "nice to have", "not required"), else from the heading the sentence sits under ("Essential criteria:", "Nice to have:"); a preferred cue wins over a required one |
 
 ## 2. The gap result: output of `match()` + `recommend()`, input of the app
 

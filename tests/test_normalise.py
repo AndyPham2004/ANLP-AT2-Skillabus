@@ -56,3 +56,11 @@ def test_canonical_from_extract_is_kept():
 def test_csharp_row_survives_reading_the_seed():
     r = norm("C#")["C#"]
     assert r["canonical"] == "C#"
+
+
+def test_vocabulary_ids_keep_close_tools_apart():
+    """C2: a broad ESCO link ("data visualisation software") does not merge Tableau and Power BI."""
+    r = norm("tableau", "power bi")
+    assert r["tableau"]["skill_id"] == "skillabus:tableau" and r["power bi"]["skill_id"] == "skillabus:power-bi"
+    assert r["tableau"]["vocab"] == "seed" and r["tableau"]["how"] == "dictionary"
+

@@ -7,10 +7,13 @@ before normalisation):
      "sentence": "Strong programming experience with Python and SQL."}
 
 `text`      the words as they appear in the ad or resume
-`canonical` the skill name in data/1_knowledge/skills/skills_seed_v2.csv, or None when the
-            mention is not in the dictionary (tier 2 candidates, emerging skills)
+`canonical` the skill's `label` in data/1_knowledge/skills/skills_vocabulary.csv (the detection
+            rows, `used_for` contains `extract`), or None when the mention is not in it (tier 2
+            candidates, emerging skills)
 `method`    which tier found it: dictionary, ner, llm
 `sentence`  the full sentence, kept as the evidence the app shows
+`requirement` "required", "preferred" or "" (not said): from cue words in the sentence ("must",
+            "desirable", "a plus") or the section heading above it ("Essential", "Nice to have")
 
 Tier 1, dictionary: exact alias lookup. Fast, transparent, the baseline.
 Tier 2, ner: tier 1 plus what spaCy adds: part-of-speech filtering of ambiguous
@@ -27,7 +30,8 @@ from functools import lru_cache
 
 from . import paths
 
-SEED_CSV = paths.SKILLS_SEED
+VOCABULARY_CSV = paths.SKILLS_VOCABULARY   # since C2 (16 Oct): the one vocabulary, detection rows only
+SEED_CSV = paths.SKILLS_SEED               # the old 148-row dictionary, still readable by path
 METHODS = ("dictionary", "ner", "llm")
 SPACY_MODEL = "en_core_web_sm"
 
@@ -95,18 +99,37 @@ def split_sentences(text: str) -> list[str]:
 
 @lru_cache(maxsize=None)
 def load_dictionary(path: str | None = None) -> tuple[dict, ...]:
-    """Read skills_seed_v2.csv: one dict per skill with canonical, category, strict, aliases."""
-    with open(path or SEED_CSV, encoding="utf-8", newline="") as f:
-        rows = csv.DictReader(line for line in f if not line.startswith("#"))
+    """The skills extraction looks for: one dict per skill with canonical, category, strict, aliases.
+
+    Default: the detection rows of skills_vocabulary.csv (`used_for` contains `extract` and
+    `aliases_ads` is set), with `label` as canonical and `aliases_ads` as aliases; each dict also
+    carries skill_id, esco_label and esco_match for normalise(). A path to a file in the old
+    skills_seed_v2.csv format (canonical, aliases) is still read as before.
+    """
+    with open(path or VOCABULARY_CSV, encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(line for line in f if not line.startswith("#")))
+    if rows and "aliases_ads" in rows[0]:
         return tuple(
             {
-                "canonical": row["canonical"].strip(),
+                "canonical": row["label"].strip(),
                 "category": row["category"].strip(),
                 "strict": row["strict"].strip() == "1",
-                "aliases": tuple(a.strip() for a in row["aliases"].split("|") if a.strip()),
+                "aliases": tuple(a.strip() for a in row["aliases_ads"].split("|") if a.strip()),
+                "skill_id": row["skill_id"].strip(),
+                "esco_label": row.get("esco_label", "").strip(),
+                "esco_match": row.get("esco_match", "").strip(),
             }
-            for row in rows
+            for row in rows if "extract" in row.get("used_for", "") and row["aliases_ads"].strip()
         )
+    return tuple(
+        {
+            "canonical": row["canonical"].strip(),
+            "category": row["category"].strip(),
+            "strict": row["strict"].strip() == "1",
+            "aliases": tuple(a.strip() for a in row["aliases"].split("|") if a.strip()),
+        }
+        for row in rows
+    )
 
 
 def _alias_pattern(aliases, flags) -> re.Pattern | None:
@@ -377,12 +400,71 @@ def _extract_ner(text: str) -> list[dict]:
     return mentions
 
 
+# ------------------------------------------------------- required or preferred (plan D14)
+
+_PREFERRED = re.compile(
+    r"\b(?:preferred|preferable|desirable|desired|nice[- ]to[- ]have|bonus|advantage(?:ous)?|a plus|"
+    r"ideally|highly regarded|well regarded|beneficial|not (?:required|essential|mandatory))\b", re.I)
+_REQUIRED = re.compile(r"\b(?:must|required|requirements?|essential|mandatory|minimum)\b", re.I)
+_HEADING_WORDS = 8
+
+
+def _cue(text: str) -> str:
+    if _PREFERRED.search(text):          # first, so "desirable but not required" is preferred
+        return "preferred"
+    if _REQUIRED.search(text):
+        return "required"
+    return ""
+
+
+_SECTION = re.compile(
+    r"^(?:about|benefits|perks|what we offer|what's in it|why (?:join|work)|who we are|our (?:team|culture|values)|"
+    r"responsibilities|key responsibilities|the role|your role|what you(?:'ll| will) do|how to apply)\b", re.I)
+
+
+def _heading(sentence: str) -> str | None:
+    """The cue of a line that opens a section ("Essential criteria:", "Nice to have", "Benefits"),
+    "" for a section without one, None when the line is not a heading. A bullet such as
+    "Python and SQL" is short too, so a heading must end with ":" or name a cue or a section."""
+    words = sentence.rstrip(":").split()
+    if not words or len(words) > _HEADING_WORDS:
+        return None
+    if sentence.endswith(":"):
+        return _cue(sentence)
+    if len(words) <= 6 and _cue(sentence):
+        return _cue(sentence)
+    if len(words) <= 6 and _SECTION.search(sentence):
+        return ""
+    return None
+
+
+def requirement_by_sentence(text: str) -> dict[str, str]:
+    """sentence -> "required" / "preferred" / "". The sentence's own cue wins; otherwise the
+    nearest heading above it ("Essential", "Desirable"); a heading without a cue ends the section.
+    Cue lists set by judgement on the job-ad conventions, not tuned on the labelled ads."""
+    out, section = {}, ""
+    for sentence in split_sentences(text):
+        heading = _heading(sentence)
+        if heading is not None:
+            section = out[sentence] = heading
+            continue
+        out[sentence] = _cue(sentence) or section
+    return out
+
+
+def _tag_requirement(text: str, mentions: list[dict]) -> list[dict]:
+    by_sentence = requirement_by_sentence(text)
+    for m in mentions:
+        m["requirement"] = by_sentence.get(m["sentence"], _cue(m["sentence"]))
+    return mentions
+
+
 # ------------------------------------------------------------------------------ public
 
 def extract(text: str, method: str = "dictionary") -> list[dict]:
     """Return skill mentions (data contract section 1, before normalisation).
 
-    method = "dictionary"  tier 1, exact alias lookup in skills_seed_v2.csv
+    method = "dictionary"  tier 1, exact alias lookup in the vocabulary's detection rows
     method = "ner"         tier 2, tier 1 + spaCy (POS filter, plurals, new candidates)
     method = "llm"         tier 3, GPT-4o-mini (Quan)
     """
@@ -391,11 +473,11 @@ def extract(text: str, method: str = "dictionary") -> list[dict]:
     if not text or not text.strip():
         return []
     if method == "dictionary":
-        return _extract_dictionary(text)
+        return _tag_requirement(text, _extract_dictionary(text))
     if method == "ner":
-        return _extract_ner(text)
+        return _tag_requirement(text, _extract_ner(text))
     try:  # tier 3 lives in llm_extract.py (Quan)
         from .llm_extract import extract_llm
     except ImportError as error:
         raise NotImplementedError("Tier 3 (GPT-4o-mini) is in llm_extract.py, not on this branch yet.") from error
-    return extract_llm(text)
+    return _tag_requirement(text, extract_llm(text))

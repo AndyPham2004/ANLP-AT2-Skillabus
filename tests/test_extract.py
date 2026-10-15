@@ -32,7 +32,8 @@ def test_mentions_follow_the_data_contract(method):
     mentions = extract(AD, method)
     assert mentions
     for m in mentions:
-        assert set(m) == {"text", "canonical", "method", "sentence"}
+        assert set(m) == {"text", "canonical", "method", "sentence", "requirement"}
+        assert m["requirement"] in ("required", "preferred", "")
         assert m["method"] == method
         assert m["text"] in m["sentence"]
 
@@ -131,3 +132,33 @@ def test_ner_proposes_skills_outside_the_dictionary():
 def test_ner_candidates_skip_numbers_places_and_vague_nouns():
     assert candidates("5+ years of experience in Sydney with large clusters and Python.") == set()
     assert candidates("Understanding of retrieval-augmented generation (RAG).") == set()
+
+
+# ------------------------------------------------- C2: the vocabulary; D14: required or preferred
+
+def test_extraction_reads_the_vocabulary_detection_rows():
+    """Since C2 the dictionary is skills_vocabulary.csv's detection rows; the old 148 are all in it."""
+    vocabulary = {s["canonical"]: s for s in load_dictionary()}
+    with open(ROOT / "data/1_knowledge/skills/skills_seed_v2.csv", encoding="utf-8") as f:
+        old = {r["canonical"] for r in csv.DictReader(line for line in f if not line.startswith("#"))}
+    assert old <= set(vocabulary) and len(vocabulary) > len(old)
+    assert vocabulary["Tableau"]["skill_id"] == "skillabus:tableau" and vocabulary["Python"]["esco_match"] == "exact"
+    assert [m["canonical"] for m in extract("Experience with Kubernetes, Terraform and Grafana.")] == [
+        "Kubernetes", "Terraform", "Grafana"]                       # Grafana: an IT skill added in D5
+
+
+def test_requirement_comes_from_the_sentence_or_its_heading():
+    ad = """Essential criteria:
+- Python and SQL
+Nice to have:
+- dbt
+Benefits
+- Free Python books
+Must have strong Tableau skills. Experience with Power BI is desirable but not required."""
+    req = {(m["canonical"], m["sentence"]): m["requirement"] for m in extract(ad)}
+    assert req[("Python", "Python and SQL")] == req[("SQL", "Python and SQL")] == "required"
+    assert req[("dbt", "dbt")] == "preferred"
+    assert req[("Python", "Free Python books")] == ""                 # "Benefits" ends the section
+    assert req[("Tableau", "Must have strong Tableau skills.")] == "required"
+    assert req[("Power BI", "Experience with Power BI is desirable but not required.")] == "preferred"
+

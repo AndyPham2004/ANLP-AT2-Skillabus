@@ -1,7 +1,8 @@
 """Map raw skill mentions to ESCO, then Lightcast, else tag as emerging. Owner: Quan.
 
 For each mention, in order (first hit wins):
-1. dictionary   our alias list (skills_seed_v2.csv) -> canonical name, ESCO link if Van Thong made one
+1. dictionary   the vocabulary's detection rows (skills_vocabulary.csv, since C2) -> label and the id the
+                vocabulary decided: ESCO's when the link is exact, else skillabus:<slug> (no ESCO steps)
 2. esco_exact   the phrase (or its canonical name) equals an ESCO preferred or alternative label
 3. esco_embed   nearest ESCO preferred label by sentence embedding, if cosine >= ESCO_MIN_SIM
    (a dictionary skill still unmatched here keeps vocab "seed", id seed:<slug>)
@@ -27,10 +28,8 @@ from functools import lru_cache
 import pandas as pd
 
 from . import paths
-from .text import read_csv_skipping_notes, slug
-
-SEED_CSV = paths.SKILLS_SEED
-ESCO_LINKS_CSV = paths.SKILL_TO_ESCO
+from .extract import load_dictionary
+from .text import slug
 # Van Thong's cleaned ESCO file is in git (PR #44); the raw download is only in data/raw/.
 ESCO_CLEAN_CSV = paths.ESCO_SKILLS_CLEAN
 ESCO_SKILLS_CSV = paths.ESCO_RAW
@@ -72,16 +71,25 @@ def lookup(table: dict, s: str):
 # ---------------------------------------------------------------- 1. dictionary
 @lru_cache(maxsize=1)
 def _dictionary() -> tuple[dict, dict]:
-    seed = read_csv_skipping_notes(SEED_CSV, dtype=str)
-    alias_to_canon = {}
-    for _, r in seed.iterrows():
-        for a in [r.canonical] + [a for a in str(r.aliases).split("|") if a and a != "nan"]:
-            alias_to_canon.setdefault(key(a), r.canonical)
-    links = {}
-    if ESCO_LINKS_CSV.exists():
-        e = pd.read_csv(ESCO_LINKS_CSV, dtype=str).dropna(subset=["esco_uri"])
-        links = {r.canonical: (r.esco_uri, r.esco_preferred_label) for _, r in e.iterrows()}
-    return alias_to_canon, links
+    """(alias key -> label, label -> vocabulary row) for the vocabulary's detection rows."""
+    alias_to_canon, rows = {}, {}
+    for skill in load_dictionary():
+        rows[skill["canonical"]] = skill
+        for a in (skill["canonical"], *skill["aliases"]):
+            alias_to_canon.setdefault(key(a), skill["canonical"])
+    return alias_to_canon, rows
+
+
+def _from_vocabulary(skill: dict) -> dict:
+    """The id the vocabulary gives a skill: ESCO's only when the link is exact (a broad link such as
+    "data visualisation software" would make Tableau and Power BI the same skill)."""
+    if skill.get("esco_match") == "exact" and skill.get("skill_id", "").startswith("esco:"):
+        return {"skill_id": skill["skill_id"], "skill_label": skill.get("esco_label") or skill["canonical"],
+                "vocab": "esco", "how": "dictionary"}
+    sid = skill.get("skill_id") or f"seed:{slug(skill['canonical'])}"
+    if skill["canonical"] in NOT_IN_ESCO or skill.get("esco_match") == "none":
+        return {"skill_id": sid, "skill_label": skill["canonical"], "vocab": "emerging", "how": "dictionary"}
+    return {"skill_id": sid, "skill_label": skill["canonical"], "vocab": "seed", "how": "dictionary"}
 
 
 # ---------------------------------------------------------------- 2-3. ESCO
@@ -210,9 +218,8 @@ def normalise(mentions: list[dict]) -> list[dict]:
         # Keep the canonical extract() found: tier 2 matches forms the alias list lacks ("REST APIs").
         canon = m.get("canonical") or lookup(alias_to_canon, text)
         res = {**m, "canonical": canon, "similarity": None}
-        if canon and canon in links:
-            uri, label = links[canon]
-            out[i] = {**res, "skill_id": f"esco:{uri}", "skill_label": label, "vocab": "esco", "how": "dictionary"}
+        if canon and canon in links:            # a vocabulary skill: its id and ESCO link are already decided
+            out[i] = {**res, **_from_vocabulary(links[canon])}
             continue
         if canon not in NOT_IN_ESCO:
             hit = lookup(exact, text) or (exact.get(key(canon)) if canon else None)
