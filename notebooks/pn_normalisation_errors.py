@@ -38,6 +38,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from skillabus import paths  # noqa: E402
 from skillabus.extract import extract  # noqa: E402
 from skillabus.normalise import _esco_labels, esco_nearest, key, normalise  # noqa: E402
+from skillabus.text import mask_pii  # noqa: E402
 
 OUT = paths.RESULTS / "normalisation_errors.csv"
 FUZZY_MIN = 0.85
@@ -96,7 +97,7 @@ def build() -> None:
             "embed_label": near[1] if near else "", "embed_sim": round(near[2], 3) if near else "",
             "final_how": fin["how"], "final_label": fin["skill_label"],
             "exact_ok": "", "fuzzy_ok": "", "embed_ok": "", "final_ok": "", "error_type": "", "note": "",
-            "sentence": r["sentence"],
+            "sentence": mask_pii(r["sentence"]),           # emails, phones, URLs out of the committed table
         })
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT, "w", encoding="utf-8", newline="") as f:
