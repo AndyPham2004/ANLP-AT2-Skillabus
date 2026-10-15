@@ -56,7 +56,8 @@ and Phuong Nhi**.
          "text": "Implement and evaluate advanced machine learning techniques ...", "match": "named"}
       ],
       "needs": ["36106"],
-      "offered": ["Spring"]
+      "offered": ["Spring"],
+      "unverified": false
     }
   ],
   "learning_path": {
