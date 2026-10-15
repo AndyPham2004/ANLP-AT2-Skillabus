@@ -32,6 +32,7 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | `1_knowledge/uts/assessments_scraped.csv` | Assessment tasks before the merge | Quan, Van Thong | `python data-eda/src/scrape_assessments.py` |
 | `1_knowledge/uts/subjects_template.csv`, `subject_content_TEMPLATE.csv` | Templates for adding a subject or subject rows by hand | Van Thong, Quan | Templates |
 | `1_knowledge/learning_resources/external_courses.csv` (+ `.md`) | 56 free outside courses, 1,167 rows | Quan, Van Thong | `python data-eda/src/external/build_external.py` |
+| `1_knowledge/learning_resources/certifications.csv` (+ `.md`) | 49 industry certifications for the 11 IT roles: price, official page, "hot" signal (D11) | Quan, Van Thong (Adzuna counts) | By hand; `count_cert_mentions.py`, `count_cert_adzuna.py` |
 | `2_demand/skill_counts_v2.csv` | Every dictionary skill over 3,204 Seek ads 2019-22 (the app's `demand_pct`) | Quan, Van Thong | `data-eda/src/extract_skills.py` with this dictionary |
 | `2_demand/skill_counts_2026.csv` | The same in 2019-22, Jan 2024 and 2026, with 95% intervals | Van Thong | `python data-eda/src/recount_recent.py` |
 | `2_demand/top_skills.csv` | The 15 most-asked technical skills (the Data Scientist role) | Quan | From `skill_counts_v2.csv` |
