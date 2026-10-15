@@ -16,7 +16,6 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 | `uts/offerings.csv` | One row per subject, teaching period and mode | Quan's session, 13 Oct | `python data-eda/src/scrape_requisites.py` |
 | `uts/assessments_scraped.csv` | Assessment tasks from the Handbook, before the merge into the profiles | Quan's session 13 Oct, Van Thong 14 Oct | `python data-eda/src/scrape_assessments.py` |
 | `uts/subjects_template.csv` | The column shape of `data/raw/uts_subjects_2026.csv`, for pasting a subject by hand | Van Thong | Template |
-| `uts/subject_content_TEMPLATE.csv` | Columns for hand-collected subject rows; save as `uts/subject_content.csv` and `build_subject_profiles.py` merges them | Quan | Template |
 | `learning_resources/external_courses.csv` | 56 free or free-to-audit outside courses, one row per sentence or module; notes in `external_courses.md` | Quan's session 13 Oct, Van Thong 14 Oct | `python data-eda/src/external/build_external.py` (needs the saved pages in `data/raw/external_courses_pages/`) |
 
 Owner of the folder: Van Thong (data). Planned here: `skills/skills_vocabulary.csv` (D5),

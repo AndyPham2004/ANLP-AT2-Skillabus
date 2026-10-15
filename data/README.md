@@ -27,7 +27,7 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | `1_knowledge/uts/subject_profiles.csv` (+ `.md`) | 360 subjects, 6,853 rows in four layers | Van Thong, Quan | `python data-eda/src/build_subject_profiles.py` |
 | `1_knowledge/uts/prerequisites.csv`, `offerings.csv` | Access-condition rules; teaching periods | Quan | `python data-eda/src/scrape_requisites.py` |
 | `1_knowledge/uts/assessments_scraped.csv` | Assessment tasks before the merge | Quan, Van Thong | `python data-eda/src/scrape_assessments.py` |
-| `1_knowledge/uts/subjects_template.csv`, `subject_content_TEMPLATE.csv` | Templates for adding a subject or subject rows by hand | Van Thong, Quan | Templates |
+| `1_knowledge/uts/subjects_template.csv` | Template for adding a subject by hand | Van Thong, Quan | Templates |
 | `1_knowledge/learning_resources/external_courses.csv` (+ `.md`) | 56 free outside courses, 1,167 rows | Quan, Van Thong | `python data-eda/src/external/build_external.py` |
 | `2_demand/skill_counts_v2.csv` | Every dictionary skill over 3,204 Seek ads 2019-22 (the app's `demand_pct`) | Quan, Van Thong | `data-eda/src/extract_skills.py` with this dictionary |
 | `2_demand/skill_counts_2026.csv` | The same in 2019-22, Jan 2024 and 2026, with 95% intervals | Van Thong | `python data-eda/src/recount_recent.py` |
@@ -42,7 +42,6 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | `4_evaluation/llm_cache/` | 30 GPT-4o-mini answers for the evaluation texts (read only) | Quan | Rerun with a key |
 | `4_evaluation/results/` | Scores for report section 6 | Hoai Thuong | The evaluation run (#56) |
 | `5_crosscheck/*.csv` | LinkedIn US, Glassdoor AU, AU vs US, extractor agreement, source counts | Van Thong | `count_glassdoor_au.py`, `validate_against_authorflags.py`; others from the September EDA |
-| `5_crosscheck/esco_coverage/` | Dictionary skills ESCO lacks (73) or has only as verb phrases (12) | Van Thong | September EDA |
 
 Four committed files are over the 5 MB limit in CONTRIBUTING.md (Seek 9.7 MB, resumes 14.8 MB, ESCO
 skills 6.7 MB, ESCO lookup 14.3 MB); keeping them in the repo means everyone labels and evaluates on
