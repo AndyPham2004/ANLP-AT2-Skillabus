@@ -533,3 +533,682 @@ ad_id,skill_label,in_dictionary,evidence_text,annotator
 38644875,Statistics,y,"ved in implementing, deploying, testing and evaluating statistical and machine learning models to identify patterns, pred",tompham9016
 38644875,Predictive modelling,y,"ical and machine learning models to identify patterns, predict outcomes and provide actionable insights across linked",tompham9016
 38644875,Artificial intelligence,y,R programming - Python - AI - Machine learning - Data ScienceYour new company You,tompham9016
+40100271,Machine learning,y,statistical / machine learning studies,Akashtom98+Claude
+40100271,Statistics,y,cutting-edge statistical approaches,Akashtom98+Claude
+40100271,Predictive modelling,y,predictive analytics solutions,Akashtom98+Claude
+40100271,Presentation skills,y,presenting to Product Managers,Akashtom98+Claude
+40100271,Stakeholder management,y,liaising directly with senior stakeholders,Akashtom98+Claude
+40100271,Requirements gathering,y,capturing requirements,Akashtom98+Claude
+40100271,Regression analysis,y,regularised regressions,Akashtom98+Claude
+40100271,Random forest,y,Random Forests,Akashtom98+Claude
+40100271,Support vector machines,y,Support Vector Machines,Akashtom98+Claude
+40100271,Deep learning,y,Neural Networks,Akashtom98+Claude
+40100271,Python,y,Strong programming skills in Python and/or R,Akashtom98+Claude
+40100271,R,y,Strong programming skills in Python and/or R,Akashtom98+Claude
+40100271,SQL,y,Advance SQL,Akashtom98+Claude
+40100271,MySQL,y,Some experience with MySQL is beneficial,Akashtom98+Claude
+40100271,Git,y,version control software such as Git,Akashtom98+Claude
+40100271,Hypothesis testing,y,inference testing,Akashtom98+Claude
+40100271,A/B testing,y,A/B Testing,Akashtom98+Claude
+40100271,Communication,y,Excellent written and spoken communication skills,Akashtom98+Claude
+40100271,Problem solving,y,pragmatic approach to problem solving,Akashtom98+Claude
+40100271,Documentation,y,report / manuscript writing,Akashtom98+Claude
+54225540,Machine learning,y,Define and create ML methodologies and approaches,Akashtom98+Claude
+54225540,MLOps,y,productionise and deploy ML models,Akashtom98+Claude
+54225540,Git,y,version control,Akashtom98+Claude
+54225540,Documentation,y,"code reviews, version control and documentation",Akashtom98+Claude
+54225540,Agile,y,best practice agile development project methodology,Akashtom98+Claude
+54225540,Leadership,y,coaching and mentoring of our data scientists and data analysts,Akashtom98+Claude
+54225540,Statistics,y,implementing and tuning statistical and ML models,Akashtom98+Claude
+54225540,Regression analysis,y,GLM,Akashtom98+Claude
+54225540,Time series forecasting,y,Time Series Modelling,Akashtom98+Claude
+54225540,Deep learning,y,Neural Networks,Akashtom98+Claude
+54225540,Gradient boosting,y,?Decision Tree Ensemble Methods,Akashtom98+Claude
+54225540,Clustering,y,Clustering,Akashtom98+Claude
+54225540,Python,y,Proficiency in Python or Spark,Akashtom98+Claude
+54225540,Spark,y,Proficiency in Python or Spark,Akashtom98+Claude
+54225540,ETL,y,implement data pipelines,Akashtom98+Claude
+54225540,Problem solving,y,strong ability to problem solve,Akashtom98+Claude
+54225540,Communication,y,Exceptional communication and influencing skills,Akashtom98+Claude
+54225540,Teamwork,y,Experience collaborating with Data and Machine Learning Engineers,Akashtom98+Claude
+54225540,Power BI,y,PowerBI,Akashtom98+Claude
+54225540,Tableau,y,Tableau,Akashtom98+Claude
+54225540,Data visualisation,y,data visualisation tools,Akashtom98+Claude
+54225540,Cloud platforms,y,cloud computing resources,Akashtom98+Claude
+38289785,Predictive modelling,y,predictive modelling methods,Akashtom98+Claude
+38289785,Data cleaning,y,wrangling data,Akashtom98+Claude
+38289785,Statistics,y,performing statistical analysis,Akashtom98+Claude
+38289785,Machine learning,y,building Machine Learning algorithms,Akashtom98+Claude
+38289785,Stakeholder management,y,engage with and influence business stakeholders,Akashtom98+Claude
+38289785,Python,y,"Python, R, SQL, Java, C++, Scala, Spark",Akashtom98+Claude
+38289785,R,y,"Python, R, SQL, Java, C++, Scala, Spark",Akashtom98+Claude
+38289785,SQL,y,"Python, R, SQL, Java, C++, Scala, Spark",Akashtom98+Claude
+38289785,Java,y,"Python, R, SQL, Java, C++, Scala, Spark",Akashtom98+Claude
+38289785,C++,y,"Python, R, SQL, Java, C++, Scala, Spark",Akashtom98+Claude
+38289785,Scala,y,"Python, R, SQL, Java, C++, Scala, Spark",Akashtom98+Claude
+38289785,Spark,y,"Python, R, SQL, Java, C++, Scala, Spark",Akashtom98+Claude
+38289785,Big data,n,big data technologies,Akashtom98+Claude
+40145975,Statistics,y,Very strong knowledge of statistical modelling techniques,Akashtom98+Claude
+40145975,Artificial intelligence,y,AI and machine learning techniques,Akashtom98+Claude
+40145975,Machine learning,y,AI and machine learning techniques,Akashtom98+Claude
+40145975,SAS,y,"SAS, SPSS or other",Akashtom98+Claude
+40145975,SPSS,n,"SAS, SPSS or other",Akashtom98+Claude
+40145975,Jira,y,Strong skills with Jira and Confluence,Akashtom98+Claude
+40145975,Confluence,n,Strong skills with Jira and Confluence,Akashtom98+Claude
+40703984,Machine learning,y,advanced machine learning algorithms,Akashtom98+Claude
+40703984,Time series forecasting,y,time series forecasting models,Akashtom98+Claude
+40703984,Predictive modelling,y,predictive modelling solutions,Akashtom98+Claude
+40703984,MLOps,y,"Developing, optimising and deploying machine learning models",Akashtom98+Claude
+40703984,Statistics,y,advanced statistical/ mathematical/engineering techniques,Akashtom98+Claude
+40703984,Feature engineering,y,ML and time series feature store,Akashtom98+Claude
+40703984,Deep learning,y,Machine Learning and Deep Learning methods,Akashtom98+Claude
+40703984,Support vector machines,y,SVM,Akashtom98+Claude
+40703984,Random forest,y,Decision Trees & RF,Akashtom98+Claude
+40703984,Logistic regression,y,Logistic Regression,Akashtom98+Claude
+40703984,Clustering,y,K-Means,Akashtom98+Claude
+40703984,Data cleaning,y,wrangling complex time-series data sets,Akashtom98+Claude
+40703984,SQL Server,y,MS SQL Server,Akashtom98+Claude
+40703984,AWS,y,AWS Cloud Computing,Akashtom98+Claude
+40703984,Azure,y,Azure Data Lake,Akashtom98+Claude
+40703984,Data warehousing,y,Azure Data Lake,Akashtom98+Claude
+40703984,Databricks,y,Databricks,Akashtom98+Claude
+40703984,Communication,y,Excellent verbal and written communication skills,Akashtom98+Claude
+40703984,Stakeholder management,y,"working with leaders across the marketing, product and sales teams",Akashtom98+Claude
+55568052,Machine learning,y,machine learning,Akashtom98+Claude
+55568052,Predictive modelling,y,"prediction, regression, machine learning",Akashtom98+Claude
+55568052,Regression analysis,y,regression,Akashtom98+Claude
+55568052,Natural language processing,y,text mining,Akashtom98+Claude
+55568052,Optimisation,y,mathematical optimisation,Akashtom98+Claude
+55568052,Econometrics,y,Econometrics,Akashtom98+Claude
+55568052,Clustering,y,clustering,Akashtom98+Claude
+55568052,R,y,"R, Python, Scala, Hive, Spark, SQL, Excel",Akashtom98+Claude
+55568052,Python,y,"R, Python, Scala, Hive, Spark, SQL, Excel",Akashtom98+Claude
+55568052,Scala,y,"R, Python, Scala, Hive, Spark, SQL, Excel",Akashtom98+Claude
+55568052,Hive,y,"R, Python, Scala, Hive, Spark, SQL, Excel",Akashtom98+Claude
+55568052,Spark,y,"R, Python, Scala, Hive, Spark, SQL, Excel",Akashtom98+Claude
+55568052,SQL,y,"R, Python, Scala, Hive, Spark, SQL, Excel",Akashtom98+Claude
+55568052,Excel,y,"R, Python, Scala, Hive, Spark, SQL, Excel",Akashtom98+Claude
+55568052,Git,y,"Git, Jira, Confluence",Akashtom98+Claude
+55568052,Jira,y,"Git, Jira, Confluence",Akashtom98+Claude
+55568052,Confluence,n,"Git, Jira, Confluence",Akashtom98+Claude
+54192177,Statistics,y,strong statistics and data manipulation skills,Akashtom98+Claude
+54192177,Data cleaning,y,data manipulation skills,Akashtom98+Claude
+54192177,Machine learning,y,Machine Learning and analytics using social media data,Akashtom98+Claude
+54192177,Python,y,"Python, AWS, Snowflake, SQL, APIs",Akashtom98+Claude
+54192177,AWS,y,"Python, AWS, Snowflake, SQL, APIs",Akashtom98+Claude
+54192177,Snowflake,y,"Python, AWS, Snowflake, SQL, APIs",Akashtom98+Claude
+54192177,SQL,y,Strong SQL Skills,Akashtom98+Claude
+54192177,API development,y,"?Python, AWS, Snowflake, SQL, APIs",Akashtom98+Claude
+54192177,Communication,y,Confident communication skills,Akashtom98+Claude
+54192177,Presentation skills,y,"experience presenting ideas, insights and reports to stakeholders",Akashtom98+Claude
+54192177,Social media analytics,n,Social Media data experience,Akashtom98+Claude
+40084577,Machine learning,y,Knowledge of a variety of machine learning techniques,Akashtom98+Claude
+40084577,Feature engineering,y,conduct feature engineering,Akashtom98+Claude
+40084577,MLOps,y,Deploy new models into production,Akashtom98+Claude
+40084577,Cloud platforms,y,in a Cloud environment,Akashtom98+Claude
+40084577,Agile,y,Use Agile practices for rapid development,Akashtom98+Claude
+40084577,ETL,y,Develop ETLs,Akashtom98+Claude
+40084577,Data modelling,y,maintain data models in our data warehouse,Akashtom98+Claude
+40084577,Data warehousing,y,data warehouse,Akashtom98+Claude
+40084577,Predictive modelling,y,Use predictive modeling,Akashtom98+Claude
+40084577,Stakeholder management,y,Work with stakeholders throughout the organization,Akashtom98+Claude
+40084577,Anomaly detection,y,?credit and fraud risk,Akashtom98+Claude
+40084577,Regression analysis,y,GLM/Regression,Akashtom98+Claude
+40084577,Random forest,y,Random Forest,Akashtom98+Claude
+40084577,Gradient boosting,y,Boosting,Akashtom98+Claude
+40084577,Natural language processing,y,text mining,Akashtom98+Claude
+40084577,Social network analysis,n,social network analysis,Akashtom98+Claude
+40084577,R,y,"R, Python, SAS/SLQ",Akashtom98+Claude
+40084577,Python,y,"R, Python, SAS/SLQ",Akashtom98+Claude
+40084577,SAS,y,"R, Python, SAS/SLQ",Akashtom98+Claude
+40084577,SQL,y,?SAS/SLQ,Akashtom98+Claude
+40084577,Clustering,y,clustering,Akashtom98+Claude
+40084577,Deep learning,y,artificial neural networks,Akashtom98+Claude
+40084577,Statistics,y,advanced statistical techniques,Akashtom98+Claude
+40084577,Hypothesis testing,y,statistical tests and proper usage,Akashtom98+Claude
+40084577,AWS,y,AWS desirable but not essential,Akashtom98+Claude
+40084577,Data visualisation,y,Experience in data visualisation,Akashtom98+Claude
+40084577,Power BI,y,Power BI / Splunk / Tableau,Akashtom98+Claude
+40084577,Splunk,n,Power BI / Splunk / Tableau,Akashtom98+Claude
+40084577,Tableau,y,Power BI / Splunk / Tableau,Akashtom98+Claude
+40084577,Communication,y,Strong communication skills,Akashtom98+Claude
+40084577,Requirements gathering,y,understand stakeholder and business requirements,Akashtom98+Claude
+40084577,Problem solving,y,Strong problem-solving skills,Akashtom98+Claude
+40084577,Teamwork,y,Work collaboratively with credit and fraud analysts,Akashtom98+Claude
+38919426,Predictive modelling,y,Build predictive models,Akashtom98+Claude
+38919426,Machine learning,y,machine-learning algorithms,Akashtom98+Claude
+38919426,Data cleaning,y,pre-processing of structured and unstructured data,Akashtom98+Claude
+38919426,Data visualisation,y,data visualization techniques,Akashtom98+Claude
+38919426,Teamwork,y,Collaborate with engineering and product development teams,Akashtom98+Claude
+38919426,Artificial intelligence,y,use artificial intelligence for automating processes,Akashtom98+Claude
+38919426,Statistics,y,statistical methods,Akashtom98+Claude
+38919426,Optimisation,y,operations research,Akashtom98+Claude
+38919426,R,y,"R, SQL and Python",Akashtom98+Claude
+38919426,SQL,y,"R, SQL and Python",Akashtom98+Claude
+38919426,Python,y,"R, SQL and Python",Akashtom98+Claude
+38919426,Spark,y,"Spark, Scala, Java or C++",Akashtom98+Claude
+38919426,Scala,y,"Spark, Scala, Java or C++",Akashtom98+Claude
+38919426,Java,y,"Spark, Scala, Java or C++",Akashtom98+Claude
+38919426,C++,y,"Spark, Scala, Java or C++",Akashtom98+Claude
+38919426,SAS,y,"SAS, SAP HANA PAL",Akashtom98+Claude
+38919426,SAP,y,SAP HANA PAL,Akashtom98+Claude
+38919426,Qlik,y,QlikView,Akashtom98+Claude
+38919426,Tableau,y,Tableau,Akashtom98+Claude
+38919426,Hadoop,y,Hadoop,Akashtom98+Claude
+38919426,Business acumen,y,business acumen,Akashtom98+Claude
+38919426,Problem solving,y,problem-solving aptitude,Akashtom98+Claude
+38919426,Communication,y,Excellent communication and presentation skills,Akashtom98+Claude
+38919426,Presentation skills,y,Excellent communication and presentation skills,Akashtom98+Claude
+38919426,CRISP-DM,n,CRISP-DM,Akashtom98+Claude
+50891498,Statistics,y,statistical analysis,Akashtom98+Claude
+50891498,Data visualisation,y,data visualisation techniques,Akashtom98+Claude
+50891498,Stakeholder management,y,Communicate finding to all stakeholders,Akashtom98+Claude
+50891498,Data cleaning,y,pre-processing,Akashtom98+Claude
+50891498,Microsoft Office,y,MS suite,Akashtom98+Claude
+50891498,Tableau,y,Tableau,Akashtom98+Claude
+50891498,SQL,y,"Tableau, SQL",Akashtom98+Claude
+50891498,Java,y,"Java/Python, SAS",Akashtom98+Claude
+50891498,Python,y,"Java/Python, SAS",Akashtom98+Claude
+50891498,SAS,y,"Java/Python, SAS",Akashtom98+Claude
+50891498,Communication,y,Excellent communication skills,Akashtom98+Claude
+50891498,Agile,y,AGILE team,Akashtom98+Claude
+50891498,Teamwork,y,team work is the name of the game,Akashtom98+Claude
+39539616,Statistics,y,"application of Statistics, Machine Learning, Predictive modelling and Optimization algorithms",Akashtom98+Claude
+39539616,Machine learning,y,"Statistics, Machine Learning, Predictive modelling",Akashtom98+Claude
+39539616,Predictive modelling,y,Predictive modelling,Akashtom98+Claude
+39539616,Optimisation,y,Optimization algorithms,Akashtom98+Claude
+39539616,Stakeholder management,y,cultivating relationships with stakeholders,Akashtom98+Claude
+39539616,Regression analysis,y,"regression, clustering, optimisation",Akashtom98+Claude
+39539616,Clustering,y,"regression, clustering, optimisation",Akashtom98+Claude
+39539616,Deep learning,y,"deep learning, reinforcement learning",Akashtom98+Claude
+39539616,Reinforcement learning,n,reinforcement learning,Akashtom98+Claude
+39539616,Natural language processing,y,NLP,Akashtom98+Claude
+39539616,Econometrics,y,Econometrics,Akashtom98+Claude
+39539616,R,y,"R, Python, Scala, Hive, Spark, SQL",Akashtom98+Claude
+39539616,Python,y,"R, Python, Scala, Hive, Spark, SQL",Akashtom98+Claude
+39539616,Scala,y,"R, Python, Scala, Hive, Spark, SQL",Akashtom98+Claude
+39539616,Hive,y,"R, Python, Scala, Hive, Spark, SQL",Akashtom98+Claude
+39539616,Spark,y,"R, Python, Scala, Hive, Spark, SQL",Akashtom98+Claude
+39539616,SQL,y,"R, Python, Scala, Hive, Spark, SQL",Akashtom98+Claude
+39539616,Git,y,"Git, Jira, Confluence",Akashtom98+Claude
+39539616,Jira,y,"Git, Jira, Confluence",Akashtom98+Claude
+39539616,Confluence,n,"Git, Jira, Confluence",Akashtom98+Claude
+39539616,Leadership,y,managing high performance teams,Akashtom98+Claude
+39539616,Cloud platforms,y,Cloud techniques,Akashtom98+Claude
+39539616,Docker,y,Containerization,Akashtom98+Claude
+39539616,MLOps,y,ML engineering,Akashtom98+Claude
+55564640,Python,y,strong proficiency in Python,Akashtom98+Claude
+55564640,Machine learning,y,data science & machine learning solutions,Akashtom98+Claude
+55564640,SQL,y,Python SQL Scala,Akashtom98+Claude
+55564640,Scala,y,Python SQL Scala,Akashtom98+Claude
+55564640,R,y,"Scala, R, Go, JS/TS",Akashtom98+Claude
+55564640,Go,y,"Scala, R, Go, JS/TS",Akashtom98+Claude
+55564640,JavaScript,y,JS/TS,Akashtom98+Claude
+55564640,Power BI,y,PowerBI & Dash,Akashtom98+Claude
+55564640,Plotly,y,PowerBI & Dash,Akashtom98+Claude
+55564640,Spotfire,n,"Spotfire, Tableau",Akashtom98+Claude
+55564640,Tableau,y,"Spotfire, Tableau",Akashtom98+Claude
+55564640,MLOps,y,MLOps & cloud,Akashtom98+Claude
+55564640,Cloud platforms,y,MLOps & cloud,Akashtom98+Claude
+55564640,Communication,y,Excellent communication skills,Akashtom98+Claude
+55564640,Teamwork,y,collaborative team,Akashtom98+Claude
+53503554,Artificial intelligence,y,AI and machine learning,Akashtom98+Claude
+53503554,Machine learning,y,AI and machine learning,Akashtom98+Claude
+53503554,Predictive modelling,y,propensity modelling,Akashtom98+Claude
+53503554,Optimisation,y,mathematical optimisation,Akashtom98+Claude
+53503554,Statistics,y,statistical analytics,Akashtom98+Claude
+53503554,MLOps,y,our MLOps Capability,Akashtom98+Claude
+53503554,Feature engineering,y,feature reduction using rotational matrix (PCA),Akashtom98+Claude
+53503554,Leadership,y,mentoring the team,Akashtom98+Claude
+53503554,Stakeholder management,y,Managing stakeholders / projects,Akashtom98+Claude
+53503554,Project management,y,Managing stakeholders / projects,Akashtom98+Claude
+53503554,Docker,y,Experience with Docker for production workloads,Akashtom98+Claude
+53503554,Cloud platforms,y,Docker images on cloud environments,Akashtom98+Claude
+53503554,Data privacy,y,customer privacy legislation,Akashtom98+Claude
+53503554,Natural language processing,y,NLP techniques to generate insights from free text data,Akashtom98+Claude
+53503554,Java,y,"java, Scala, R, python and C/C++",Akashtom98+Claude
+53503554,Scala,y,"java, Scala, R, python and C/C++",Akashtom98+Claude
+53503554,R,y,"java, Scala, R, python and C/C++",Akashtom98+Claude
+53503554,Python,y,"java, Scala, R, python and C/C++",Akashtom98+Claude
+53503554,C++,y,"java, Scala, R, python and C/C++",Akashtom98+Claude
+53503554,Agile,y,Experience working in an Agile environment,Akashtom98+Claude
+53503554,CI/CD,y,CI/CD/DevOps model,Akashtom98+Claude
+53503554,Git,y,"git, Maven, Jenkins, Nexus, SonarQube",Akashtom98+Claude
+53503554,Jenkins,y,"git, Maven, Jenkins, Nexus, SonarQube",Akashtom98+Claude
+39594690,Predictive modelling,y,building and maintaining predictive models using Python or R,Akashtom98+Claude
+39594690,Machine learning,y,predictive models and machine learning,Akashtom98+Claude
+39594690,Python,y,Python/R scripting experience,Akashtom98+Claude
+39594690,R,y,Python/R scripting experience,Akashtom98+Claude
+39594690,Deep learning,y,Predictive Models/Deep-Learning,Akashtom98+Claude
+39594690,AWS,y,hands-on experience using AWS (Sage-Maker),Akashtom98+Claude
+39594690,SageMaker,y,AWS (Sage-Maker),Akashtom98+Claude
+39594690,MLOps,y,productionise Predictive models,Akashtom98+Claude
+39594690,Requirements gathering,y,analyse user requirements,Akashtom98+Claude
+39594690,Stakeholder management,y,Stakeholder engagement and influencing skills,Akashtom98+Claude
+50055399,Machine learning,y,Applying machine learning and statistical theory,Akashtom98+Claude
+50055399,Statistics,y,statistical theory,Akashtom98+Claude
+50055399,Stakeholder management,y,Excellent stakeholder management skills,Akashtom98+Claude
+50055399,Agile,y,Working as part of an Agile team,Akashtom98+Claude
+50055399,Time series forecasting,y,Volume / Revenue forecasting,Akashtom98+Claude
+50055399,Clustering,y,?advanced customer segmentation,Akashtom98+Claude
+50055399,Anomaly detection,y,Fraud,Akashtom98+Claude
+50055399,Python,y,"Python, R, SQL, Scala, GoLang",Akashtom98+Claude
+50055399,R,y,"Python, R, SQL, Scala, GoLang",Akashtom98+Claude
+50055399,SQL,y,"Python, R, SQL, Scala, GoLang",Akashtom98+Claude
+50055399,Scala,y,"Python, R, SQL, Scala, GoLang",Akashtom98+Claude
+50055399,Go,y,GoLang,Akashtom98+Claude
+50055399,TensorFlow,y,TensorFlow and Keras,Akashtom98+Claude
+50055399,Keras,y,TensorFlow and Keras,Akashtom98+Claude
+50055399,SageMaker,y,Sagemaker,Akashtom98+Claude
+50055399,scikit-learn,y,SciKit,Akashtom98+Claude
+50055399,MATLAB,y,MATLAB,Akashtom98+Claude
+50055399,PyTorch,y,PyTorch,Akashtom98+Claude
+50055399,Artificial intelligence,y,AI/Machine learning models,Akashtom98+Claude
+50055399,Financial modelling,n,financial modelling and risk management skills,Akashtom98+Claude
+50055399,Risk management,n,financial modelling and risk management skills,Akashtom98+Claude
+50055399,Communication,y,communicate complex problems to senior stakeholders,Akashtom98+Claude
+39783711,Clustering,y,?customer segmentation / targeting,Akashtom98+Claude
+39783711,Experimental design,y,experimental design,Akashtom98+Claude
+39783711,Recommender systems,y,recommended systems,Akashtom98+Claude
+39783711,Project management,y,"project delivery including scoping, articulating requirements, timeline management",Akashtom98+Claude
+39783711,Requirements gathering,y,articulating requirements,Akashtom98+Claude
+39783711,Cloud platforms,y,cloud technologies in production environments,Akashtom98+Claude
+39783711,Machine learning,y,Applying machine learning,Akashtom98+Claude
+39783711,Data cleaning,y,"Processing, cleansing, and verifying the integrity of data",Akashtom98+Claude
+39783711,Data quality,y,verifying the integrity of data,Akashtom98+Claude
+39783711,SQL,y,Proficiency in SQL,Akashtom98+Claude
+39783711,Python,y,Python / C#,Akashtom98+Claude
+39783711,C#,y,Python / C#,Akashtom98+Claude
+39783711,AWS,y,"AWS technology (Lambda, S3, Dynamo DB)",Akashtom98+Claude
+39783711,Data warehousing,y,Data Warehouses in SQL,Akashtom98+Claude
+39783711,Data visualisation,y,visualisation tools,Akashtom98+Claude
+39783711,Tableau,y,"Tableau, Power BI, or Python",Akashtom98+Claude
+39783711,Power BI,y,"Tableau, Power BI, or Python",Akashtom98+Claude
+39783711,Teamwork,y,Collaborative and a team player,Akashtom98+Claude
+39783711,Communication,y,Strong communication skills,Akashtom98+Claude
+51537416,Statistics,y,statistical / actuarial modelling,Akashtom98+Claude
+51537416,Machine learning,y,statistical / actuarial modelling and machine learning,Akashtom98+Claude
+51537416,SQL,y,Experience using SQL,Akashtom98+Claude
+51537416,Python,y,good understanding of Python is mandatory,Akashtom98+Claude
+51537416,R,y,"R, SAS, Matlab, C/C++",Akashtom98+Claude
+51537416,SAS,y,"R, SAS, Matlab, C/C++",Akashtom98+Claude
+51537416,MATLAB,y,"R, SAS, Matlab, C/C++",Akashtom98+Claude
+51537416,C++,y,"R, SAS, Matlab, C/C++",Akashtom98+Claude
+51537416,Alteryx,y,"Alteryx, SageMaker",Akashtom98+Claude
+51537416,SageMaker,y,"Alteryx, SageMaker",Akashtom98+Claude
+51537416,Problem solving,y,Strong problem-solving skills,Akashtom98+Claude
+51537416,Communication,y,Effective communication skills (both written and verbal),Akashtom98+Claude
+51537416,Teamwork,y,work effectively within a team environment,Akashtom98+Claude
+51537416,Excel,y,"Microsoft Excel, Word and PowerPoint",Akashtom98+Claude
+51537416,Microsoft Office,y,"Microsoft Excel, Word and PowerPoint",Akashtom98+Claude
+51537416,Time management,n,Time management skills,Akashtom98+Claude
+50261785,Statistics,y,"statistics, machine learning, predictive analysis",Akashtom98+Claude
+50261785,Machine learning,y,"statistics, machine learning, predictive analysis",Akashtom98+Claude
+50261785,Predictive modelling,y,Be a leader in predictive analytics,Akashtom98+Claude
+50261785,Stakeholder management,y,engage with and influence stakeholders,Akashtom98+Claude
+50261785,Teamwork,y,You will be a team player,Akashtom98+Claude
+50261785,R,y,modelling in R or Python,Akashtom98+Claude
+50261785,Python,y,modelling in R or Python,Akashtom98+Claude
+50261785,SQL,y,querying relational databases with SQL,Akashtom98+Claude
+50261785,Data privacy,y,privacy and health/personal information legislation,Akashtom98+Claude
+55109965,Machine learning,y,passionate about machine learning,Akashtom98+Claude
+55109965,MLOps,y,machine learning models (ML Ops),Akashtom98+Claude
+55109965,Python,y,"Python, SQL and cloud computing platforms",Akashtom98+Claude
+55109965,SQL,y,"Python, SQL and cloud computing platforms",Akashtom98+Claude
+55109965,Cloud platforms,y,cloud computing platforms,Akashtom98+Claude
+55109965,AWS,y,"(e.g., AWS)",Akashtom98+Claude
+55109965,Stakeholder management,y,"internal stakeholders across Marketing, Treasury, Risk and Operations",Akashtom98+Claude
+55109965,Statistics,y,statistical modelling,Akashtom98+Claude
+55109965,Deep learning,y,deep learning,Akashtom98+Claude
+55109965,Problem solving,y,Problem solving mindset,Akashtom98+Claude
+55109965,Communication,y,Excellent written and verbal communication skills,Akashtom98+Claude
+55109965,Teamwork,y,work collaboratively,Akashtom98+Claude
+38587951,Artificial intelligence,y,AI and Machine Learning based solutions,Akashtom98+Claude
+38587951,Machine learning,y,Artificial Intelligence/Machine Learning/Data Mining,Akashtom98+Claude
+38587951,Leadership,y,"coaching, mentoring and providing technical direction",Akashtom98+Claude
+38587951,Communication,y,excellent communication skills,Akashtom98+Claude
+38587951,Agile,y,an agile environment,Akashtom98+Claude
+38587951,Teamwork,y,cross-functional stakeholders,Akashtom98+Claude
+38587951,Stakeholder management,y,cross-functional stakeholders,Akashtom98+Claude
+38587951,Requirements gathering,y,understanding business requirements,Akashtom98+Claude
+38587951,MLOps,y,production rollout at scale,Akashtom98+Claude
+38587951,ETL,y,production grade machine learning solutions and data pipelines,Akashtom98+Claude
+38587951,Natural language processing,y,Natural Language Processing,Akashtom98+Claude
+38587951,Computer vision,y,Computer Vision,Akashtom98+Claude
+38587951,Statistics,y,statistical modelling,Akashtom98+Claude
+38587951,R,y,"R, Python (SciKit Learn, SciPy, Numpy, etc.)",Akashtom98+Claude
+38587951,Python,y,"R, Python (SciKit Learn, SciPy, Numpy, etc.)",Akashtom98+Claude
+38587951,scikit-learn,y,SciKit Learn,Akashtom98+Claude
+38587951,SciPy,n,SciPy,Akashtom98+Claude
+38587951,NumPy,y,Numpy,Akashtom98+Claude
+38587951,Spark,y,Apache Spark (Scala or Python),Akashtom98+Claude
+38587951,Scala,y,Apache Spark (Scala or Python),Akashtom98+Claude
+38587951,H2O,n,"H2O, Weka",Akashtom98+Claude
+38587951,Weka,n,"H2O, Weka",Akashtom98+Claude
+38587951,TensorFlow,y,"TensorFlow, Torch, Keras",Akashtom98+Claude
+38587951,PyTorch,y,Torch,Akashtom98+Claude
+38587951,Keras,y,"TensorFlow, Torch, Keras",Akashtom98+Claude
+38587951,Optimisation,y,"optimization, forecasting, segmentation",Akashtom98+Claude
+38587951,Time series forecasting,y,"optimization, forecasting, segmentation",Akashtom98+Claude
+38587951,Clustering,y,?segmentation,Akashtom98+Claude
+38587951,Cloud platforms,y,cloud infrastructure and deployments,Akashtom98+Claude
+38587951,Hadoop,y,Hadoop and other NoSQL technologies such as Map Reduce,Akashtom98+Claude
+38587951,NoSQL,y,NoSQL technologies,Akashtom98+Claude
+38587951,HBase,n,HBase,Akashtom98+Claude
+38587951,Data modelling,y,data schemas,Akashtom98+Claude
+38587951,Problem solving,y,"problem solving, debugging and communication skills",Akashtom98+Claude
+54384443,Anomaly detection,y,fraud detection and anomaly detection,Akashtom98+Claude
+54384443,Azure,y,"Microsoft Azure, Python and Spark",Akashtom98+Claude
+54384443,Python,y,"Microsoft Azure, Python and Spark",Akashtom98+Claude
+54384443,Spark,y,"Microsoft Azure, Python and Spark",Akashtom98+Claude
+54384443,Cloud platforms,y,big data and cloud technology stack,Akashtom98+Claude
+54384443,Machine learning,y,ML tools,Akashtom98+Claude
+54384443,Data visualisation,y,In depth knowledge on data visualisation,Akashtom98+Claude
+54384443,Predictive modelling,y,descriptive and predictive models,Akashtom98+Claude
+54384443,Agile,y,Agile and innovative data and advanced analytics team,Akashtom98+Claude
+54384443,Stakeholder management,y,Strong engagements with multiple stakeholders,Akashtom98+Claude
+54384443,Project management,y,manage projects independently,Akashtom98+Claude
+54384443,Teamwork,y,"A collaborative, team player",Akashtom98+Claude
+54384443,Power BI,y,PowerBI highly regarded,Akashtom98+Claude
+54384443,R,y,"Python, R, databricks",Akashtom98+Claude
+54384443,Databricks,y,"Python, R, databricks",Akashtom98+Claude
+54384443,DevOps,n,DevOps and Agile methodologies,Akashtom98+Claude
+54384443,Data warehousing,y,Data lake,Akashtom98+Claude
+54384443,Communication,y,"Excellent communications skills, both written and oral",Akashtom98+Claude
+54384443,Presentation skills,y,present well to both technical and non-technical audiences,Akashtom98+Claude
+40192105,Statistics,y,"mathematics, statistics or physical sciences",Akashtom98+Claude
+40192105,Teamwork,y,collaborative development,Akashtom98+Claude
+40192105,Documentation,y,"development, testing and documentation",Akashtom98+Claude
+40192105,Machine learning,y,Machine learning knowledge and experience,Akashtom98+Claude
+40192105,C,n,"C, Python and shell scripts",Akashtom98+Claude
+40192105,Python,y,"C, Python and shell scripts",Akashtom98+Claude
+40192105,Shell scripting,y,shell scripts,Akashtom98+Claude
+40192105,Linux,y,high performance Linux platforms,Akashtom98+Claude
+40192105,High-performance computing,n,large high-performance computing systems,Akashtom98+Claude
+40192105,Git,y,"git, automated testing and deployment",Akashtom98+Claude
+40192105,Software testing,n,automated testing,Akashtom98+Claude
+40192105,Data visualisation,y,evaluation and visualisation of gridded scientific fields,Akashtom98+Claude
+53258461,Statistics,y,"statistical, predictive models",Akashtom98+Claude
+53258461,Predictive modelling,y,"statistical, predictive models",Akashtom98+Claude
+53258461,Simulation,n,simulation models,Akashtom98+Claude
+53258461,MLOps,y,Experience in deploying machine learning models,Akashtom98+Claude
+53258461,Machine learning,y,machine learning models,Akashtom98+Claude
+53258461,Python,y,"Python, R, SQL or others",Akashtom98+Claude
+53258461,R,y,"Python, R, SQL or others",Akashtom98+Claude
+53258461,SQL,y,"Python, R, SQL or others",Akashtom98+Claude
+53258461,AWS,y,AWS Sagemaker experience,Akashtom98+Claude
+53258461,SageMaker,y,AWS Sagemaker experience,Akashtom98+Claude
+40235873,A/B testing,y,?launch experiments,Akashtom98+Claude
+40235873,Teamwork,y,collaborating in a high-performance team,Akashtom98+Claude
+40235873,Communication,y,Outstanding communication skills,Akashtom98+Claude
+40235873,Data visualisation,y,data manipulation/visualization tools,Akashtom98+Claude
+40235873,Tableau,y,"Tableau, SQL, Python",Akashtom98+Claude
+40235873,SQL,y,"Tableau, SQL, Python",Akashtom98+Claude
+40235873,Python,y,"Tableau, SQL, Python",Akashtom98+Claude
+40235873,Statistics,y,common statistical techniques,Akashtom98+Claude
+40235873,Kibana,n,"SQL, Python, Kibana, Tableau",Akashtom98+Claude
+40235873,Jira,y,JIRA/Confluence,Akashtom98+Claude
+40235873,Confluence,n,JIRA/Confluence,Akashtom98+Claude
+40235873,AWS,y,Amazon Web Services,Akashtom98+Claude
+40235873,Anomaly detection,y,?analyzing and stopping attacks,Akashtom98+Claude
+51181089,Leadership,y,play a leadership role for data science,Akashtom98+Claude
+51181089,Problem solving,y,think critically and problem solve,Akashtom98+Claude
+51181089,Churn analytics,n,churn analytics,Akashtom98+Claude
+51181089,Sentiment analysis,y,sentiment analysis,Akashtom98+Claude
+51181089,Clustering,y,?customer segmentation,Akashtom98+Claude
+51181089,Customer lifetime value,n,life time value model development,Akashtom98+Claude
+51181089,Hypothesis testing,y,Create hypotheses and experiments,Akashtom98+Claude
+51181089,Data visualisation,y,Developing visualisations and presentations,Akashtom98+Claude
+51181089,Presentation skills,y,visualisations and presentations,Akashtom98+Claude
+51181089,Stakeholder management,y,influence key stakeholders,Akashtom98+Claude
+51181089,Machine learning,y,Develop machine learning models,Akashtom98+Claude
+51181089,ETL,y,"operational processes, practices and pipelines",Akashtom98+Claude
+51181089,Data governance,y,our Data Governance function,Akashtom98+Claude
+51181089,Data quality,y,data collection and quality practices,Akashtom98+Claude
+51181089,Business acumen,y,business acumen,Akashtom98+Claude
+51181089,Communication,y,Excellent written and verbal communication,Akashtom98+Claude
+51181089,Teamwork,y,team building skills,Akashtom98+Claude
+51181089,Microsoft Office,y,Excellent knowledge of Office package,Akashtom98+Claude
+51181089,Excel,y,"advanced expertise in Excel (pivot, macro, statistics formulas)",Akashtom98+Claude
+51181089,SQL,y,Excellent knowledge of SQL,Akashtom98+Claude
+51181089,R,y,Knowledge of R or Python,Akashtom98+Claude
+51181089,Python,y,Knowledge of R or Python,Akashtom98+Claude
+51181089,Power BI,y,"PowerBI, SSRS, Dataiku",Akashtom98+Claude
+51181089,SQL Server,y,SSRS,Akashtom98+Claude
+51181089,Dataiku,n,"PowerBI, SSRS, Dataiku",Akashtom98+Claude
+52631678,Python,y,Python (Mandatory),Akashtom98+Claude
+52631678,R,y,"Python (Mandatory)/ R/ Scala, SQL",Akashtom98+Claude
+52631678,Scala,y,"R/ Scala, SQL",Akashtom98+Claude
+52631678,SQL,y,"R/ Scala, SQL",Akashtom98+Claude
+52631678,Statistics,y,sound knowledge in statistics,Akashtom98+Claude
+52631678,Documentation,y,strong documentation background,Akashtom98+Claude
+52631678,scikit-learn,y,"scikit, panadas, numpy, matplotlib",Akashtom98+Claude
+52631678,pandas,y,?panadas,Akashtom98+Claude
+52631678,NumPy,y,numpy,Akashtom98+Claude
+52631678,matplotlib,y,matplotlib,Akashtom98+Claude
+52631678,Git,y,Github,Akashtom98+Claude
+52631678,CI/CD,y,CI/CD,Akashtom98+Claude
+52631678,Docker,y,Docker,Akashtom98+Claude
+52631678,Data visualisation,y,dashboarding data science output to end user,Akashtom98+Claude
+52631678,Jupyter,n,Jupyter notebook,Akashtom98+Claude
+52631678,Flask,y,flask or markdowns,Akashtom98+Claude
+52631678,Machine learning,y,Machine learning/statistical model building,Akashtom98+Claude
+52631678,MATLAB,y,Python/R/Matlab,Akashtom98+Claude
+52631678,Probability,y,"Normal, Poisson and Weibull Distribution",Akashtom98+Claude
+52631678,Hypothesis testing,y,hypothesis testing,Akashtom98+Claude
+52631678,Agile,y,Experience in distributed agile,Akashtom98+Claude
+52631678,Regression analysis,y,classification./regression/forecasting,Akashtom98+Claude
+52631678,Time series forecasting,y,forecasting,Akashtom98+Claude
+52631678,Deep learning,y,"Deep Learning using Tensorflow, Keras",Akashtom98+Claude
+52631678,TensorFlow,y,Tensorflow,Akashtom98+Claude
+52631678,Keras,y,Keras,Akashtom98+Claude
+52631678,AWS,y,"cloud-based infrastructure, especially AWS",Akashtom98+Claude
+52631678,Cloud platforms,y,cloud-based infrastructure,Akashtom98+Claude
+52631678,Java,y,"Scala, Java, Blockly or C++",Akashtom98+Claude
+52631678,C++,y,"Scala, Java, Blockly or C++",Akashtom98+Claude
+52631678,Leadership,y,leads in a team consisting of data scientists and web devlopers,Akashtom98+Claude
+52631678,Communication,y,Excellent Communication & Presentation skills,Akashtom98+Claude
+52631678,Presentation skills,y,Excellent Communication & Presentation skills,Akashtom98+Claude
+52631678,Problem solving,y,troubleshooting and problem solving skills,Akashtom98+Claude
+52631678,Teamwork,y,geographically-dispersed team,Akashtom98+Claude
+41162721,Statistics,y,statistical modelling,Akashtom98+Claude
+41162721,SQL,y,"SQL, Python, PySpark, and H2O",Akashtom98+Claude
+41162721,Python,y,"SQL, Python, PySpark, and H2O",Akashtom98+Claude
+41162721,Spark,y,PySpark,Akashtom98+Claude
+41162721,H2O,n,"SQL, Python, PySpark, and H2O",Akashtom98+Claude
+41162721,Big data,n,Big Data and Cloud technologies,Akashtom98+Claude
+41162721,Cloud platforms,y,Big Data and Cloud technologies,Akashtom98+Claude
+41162721,AWS,y,"AWS (EMR, Redshift, S3, etc.)",Akashtom98+Claude
+41162721,Redshift,y,Redshift,Akashtom98+Claude
+41162721,Data storytelling,y,storytelling through visualisation tools,Akashtom98+Claude
+41162721,Data visualisation,y,visualisation tools,Akashtom98+Claude
+41162721,Tableau,y,Tableau or Python,Akashtom98+Claude
+41162721,Machine learning,y,statistical and machine learning techniques,Akashtom98+Claude
+41162721,Causal inference,y,causal relationships,Akashtom98+Claude
+41162721,Agile,y,Agile ways of working,Akashtom98+Claude
+41162721,Jira,y,JIRA and Confluence,Akashtom98+Claude
+41162721,Confluence,n,JIRA and Confluence,Akashtom98+Claude
+41162721,Artificial intelligence,y,AI algorithms (e.g. deep learning),Akashtom98+Claude
+41162721,Deep learning,y,deep learning,Akashtom98+Claude
+41162721,Problem solving,y,A disciplined approach to problem solving,Akashtom98+Claude
+41162721,Presentation skills,y,capability in presenting,Akashtom98+Claude
+52444212,Anomaly detection,y,fraud threats,Akashtom98+Claude
+52444212,Leadership,y,"Mentor, coach and support",Akashtom98+Claude
+52444212,Teamwork,y,"Actively collaborate with Functions, Compliance, Risk and Technology teams",Akashtom98+Claude
+52444212,SQL,y,Mandatory Advanced SQL,Akashtom98+Claude
+52444212,Statistics,y,Modelling and Maths Stats,Akashtom98+Claude
+52444212,Microsoft Access,n,MS Access,Akashtom98+Claude
+52444212,Tableau,y,Tableau or Power BI visualisation,Akashtom98+Claude
+52444212,Power BI,y,Tableau or Power BI visualisation,Akashtom98+Claude
+52444212,Data visualisation,y,Tableau or Power BI visualisation,Akashtom98+Claude
+52444212,Communication,y,Communicator,Akashtom98+Claude
+52444212,Change management,n,Change management,Akashtom98+Claude
+52444212,Presentation skills,y,clearly present and articulate risk positions,Akashtom98+Claude
+52444212,Stakeholder management,y,key stakeholders,Akashtom98+Claude
+52444212,Risk management,n,"risk prevention, detection or response controls",Akashtom98+Claude
+38513017,Natural language processing,y,unstructured data (images and text),Akashtom98+Claude
+38513017,Computer vision,y,?datasets of all types and formats specifically images,Akashtom98+Claude
+38513017,Leadership,y,guide and mentor others,Akashtom98+Claude
+38513017,Machine learning,y,Machine Learning and Artificial Intelligence techniques,Akashtom98+Claude
+38513017,Artificial intelligence,y,Machine Learning and Artificial Intelligence techniques,Akashtom98+Claude
+38513017,SQL,y,knowledge of SQL,Akashtom98+Claude
+38513017,R,y,"either R, or, Python",Akashtom98+Claude
+38513017,Python,y,"either R, or, Python",Akashtom98+Claude
+38513017,Java,y,Java skills will be highly advantageous,Akashtom98+Claude
+38513017,Hadoop,y,Hadoop/Spark,Akashtom98+Claude
+38513017,Spark,y,Hadoop/Spark,Akashtom98+Claude
+38513017,Solr,n,"Solr, Tika, Tesseract",Akashtom98+Claude
+38513017,Tesseract,n,"Solr, Tika, Tesseract",Akashtom98+Claude
+38513017,Hive,y,"Hive, Impala",Akashtom98+Claude
+38513017,Impala,n,"Hive, Impala",Akashtom98+Claude
+38513017,TensorFlow,y,TensorFlow,Akashtom98+Claude
+38513017,D3.js,y,D3JS,Akashtom98+Claude
+38513017,R Shiny,n,R Shiny,Akashtom98+Claude
+38513017,Apache Superset,n,Superset,Akashtom98+Claude
+38513017,Git,y,deployment using Git,Akashtom98+Claude
+38513017,CI/CD,y,a CI pipeline,Akashtom98+Claude
+38513017,Experimental design,y,experimental methods,Akashtom98+Claude
+38513017,Data visualisation,y,visually presenting in a dashboard,Akashtom98+Claude
+38513017,Big data,n,analysing big data from disparate systems,Akashtom98+Claude
+38513017,Time series forecasting,y,forecasting,Akashtom98+Claude
+38513017,Econometrics,y,econometric modelling,Akashtom98+Claude
+38513017,Optimisation,y,linear programming and other optimisation algorithms,Akashtom98+Claude
+38513017,Data cleaning,y,strong data cleansing skills,Akashtom98+Claude
+38513017,Communication,y,clearly communicating statistical concepts,Akashtom98+Claude
+38513017,Presentation skills,y,Presenting data and complex numerical information,Akashtom98+Claude
+51602165,Predictive modelling,y,predictive modelling and statistical analysis,Akashtom98+Claude
+51602165,Statistics,y,statistical analysis,Akashtom98+Claude
+51602165,Machine learning,y,machine learning and time series analysis techniques,Akashtom98+Claude
+51602165,Time series forecasting,y,time series analysis techniques,Akashtom98+Claude
+51602165,R,y,"R, Python and feature selection techniques",Akashtom98+Claude
+51602165,Python,y,"R, Python and feature selection techniques",Akashtom98+Claude
+51602165,Feature engineering,y,feature selection techniques,Akashtom98+Claude
+51602165,Experimental design,y,set study protocol in data collection,Akashtom98+Claude
+51602165,Linear regression,y,linear regression,Akashtom98+Claude
+51602165,Communication,y,Good communication skills,Akashtom98+Claude
+38855545,Machine learning,y,sophisticated machine learning algorithms,Akashtom98+Claude
+38855545,Statistics,y,advanced statistical tools,Akashtom98+Claude
+38855545,Big data,n,big proteogenomic data mining and management,Akashtom98+Claude
+38855545,Communication,y,outstanding communication and writing skills,Akashtom98+Claude
+38855545,Bioinformatics,n,"strong background in bioinformatics, biostatistics or machine learning",Akashtom98+Claude
+38855545,R,y,Strong programming skills in R and Python,Akashtom98+Claude
+38855545,Python,y,Strong programming skills in R and Python,Akashtom98+Claude
+38855545,Data visualisation,y,scientific data visualization,Akashtom98+Claude
+53106767,Statistics,y,Statistical & Risk Modelling,Akashtom98+Claude
+53106767,Credit risk modelling,n,advanced credit risk modelling techniques,Akashtom98+Claude
+53106767,Time series forecasting,y,?accurate forecasts,Akashtom98+Claude
+53106767,Hypothesis testing,y,strong hypothesis testing platform,Akashtom98+Claude
+53106767,Documentation,y,develop and document credit risk models,Akashtom98+Claude
+53106767,Python,y,"Python, R,SAS, SQL, R, Power BI, Alteryx, Tableau",Akashtom98+Claude
+53106767,R,y,"Python, R,SAS, SQL, R, Power BI, Alteryx, Tableau",Akashtom98+Claude
+53106767,SAS,y,"Python, R,SAS, SQL, R, Power BI, Alteryx, Tableau",Akashtom98+Claude
+53106767,SQL,y,"Python, R,SAS, SQL, R, Power BI, Alteryx, Tableau",Akashtom98+Claude
+53106767,Power BI,y,"Python, R,SAS, SQL, R, Power BI, Alteryx, Tableau",Akashtom98+Claude
+53106767,Alteryx,y,"Python, R,SAS, SQL, R, Power BI, Alteryx, Tableau",Akashtom98+Claude
+53106767,Tableau,y,"Python, R,SAS, SQL, R, Power BI, Alteryx, Tableau",Akashtom98+Claude
+53106767,Qlik,y,"Power BI, Tableau, Qlik etc",Akashtom98+Claude
+53106767,Data visualisation,y,data visualisation tools,Akashtom98+Claude
+53106767,Communication,y,Strong communication and presentation skills,Akashtom98+Claude
+53106767,Presentation skills,y,Strong communication and presentation skills,Akashtom98+Claude
+53106767,Data warehousing,y,using data warehouse,Akashtom98+Claude
+53106767,Predictive modelling,y,build datasets for predictive modelling,Akashtom98+Claude
+53106767,Time management,n,Excellent organisational and time management skills,Akashtom98+Claude
+53106767,Risk management,n,risk management reports,Akashtom98+Claude
+40365873,Gradient boosting,y,gradient-boosted machines,Akashtom98+Claude
+40365873,Bayesian methods,y,structural Bayesian time-series modelling,Akashtom98+Claude
+40365873,Time series forecasting,y,structural Bayesian time-series modelling,Akashtom98+Claude
+40365873,R,y,"R, Python, Tableau",Akashtom98+Claude
+40365873,Python,y,"R, Python, Tableau",Akashtom98+Claude
+40365873,Tableau,y,"R, Python, Tableau",Akashtom98+Claude
+40365873,Stakeholder management,y,Stakeholder management,Akashtom98+Claude
+40365873,Teamwork,y,Collaborating with Data Scientists across the group,Akashtom98+Claude
+40365873,Predictive modelling,y,developing predictive modelling,Akashtom98+Claude
+40365873,SQL,y,R or Python and SQL,Akashtom98+Claude
+40365873,Leadership,y,leading teams of data scientists,Akashtom98+Claude
+40365873,Statistics,y,statistical and machine learning,Akashtom98+Claude
+40365873,Machine learning,y,statistical and machine learning,Akashtom98+Claude
+40365873,Hadoop,y,Hadoop and Spark,Akashtom98+Claude
+40365873,Spark,y,Hadoop and Spark,Akashtom98+Claude
+40365873,Git,y,?Bitbucket/GitHub,Akashtom98+Claude
+40300719,Network analysis,n,network analysis,Akashtom98+Claude
+40300719,Natural language processing,y,natural language processing,Akashtom98+Claude
+40300719,Machine learning,y,machine learning and data visualisation,Akashtom98+Claude
+40300719,Data visualisation,y,machine learning and data visualisation,Akashtom98+Claude
+40300719,Data quality,y,performing quality assessments,Akashtom98+Claude
+40300719,Python,y,Developing python scripts for pre-processing large datasets,Akashtom98+Claude
+40300719,Data cleaning,y,pre-processing large datasets,Akashtom98+Claude
+40300719,SQL,y,SQL queries for large scale data linking,Akashtom98+Claude
+40300719,Data storytelling,y,tell effect stories through data,Akashtom98+Claude
+40300719,Cloud platforms,y,public cloud environments,Akashtom98+Claude
+40300719,Statistics,y,"data science, statistics, mathematical modelling",Akashtom98+Claude
+40300719,Optimisation,y,optimisation techniques,Akashtom98+Claude
+40300719,JavaScript,y,"JavaScript, React, Leaflet, D3",Akashtom98+Claude
+40300719,React,y,"JavaScript, React, Leaflet, D3",Akashtom98+Claude
+40300719,D3.js,y,"?Leaflet, D3",Akashtom98+Claude
+40300719,Leaflet,n,"JavaScript, React, Leaflet, D3",Akashtom98+Claude
+40300719,Linux,y,work in Linux within cloud environments,Akashtom98+Claude
+40300719,Problem solving,y,Outstanding analytical and problem solving skills,Akashtom98+Claude
+40300719,Teamwork,y,work effectively as part of a team,Akashtom98+Claude
+40300719,Communication,y,Well-developed written communication skills,Akashtom98+Claude
+40300719,Stakeholder management,y,consult and liaise with personnel across all levels,Akashtom98+Claude
+40300719,Agile,y,?Agile and flexible working environment,Akashtom98+Claude
+40702972,Machine learning,y,deploy Machine Learning techniques,Akashtom98+Claude
+40702972,Documentation,y,high quality documentation,Akashtom98+Claude
+40702972,Natural language processing,y,most recent advances in NLP,Akashtom98+Claude
+40702972,Data visualisation,y,Develop visualization tools,Akashtom98+Claude
+40702972,Teamwork,y,multidisciplinary team,Akashtom98+Claude
+40702972,Agile,y,using the Agile Method,Akashtom98+Claude
+40702972,Python,y,"expertise in Python, SQL",Akashtom98+Claude
+40702972,SQL,y,"expertise in Python, SQL",Akashtom98+Claude
+40702972,Communication,y,communicating outcomes of complex data science projects with non-expert audiences,Akashtom98+Claude
+40702972,Azure DevOps,n,Azure DevOps for Agile Methodology,Akashtom98+Claude
+39155311,Simulation,n,"rapid generation, simulation and analysis of projects",Akashtom98+Claude
+39155311,Python,y,"Python, R, Matlab, Stata and SQL",Akashtom98+Claude
+39155311,R,y,"Python, R, Matlab, Stata and SQL",Akashtom98+Claude
+39155311,MATLAB,y,"Python, R, Matlab, Stata and SQL",Akashtom98+Claude
+39155311,Stata,n,"Python, R, Matlab, Stata and SQL",Akashtom98+Claude
+39155311,SQL,y,Strong SQL skills,Akashtom98+Claude
+39155311,Teamwork,y,collaborate with technical team members,Akashtom98+Claude
+39155311,Stakeholder management,y,Strong stakeholder management skills,Akashtom98+Claude
+39155311,Business acumen,y,high business accumen,Akashtom98+Claude
+39155311,Machine learning,y,Data Science/Machine Learning,Akashtom98+Claude
+39155311,AWS,y,"AWS tools like Athena, Glue, Lambda and RedShift",Akashtom98+Claude
+39155311,Redshift,y,RedShift,Akashtom98+Claude
+39155311,Data visualisation,y,Data Visualisation skills,Akashtom98+Claude
+39155311,Econometrics,y,econometric and machine learning toolkits,Akashtom98+Claude
+39155311,Communication,y,Strong written and verbal communication skills,Akashtom98+Claude
+52567499,Predictive modelling,y,propensity modelling,Akashtom98+Claude
+52567499,Next best action,n,next best action,Akashtom98+Claude
+52567499,ETL,y,Extract and transform data,Akashtom98+Claude
+52567499,Data visualisation,y,"data analysis, visualisation, and statistical modelling",Akashtom98+Claude
+52567499,Statistics,y,statistical modelling,Akashtom98+Claude
+52567499,Machine learning,y,machine learning techniques,Akashtom98+Claude
+52567499,Probability,y,probabilistic modelling,Akashtom98+Claude
+52567499,Teamwork,y,?work with a dynamic team,Akashtom98+Claude
+38618566,Leadership,y,lead the advanced data analytics and modelling development,Akashtom98+Claude
+38618566,SQL,y,Extensive SQL experience,Akashtom98+Claude
+38618566,Teradata,n,preferably Teradata,Akashtom98+Claude
+38618566,R,y,"R, SAS Enterprise Miner, Python, Emblem",Akashtom98+Claude
+38618566,SAS,y,SAS Enterprise Miner,Akashtom98+Claude
+38618566,Python,y,"R, SAS Enterprise Miner, Python, Emblem",Akashtom98+Claude
+38618566,Emblem,n,Emblem,Akashtom98+Claude
+38618566,Tableau,y,Tableau (or similar),Akashtom98+Claude
+50327061,Remote sensing,n,remote sensing principles,Akashtom98+Claude
+50327061,Image processing,n,image processing software,Akashtom98+Claude
+50327061,Python,y,Python scripting,Akashtom98+Claude
+50327061,Documentation,y,"development, maintenance and documentation of Python scripting",Akashtom98+Claude
+50327061,Machine learning,y,Knowledge in machine learning,Akashtom98+Claude
+50327061,Stakeholder management,y,collaboration with stakeholders and clients,Akashtom98+Claude
+50327061,Communication,y,Well-developed communication skills,Akashtom98+Claude
+50327061,Teamwork,y,effective member of a team,Akashtom98+Claude
+50327061,Open Data Cube,n,Open Data Cube,Akashtom98+Claude
+39057225,Business acumen,y,strong business acumen,Akashtom98+Claude
+39057225,Requirements gathering,y,gather data requirements,Akashtom98+Claude
+39057225,Stakeholder management,y,Liaising with client's business and IT stakeholders,Akashtom98+Claude
+39057225,ETL,y,building data pipelines and data streams,Akashtom98+Claude
+39057225,Data warehousing,y,implementation of Data Warehouses,Akashtom98+Claude
+39057225,Hadoop,y,Hadoop/Informatica or talend,Akashtom98+Claude
+39057225,Informatica,n,Hadoop/Informatica or talend,Akashtom98+Claude
+39057225,Talend,n,Hadoop/Informatica or talend,Akashtom98+Claude
+39057225,Azure,y,Azure Cloud Data Services,Akashtom98+Claude
+39057225,Power BI,y,Power BI tools,Akashtom98+Claude
