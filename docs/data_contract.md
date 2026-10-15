@@ -159,7 +159,7 @@ share the `subject_code` key:
 
 `timestamp, subject_code, skill_label, vote (up|down), has_taken_subject (y|n)`. No names.
 
-## 5. Role profiles: `data/processed/role_profiles.csv`
+## 5. Role profiles: `data/2_demand/role_profiles.csv`
 
 Built by Van Thong (`data-eda/src/build_role_profiles.py`, #65) from 10,925 Australian 2023 postings
 (lukebarousse/data_jobs). One row per role and skill. `match.role_profile(role)` takes the role's 15
