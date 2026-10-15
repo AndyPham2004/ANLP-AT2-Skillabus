@@ -178,3 +178,18 @@ def test_analyse_job_mode_still_works(monkeypatch):
     assert engine.startswith("pipeline")
     assert result["role"] is None and result["skills"]
     assert "outside_recommendations" in result
+
+
+def test_llm_only_gaps_keep_the_2026_trend(monkeypatch):
+    """A skill only the GPT tier finds in an ad is weighted like the dictionary's rows: Seek share, 2026 trend."""
+    from skillabus import llm_extract
+    from skillabus.match import _demand_2026
+
+    found = [{"text": "LLMs", "kind": "hard", "method": "llm", "sentence": "Experience with LLMs."}]
+    monkeypatch.setattr(llm_extract, "extract_llm", lambda text, **kw: found if "LLMs" in text else [])
+    empty = {"skills": [], "recommendations": [], "learning_path": {}, "outside_recommendations": []}
+    out = backend.augment_with_llm(empty, "I write Python.", "Experience with LLMs.", [], rank=lambda gaps: {})
+    row = next(s for s in out["skills"] if s["found_by"] == "llm")
+    assert row["demand_pct_2026"] == _demand_2026().get(row["skill_label"])
+    assert row["demand_pct_2026"] is not None
+    assert (row["demand_source"], row["demand_period"]) == ("Seek", "2019-22")

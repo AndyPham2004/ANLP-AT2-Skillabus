@@ -222,8 +222,10 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
     rank(gaps) -> {"recommendations", "learning_path", "outside_recommendations"}; the baseline ranker when not given.
     """
     from skillabus.llm_extract import extract_llm
+    from skillabus.match import DEFAULT_PERIOD, DEFAULT_SOURCE, _demand_2026
     from skillabus.normalise import normalise
 
+    trend = _demand_2026()   # ad mode is weighted by the Seek shares, so the 2026 trend applies as in match()
     ad = normalise(extract_llm(ad_text))
     cv = normalise(extract_llm(resume_text)) if resume_text else []
     cv_ids = {m["skill_id"]: m for m in cv} | {m["canonical"]: m for m in cv if m["canonical"]}
@@ -243,7 +245,8 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
             "skill_id": m["skill_id"], "skill_label": label,
             "status": "have" if have else "missing",
             "demand_pct": round(res.demand.get(m["canonical"], 0.0), 1) if m["canonical"] else 0.0,
-            "demand_pct_2026": None,
+            "demand_pct_2026": trend.get(m["canonical"]) if m["canonical"] else None,
+            "demand_source": DEFAULT_SOURCE, "demand_period": DEFAULT_PERIOD,
             "emerging": m["vocab"] in ("emerging", "lightcast"),
             "ad_evidence": m["sentence"],
             "resume_evidence": have["sentence"] if have else None,
