@@ -43,6 +43,9 @@ SKILL_TO_ESCO_V1 = SKILLS / "original" / "skill_to_esco.csv"
 # One vocabulary (plan D5): ESCO plus what ESCO lacks; built by data-eda/src/build_vocabulary.py
 SKILLS_VOCABULARY = SKILLS / "skills_vocabulary.csv"      # skill_id, ESCO link + match, ad aliases, used_for
 ESCO_LINK_REVIEW = SKILLS / "esco_link_review.csv"        # hand-checked ESCO link per dictionary skill (edit this)
+ADDED_SKILLS = SKILLS / "added_skills.csv"                # part 3: IT skills beyond the dictionary, ad aliases (edit this)
+ONET_TOOL_MAP = SKILLS / "onet_tool_map.csv"              # O*NET in-demand tool name -> vocabulary label (edit this)
+VOCAB_AD_COUNTS = SKILLS / "vocabulary_ad_counts.csv"     # ads naming each extract skill, by source (--recount)
 
 TAXONOMIES = KNOWLEDGE / "taxonomies"
 ESCO_SKILLS_CLEAN = TAXONOMIES / "esco_skills_clean.csv"
@@ -122,6 +125,8 @@ SEEK_RAW = RAW / "jobs_au_seek_datascientist_2019-2022.csv"
 SEEK_AUTHORFLAGS_RAW = RAW / "jobs_au_seek_datascience_2019-2022_authorflags.csv"
 RESUMES_RAW = RAW / "resumes_us_2021.csv"
 DATA_JOBS_RAW = RAW / "data_jobs_hf" / "data_jobs.csv"
+ATS_SEPT_RAW = RAW / "jobs_au_ats_2026.csv"               # 234 ATS ads, 23 Sep 2026, full text
+ATS_RAW_PATTERN = "ats_ads_2026-*.csv"                    # later ATS fetches in RAW (13 Oct: 601 ads)
 GLASSDOOR_RAW = RAW / "glassdoor_au_2022"
 EXTERNAL_PAGES_RAW = RAW / "external_courses_pages"       # official course pages saved for build_external.py
 
@@ -148,6 +153,7 @@ POSTER_AD_SKILL_LONG = POSTER_DATA / "ad_skill_long.csv"
 # Committed files the code reads: tests/test_paths.py checks each one exists.
 COMMITTED = (
     SKILLS_SEED, SKILL_TO_ESCO, SKILLS_SEED_V1, SKILL_TO_ESCO_V1, SKILLS_VOCABULARY, ESCO_LINK_REVIEW,
+    ADDED_SKILLS, ONET_TOOL_MAP, VOCAB_AD_COUNTS,
     ESCO_SKILLS_CLEAN, ESCO_LABEL_LOOKUP, ROLE_OCCUPATIONS, OCCUPATION_SKILLS,
     SUBJECT_PROFILES, PREREQUISITES, OFFERINGS, ASSESSMENTS_SCRAPED, SUBJECTS_TEMPLATE, EXTERNAL_COURSES,
     EXTERNAL_COURSES_MD, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS, ROLE_PROFILES, SKILLS_NOT_TAUGHT,

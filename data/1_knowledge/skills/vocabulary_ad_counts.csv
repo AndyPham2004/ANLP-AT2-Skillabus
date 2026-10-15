@@ -1,0 +1,272 @@
+label,n_ads,n_employers,seek_2019_22,recent_2024_26,ats_2026
+Python,2312,758,2131,97,84
+R,300,168,295,5,0
+SQL,1545,592,1421,86,38
+Java,326,158,270,16,40
+Scala,416,166,398,10,8
+C++,196,100,171,1,24
+C#,77,47,62,3,12
+JavaScript,156,93,88,7,61
+Julia,45,25,45,0,0
+MATLAB,137,83,135,2,0
+SAS,377,172,374,3,0
+Go,20,13,6,3,11
+Shell scripting,44,33,23,8,13
+VBA,33,28,31,2,0
+pandas,106,77,103,3,0
+NumPy,88,57,87,1,0
+Spark,698,265,644,28,26
+Hadoop,457,169,443,13,1
+Hive,3,3,2,1,0
+Databricks,135,90,107,21,7
+Dask,5,3,3,0,2
+Polars,0,0,0,0,0
+Data cleaning,206,119,193,13,0
+scikit-learn,108,70,104,4,0
+XGBoost,106,34,106,0,0
+LightGBM,5,5,5,0,0
+CatBoost,0,0,0,0,0
+Random forest,187,84,184,3,0
+Gradient boosting,49,21,49,0,0
+Logistic regression,56,28,55,1,0
+Linear regression,38,23,38,0,0
+Support vector machines,33,27,33,0,0
+Clustering,213,136,208,5,0
+Time series forecasting,378,199,318,15,45
+Feature engineering,103,56,97,5,1
+Hyperparameter tuning,4,4,4,0,0
+Recommender systems,19,13,19,0,0
+Anomaly detection,77,52,71,4,2
+TensorFlow,211,134,202,7,2
+PyTorch,97,75,84,10,3
+Keras,90,59,85,5,0
+Deep learning,409,230,395,12,2
+Hugging Face,1,1,0,0,1
+Transformers,1,1,1,0,0
+BERT,5,3,5,0,0
+Large language models,62,24,0,19,43
+Natural language processing,437,215,427,8,2
+spaCy,5,5,5,0,0
+NLTK,5,5,5,0,0
+Sentiment analysis,24,19,24,0,0
+Named entity recognition,7,7,7,0,0
+Topic modelling,7,6,7,0,0
+Word embeddings,4,4,2,0,2
+RAG,1,1,0,1,0
+Prompt engineering,6,5,0,4,2
+LangChain,6,4,0,3,3
+Vector databases,0,0,0,0,0
+Computer vision,84,59,74,8,2
+OpenCV,6,5,5,1,0
+AWS,718,308,583,43,92
+Azure,403,229,339,28,36
+Google Cloud,323,147,234,33,56
+SageMaker,75,43,67,8,0
+Snowflake,66,47,37,20,9
+BigQuery,76,47,54,17,5
+Redshift,149,65,138,8,3
+Azure ML,26,21,24,2,0
+Vertex AI,11,5,5,6,0
+PostgreSQL,50,41,43,2,5
+MySQL,36,24,27,1,8
+MongoDB,52,35,47,4,1
+Oracle,6,6,5,1,0
+SQL Server,119,89,105,11,3
+NoSQL,111,69,101,4,6
+Cassandra,8,8,6,1,1
+Elasticsearch,25,18,14,3,8
+Redis,14,10,5,3,6
+Data modelling,198,135,158,35,5
+Data warehousing,164,107,107,32,25
+Tableau,524,267,478,39,7
+Power BI,418,266,373,42,3
+Looker,27,20,8,11,8
+Qlik,94,56,92,2,0
+Excel,281,165,208,18,55
+matplotlib,43,31,42,1,0
+seaborn,5,4,5,0,0
+Plotly,55,33,54,0,1
+D3.js,34,23,34,0,0
+Data visualisation,717,341,634,50,33
+Docker,106,72,70,15,21
+Kubernetes,93,57,35,14,44
+Git,305,180,257,26,22
+CI/CD,144,81,64,26,54
+Airflow,42,31,22,18,2
+dbt,30,24,9,19,2
+MLflow,20,14,10,7,3
+Kubeflow,19,13,10,7,2
+Terraform,30,23,4,4,22
+Jenkins,19,16,9,4,6
+ETL,338,213,264,57,17
+API development,38,31,22,2,14
+FastAPI,1,1,1,0,0
+Flask,10,10,10,0,0
+Django,15,11,13,1,1
+Streamlit,0,0,0,0,0
+MLOps,98,65,74,19,5
+Statistics,1455,567,1400,45,10
+Probability,42,34,35,7,0
+Hypothesis testing,51,35,46,5,0
+Bayesian methods,68,36,68,0,0
+A/B testing,167,85,87,36,44
+Experimental design,41,32,39,2,0
+Causal inference,10,9,10,0,0
+Regression analysis,24,15,24,0,0
+Optimisation,601,265,504,29,68
+Econometrics,123,51,120,3,0
+Data governance,56,46,32,19,5
+Data quality,138,101,89,32,17
+Data privacy,35,15,6,4,25
+Data security,65,41,27,8,30
+Responsible AI,23,12,3,9,11
+Communication,963,435,746,45,172
+Stakeholder management,579,245,443,16,120
+Project management,209,140,170,12,27
+Agile,496,255,379,42,75
+Problem solving,637,332,479,50,108
+Teamwork,1066,417,601,82,383
+Presentation skills,151,79,116,7,28
+Data storytelling,27,22,16,5,6
+Business acumen,189,94,160,5,24
+Leadership,830,343,482,58,290
+Requirements gathering,197,138,170,15,12
+Documentation,308,162,203,18,87
+Machine learning,1873,634,1782,59,32
+Artificial intelligence,1025,341,564,69,392
+Predictive modelling,782,345,767,15,0
+Generative AI,27,11,0,13,14
+Cloud platforms,880,362,631,61,188
+Kafka,76,49,56,14,6
+Linux,131,82,99,7,25
+Windows,7,3,1,0,6
+Jira,82,56,63,4,15
+SAP,52,31,36,7,9
+Microsoft Office,98,62,91,2,5
+React,64,30,22,1,41
+Ruby,20,14,10,0,10
+Alteryx,47,28,44,3,0
+Ansible,9,7,3,0,6
+C,61,40,55,0,6
+PHP,19,12,10,0,9
+Kotlin,23,11,7,1,15
+Swift,4,4,1,0,3
+Rust,17,7,3,0,14
+Objective-C,1,1,0,0,1
+HTML,40,33,23,2,15
+CSS,48,34,34,2,12
+Angular,9,8,2,0,7
+Vue.js,13,7,7,0,6
+Next.js,4,4,0,0,4
+jQuery,5,4,5,0,0
+Spring,4,2,0,1,3
+Express.js,1,1,0,0,1
+Microservices,19,15,3,1,15
+Android,22,10,8,0,14
+iOS,21,10,6,0,15
+Selenium,3,1,3,0,0
+Playwright,1,1,0,0,1
+Cypress,1,1,0,0,1
+Appium,0,0,0,0,0
+JMeter,1,1,1,0,0
+Postman,2,2,1,0,1
+TestNG,0,0,0,0,0
+JUnit,1,1,0,1,0
+pytest,0,0,0,0,0
+Cucumber,1,1,0,1,0
+REST Assured,0,0,0,0,0
+Test automation,29,16,11,2,16
+Unit testing,19,15,16,0,3
+Performance testing,1,1,0,0,1
+User acceptance testing,3,3,0,1,2
+Helm,0,0,0,0,0
+Prometheus,13,9,0,2,11
+Grafana,14,10,2,2,10
+Datadog,10,8,0,0,10
+Splunk,18,11,7,1,10
+New Relic,5,4,1,0,4
+Observability,76,29,3,11,62
+Puppet,4,2,0,0,4
+Pulumi,4,3,0,0,4
+CloudFormation,27,12,19,2,6
+VMware,1,1,0,0,1
+Hyper-V,0,0,0,0,0
+OpenStack,4,3,1,0,3
+Serverless,22,13,15,0,7
+Site reliability engineering,6,5,0,0,6
+Argo CD,5,4,0,1,4
+Nginx,1,1,0,0,1
+DynamoDB,31,16,23,4,4
+DB2,4,4,3,1,0
+Teradata,90,38,90,0,0
+Neo4j,9,9,5,4,0
+MariaDB,1,1,1,0,0
+SQLite,0,0,0,0,0
+Informatica,11,10,9,2,0
+Talend,11,8,11,0,0
+Fivetran,6,5,2,4,0
+Azure Data Factory,21,18,18,3,0
+Azure Synapse,11,10,7,4,0
+Delta Lake,1,1,0,0,1
+Jupyter,56,40,54,2,0
+Cognos,11,11,9,2,0
+MicroStrategy,10,7,8,2,0
+SPSS,45,34,44,1,0
+Stata,19,12,19,0,0
+tidyverse,42,23,41,1,0
+R Shiny,58,30,58,0,0
+Google Analytics,57,38,43,7,7
+Adobe Analytics,17,12,15,1,1
+Power Platform,5,5,5,0,0
+Confluence,52,36,37,5,10
+SharePoint,12,10,11,0,1
+ServiceNow,0,0,0,0,0
+Salesforce,91,41,22,3,66
+Microsoft Dynamics,3,3,0,0,3
+TCP/IP,4,3,0,0,4
+DNS,3,3,0,0,3
+DHCP,2,1,0,0,2
+VPN,3,2,1,0,2
+LAN and WAN,1,1,1,0,0
+Cisco,8,7,4,0,4
+Routing and switching,0,0,0,0,0
+Firewalls,2,2,0,0,2
+Load balancing,3,2,0,0,3
+Network security,2,2,0,0,2
+Active Directory,1,1,0,0,1
+Intune,2,2,0,0,2
+macOS,7,6,0,0,7
+SIEM,8,7,0,0,8
+Penetration testing,4,4,2,0,2
+Vulnerability management,3,3,0,0,3
+Incident response,41,21,0,0,41
+Threat intelligence,7,5,0,0,7
+Identity and access management,13,11,4,2,7
+Zero trust,2,1,0,0,2
+ISO 27001,8,8,0,1,7
+NIST,3,3,0,0,3
+Essential Eight,1,1,0,0,1
+OWASP,4,3,0,0,4
+Encryption,30,25,28,0,2
+CrowdStrike,1,1,0,0,1
+MITRE ATT&CK,4,4,0,0,4
+Nessus,0,0,0,0,0
+Application security,7,6,0,0,7
+SOC 2,8,8,0,0,8
+Business analysis,26,20,16,7,3
+Process mapping,17,11,14,2,1
+User stories,10,8,7,1,2
+Change management,18,14,12,2,4
+AI agents,75,27,0,13,62
+OpenAI API,11,5,0,1,10
+Copilot,4,2,0,3,1
+Amazon Bedrock,0,0,0,0,0
+LLMOps,5,4,0,3,2
+Model Context Protocol,0,0,0,0,0
+Diffusion models,0,0,0,0,0
+Semantic search,2,2,1,0,1
+Knowledge graphs,14,9,12,1,1
+Speech recognition,2,2,2,0,0
+Reinforcement learning,31,18,29,2,0
+Object detection,15,13,14,1,0
+Weights & Biases,0,0,0,0,0
