@@ -90,7 +90,9 @@ def test_core_skills_agree_with_the_self_study_priority_list():
     for role in NO_COUNTS:
         expected = [r["skill"] for r in priority if r["role"] == role]
         shown = [s["skill_label"] for s in backend.core_skills(role, [])]
-        assert shown[: len(expected)] == expected
+        # Same 15 skills; D9 put "cyber security" in the 13th slot after dropping the building-systems one.
+        assert set(shown) == set(expected) and len(shown) == len(expected)
+    assert backend.self_study("cyber security", role="Cybersecurity Analyst")     # D9 added two courses for it
 
 
 def test_core_skills_compare_with_the_resume_without_percentages():

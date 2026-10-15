@@ -86,6 +86,7 @@ def test_role_mode_cybersecurity_shows_core_skills_without_bars():
     assert "Core skills of the role" in text and "No percentages" in text
     assert "How often employers ask for each skill" not in text
     assert "Self-study" in text and "ATT&CK Fundamentals Training" in text
+    assert "No self-study resource in our list" not in text                    # every core skill has one (D9)
     assert "Certifications worth having" in text and "CompTIA Security+" in text
     assert not at.get("vega_lite_chart")                                 # no percentage chart
 
