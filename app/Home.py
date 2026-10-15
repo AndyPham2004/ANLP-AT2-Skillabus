@@ -339,7 +339,7 @@ elif ss.step == "input":
 
     ready = bool(resume or taken) and (ss.role != "job" or bool((ad_text or "").strip()))
     if st.button("Show my gaps", type="primary", disabled=not ready, key="show_gaps"):
-        with st.spinner("Reading the ad and your resume..."):
+        with st.spinner("Reading the ad and your resume..." if ss.role == "job" else "Reading your resume..."):
             result, engine = backend.analyse(resume, ad_text if ss.role == "job" else None, taken,
                                              role=ss.get("role_keep", backend.DEFAULT_ROLE))
         go("results", result=result, engine=engine)
