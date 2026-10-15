@@ -18,6 +18,12 @@ demand, repeat, at most three subjects. Only subjects the student can enrol in c
 step that uses that many of the three places and is valued per place; a subject the student
 cannot take (43023 needs 42172 or 41040, which an MDSI student cannot enrol in) is left out
 and listed under `learning_path.dropped`. The path is then laid out over sessions.
+
+Second tier (ideas doc 4.5): the gaps the UTS path leaves open get the same greedy cover over
+outside courses (external_courses.csv: free or free-to-audit, no UTS credit), at most three.
+The two are never mixed in one pass: a short course aimed at one skill would push UTS subjects
+out. Output: `outside_recommendations`, and `learning_path.outside` with the share of demand
+the UTS path and outside courses close together.
 """
 
 from __future__ import annotations
@@ -58,6 +64,9 @@ COVER_RATIO = 0.60          # a subject covers a skill if it is at least this st
 SUBJECTS_PER_SKILL = 5      # and is among this many strongest subjects for it
 MAX_PATH = 3
 MAX_SUBJECTS = 10           # recommendations returned: the path first, then the next best
+EXTERNAL_CSV = paths.EXTERNAL_COURSES
+MAX_OUTSIDE = 3             # outside courses in the second tier
+MAX_OUTSIDE_SHOWN = 6       # outside recommendations returned
 
 
 # -------------------------------------------------------------------------- profiles
@@ -231,7 +240,8 @@ def learning_path(covers: dict[str, set[str]], weight: dict[str, float], score: 
 
 def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | None = None,
               exclude: set[str] | None = None, home_course: str | None = HOME_COURSE,
-              rules: Rules | None = None, start: tuple[str, int] | None = None) -> dict:
+              rules: Rules | None = None, start: tuple[str, int] | None = None,
+              external_csv: str | None = None) -> dict:
     """Return `recommendations` and `learning_path` (data contract section 2).
 
     gaps          skills from match() whose status is not "have"
@@ -241,6 +251,7 @@ def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | N
     home_course   the student's course: admission conditions naming it are met
     rules         prerequisites and teaching periods; default: load_rules() (none when the files are missing)
     start         first session of the plan, e.g. ("Autumn", 2027); default: the next one
+    external_csv  outside courses for the second tier; default: external_courses.csv ("" = none)
     """
     rules = rules if rules is not None else load_rules()
     done = set(exclude or ())
@@ -303,4 +314,66 @@ def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | N
         if best and not any(label in rec["covers"] for rec in shown):
             shown.append(best)
     shown += [rec for rec in ranked if rec not in shown][: max(0, MAX_SUBJECTS - len(shown))]
-    return {"recommendations": shown, "learning_path": path}
+
+    still_open = [label for label in labels if not any(label in subjects[c]["covers"] for c in chosen)]
+    outside_recs, path["outside"] = outside(still_open, weight, external_csv, method)
+    return {"recommendations": shown, "learning_path": path, "outside_recommendations": outside_recs}
+
+
+def _external_path(external_csv: str | None) -> Path | None:
+    if external_csv == "":
+        return None
+    path = Path(external_csv) if external_csv else EXTERNAL_CSV
+    path = path if path.is_absolute() else ROOT / path
+    return path if path.exists() else None
+
+
+def outside(open_gaps: list[str], weight: dict[str, float], external_csv: str | None = None,
+            method: str | None = None) -> tuple[list[dict], dict]:
+    """Second tier: outside courses for the gaps the UTS path leaves open.
+
+    Same evidence and greedy cover as the UTS subjects (no prerequisites, no sessions), at most
+    MAX_OUTSIDE courses. Returns (outside_recommendations, learning_path["outside"]).
+    weight holds every gap, so `demand_covered_pct` is over all gaps: the UTS path plus these courses.
+    """
+    total = sum(weight.values())
+    closed_by_uts = sum(w for k, w in weight.items() if k not in open_gaps)
+    block = {"courses": [], "gaps_closed": 0, "gaps_open_before": len(open_gaps), "still_open": list(open_gaps),
+             "demand_covered_pct": round(100 * closed_by_uts / total, 1) if total else 0.0}
+    path = _external_path(external_csv)
+    if not open_gaps or path is None:
+        return [], block
+
+    evidence = subject_evidence(open_gaps, str(path), method, home_course=None)
+    meta = {row["subject_code"]: row for row in load_profiles(str(path))[0]}
+    courses: dict[str, dict] = {}
+    for label in sorted(open_gaps, key=lambda k: -weight[k]):
+        found = evidence[label]
+        floor = COVER_RATIO * found[0]["strength"] if found else 0.0
+        for e in [e for e in found if e["strength"] >= floor][:SUBJECTS_PER_SKILL]:
+            row = meta[e["subject_code"]]
+            rec = courses.setdefault(e["subject_code"], {
+                "subject_code": e["subject_code"], "subject_name": e["subject_name"], "source_url": e["source_url"],
+                "provider": row.get("provider", ""), "cost": row.get("cost", ""), "score": 0.0,
+                "covers": [], "evidence": []})
+            rec["covers"].append(label)
+            rec["evidence"].append({"skill_label": label, "layer": e["layer"], "text": e["text"], "match": e["match"]})
+            rec["score"] += e["strength"] * weight[label]
+    top = max((rec["score"] for rec in courses.values()), default=0.0) or 1.0
+    for rec in courses.values():
+        rec["score"] = round(rec["score"] / top, 2)
+
+    open_weight = {k: weight[k] for k in open_gaps}
+    tier2 = learning_path({c: set(r["covers"]) for c, r in courses.items()}, open_weight,
+                          {c: r["score"] for c, r in courses.items()}, max_subjects=MAX_OUTSIDE)
+    closed = set().union(*(courses[c]["covers"] for c in tier2["subjects"])) if tier2["subjects"] else set()
+    block.update({
+        "courses": tier2["subjects"],
+        "gaps_closed": len(closed),
+        "still_open": [k for k in open_gaps if k not in closed],
+        "demand_covered_pct": round(100 * (closed_by_uts + sum(weight[k] for k in closed)) / total, 1),
+    })
+    ranked = sorted(courses.values(), key=lambda r: (-r["score"], r["subject_code"]))
+    shown = [courses[c] for c in tier2["subjects"]]
+    shown += [r for r in ranked if r not in shown][: max(0, MAX_OUTSIDE_SHOWN - len(shown))]
+    return shown, block

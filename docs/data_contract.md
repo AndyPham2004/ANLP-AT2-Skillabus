@@ -74,8 +74,28 @@ and Phuong Nhi**.
       {"subject_code": "43023", "subject_name": "Emerging Topics in Artificial Intelligence",
        "reason": "needs 42172 Introduction to Artificial Intelligence or 41040 Introduction to Artificial Intelligence",
        "covers": ["large language models"]}
-    ]
-  }
+    ],
+    "outside": {
+      "courses": ["EXT-HF-LLM"],
+      "gaps_open_before": 2,
+      "gaps_closed": 1,
+      "still_open": ["tableau"],
+      "demand_covered_pct": 91.5
+    }
+  },
+  "outside_recommendations": [
+    {
+      "subject_code": "EXT-HF-LLM",
+      "subject_name": "Hugging Face LLM Course",
+      "source_url": "https://huggingface.co/learn/llm-course/chapter1/1",
+      "provider": "Hugging Face",
+      "cost": "free",
+      "score": 1.0,
+      "covers": ["large language models"],
+      "evidence": [{"skill_label": "large language models", "layer": "weekly_topic",
+                    "text": "1. Transformer models: Natural Language Processing and Large Language Models", "match": "named"}]
+    }
+  ]
 }
 ```
 
@@ -97,6 +117,8 @@ and Phuong Nhi**.
 | `learning_path.subjects` | In the order chosen (most demand first); a prerequisite comes right before the subject that needs it and also uses one of the three places. A prerequisite that covers no gap is in `recommendations` with `score` 0 and empty `covers` |
 | `plan` | The same subjects over sessions, earliest first: each goes in the first session after its prerequisites (`after`) that teaches it, starting from the next session (`recommend(start=...)`). `unverified`: the access-conditions site has no record, so "no prerequisite" is not confirmed |
 | `dropped` | Subjects that teach a gap but the student cannot take: not taught in 2026, an antirequisite, admission into another course, or prerequisites they cannot meet in time. Never in `recommendations`. `reason` is short text for the app |
+| `outside` | Second tier (ideas doc 4.5): outside courses for the gaps the UTS path leaves open, chosen by the same greedy cover, at most three. `gaps_open_before` = gaps the UTS path left open; `gaps_closed` = how many of those the courses close; `demand_covered_pct` = UTS path **plus** these courses, over all gaps (the UTS-only figure stays in `learning_path.demand_covered_pct`). No UTS credit |
+| `outside_recommendations` | The chosen courses first, then the next best, at most six. Same fields as a recommendation plus `provider` and `cost` (`free`, `free-to-audit`, `paid`); no `needs` or `offered`. Empty when `external_courses.csv` is missing |
 
 Who can enrol (`src/skillabus/requisites.py`, from `prerequisites.csv` and `offerings.csv`): an admission or
 credit-point item counts as met only when its text names the student's course (C04372); a subject-code item
@@ -105,7 +127,7 @@ did not capture is never met. Subjects taken (`recommend(exclude=...)`, the app'
 prerequisites. Antirequisites count item by item and in both directions (the site often lists a pair on
 one side only). `unverified` is on each recommendation and each `plan` step. Without the two files every
 subject is open and `plan` is a single session. The fallback engine (`app/baseline.py`) has no
-prerequisite data: it fills `needs`, `offered` and `dropped` with empty values and `plan` with empty sessions.
+prerequisite data: it fills `needs`, `offered` and `dropped` with empty values, `plan` with empty sessions, and `outside` with no courses.
 
 ## 3. Subject profiles: `data/1_knowledge/uts/subject_profiles.csv`
 
@@ -136,3 +158,21 @@ share the `subject_code` key:
 ## 4. Feedback votes: `data/runtime/feedback.csv` (written by the app, not in git)
 
 `timestamp, subject_code, skill_label, vote (up|down), has_taken_subject (y|n)`. No names.
+
+## 5. Role profiles: `data/2_demand/role_profiles.csv`
+
+Built by Van Thong (`data-eda/src/build_role_profiles.py`, #65) from 10,925 Australian 2023 postings
+(lukebarousse/data_jobs). One row per role and skill. `match.role_profile(role)` takes the role's 15
+most-asked technical skills; `match.match_role(resume_skills, role)` matches them like an ad, with
+`demand_pct` = the role's own share. Data Scientist always comes from `top_skills.csv` (3,204
+full-text Seek ads): the 2023 file has tool lists only, so it has no concepts such as machine learning.
+
+| Column | Example |
+|---|---|
+| `role` | `Data Engineer` |
+| `skill` | `Spark`: the canonical name in `skills_seed_v2.csv`; other names are skipped |
+| `n_ads` | `1331`: ads naming the skill |
+| `pct_ads` | `30.0`: share of the role's ads (0-100) |
+| `pct_low`, `pct_high` | 95% Wilson interval |
+| `total_ads` | `4438`: the role's ads with a tool list (shown as "Asked for in 30% of 4,438 Australian Data Engineer ads (2023).") |
+| `category`, `source` | the dictionary category; the dataset (`lukebarousse/data_jobs (2023, Australia)`) |
