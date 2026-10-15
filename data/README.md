@@ -25,6 +25,8 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | `1_knowledge/skills/skill_to_esco.csv` | Dictionary skill -> ESCO concept, 132 rows | Van Thong, Quan | `data-eda/src/map_to_esco.py`, minus the Spark row |
 | `1_knowledge/skills/original/skills_seed.csv`, `skill_to_esco.csv` | Van Thong's 133-row original and its ESCO links | Van Thong | `data-eda/src/map_to_esco.py` |
 | `1_knowledge/taxonomies/esco_skills_clean.csv`, `esco_label_lookup.csv` | ESCO v1.2.1: 13,960 concepts; 100,886 (label, concept) rows | Van Thong | `python data-eda/src/clean_esco.py` |
+| `1_knowledge/taxonomies/role_occupations.csv` | The 11 IT roles -> ESCO, O*NET and ASC occupations, 34 rows, each with match (exact/close/broad) and reason | Quan's session (D4) | `python data-eda/src/build_occupation_skills.py` |
+| `1_knowledge/taxonomies/occupation_skills.csv` | What those occupations require, 1,148 rows: ESCO essential/optional skills, O*NET in-demand tools, ASC core competencies and tool categories | Quan's session (D4) | `python data-eda/src/build_occupation_skills.py` |
 | `1_knowledge/uts/subject_profiles.csv` (+ `.md`) | 360 subjects, 6,853 rows in four layers | Van Thong, Quan | `python data-eda/src/build_subject_profiles.py` |
 | `1_knowledge/uts/prerequisites.csv`, `offerings.csv` | Access-condition rules; teaching periods | Quan | `python data-eda/src/scrape_requisites.py` |
 | `1_knowledge/uts/assessments_scraped.csv` | Assessment tasks before the merge | Quan, Van Thong | `python data-eda/src/scrape_assessments.py` |
@@ -58,8 +60,9 @@ byte-identical files (`.gitattributes` keeps their line ends). The EDA notebook 
 | Seek Australia, Data Scientist ads (Kaggle, nomilk) | **3,204** full-text ads | 2019–22 | the demand side: every demand % | [kaggle](https://www.kaggle.com/datasets/nomilk/data-science-job-listings-australia-20192020) |
 | LinkedIn Job Postings (Kaggle, arshkon) | 123,849 ads, 99.9% US; 1,355 data roles | 2023–24 | validation only: ranking agrees with Seek at ρ = 0.819 | [kaggle](https://www.kaggle.com/datasets/arshkon/linkedin-job-postings) |
 | Glassdoor Australia (Kaggle, nadzmiagthomas) | 193 data roles, full text | Aug–Dec 2022 | platform check only: rank correlation 0.75 with Seek (technical skills) | [kaggle](https://www.kaggle.com/datasets/nadzmiagthomas/australia-data-science-jobs) |
-| ESCO v1.2.1 | 13,960 skill concepts, 100,135 distinct labels (100,886 label–concept rows) | 2025 | the vocabulary `normalise()` maps to | [esco](https://esco.ec.europa.eu/en/use-esco/download) |
-| O*NET 31.0 | 8,753 tool names | 2026 | tools ESCO lacks | [onet](https://www.onetcenter.org/database.html) |
+| ESCO v1.2.1 | 13,960 skill concepts, 100,135 distinct labels (100,886 label–concept rows); the essential and optional skills of 11 occupations | 2025 | the vocabulary `normalise()` maps to; core skills per role | [esco](https://esco.ec.europa.eu/en/use-esco/download) |
+| O*NET 31.0 | 8,753 tool names; the "In Demand" tools of 10 occupations | 2026 | tools ESCO lacks; in-demand tools per role | [onet](https://www.onetcenter.org/database.html) |
+| Australian Skills Classification v1.0 (National Skills Commission, now Jobs and Skills Australia), CC BY 4.0 | Core competencies (level 1-10) and technology tool categories of 9 ANZSCO 2013 codes | Mar 2021 | the Australian taxonomy beside ESCO and O*NET, per role | [jsa](https://www.jobsandskills.gov.au/australian-skills-classification) (no longer downloadable, see below) |
 | UTS Handbook 2026 | 360 subjects in 44 courses (19 MDSI) | 2026 | subject profiles, prerequisites, teaching sessions | [handbook](https://coursehandbook.uts.edu.au) |
 | Resume Dataset (Kaggle, snehaanbhawal) | 2,481 resumes; 125 with 2+ data skills | 2021 | resume parsing and CV–JD test pairs | [kaggle](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) |
 | Job-board APIs of 65 employers (Greenhouse, Lever, SmartRecruiters, Ashby, Workable) + Adzuna API | 38 Australian data roles with full text (22 in the sample, 9 of them data scientists) + 32 Adzuna roles cut at 500 characters | Sep–Oct 2026 | the 2026 sample | public APIs |
@@ -83,6 +86,16 @@ Notes for anyone citing these:
   The January 2024 LinkedIn rows are kept as their own period, not merged into 2026. All of
   it is in `2_demand/ads/jobs_au_recent_2024-2026_clean.csv`
   (`python data-eda/src/build_recent_sample.py`).
+- **ASC licence and attribution.** Our copy (`raw/taxonomy_asc_australia/`, Version 1.0, current at
+  March 2021) says in its Index sheet that the content is licensed under CC BY 4.0, except the Coat of
+  Arms, logos, images and trade marks; it includes O*NET 21.2 / 23.1 and ABS material, also CC BY 4.0.
+  Cite it as: "This app includes content derived from the Australian Skills Classification by the
+  National Skills Commission, Commonwealth of Australia. Used under CC BY 4.0 licence. Skillabus has
+  modified some of this content, and the National Skills Commission has not approved, endorsed or tested
+  the modified content." Jobs and Skills Australia decommissioned the ASC in December 2023 and took it
+  off its website in January 2025; it is now released only for research under a data access agreement.
+  A CC BY 4.0 grant cannot be withdrawn for copies already obtained under it, so the 2021 copy stays
+  usable with that attribution, but it cannot be re-downloaded and it is five years old.
 - Resumes are de-identified, not anonymous: emails, phones, URLs and 1,146 person names are
   masked, but a name in capitals or a lone first name can survive. Mask again with spaCy
   before sending any resume text to an LLM.

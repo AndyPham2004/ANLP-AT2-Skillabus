@@ -1,0 +1,35 @@
+role,role_family,source,occupation_code,occupation_title,match,why
+Data Scientist,Data & AI,esco,http://data.europa.eu/esco/occupation/258e46f9-0075-4a2e-adae-1ff0477e0f30,data scientist,exact,ESCO occupation 'data scientist'
+Data Scientist,Data & AI,onet,15-2051.00,Data Scientists,exact,O*NET 'Data Scientists'
+Data Scientist,Data & AI,asc,224113,Statistician,broad,ANZSCO 2013 has no data scientist; ANZSCO 2022 put 224115 Data Scientist in this unit group (2241)
+Data Analyst,Data & AI,esco,http://data.europa.eu/esco/occupation/d3edb8f8-3a06-47a0-8fb9-9b212c006aa2,data analyst,exact,ESCO occupation 'data analyst'
+Data Analyst,Data & AI,onet,15-2051.01,Business Intelligence Analysts,close,"O*NET alternate title 'Data Analyst'; O*NET search ranks Data Scientists first, which would copy that role"
+Data Analyst,Data & AI,asc,224113,Statistician,broad,ANZSCO 2013 has no data analyst; ANZSCO 2022 put 224114 Data Analyst in this unit group (2241)
+Data Engineer,Data & AI,esco,http://data.europa.eu/esco/occupation/2079755f-d809-49e6-8037-4de6180e54c0,data engineer,exact,ESCO occupation 'data engineer'
+Data Engineer,Data & AI,onet,15-1243.00,Database Architects,close,"O*NET alternate titles 'Data Engineer', 'Big Data Engineer'"
+Data Engineer,Data & AI,asc,262111,Database Administrator,broad,ANZSCO 2013 has no data engineer; the database administrator builds and runs the data stores
+Machine Learning Engineer,Data & AI,esco,http://data.europa.eu/esco/occupation/35553663-deab-4d9a-bf22-15c1625d28e8,artificial intelligence engineer,close,'machine learning engineer' is an alt label of ESCO 'artificial intelligence engineer'
+Machine Learning Engineer,Data & AI,onet,15-1221.00,Computer and Information Research Scientists,close,O*NET alternate title 'Machine Learning Engineer' (also under Data Scientists; this keeps the two roles apart)
+Machine Learning Engineer,Data & AI,asc,261313,Software Engineer,broad,ANZSCO 2013 has no ML engineer; the job is software engineering of ML systems
+Software Engineer,Software,esco,http://data.europa.eu/esco/occupation/f2b15a0e-e65a-438a-affb-29b9d50b77d1,software developer,close,'software engineer' is an alt label of ESCO 'software developer'
+Software Engineer,Software,onet,15-1252.00,Software Developers,close,O*NET alternate title 'Software Engineer'
+Software Engineer,Software,asc,261313,Software Engineer,exact,ANZSCO 'Software Engineer'
+QA/Test Engineer,Software,esco,http://data.europa.eu/esco/occupation/106f79e4-6264-45f1-9e7a-297435cd684b,software tester,close,ESCO 'software tester' (alt label 'software testing specialist'); ICT test analyst and ICT system tester are narrower
+QA/Test Engineer,Software,onet,15-1253.00,Software Quality Assurance Analysts and Testers,exact,O*NET 'Software Quality Assurance Analysts and Testers'
+QA/Test Engineer,Software,asc,261314,Software Tester,close,"ANZSCO 'Software Tester'; 263211 ICT Quality Assurance Engineer covers QA process, not testing"
+Cloud Engineer,Cloud & infrastructure,esco,http://data.europa.eu/esco/occupation/349ee6f6-c295-4c38-9b98-48765b55280e,cloud engineer,exact,ESCO occupation 'cloud engineer'
+Cloud Engineer,Cloud & infrastructure,onet,15-1299.08,Computer Systems Engineers/Architects,close,O*NET alternate title 'Cloud Engineer'
+Cloud Engineer,Cloud & infrastructure,asc,263111,Computer Network and Systems Engineer,broad,ANZSCO 2013 has no cloud engineer; nearest is the engineer who deploys network and system services
+DevOps/SRE,Cloud & infrastructure,esco,http://data.europa.eu/esco/occupation/cc867bee-ab5c-427f-9244-f7a204d9574b,cloud DevOps engineer,close,"ESCO 'cloud DevOps engineer', alt labels 'devops engineer', 'site reliability devops engineer'"
+DevOps/SRE,Cloud & infrastructure,onet,15-1252.00,Software Developers,close,"O*NET alternate titles 'DevOps Engineer', 'Site Reliability Engineer' (same occupation as Software Engineer)"
+DevOps/SRE,Cloud & infrastructure,asc,261313,Software Engineer,broad,ANZSCO 2013 has no DevOps; the later code 261316 DevOps Engineer sits in the same unit group 2613
+Network/Systems Administrator,Cloud & infrastructure,esco,http://data.europa.eu/esco/occupation/9e2e6e1e-363b-4e1b-a673-7bc0f7343300,ICT system administrator,exact,"ESCO 'ICT system administrator', alt labels 'network administrator', 'system and network administrator'"
+Network/Systems Administrator,Cloud & infrastructure,onet,15-1244.00,Network and Computer Systems Administrators,exact,O*NET 'Network and Computer Systems Administrators'
+Network/Systems Administrator,Cloud & infrastructure,asc,262113,Systems Administrator,exact,"ANZSCO 'Systems Administrator'; ASC splits the role, see 263112"
+Network/Systems Administrator,Cloud & infrastructure,asc,263112,Network Administrator,exact,"ANZSCO 'Network Administrator'; ASC splits the role, see 262113"
+Cybersecurity Analyst,Security,esco,http://data.europa.eu/esco/occupation/0ce5a9f4-e00a-4bbe-b255-3c63407167a4,cyber incident responder,close,"ESCO 'cyber incident responder', alt label 'SOC Analyst'; ESCO files 'cybersecurity analyst' under digital forensics expert, too narrow"
+Cybersecurity Analyst,Security,onet,15-1212.00,Information Security Analysts,close,O*NET alternate title 'Cybersecurity Analyst'
+Cybersecurity Analyst,Security,asc,262112,ICT Security Specialist,close,ANZSCO 'ICT Security Specialist'; ASC v1.0 predates the later code 262116 Cyber Security Analyst
+Business Analyst,Business analysis,esco,http://data.europa.eu/esco/occupation/fe0fa514-b48d-4a53-9757-a283c0baacf0,ICT business analyst,close,ESCO 'ICT business analyst' (alt 'IT business analyst'); ESCO 'business analyst' (2421.1) is strategy consulting
+Business Analyst,Business analysis,onet,15-1211.00,Computer Systems Analysts,close,"O*NET alternate titles 'Business Analyst', 'IT Business Analyst'"
+Business Analyst,Business analysis,asc,2611,ICT Business and Systems Analysts,close,ASC has only the unit group 'ICT Business and Systems Analysts' (holds 261111 ICT Business Analyst)
