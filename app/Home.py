@@ -84,8 +84,20 @@ html, body, [class*="css"], .stMarkdown, .stButton button, input, textarea { fon
 
 
 def lc(label: str) -> str:
-    """Lower-case a skill name for running text, keeping acronyms: "Generative AI" -> "generative AI"."""
-    return label[:1].lower() + label[1:] if len(label) > 1 and label[1].islower() else label
+    """Lower-case a generic skill name for running text: "Machine learning" -> "machine learning",
+    "Generative AI" -> "generative AI". Product and proper names keep their case ("Azure", "Microsoft Office",
+    "SQL Server"): one-word names are left alone, and so are names whose second word starts with a capital
+    followed by small letters."""
+    words = label.split()
+    if len(words) < 2 or not label[1:2].islower():
+        return label
+    second = words[1]
+    if second[:1].isupper() and second[1:2].islower():
+        return label
+    # "Word ACRONYM" is a product (Power BI, Vertex AI, Azure ML, Argo CD) except these two concepts
+    if second.isupper() and label not in ("Generative AI", "Responsible AI"):
+        return label
+    return label[:1].lower() + label[1:]
 
 
 def read_resume(upload) -> str:
