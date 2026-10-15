@@ -23,7 +23,6 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 | `uts/offerings.csv` | One row per subject, teaching period and mode | Quan's session, 13 Oct | `python data-eda/src/scrape_requisites.py` |
 | `uts/assessments_scraped.csv` | Assessment tasks from the Handbook, before the merge into the profiles | Quan's session 13 Oct, Van Thong 14 Oct | `python data-eda/src/scrape_assessments.py` |
 | `uts/subjects_template.csv` | The column shape of `data/raw/uts_subjects_2026.csv`, for pasting a subject by hand | Van Thong | Template |
-| `uts/subject_content_TEMPLATE.csv` | Columns for hand-collected subject rows; save as `uts/subject_content.csv` and `build_subject_profiles.py` merges them | Quan | Template |
 | `learning_resources/external_courses.csv` | 56 free or free-to-audit outside courses, one row per sentence or module; notes in `external_courses.md` | Quan's session 13 Oct, Van Thong 14 Oct | `python data-eda/src/external/build_external.py` (needs the saved pages in `data/raw/external_courses_pages/`) |
 | `learning_resources/certifications.csv` | 49 industry certifications for the 11 IT roles, with price, official page and a "hot" signal; notes in `certifications.md` | Quan's session 15 Oct (D11); Adzuna counts by Van Thong | Checked by hand on the vendors' pages; counts: `count_cert_mentions.py`, `count_cert_adzuna.py` |
 
