@@ -86,24 +86,25 @@ def occupation(role: str, source: str) -> dict | None:
     return next((row for row in _occupations() if row["role"] == role and row["source"] == source), None)
 
 
-@lru_cache(maxsize=1)
-def _profile_datasets() -> dict[str, str]:
-    """role -> the dataset named in role_profiles.csv ("lukebarousse/data_jobs (2023, Australia)")."""
-    return {row["role"]: row["source"] for row in _read(paths.ROLE_PROFILES)}
+def role_source(role: str, source: str | None = None, period: str | None = None) -> str:
+    """Where a role's demand comes from: source, year, n and kind of data (the caption under the picker).
 
-
-def role_source(role: str) -> str:
-    """Where a role's demand comes from: source, year, n and kind of data (the caption under the picker)."""
+    source, period: a gap row's demand_source and demand_period (match.py); default: match.roles(),
+    which reads the same values from the files before any resume is matched.
+    """
     from skillabus.match import roles
     info = next((r for r in roles() if r["role"] == role), None)
     if info is None:
         esco, onet = occupation(role, "esco"), occupation(role, "onet")
         return (f"No Australian ad counts yet: core skills of the ESCO occupation '{esco['occupation_title']}' "
                 f"and O*NET {onet['occupation_code']} {onet['occupation_title']}.")
-    if role == DEFAULT_ROLE:   # match.py takes Data Scientist from the full-text Seek ads
-        return f"{info['n_ads']:,} {info['source']} {role} ads {info['period']}, full text."
-    dataset = _profile_datasets().get(role, "data_jobs").split(" (")[0].split("/")[-1]
-    return f"{info['n_ads']:,} Australian {role} postings {info['period']} ({dataset}, the tools each ad lists)."
+    source, period = source or info["source"], period or info["period"]
+    if source == "Seek":   # match.py takes Data Scientist from the full-text Seek ads
+        return f"{info['n_ads']:,} Seek {role} ads {period}, full text."
+    # "lukebarousse/data_jobs (2023, Australia)" -> "data_jobs"; that file has each ad's tool list, no text
+    dataset = source.split(" (")[0].split("/")[-1]
+    where = "Australian " if "Australia" in source else ""
+    return f"{info['n_ads']:,} {where}{role} postings {period} ({dataset}, the tools each ad lists)."
 
 
 # ---------------------------------------------------------------- core skills (roles with no ad counts)

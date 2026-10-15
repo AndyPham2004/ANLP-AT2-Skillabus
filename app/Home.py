@@ -391,7 +391,10 @@ elif ss.step == "results":
             if target_role is None:
                 cap = "Bar = share of 3,204 Seek Australia Data Scientist ads (2019-22) naming the skill."
             else:
-                cap = f"Bar = share of the role's ads naming the skill: {backend.role_source(target_role)}"
+                # demand_source / demand_period travel on every gap row (match.py), so the caption says
+                # exactly where these bars come from.
+                source = backend.role_source(target_role, skills[0].get("demand_source"), skills[0].get("demand_period"))
+                cap = f"Bar = share of the role's ads naming the skill: {source}"
         else:
             st.markdown("#### Core skills of the role")
             core_list(skills)
