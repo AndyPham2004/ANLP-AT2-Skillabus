@@ -40,6 +40,10 @@ SKILL_TO_ESCO = SKILLS / "skill_to_esco.csv"              # dictionary skill -> 
 SKILLS_SEED_V1 = SKILLS / "original" / "skills_seed.csv"  # Van Thong's 133-row original (poster, EDA)
 SKILL_TO_ESCO_V1 = SKILLS / "original" / "skill_to_esco.csv"
 
+# One vocabulary (plan D5): ESCO plus what ESCO lacks; built by data-eda/src/build_vocabulary.py
+SKILLS_VOCABULARY = SKILLS / "skills_vocabulary.csv"      # skill_id, ESCO link + match, ad aliases, used_for
+ESCO_LINK_REVIEW = SKILLS / "esco_link_review.csv"        # hand-checked ESCO link per dictionary skill (edit this)
+
 TAXONOMIES = KNOWLEDGE / "taxonomies"
 ESCO_SKILLS_CLEAN = TAXONOMIES / "esco_skills_clean.csv"
 ESCO_LABEL_LOOKUP = TAXONOMIES / "esco_label_lookup.csv"
@@ -131,7 +135,8 @@ POSTER_AD_SKILL_LONG = POSTER_DATA / "ad_skill_long.csv"
 
 # Committed files the code reads: tests/test_paths.py checks each one exists.
 COMMITTED = (
-    SKILLS_SEED, SKILL_TO_ESCO, SKILLS_SEED_V1, SKILL_TO_ESCO_V1, ESCO_SKILLS_CLEAN, ESCO_LABEL_LOOKUP,
+    SKILLS_SEED, SKILL_TO_ESCO, SKILLS_SEED_V1, SKILL_TO_ESCO_V1, SKILLS_VOCABULARY, ESCO_LINK_REVIEW,
+    ESCO_SKILLS_CLEAN, ESCO_LABEL_LOOKUP,
     SUBJECT_PROFILES, PREREQUISITES, OFFERINGS, ASSESSMENTS_SCRAPED, SUBJECTS_TEMPLATE, EXTERNAL_COURSES,
     EXTERNAL_COURSES_MD, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS, ROLE_PROFILES, SKILLS_NOT_TAUGHT,
     SEEK_ADS, RECENT_ADS, ATS_COMPANIES, ATS_CANDIDATES, EMERGING_CANDIDATES, AD_SKILLS, CV_JD_PAIRS,

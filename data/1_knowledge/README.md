@@ -6,6 +6,8 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 | File | What | Made by | Rebuild |
 |---|---|---|---|
 | `skills/skills_seed_v2.csv` | The one skill dictionary: 148 skills, `canonical, category, strict, aliases`. Starts with a `#` note: read with `skiprows=1`, never `comment="#"` (that cuts `C#` to `C`) | Van Thong's 133 rows + 5 generic rows (Quan, 25 Sep) + 10 tool rows (Van Thong, 14 Oct) | Edited by hand through a PR. To be replaced by `skills_vocabulary.csv` (plan D5) |
+| `skills/skills_vocabulary.csv` | The one vocabulary (plan D5): `skill_id` (`esco:<uri>` only for an exact ESCO match, else `skillabus:<slug>`), `esco_match` exact / close / broad (ESCO wider) / none, `aliases_ads` (only rows with aliases detect skills in ads), `used_for`, `why_added`. Part 1 so far: the 148 dictionary skills, 47 exact, 7 close, 90 broad, 4 none | Claude 15 Oct, Van Thong to check | `python data-eda/src/build_vocabulary.py` (`--check` says if it is stale) |
+| `skills/esco_link_review.csv` | The hand-checked ESCO link of each dictionary skill: old link, new link, `esco_match`, a note for every link that is not exact | Claude 15 Oct, Van Thong to check | Edit by hand, then rerun `build_vocabulary.py`; it refuses a URI not in ESCO, a label that is not ESCO's, or a known wrong link |
 | `skills/skill_to_esco.csv` | Dictionary skill -> ESCO concept, 132 rows (the wrong "SPARK" link removed) | Van Thong (`map_to_esco.py`), copied by Quan's 3 Oct mock builder | `python data-eda/src/map_to_esco.py` writes `original/skill_to_esco.csv`; drop the Spark row, copy here |
 | `skills/original/skills_seed.csv` | Van Thong's original 133-row dictionary: poster counts, resume cleaning, Glassdoor counts, EDA | Van Thong | Hand-edited; goes to `archive/dictionary_v1/` once D5 lands |
 | `skills/original/skill_to_esco.csv` | Its ESCO links, 133 rows | Van Thong | `python data-eda/src/map_to_esco.py` (needs `data/raw/taxonomy_esco_v1.2.1/`) |
@@ -19,6 +21,6 @@ Commands run from the repo root; "raw" inputs are in `data/raw/` (not in git, se
 | `uts/subject_content_TEMPLATE.csv` | Columns for hand-collected subject rows; save as `uts/subject_content.csv` and `build_subject_profiles.py` merges them | Quan | Template |
 | `learning_resources/external_courses.csv` | 56 free or free-to-audit outside courses, one row per sentence or module; notes in `external_courses.md` | Quan's session 13 Oct, Van Thong 14 Oct | `python data-eda/src/external/build_external.py` (needs the saved pages in `data/raw/external_courses_pages/`) |
 
-Owner of the folder: Van Thong (data). Planned here: `skills/skills_vocabulary.csv` (D5),
+Owner of the folder: Van Thong (data). Planned here: parts 2 and 3 of `skills/skills_vocabulary.csv` (D5),
 `taxonomies/occupation_skills.csv` (D4), `uts/taught_skills_student_reported.csv` (D10),
 `learning_resources/resources.csv` and `certifications.csv` (D9, D11).

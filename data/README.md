@@ -21,6 +21,7 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | File | What | Made by | Rebuild |
 |---|---|---|---|
 | `1_knowledge/skills/skills_seed_v2.csv` | The one dictionary, 148 skills (starts with a `#` line: `skiprows=1`, not `comment="#"`, or `C#` becomes `C`) | Van Thong, Quan | By hand, through a PR |
+| `1_knowledge/skills/skills_vocabulary.csv`, `esco_link_review.csv` | One vocabulary, ESCO plus what ESCO lacks (D5; part 1 = the 148 dictionary skills); the hand-checked ESCO link of each | Claude, Van Thong to check | `python data-eda/src/build_vocabulary.py` after editing the review file |
 | `1_knowledge/skills/skill_to_esco.csv` | Dictionary skill -> ESCO concept, 132 rows | Van Thong, Quan | `data-eda/src/map_to_esco.py`, minus the Spark row |
 | `1_knowledge/skills/original/skills_seed.csv`, `skill_to_esco.csv` | Van Thong's 133-row original and its ESCO links | Van Thong | `data-eda/src/map_to_esco.py` |
 | `1_knowledge/taxonomies/esco_skills_clean.csv`, `esco_label_lookup.csv` | ESCO v1.2.1: 13,960 concepts; 100,886 (label, concept) rows | Van Thong | `python data-eda/src/clean_esco.py` |
