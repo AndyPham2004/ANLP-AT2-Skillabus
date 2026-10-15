@@ -43,7 +43,7 @@ import fetch_adzuna  # noqa: E402
 from skillabus import paths  # noqa: E402
 
 ROLES = (
-    "Data Scientist", "Data Analyst", "Data Engineer", "ML Engineer", "Software Engineer", "QA/Test Engineer",
+    "Data Scientist", "Data Analyst", "Data Engineer", "Machine Learning Engineer", "Software Engineer", "QA/Test Engineer",
     "Cloud Engineer", "DevOps/SRE", "Network/Systems Administrator", "Cybersecurity Analyst", "Business Analyst",
 )
 TREND_MIN_CHANGE = 0.20   # a rise of 20% or more between two counts ...

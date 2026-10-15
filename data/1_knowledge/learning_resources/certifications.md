@@ -42,7 +42,7 @@ keep learning all career long). The app can show them next to the gaps that outs
 | Data Scientist | 4 | MLA-C02, AI-103, AI-300, Google Cloud Professional Machine Learning Engineer |
 | Data Analyst | 4 | PL-300, Google Cloud Associate Data Practitioner, SnowPro Core (COF-C03), Salesforce Certified Tableau Data Analyst |
 | Data Engineer | 6 | SAA-C03, DEA-C01, Google Professional Data Engineer, Google Associate Data Practitioner, Databricks Data Engineer Associate, COF-C03 |
-| ML Engineer | 5 | DEA-C01, MLA-C02, AI-103, AI-300, Google Professional Machine Learning Engineer |
+| Machine Learning Engineer | 5 | DEA-C01, MLA-C02, AI-103, AI-300, Google Professional Machine Learning Engineer |
 | Software Engineer | 11 | CLF-C02, SAA-C03, DVA-C02, AZ-400, AI-200, AI-103, CKAD, KCNA, PSM I, CSM, ACS CP |
 | QA/Test Engineer | 4 | ISTQB CTFL v4.0, ISTQB CTAL-TAE v2.0, PSM I, CSM |
 | Cloud Engineer | 14 | CLF-C02, SAA-C03, DVA-C02, DOP-C02, SCS-C03, AZ-104, AZ-305, AI-200, Google ACE, Google PCA, Cloud+ (CV0-004), CKA, KCNA, Terraform Associate (004) |
