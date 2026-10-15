@@ -153,8 +153,9 @@ small price for a path the student can actually take.
 
 **Outside courses.** The gaps the UTS path leaves open get a second greedy pass, over 56 free or free-to-audit courses from
 42 providers (`external_courses.csv`), at most three, never mixed with UTS subjects in one pass (a short course aimed at one
-skill would push subjects out). For the Robert Walters ad and the sample resume, the UTS path is 36106 → 32130 → 36121
-(5 of 6 gaps, 88.3% of the demand) and the Hugging Face LLM Course closes the last gap.
+skill would push subjects out). For the Robert Walters ad and the sample resume, the UTS path is 36106 → 36121 → 32130
+(5 of 6 gaps, 87.9% of the demand, with the 2026 counts of 15 Oct; 36106 → 32130 → 36121 and 88.3% with those of 13 Oct)
+and the Hugging Face LLM Course closes the last gap.
 
 **Roles.** For the Elective chooser and Career switcher modes, a role is matched like an ad: its 15 most-asked technical
 skills, with the role's own shares as demand. Six roles come from 10,925 Australian 2023 postings (tool lists only)
