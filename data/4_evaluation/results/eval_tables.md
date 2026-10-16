@@ -56,6 +56,7 @@ Cohen's kappa between hoaithuongnguyen-uts and tompham9016 on 20 ads:
 | tfidf | 0.933 | 0.778 |
 | embed | 0.800 | 0.567 |
 
+LLM judge (retrieval: tfidf, n=15, unparsed=0): relevance 4.33/5, faithfulness 4.33/5, share of answers with faithfulness 4+: 0.93
+
 ## Not run
 
-- Chat LLM judge: not run: set OPENAI_API_KEY (answers and judge use GPT-4o-mini)
