@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"><style>body{margin:0;background:#0a0b0c;font-family:'Public Sans',system-ui,sans-serif;color:#e8e6e1}a{color:#8fbcff}a:hover{color:#b8d4ff}button{font:inherit;cursor:pointer}@keyframes spin{to{transform:rotate(360deg)}}</style></helmet>
+<div style="min-height:100vh;display:flex;background:#121416;color:#e8e6e1;font-size:15px;line-height:1.5;position:relative">
+  <aside style="width:220px;flex:none;background:#0e1012;border-right:1px solid rgba(255,255,255,.07);padding:24px 18px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh;box-sizing:border-box">
+    <button onClick="{{ goStart }}" style="background:none;border:none;padding:0;color:inherit;text-align:left;font-family:'Literata',Georgia,serif;font-size:24px;font-weight:500">Skillabus</button>
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px">
+      <li><button onClick="{{ goStart }}" style="width:100%;background:{{ step1Bg }};border:none;border-radius:4px;display:flex;gap:12px;align-items:center;padding:10px 12px;color:{{ step1Color }};font-weight:{{ step1Weight }};text-align:left;font-size:15px"><span style="width:22px;height:22px;border-radius:50%;background:{{ step1DotBg }};border:1.5px solid {{ step1DotBorder }};color:#0a0b0c;font-size:12px;display:grid;place-items:center;box-sizing:border-box">{{ step1Mark }}</span>Who you are</button></li>
+      <li><button onClick="{{ goInputs }}" style="width:100%;background:{{ step2Bg }};border:none;border-radius:4px;display:flex;gap:12px;align-items:center;padding:10px 12px;color:{{ step2Color }};font-weight:{{ step2Weight }};text-align:left;font-size:15px"><span style="width:22px;height:22px;border-radius:50%;background:{{ step2DotBg }};border:1.5px solid {{ step2DotBorder }};color:#0a0b0c;font-size:12px;display:grid;place-items:center;box-sizing:border-box">{{ step2Mark }}</span>Your inputs</button></li>
+      <li><button onClick="{{ goResults }}" style="width:100%;background:{{ step3Bg }};border:none;border-radius:4px;display:flex;gap:12px;align-items:center;padding:10px 12px;color:{{ step3Color }};font-weight:{{ step3Weight }};text-align:left;font-size:15px"><span style="width:22px;height:22px;border-radius:50%;border:1.5px solid {{ step3DotBorder }};font-size:12px;display:grid;place-items:center;box-sizing:border-box">3</span>Results</button></li>
+    </ol>
+    <sc-if value="{{ hasInputs }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9a9a94;padding:0 12px"><div>{{ userTypeLabel }} · {{ stageLabel }}</div><sc-if value="{{ hasAd }}" hint-placeholder-val="{{ false }}"><div style="color:#e8e6e1">{{ adTitle }}</div></sc-if><sc-if value="{{ hasResume }}" hint-placeholder-val="{{ false }}"><div>{{ resumeLabel }}</div></sc-if></div>
+    </sc-if>
+    <button onClick="{{ toggleChat }}" style="margin-top:auto;background:#1b1e22;border:1px solid rgba(255,255,255,.1);color:#e8e6e1;border-radius:4px;padding:12px 14px;font-size:14px;text-align:left;width:100%">Ask the Handbook</button>
+  </aside>
+
+  <main style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+  <!-- START -->
+  <sc-if value="{{ onStart }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:80px 72px;display:flex;flex-direction:column;gap:40px;max-width:960px">
+    <h1 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:400;font-size:46px;line-height:1.15;letter-spacing:-.015em;text-wrap:pretty">Find the skills a job wants that you don't have yet — and the UTS subject that teaches each one.</h1>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:14px;color:#9a9a94">I am a…</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+        <sc-for list="{{ userTypes }}" as="u" hint-placeholder-count="3">
+        <button onClick="{{ u.pick }}" style="text-align:left;color:inherit;background:#1b1e22;border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:24px 22px;display:flex;flex-direction:column;gap:10px;min-height:170px" style-hover="border-color:rgba(255,255,255,.4)"><span style="font-family:'Literata',Georgia,serif;font-size:24px;font-weight:500">{{ u.label }}</span><span style="font-size:15px;color:#c9c8c2;line-height:1.45">{{ u.question }}</span><span style="margin-top:auto;font-size:14px;color:#8fbcff">{{ u.cta }}</span></button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- INPUTS -->
+  <sc-if value="{{ onInputs }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:48px 56px 56px;display:flex;flex-direction:column;gap:32px;max-width:980px">
+    <h1 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.01em">{{ inputsTitle }}</h1>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:14px;color:#9a9a94">Where are you in your studies?</div>
+      <div style="display:inline-flex;border:1px solid rgba(255,255,255,.14);border-radius:4px;overflow:hidden;align-self:flex-start;font-size:15px"><sc-for list="{{ stages }}" as="s" hint-placeholder-count="3"><button onClick="{{ s.pick }}" style="padding:10px 20px;border:none;border-left:1px solid rgba(255,255,255,.12);background:{{ s.bg }};color:{{ s.color }};font-weight:{{ s.weight }}">{{ s.label }}</button></sc-for></div>
+    </div>
+    <sc-if value="{{ isJobSeeker }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:14px;color:#9a9a94">The job ad</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <button onClick="{{ goJobs }}" style="color:inherit;background:#1b1e22;border:1px solid {{ adSearchBorder }};border-radius:6px;padding:16px 18px;text-align:left;display:flex;flex-direction:column;gap:4px" style-hover="border-color:rgba(255,255,255,.4)"><span style="font-weight:500;font-size:16px">Browse ads</span><span style="font-size:13px;color:#9a9a94">From Seek and company sites</span></button>
+        <button onClick="{{ adPaste }}" style="color:inherit;background:#1b1e22;border:1px solid {{ adPasteBorder }};border-radius:6px;padding:16px 18px;text-align:left;display:flex;flex-direction:column;gap:4px" style-hover="border-color:rgba(255,255,255,.4)"><span style="font-weight:500;font-size:16px">Paste an ad</span><span style="font-size:13px;color:#9a9a94">Copy the full text</span></button>
+        <button onClick="{{ adSample }}" style="color:inherit;background:#1b1e22;border:1px solid {{ adSampleBorder }};border-radius:6px;padding:16px 18px;text-align:left;display:flex;flex-direction:column;gap:4px" style-hover="border-color:rgba(255,255,255,.4)"><span style="font-weight:500;font-size:16px">Try a sample</span><span style="font-size:13px;color:#9a9a94">Data Scientist, Sydney</span></button>
+      </div>
+      <sc-if value="{{ adVisible }}" hint-placeholder-val="{{ true }}"><textarea value="{{ adText }}" onChange="{{ setAdText }}" placeholder="Paste the full job ad here…" style="background:#0e1012;border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:16px 18px;min-height:200px;font-family:'Literata',Georgia,serif;font-size:16px;line-height:1.6;color:#c9c8c2;resize:vertical;width:100%;box-sizing:border-box;outline:none"></textarea></sc-if>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isRoleMode }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:14px;color:#9a9a94">The role you want</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><sc-for list="{{ roles }}" as="r" hint-placeholder-count="8"><button onClick="{{ r.pick }}" style="padding:14px 16px;background:#1b1e22;border:1px solid {{ r.border }};border-radius:6px;color:inherit;text-align:left;font-size:15px;font-weight:{{ r.weight }}" style-hover="border-color:rgba(255,255,255,.4)">{{ r.name }}</button></sc-for></div>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isElective }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:14px;color:#9a9a94">Subjects you've already taken <span style="color:#4fd1b8">· {{ takenCount }}</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><sc-for list="{{ allSubjects }}" as="s" hint-placeholder-count="8"><button onClick="{{ s.toggle }}" style="display:flex;gap:12px;align-items:center;padding:12px 14px;background:#1b1e22;border:1px solid {{ s.border }};border-radius:6px;color:inherit;text-align:left;font-size:15px"><span style="width:18px;height:18px;border-radius:3px;background:{{ s.boxBg }};border:1.5px solid {{ s.boxBorder }};color:#0a0b0c;font-size:12px;display:grid;place-items:center;box-sizing:border-box;flex:none">{{ s.mark }}</span>{{ s.name }}</button></sc-for></div>
+    </div>
+    </sc-if>
+    <sc-if value="{{ needsResume }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:14px;color:#9a9a94">Your resume <span style="color:#6b6c68">· stays on your device for this session</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <button onClick="{{ resumeUpload }}" style="border:1px dashed {{ resumeUploadBorder }};border-radius:6px;padding:28px 18px;text-align:center;background:none;color:inherit;font-size:16px;display:flex;flex-direction:column;gap:4px;align-items:center"><span>Upload a PDF</span><span style="font-size:13px;color:#6b6c68">{{ resumeUploadSub }}</span></button>
+        <button onClick="{{ resumeSample }}" style="border:1px solid {{ resumeSampleBorder }};border-radius:6px;padding:28px 18px;text-align:center;background:#1b1e22;color:inherit;font-size:16px;display:flex;flex-direction:column;gap:4px;align-items:center"><span>Use a sample resume</span><span style="font-size:13px;color:#6b6c68">Early-career MDSI student</span></button>
+      </div>
+    </div>
+    </sc-if>
+    <div style="display:flex;align-items:center;gap:18px;padding-top:8px">
+      <button onClick="{{ runAnalysis }}" disabled="{{ runDisabled }}" style="background:{{ runBg }};color:{{ runColor }};border:none;border-radius:6px;padding:14px 28px;font-size:17px;font-weight:500;cursor:{{ runCursor }}">Find my gaps</button>
+      <span style="font-size:14px;color:#9a9a94">{{ runHint }}</span>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- JOBS -->
+  <sc-if value="{{ onJobs }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:48px 56px 56px;display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;flex-direction:column;gap:10px"><button onClick="{{ goInputs }}" style="background:none;border:none;padding:0;font-size:14px;color:#8fbcff;text-align:left">← Back</button><h1 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.01em">Pick a job ad</h1></div>
+    <form onSubmit="{{ jobSearchSubmit }}" style="display:flex;gap:8px;background:#0e1012;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:12px 16px;font-size:16px;max-width:640px"><input value="{{ jobQuery }}" onChange="{{ setJobQuery }}" placeholder="Search a title, company or skill" style="flex:1;background:none;border:none;color:#e8e6e1;font:inherit;outline:none"><button type="submit" style="background:none;border:none;color:#8fbcff;padding:0;font-size:14px">Search</button></form>
+    <div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ jobRoleChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.pick }}" style="padding:7px 14px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-size:14px">{{ c.label }}</button></sc-for><span style="width:1px;background:rgba(255,255,255,.12);margin:0 6px"></span><sc-for list="{{ jobLocChips }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.pick }}" style="padding:7px 14px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-size:14px">{{ c.label }}</button></sc-for></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:24px;align-items:start">
+      <section style="display:flex;flex-direction:column;gap:8px">
+        <sc-if value="{{ jobEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 0;font-family:'Literata',Georgia,serif;font-size:18px;color:#9a9a94">No ads match. Try a broader role or location.</div></sc-if>
+        <sc-for list="{{ jobRows }}" as="j" hint-placeholder-count="5">
+        <button onClick="{{ j.pick }}" style="text-align:left;color:inherit;background:{{ j.bg }};border:1px solid {{ j.border }};border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;width:100%" style-hover="border-color:rgba(255,255,255,.4)"><span style="font-weight:500;font-size:17px">{{ j.title }}</span><span style="font-size:14px;color:#9a9a94">{{ j.company }} · {{ j.location }} · {{ j.date }}</span></button>
+        </sc-for>
+      </section>
+      <section style="position:sticky;top:28px">
+        <sc-if value="{{ jobNone }}" hint-placeholder-val="{{ true }}"><div style="border:1px dashed rgba(255,255,255,.15);border-radius:6px;padding:48px 20px;text-align:center;color:#6b6c68;font-size:15px">Pick an ad to read it.</div></sc-if>
+        <sc-if value="{{ jobSelected }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#1b1e22;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+          <div><h2 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:500;font-size:24px">{{ jb.title }}</h2><div style="font-size:14px;color:#9a9a94">{{ jb.company }} · {{ jb.location }}</div></div>
+          <div style="font-family:'Literata',Georgia,serif;font-size:16px;line-height:1.65;color:#c9c8c2;white-space:pre-line;max-height:340px;overflow:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent">{{ jb.text }}</div>
+          <button onClick="{{ useJob }}" style="background:#e8e6e1;color:#0a0b0c;border:none;border-radius:6px;padding:13px 22px;font-size:16px;font-weight:500;align-self:flex-start">Use this ad</button>
+        </div>
+        </sc-if>
+      </section>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- RUNNING -->
+  <sc-if value="{{ onRunning }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:grid;place-items:center;padding:60px"><div style="display:flex;flex-direction:column;gap:16px;align-items:center"><span style="width:28px;height:28px;border-radius:50%;border:2.5px solid rgba(255,255,255,.12);border-top-color:#e8e6e1;animation:spin .9s linear infinite"></span><span style="font-family:'Literata',Georgia,serif;font-size:26px">{{ runningTitle }}</span><span style="font-size:14px;color:#9a9a94">{{ runningStep }}</span></div></div>
+  </sc-if>
+
+  <!-- RESULTS -->
+  <sc-if value="{{ onResults }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:48px 56px 56px;display:flex;flex-direction:column;gap:36px;max-width:1100px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="font-size:14px;color:#9a9a94">{{ targetLabel }}</div>
+      <h1 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:400;font-size:38px;line-height:1.2;letter-spacing:-.015em;text-wrap:pretty"><span style="color:{{ headlineColor }};font-weight:500">{{ gapCount }} of {{ totalCount }}</span> {{ shortConclusion }}</h1>
+      <div style="display:flex;gap:10px;font-size:15px">
+        <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(79,209,184,.12);color:#4fd1b8"><b style="font-family:'DM Mono',monospace;font-weight:500">{{ haveCount }}</b> have</span>
+        <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(242,183,79,.12);color:#f2b74f"><b style="font-family:'DM Mono',monospace;font-weight:500">{{ partialCount }}</b> partial</span>
+        <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(240,109,132,.12);color:#f06d84"><b style="font-family:'DM Mono',monospace;font-weight:500">{{ missingCount }}</b> missing</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;align-items:start">
+      <section style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><h2 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:500;font-size:21px">Skills the {{ sourceNoun }} asks for</h2><span style="font-size:13px;color:#6b6c68">bar = how often employers ask</span></div>
+        <sc-for list="{{ skillRows }}" as="k" hint-placeholder-count="8">
+        <button onClick="{{ k.open }}" style="color:inherit;background:none;border:none;display:grid;grid-template-columns:200px minmax(0,1fr) 90px;gap:0 16px;align-items:center;padding:10px 10px;border-radius:6px;text-align:left;width:100%;font-size:15px" style-hover="background:rgba(255,255,255,.05)"><span>{{ k.name }}</span><span style="height:12px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:{{ k.barW }};background:{{ k.barBg }}"></span></span><span style="font-size:14px;color:{{ k.color }};display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:50%;background:{{ k.color }}"></span>{{ k.status }}</span></button>
+        </sc-for>
+        <button onClick="{{ toggleAd }}" style="background:none;border:none;padding:10px;text-align:left;font-size:14px;color:#8fbcff">{{ adToggleLabel }}</button>
+        <sc-if value="{{ showAd }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:'Literata',Georgia,serif;font-size:16px;line-height:1.7;color:#c9c8c2;padding:6px 10px 0">
+          <p style="margin:0 0 10px">Strong programming experience with <button onClick="{{ mk.python.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.python.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.python.line }}">Python</button> and <button onClick="{{ mk.sql.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.sql.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.sql.line }}">SQL</button>. Demonstrated experience building <button onClick="{{ mk.ml.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.ml.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.ml.line }}">machine learning</button> and <button onClick="{{ mk.pm.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.pm.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.pm.line }}">predictive models</button> in production. In-depth knowledge of <button onClick="{{ mk.dl.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.dl.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.dl.line }}">deep learning</button>, <button onClick="{{ mk.genai.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.genai.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.genai.line }}">Generative AI</button>, and other <button onClick="{{ mk.ai.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.ai.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.ai.line }}">advanced AI technologies</button>; <button onClick="{{ mk.llm.open }}" style="font:inherit;border:none;padding:0 2px;background:{{ mk.llm.bg }};color:#e8e6e1;border-bottom:2px solid {{ mk.llm.line }}">LLM</button>, GenAI etc.</p>
+          <p style="margin:0;color:#8a8a84">Excellent communication skills and the ability to explain complex results to non-technical stakeholders…</p>
+        </div>
+        </sc-if>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:500;font-size:21px">Your path</h2><span style="font-size:14px;color:#4fd1b8">closes {{ closedCount }} of {{ gapCount }} gaps</span></div>
+        <sc-if value="{{ pathEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Literata',Georgia,serif;font-size:18px;color:#9a9a94;line-height:1.5">You already have every skill this ad asks for.</div></sc-if>
+        <sc-for list="{{ pathRows }}" as="p" hint-placeholder-count="3">
+        <div style="background:#1b1e22;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><button onClick="{{ p.open }}" style="background:none;border:none;padding:0;color:#e8e6e1;font-weight:500;font-size:16px;line-height:1.3;text-align:left" style-hover="color:#8fbcff">{{ p.name }}</button><span style="font-size:13px;color:#9a9a94;white-space:nowrap">{{ p.session }}</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ p.chips }}" as="c" hint-placeholder-count="2"><span style="font-size:13px;padding:3px 9px;border-radius:999px;background:{{ c.bg }};color:{{ c.color }}">{{ c.label }}</span></sc-for></div>
+          <sc-if value="{{ p.approval }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#f2b74f">Needs course coordinator approval</div></sc-if>
+          <button onClick="{{ p.toggle }}" style="background:none;border:none;padding:0;display:flex;align-items:center;gap:8px;font-size:14px;color:#9a9a94"><span style="width:16px;height:16px;border:1.5px solid {{ p.boxBorder }};background:{{ p.boxBg }};border-radius:3px;display:inline-block;box-sizing:border-box"></span>Already taken</button>
+        </div>
+        </sc-for>
+        <sc-if value="{{ hasExternal }}" hint-placeholder-val="{{ true }}">
+        <div style="border:1px dashed rgba(255,255,255,.2);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;justify-content:space-between;gap:10px"><span style="font-weight:500;font-size:16px">Hugging Face LLM Course</span><span style="font-size:13px;color:#9a9a94">free · ~20 h</span></div><span style="font-size:13px;padding:3px 9px;border-radius:999px;background:rgba(240,109,132,.14);color:#f06d84;align-self:flex-start">large language models</span><div style="font-size:13px;color:#9a9a94">No UTS subject teaches this yet · not for credit</div></div>
+        </sc-if>
+        <div style="display:flex;gap:18px;padding-top:4px"><button onClick="{{ toggleTakenAll }}" style="background:none;border:none;padding:0;font-size:14px;color:#8fbcff">{{ whatIfLabel }}</button><button onClick="{{ exportPlan }}" style="background:none;border:none;padding:0;font-size:14px;color:#8fbcff">Download plan</button></div>
+      </section>
+    </div>
+    <button onClick="{{ toggleDetails }}" style="background:none;border:none;padding:0;text-align:left;font-size:13px;color:#6b6c68;align-self:flex-start">{{ detailsLabel }}</button>
+    <sc-if value="{{ showDetails }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#9a9a94;line-height:1.6;margin-top:-24px;max-width:720px">Demand = share of 3,204 Seek Data Scientist ads (2019–22); hatched bars are new skills seen only in a 2026 sample. Skills found with a dictionary, spaCy and GPT-4o-mini <button onClick="{{ toggleGpt }}" style="background:none;border:none;padding:0;color:#8fbcff;font-size:13px">({{ gptLabel }})</button>. Subject evidence from 360 UTS outlines. Soft skills in the ad are not charted. Results are suggestions, not advice.</div></sc-if>
+  </div>
+  </sc-if>
+
+  <!-- EVIDENCE -->
+  <sc-if value="{{ onEvidence }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:48px 56px 56px;display:flex;flex-direction:column;gap:30px;max-width:1100px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button onClick="{{ goResults }}" style="background:none;border:none;padding:0;font-size:14px;color:#8fbcff;text-align:left">← All skills</button>
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap"><h1 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:400;font-size:38px;letter-spacing:-.015em">{{ gapName }}</h1><span style="font-size:15px;color:{{ gapColor }};display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:50%;background:{{ gapColor }}"></span>{{ gapStatusText }}</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:40px;align-items:start">
+      <section style="display:flex;flex-direction:column;gap:22px">
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:14px;color:#9a9a94">The ad says</div><blockquote style="margin:0;padding:16px 18px;background:#1b1e22;border-left:3px solid {{ gapColor }};font-family:'Literata',Georgia,serif;font-size:17px;line-height:1.6;color:#c9c8c2">"{{ gapAdSentence }}"</blockquote></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:14px;color:#9a9a94">Your resume</div><div style="padding:16px 18px;background:#1b1e22;border-left:3px solid #3a3c3e;font-size:15px;color:#c9c8c2;line-height:1.55">{{ gapResumeNote }}</div></div>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:14px;color:#9a9a94">UTS subjects that teach it</div>
+        <sc-if value="{{ gapNoSubject }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Literata',Georgia,serif;font-size:18px;color:#c9c8c2;line-height:1.5">No UTS subject teaches this yet.</div><div style="border:1px dashed rgba(255,255,255,.2);border-radius:6px;padding:16px 18px;display:flex;justify-content:space-between;font-size:15px"><span>Hugging Face LLM Course</span><span style="color:#9a9a94">free · not for credit</span></div></sc-if>
+        <sc-for list="{{ gapEvidence }}" as="e" hint-placeholder-count="2">
+        <article style="background:#1b1e22;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><button onClick="{{ e.open }}" style="background:none;border:none;padding:0;color:#e8e6e1;font-weight:500;font-size:17px;text-align:left" style-hover="color:#8fbcff">{{ e.name }}</button><span style="font-size:13px;color:{{ e.layerColor }};background:{{ e.layerBg }};padding:2px 9px;border-radius:999px;white-space:nowrap">{{ e.layer }}</span></div>
+          <blockquote style="margin:0;font-family:'Literata',Georgia,serif;font-size:16.5px;line-height:1.6;color:#c9c8c2">"{{ e.sentence }}"</blockquote>
+          <div style="display:flex;align-items:center;gap:14px;font-size:14px;color:#9a9a94;flex-wrap:wrap"><span style="color:{{ e.askColor }}">{{ e.ask }}</span><span style="display:inline-flex;border:1px solid rgba(255,255,255,.15);border-radius:999px;overflow:hidden"><button onClick="{{ e.up }}" style="padding:4px 12px;border:none;border-right:1px solid rgba(255,255,255,.15);background:{{ e.upBg }};color:inherit;font-size:14px">👍 {{ e.upN }}</button><button onClick="{{ e.down }}" style="padding:4px 12px;border:none;background:{{ e.downBg }};color:inherit;font-size:14px">👎 {{ e.downN }}</button></span><button onClick="{{ e.toggleTaken }}" style="margin-left:auto;background:none;border:none;padding:0;display:flex;gap:8px;align-items:center;font-size:14px;color:#9a9a94"><span style="width:16px;height:16px;border:1.5px solid {{ e.boxBorder }};background:{{ e.boxBg }};border-radius:3px;box-sizing:border-box"></span>Already taken</button></div>
+        </article>
+        </sc-for>
+      </section>
+    </div>
+  </div>
+  </sc-if>
+  </main>
+
+  <!-- SUBJECT DRAWER -->
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20"></div>
+  <section style="position:fixed;top:0;right:0;bottom:0;width:540px;background:#15181b;border-left:1px solid rgba(255,255,255,.1);box-shadow:-20px 0 60px rgba(0,0,0,.5);padding:36px 36px;display:flex;flex-direction:column;gap:24px;overflow:auto;z-index:21;box-sizing:border-box">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'DM Mono',monospace;font-size:13px;color:#9a9a94">{{ dr.code }}</span><h1 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:400;font-size:30px;line-height:1.2;letter-spacing:-.01em">{{ dr.name }}</h1></div><button onClick="{{ closeDrawer }}" style="background:none;border:none;font-size:26px;color:#9a9a94;line-height:1;padding:0">×</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;font-size:15px"><div><div style="font-size:13px;color:#6b6c68">When</div><div>{{ dr.session }}</div></div><div><div style="font-size:13px;color:#6b6c68">Before it</div><div>{{ dr.prereq }}</div></div><div style="grid-column:1/-1"><div style="font-size:13px;color:#6b6c68">For you</div><div style="color:{{ dr.accessColor }}">{{ dr.access }}</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:10px"><div style="font-size:13px;color:#6b6c68">Closes these gaps</div><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ dr.chips }}" as="c" hint-placeholder-count="2"><span style="font-size:13px;padding:3px 10px;border-radius:999px;background:{{ c.bg }};color:{{ c.color }}">{{ c.label }}</span></sc-for></div></div>
+    <div style="display:flex;flex-direction:column;gap:14px"><div style="font-size:13px;color:#6b6c68">From the Handbook</div>
+      <sc-for list="{{ dr.sentences }}" as="s" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12.5px;color:{{ s.color }}">{{ s.layer }}</span><span style="font-family:'Literata',Georgia,serif;font-size:16px;line-height:1.55;color:#c9c8c2">"{{ s.text }}"</span></div></sc-for>
+    </div>
+    <a href="#" onClick="{{ noop }}" style="font-size:14px;text-decoration:none">Open in UTS Handbook ↗</a>
+    <button onClick="{{ dr.toggle }}" style="margin-top:auto;background:#1b1e22;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:14px 16px;display:flex;gap:10px;align-items:center;font-size:15px;color:inherit;width:100%;text-align:left"><span style="width:18px;height:18px;border:1.5px solid {{ dr.boxBorder }};background:{{ dr.boxBg }};border-radius:3px;box-sizing:border-box"></span>I've already taken this</button>
+  </section>
+  </sc-if>
+
+  <!-- CHAT -->
+  <sc-if value="{{ chatOpen }}" hint-placeholder-val="{{ false }}">
+  <section style="position:fixed;top:0;right:0;bottom:0;width:420px;background:#15181b;border-left:1px solid rgba(255,255,255,.1);box-shadow:-20px 0 60px rgba(0,0,0,.5);display:flex;flex-direction:column;z-index:30">
+    <header style="padding:22px 24px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:baseline"><h2 style="margin:0;font-family:'Literata',Georgia,serif;font-weight:500;font-size:21px">Ask the Handbook</h2><button onClick="{{ toggleChat }}" style="background:none;border:none;font-size:24px;color:#9a9a94;padding:0">×</button></header>
+    <div style="flex:1;overflow:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;font-size:15px">
+      <sc-if value="{{ chatEmpty }}" hint-placeholder-val="{{ true }}"><div style="color:#9a9a94;line-height:1.5">Ask anything about UTS subjects or skills. Answers quote the Handbook.</div></sc-if>
+      <sc-for list="{{ chatLog }}" as="m" hint-placeholder-count="2">
+        <sc-if value="{{ m.user }}" hint-placeholder-val="{{ true }}"><div style="align-self:flex-end;max-width:85%;background:#e8e6e1;color:#0a0b0c;padding:10px 14px;border-radius:12px 12px 2px 12px">{{ m.text }}</div></sc-if>
+        <sc-if value="{{ m.bot }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:10px;max-width:95%;line-height:1.55;color:#c9c8c2"><p style="margin:0">{{ m.text }}</p><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ m.cites }}" as="c" hint-placeholder-count="1"><button onClick="{{ c.open }}" style="font-size:13px;background:rgba(143,188,255,.12);color:#8fbcff;border:none;padding:3px 10px;border-radius:999px">{{ c.label }}</button></sc-for></div></div></sc-if>
+        <sc-if value="{{ m.thinking }}" hint-placeholder-val="{{ false }}"><div style="color:#6b6c68;font-size:14px">Searching the Handbook…</div></sc-if>
+      </sc-for>
+    </div>
+    <footer style="padding:16px 24px 22px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ chatSuggestions }}" as="q" hint-placeholder-count="3"><button onClick="{{ q.ask }}" style="font-size:13px;background:#1b1e22;border:1px solid rgba(255,255,255,.1);color:#c9c8c2;padding:6px 12px;border-radius:999px">{{ q.text }}</button></sc-for></div>
+      <form onSubmit="{{ chatSubmit }}" style="display:flex;gap:8px;background:#0e1012;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:10px 18px;font-size:15px"><input value="{{ chatDraft }}" onChange="{{ setChatDraft }}" placeholder="Ask a question" style="flex:1;background:none;border:none;color:#e8e6e1;font:inherit;outline:none"><button type="submit" style="background:none;border:none;color:#e8e6e1;padding:0">↵</button></form>
+    </footer>
+  </section>
+  </sc-if>
+
+  <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#e8e6e1;color:#0a0b0c;padding:10px 18px;border-radius:999px;font-size:14px;z-index:40;box-shadow:0 8px 30px rgba(0,0,0,.5)">{{ toast }}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+const C = { have:'#4fd1b8', partial:'#f2b74f', missing:'#f06d84', emerging:'#b89cff', ink:'#e8e6e1', mute:'#9a9a94', dim:'#6b6c68', dark:'#0a0b0c' };
+const SKILLS = [
+  { id:'python', name:'Python', pct:83, base:'have', ad:'Strong programming experience with Python and SQL.' },
+  { id:'ml', name:'Machine learning', pct:72, base:'missing', ad:'Demonstrated experience building machine learning and predictive models in production.' },
+  { id:'sql', name:'SQL', pct:57, base:'have', ad:'Strong programming experience with Python and SQL.' },
+  { id:'pm', name:'Predictive modelling', pct:41, base:'missing', ad:'Demonstrated experience building machine learning and predictive models in production.' },
+  { id:'dl', name:'Deep learning', pct:31, base:'missing', ad:'In-depth knowledge of deep learning, Generative AI, and other advanced AI technologies; LLM, GenAI etc.' },
+  { id:'ai', name:'Artificial intelligence', pct:28, base:'partial', ad:'In-depth knowledge of deep learning, Generative AI, and other advanced AI technologies; LLM, GenAI etc.' },
+  { id:'llm', name:'Large language models', pct:0, base:'missing', emerging:true, bar:29, ad:'In-depth knowledge of deep learning, Generative AI, and other advanced AI technologies; LLM, GenAI etc.' },
+  { id:'genai', name:'Generative AI', pct:0, base:'missing', emerging:true, bar:26, ad:'In-depth knowledge of deep learning, Generative AI, and other advanced AI technologies; LLM, GenAI etc.' },
+];
+const SUBJECTS = {
+  '36106': { code:'36106', name:'Machine Learning Algorithms and Applications', mdsi:true, session:'Autumn', prereq:'36100 and 36103', closes:['ml','pm'], sentences:[['Assessment',C.have,'Build, tune and evaluate supervised machine learning models on a real data set.'],['Learning objective','#8fbcff','Apply supervised and unsupervised machine learning algorithms to real data sets.'],['Weekly topic',C.emerging,'Week 5: regression and predictive modelling for business decisions.']] },
+  '43023': { code:'43023', name:'Emerging Topics in Artificial Intelligence', session:'Spring', prereq:'31005 Machine Learning', closes:['dl','genai','ai'], approval:true, sentences:[['Assessment',C.have,'Design, train and evaluate a deep neural network for an applied problem and critically compare it with a classical baseline.'],['Learning objective','#8fbcff','Critically evaluate recent advances in artificial intelligence including generative models.'],['Weekly topic',C.emerging,'Week 8: transformer architectures and attention.'],['Weekly topic',C.emerging,'Week 10: diffusion models and generative AI in practice.']] },
+  '32130': { code:'32130', name:'Fundamentals of Data Analytics', mdsi:true, session:'Autumn or Spring', prereq:'None', closes:['pm'], sentences:[['Assessment',C.have,'Build a predictive model and report its performance to a non-technical audience.']] },
+  '36120': { code:'36120', name:'Advanced Machine Learning Application', mdsi:true, session:'Spring', prereq:'36106', closes:['dl','ml'], sentences:[['Learning objective','#8fbcff','Implement and evaluate advanced machine learning techniques to real-world problems.'],['Weekly topic',C.emerging,'Week 6: convolutional and recurrent networks.']] },
+  '36118': { code:'36118', name:'Applied Natural Language Processing', mdsi:true, session:'Spring', prereq:'36100, 36103, 36106', closes:[], sentences:[['Assessment',C.have,'Build and evaluate a transformer-based model for a text classification task.'],['Weekly topic',C.emerging,'Week 9: large pre-trained language models and fine-tuning.']] },
+  '36100': { code:'36100', name:'Data Science for Innovation', mdsi:true, session:'Autumn or Spring', prereq:'None', closes:[], sentences:[['Description',C.mute,'Introduces data science practice and the innovation process.']] },
+  '36103': { code:'36103', name:'Data Processing Using Python', mdsi:true, session:'Autumn or Spring', prereq:'None', closes:['python'], sentences:[['Assessment',C.have,'Write Python programs to clean, reshape and summarise data.']] },
+  '36104': { code:'36104', name:'Data Visualisation and Narratives', mdsi:true, session:'Autumn', prereq:'None', closes:[], sentences:[['Learning objective','#8fbcff','Design visual narratives that communicate analytical results.']] },
+  '36107': { code:'36107', name:'Statistical Thinking for Data Science', mdsi:true, session:'Spring', prereq:'None', closes:[], sentences:[['Learning objective','#8fbcff','Apply statistical reasoning to data-driven questions.']] },
+};
+const PATH = ['36106','43023','32130'];
+const EVIDENCE = { ml:[['36106','Assessment'],['36120','Learning objective']], pm:[['36106','Weekly topic'],['32130','Assessment']], dl:[['43023','Assessment'],['36120','Learning objective']], ai:[['43023','Learning objective']], genai:[['43023','Weekly topic']], llm:[], python:[['36103','Assessment']], sql:[['36103','Assessment']] };
+const LAYER_BG = { 'Assessment':['rgba(79,209,184,.12)',C.have], 'Learning objective':['rgba(143,188,255,.12)','#8fbcff'], 'Weekly topic':['rgba(184,156,255,.12)',C.emerging], 'Description':['rgba(255,255,255,.08)',C.mute] };
+const ROLES = ['Data Scientist','Data Engineer','Data Analyst','Machine Learning Engineer','Software Engineer','Business Analyst','Cloud Engineer','AI Engineer'];
+const SAMPLE_AD = `Data Scientist — Sydney CBD\nOur client, a leading financial services firm, is looking for a Data Scientist to join a growing analytics function. You will work with stakeholders across the business to turn data into decisions.\n\nRequirements\nStrong programming experience with Python and SQL. Demonstrated experience building machine learning and predictive models in production. In-depth knowledge of deep learning, Generative AI, and other advanced AI technologies; LLM, GenAI etc.\n\nExcellent communication skills and the ability to explain complex results to non-technical stakeholders. A collaborative approach and strong problem-solving mindset. Experience in financial services is highly regarded.\n\nTertiary qualification in statistics, computer science, mathematics or a related discipline. Postgraduate study is a plus.`;
+const JOBS = [
+  { id:'rw', title:'Data Scientist', company:'Robert Walters', location:'Sydney CBD', date:'2 Oct', role:'Data Scientist', text:SAMPLE_AD },
+  { id:'canva', title:'Data Engineer', company:'Canva', location:'Sydney · hybrid', date:'30 Sep', role:'Data Engineer', text:'Data Engineer — Sydney (hybrid)\nJoin the Data Platform group and own scheduled ETL pipelines end to end.\n\nWhat you bring\nStrong SQL and Python. Hands-on experience with Airflow or a similar orchestrator, dbt for transformation, and a cloud warehouse such as Snowflake or BigQuery. Comfort with AWS.' },
+  { id:'cba', title:'Senior Data Scientist, Personalisation', company:'Commonwealth Bank', location:'Sydney · Eveleigh', date:'28 Sep', role:'Data Scientist', text:'Senior Data Scientist, Personalisation\nDesign and ship machine learning models that decide what millions of customers see in the app.\n\nAbout you\nExpert Python and SQL. Deep experience with recommender systems and A/B experimentation. Spark for large data.' },
+  { id:'atl', title:'Machine Learning Engineer', company:'Atlassian', location:'Remote · Australia', date:'25 Sep', role:'Machine Learning Engineer', text:'Machine Learning Engineer — AI Platform\nBuild the serving layer for LLM-powered features.\n\nRequirements\nProduction Python and PyTorch. Experience fine-tuning or serving large language models, retrieval-augmented generation and vector databases. MLOps on Kubernetes.' },
+  { id:'woolies', title:'Data Analyst', company:'Woolworths Group', location:'Bella Vista', date:'24 Sep', role:'Data Analyst', text:'Data Analyst — Supply Chain\nTurn supply-chain data into weekly decisions for the planning team.\n\nSkills and experience\nAdvanced SQL and Tableau. Solid statistics. Python is a plus.' },
+  { id:'csiro', title:'Research Data Scientist', company:'CSIRO Data61', location:'Eveleigh', date:'20 Sep', role:'Data Scientist', text:'Research Data Scientist\nApplied machine learning for environmental monitoring.\n\nSelection criteria\nPostgraduate qualification in statistics or computer science. Python, statistics and machine learning including deep learning for imagery or text.' },
+  { id:'telstra', title:'AI Engineer', company:'Telstra', location:'Melbourne · hybrid', date:'18 Sep', role:'AI Engineer', text:'AI Engineer — Generative AI\nShip generative AI assistants for frontline teams.\n\nWhat we need\nPython and API design. Practical experience with large language models, prompt engineering and evaluation. Azure OpenAI or similar.' },
+  { id:'nab', title:'Business Analyst, Data', company:'NAB', location:'Melbourne Docklands', date:'15 Sep', role:'Business Analyst', text:'Business Analyst — Data\nBridge the gap between business owners and the data platform team.\n\nAbout you\nRequirements analysis and process mapping. SQL to validate data. Power BI reporting.' },
+];
+const JOB_ROLES = ['All roles','Data Scientist','Data Engineer','Machine Learning Engineer','AI Engineer','Data Analyst','Business Analyst'];
+const JOB_LOCS = ['Anywhere','Sydney','Melbourne','Remote'];
+const ANSWERS = [
+  { q:/llm|language model/i, a:'No UTS subject names large language models. The closest teaching is 43023 (Week 8: transformer architectures) and 36118, which assesses a transformer-based text classifier. For LLMs themselves, your path lists the free Hugging Face LLM Course.', cites:[['43023','Weekly topic'],['36118','Assessment']] },
+  { q:/36118|nlp|natural language/i, a:'36118 Applied NLP is assessed on building a transformer-based text classifier, and Week 9 covers large pre-trained language models and fine-tuning. You need 36100, 36103 and 36106 first.', cites:[['36118','Assessment'],['36118','Weekly topic']] },
+  { q:/build|project|data engineer/i, a:'Data Engineer ads most often ask for pipeline orchestration, cloud warehousing and dbt. Three projects: a nightly Opal tap-on pipeline in Airflow (related: 36103); a BoM weather warehouse in BigQuery (related: 32130); ABS Census models in dbt — no UTS subject covers dbt.', cites:[['36103','Assessment'],['32130','Assessment']] },
+  { q:/deep learning|neural/i, a:'Deep learning is assessed in 43023 ("design, train and evaluate a deep neural network…") and is a learning objective of 36120, whose Week 6 covers convolutional and recurrent networks.', cites:[['43023','Assessment'],['36120','Weekly topic']] },
+];
+
+class Component extends DCLogic {
+  state = { page:'start', userType:null, stage:'mdsi', adMode:'sample', adText:SAMPLE_AD, resume:null, role:'Data Scientist', taken:{}, gpt:true, gap:null, drawer:null, chatOpen:false, chatLog:[], chatDraft:'', votes:{}, toast:null, runStep:0, job:null, jobQuery:'', jobQ:'', jobRole:'All roles', jobLoc:'Anywhere', showAd:false, showDetails:false };
+  set(p){ this.setState(p); }
+  toast(msg){ clearTimeout(this._t); this.setState({toast:msg}); this._t=setTimeout(()=>this.setState({toast:null}),1800); }
+  effStatus(s){ if(s.base==='have') return 'have'; const t=this.state.taken; return Object.keys(SUBJECTS).some(c=>t[c]&&SUBJECTS[c].closes.includes(s.id))?'have':s.base; }
+  renderVals(){
+    const st=this.state, S=this.set.bind(this), page=st.page, ut=st.userType;
+    const isJobSeeker=ut==='job', isElective=ut==='elective', isSwitcher=ut==='switcher';
+    const stepStyle=(i,active,done)=>({ bg:active?'rgba(255,255,255,.07)':'transparent', color:active?C.ink:(done?C.mute:C.dim), weight:active?500:400, dotBg:done?C.have:'transparent', dotBorder:done?C.have:(active?C.ink:'#3a3c3e'), mark:done?'✓':String(i) });
+    const stepIdx={start:1,inputs:2,jobs:2,running:3,results:3,evidence:3}[page];
+    const s1=stepStyle(1,stepIdx===1,stepIdx>1), s2=stepStyle(2,stepIdx===2,stepIdx>2), s3=stepStyle(3,stepIdx===3,false);
+    const words=st.adText.trim()?st.adText.trim().split(/\s+/).length:0;
+    const hasAd=isJobSeeker&&words>20, needsResume=isJobSeeker||isSwitcher, hasResume=needsResume&&!!st.resume;
+    const ready=isElective?!!st.role:(hasAd||!isJobSeeker)&&hasResume;
+    const hint=!ready?(isJobSeeker&&!hasAd?'Add a job ad first.':'Add a resume first.'):'';
+    const rows=SKILLS.map(s=>({...s, eff:this.effStatus(s)}));
+    const have=rows.filter(r=>r.eff==='have').length, partial=rows.filter(r=>r.eff==='partial').length, missing=rows.filter(r=>r.eff==='missing').length;
+    const gaps=rows.filter(r=>r.eff!=='have'), gapCount=gaps.length;
+    const topGaps=gaps.filter(g=>!g.emerging).slice(0,3).map(g=>g.name.toLowerCase());
+    const pathSubs=PATH.filter(c=>!st.taken[c]&&SUBJECTS[c].closes.some(id=>gaps.find(g=>g.id===id)));
+    const closedByPath=new Set(pathSubs.flatMap(c=>SUBJECTS[c].closes).filter(id=>gaps.find(g=>g.id===id)));
+    const ext=gaps.filter(g=>g.id==='llm'&&!closedByPath.has('llm'));
+    const noun=isJobSeeker?'ad':'role';
+    const shortConclusion=gapCount===0?`skills — you already have them all.`:`skills still to learn. Biggest gaps: ${topGaps.join(', ')}.`;
+    const col=(e)=>C[e]; const openGap=(id)=>()=>S({page:'evidence',gap:id,drawer:null});
+    const mk={}; rows.forEach(r=>{ mk[r.id]={ open:openGap(r.id), bg:`${col(r.eff)}38`, line:col(r.eff) }; });
+    const chip=(id)=>{ const s=rows.find(k=>k.id===id); return { label:s.name.toLowerCase(), bg:`${col(s.eff)}24`, color:col(s.eff) }; };
+    const toggleTaken=(c)=>()=>S({taken:{...st.taken,[c]:!st.taken[c]}});
+    const gap=rows.find(r=>r.id===st.gap)||rows[4];
+    const ev=(EVIDENCE[gap.id]||[]).map(([c,layer])=>{ const sub=SUBJECTS[c]; const v=st.votes[gap.id+c]; const sent=sub.sentences.find(x=>x[0]===layer)||sub.sentences[0];
+      return { code:c, name:sub.name, open:()=>S({drawer:c}), layer, layerBg:LAYER_BG[layer][0], layerColor:LAYER_BG[layer][1], sentence:sent[2], ask:v?'Thanks for checking.':'Is this right?', askColor:v?C.have:C.mute, up:()=>S({votes:{...st.votes,[gap.id+c]:'up'}}), down:()=>S({votes:{...st.votes,[gap.id+c]:'down'}}), upN:(c==='43023'?12:c==='36120'?9:3)+(v==='up'?1:0), downN:(c==='36120'?3:1)+(v==='down'?1:0), upBg:v==='up'?'rgba(79,209,184,.18)':'transparent', downBg:v==='down'?'rgba(240,109,132,.18)':'transparent', toggleTaken:toggleTaken(c), boxBorder:st.taken[c]?C.have:C.dim, boxBg:st.taken[c]?C.have:'transparent' }; });
+    const d=SUBJECTS[st.drawer]||SUBJECTS['43023'];
+    const dr={ code:d.code, name:d.name, session:d.session, prereq:d.prereq, access:d.approval?'Outside MDSI — ask your course coordinator':'Open to you', accessColor:d.approval?C.partial:C.have, chips:d.closes.map(chip), sentences:d.sentences.map(x=>({layer:x[0],color:x[1],text:x[2]})), toggle:toggleTaken(d.code), boxBorder:st.taken[d.code]?C.have:C.dim, boxBg:st.taken[d.code]?C.have:'transparent' };
+    const pathRows=pathSubs.map((c)=>{ const sub=SUBJECTS[c]; return { code:c, name:sub.name, session:sub.session, approval:!!sub.approval, chips:sub.closes.filter(id=>gaps.find(g=>g.id===id)).map(chip), open:()=>S({drawer:c}), toggle:toggleTaken(c), boxBorder:C.dim, boxBg:'transparent' }; });
+    const anyTaken=Object.values(st.taken).some(Boolean);
+    const ask=(q)=>{ if(!q.trim()) return; const m=ANSWERS.find(a=>a.q.test(q))||{a:'The Handbook has nothing direct on that. Closest: 36100 Data Science for Innovation.',cites:[['36100','Description']]}; S({chatLog:[...st.chatLog,{user:true,text:q},{thinking:true}],chatDraft:''}); setTimeout(()=>this.setState(s=>({chatLog:[...s.chatLog.filter(x=>!x.thinking),{bot:true,text:m.a,cites:m.cites.map(([c,l])=>({label:`${c} · ${l}`,open:()=>this.setState({drawer:c})}))}]})),900); };
+    const stageLabels={enrol:'About to enrol',mdsi:'Studying MDSI',working:'Already working'};
+    const q=st.jobQ.toLowerCase();
+    const jobList=JOBS.filter(j=>(st.jobRole==='All roles'||j.role===st.jobRole)&&(st.jobLoc==='Anywhere'||j.location.toLowerCase().includes(st.jobLoc.toLowerCase()))&&(!q||[j.title,j.company,j.location,j.text].join(' ').toLowerCase().includes(q)));
+    const jbSel=JOBS.find(j=>j.id===st.job), usedJob=JOBS.find(j=>j.id===st.usedJob);
+    const chipSt=(on)=>({border:on?'rgba(255,255,255,.4)':'rgba(255,255,255,.12)',bg:on?C.ink:'transparent',color:on?C.dark:C.mute});
+    const sel=(on)=>on?'rgba(255,255,255,.45)':'rgba(255,255,255,.08)';
+    const runSteps=['Reading the ad…','Reading your resume…','Matching 360 UTS subjects…','Building your path…'];
+    return {
+      onStart:page==='start', onInputs:page==='inputs', onJobs:page==='jobs', onRunning:page==='running', onResults:page==='results', onEvidence:page==='evidence',
+      goStart:()=>S({page:'start',drawer:null}), goInputs:()=>{ if(ut) S({page:'inputs',drawer:null}); else this.toast('Pick who you are first.'); }, goResults:()=>{ if(st.ranOnce) S({page:'results',drawer:null}); else this.toast('Run "Find my gaps" first.'); },
+      step1Bg:s1.bg,step1Color:s1.color,step1Weight:s1.weight,step1DotBg:s1.dotBg,step1DotBorder:s1.dotBorder,step1Mark:s1.mark,
+      step2Bg:s2.bg,step2Color:s2.color,step2Weight:s2.weight,step2DotBg:s2.dotBg,step2DotBorder:s2.dotBorder,step2Mark:s2.mark,
+      step3Bg:s3.bg,step3Color:s3.color,step3Weight:s3.weight,step3DotBorder:s3.dotBorder,
+      hasInputs:!!ut&&stepIdx===3, hasAd:isJobSeeker, hasResume, resumeLabel:st.resume==='sample'?'Sample resume':'my_resume_2026.pdf',
+      adTitle:usedJob&&st.adMode==='search'?`${usedJob.title} · ${usedJob.company}`:'Data Scientist · Robert Walters',
+      userTypeLabel:{job:'Job seeker',elective:'Elective chooser',switcher:'Career switcher'}[ut]||'', stageLabel:stageLabels[st.stage],
+      toggleGpt:()=>S({gpt:!st.gpt}), gptLabel:st.gpt?'GPT on':'GPT off',
+      chatOpen:st.chatOpen, toggleChat:()=>S({chatOpen:!st.chatOpen}), chatEmpty:st.chatLog.length===0,
+      stages:Object.entries(stageLabels).map(([k,label])=>({label,pick:()=>S({stage:k}),bg:st.stage===k?C.ink:'transparent',color:st.stage===k?C.dark:C.mute,weight:st.stage===k?500:400})),
+      userTypes:[{k:'elective',label:'UTS student',question:'Which elective moves me closest to the job I want?',cta:'Pick a role →'},{k:'job',label:'Job seeker',question:'What does my resume lack for this ad?',cta:'Add an ad and a resume →'},{k:'switcher',label:'Career switcher',question:'How far am I from a new field?',cta:'Pick a role, add a resume →'}].map(u=>({...u,pick:()=>S({userType:u.k,page:'inputs'})})),
+      inputsTitle:isJobSeeker?'The ad and your resume':isElective?'The role and your subjects':'The role and your resume', isJobSeeker, isRoleMode:isElective||isSwitcher, isElective, needsResume,
+      adPaste:()=>S({adMode:'paste',adText:''}), adSample:()=>S({adMode:'sample',adText:SAMPLE_AD}),
+      adSearchBorder:sel(st.adMode==='search'), adPasteBorder:sel(st.adMode==='paste'), adSampleBorder:sel(st.adMode==='sample'), adVisible:st.adMode==='paste'||words>0,
+      adText:st.adText, setAdText:(e)=>S({adText:e.target.value,adMode:'paste'}),
+      roles:ROLES.map((name)=>({name,pick:()=>S({role:name}),border:sel(st.role===name),weight:st.role===name?500:400})),
+      allSubjects:Object.values(SUBJECTS).filter(s=>s.mdsi).map(s=>({name:s.name,toggle:toggleTaken(s.code),border:sel(st.taken[s.code]),boxBg:st.taken[s.code]?C.have:'transparent',boxBorder:st.taken[s.code]?C.have:C.dim,mark:st.taken[s.code]?'✓':''})),
+      takenCount:Object.values(st.taken).filter(Boolean).length,
+      resumeUpload:()=>{S({resume:'upload'}); this.toast('my_resume_2026.pdf added.');}, resumeSample:()=>S({resume:'sample'}),
+      resumeUploadBorder:st.resume==='upload'?'rgba(255,255,255,.45)':'rgba(255,255,255,.25)', resumeUploadSub:st.resume==='upload'?'my_resume_2026.pdf ✓':'PDF or text', resumeSampleBorder:sel(st.resume==='sample'),
+      runDisabled:!ready, runBg:ready?C.ink:'#2a2d31', runColor:ready?C.dark:C.dim, runCursor:ready?'pointer':'not-allowed', runHint:hint,
+      runAnalysis:()=>{ if(!ready) return; S({page:'running',runStep:0}); let i=0; const tick=()=>{ i++; if(i<runSteps.length){ this.setState({runStep:i}); setTimeout(tick,600);} else this.setState({page:'results',ranOnce:true}); }; setTimeout(tick,600); },
+      runningTitle:'One moment', runningStep:runSteps[st.runStep],
+      targetLabel:isJobSeeker?(usedJob&&st.adMode==='search'?`${usedJob.title} · ${usedJob.company} · ${usedJob.location}`:'Data Scientist · Robert Walters · Sydney CBD'):`${st.role}`,
+      gapCount, totalCount:rows.length, headlineColor:gapCount===0?C.have:(gapCount>=4?C.missing:C.partial), shortConclusion, haveCount:have, partialCount:partial, missingCount:missing, sourceNoun:noun,
+      skillRows:rows.map(r=>({...r, open:openGap(r.id), barW:`${r.pct||r.bar}%`, barBg:r.emerging?`repeating-linear-gradient(135deg,${col(r.eff)} 0 3px,transparent 3px 6px)`:col(r.eff), color:col(r.eff), status:r.eff})),
+      mk, showAd:st.showAd, toggleAd:()=>S({showAd:!st.showAd}), adToggleLabel:st.showAd?'Hide the ad':'Show where these appear in the ad',
+      closedCount:closedByPath.size, pathEmpty:gapCount===0, pathRows, hasExternal:ext.length>0,
+      whatIfLabel:anyTaken?'Reset':'What if I had taken 36106?', toggleTakenAll:()=>S({taken:anyTaken?{}:{'36106':true}}), exportPlan:()=>this.toast('Study plan PDF downloaded.'),
+      showDetails:st.showDetails, toggleDetails:()=>S({showDetails:!st.showDetails}), detailsLabel:st.showDetails?'Hide how this works':'How this works',
+      gapName:gap.name, gapColor:col(gap.eff), gapStatusText:gap.eff==='have'?'you have it':gap.eff==='partial'?'partly covered':'missing', gapAdSentence:gap.ad,
+      gapResumeNote:gap.eff==='have'?(gap.base==='have'?`Your resume mentions ${gap.name}.`:`Covered by a subject you marked as taken.`):gap.eff==='partial'?`Your resume mentions "coursework in AI fundamentals" — a mention, not hands-on use.`:`Nothing in your resume mentions ${gap.name.toLowerCase()}.`,
+      gapNoSubject:ev.length===0, gapEvidence:ev,
+      drawerOpen:!!st.drawer, closeDrawer:()=>S({drawer:null}), dr, noop:(e)=>{e.preventDefault(); this.toast('Opens the UTS Handbook.');},
+      chatLog:st.chatLog.map(m=>({user:!!m.user,bot:!!m.bot,thinking:!!m.thinking,text:m.text||'',cites:m.cites||[]})), chatDraft:st.chatDraft, setChatDraft:(e)=>S({chatDraft:e.target.value}), chatSubmit:(e)=>{e.preventDefault(); ask(st.chatDraft);},
+      chatSuggestions:['Which subject teaches LLMs?','What does 36118 cover?','What should I build for data engineering?'].map(t=>({text:t,ask:()=>ask(t)})),
+      jobQuery:st.jobQuery, setJobQuery:(e)=>S({jobQuery:e.target.value}), jobSearchSubmit:(e)=>{e.preventDefault(); S({jobQ:st.jobQuery});},
+      jobRoleChips:JOB_ROLES.map(r=>({label:r,pick:()=>S({jobRole:r}),...chipSt(st.jobRole===r)})), jobLocChips:JOB_LOCS.map(l=>({label:l,pick:()=>S({jobLoc:l}),...chipSt(st.jobLoc===l)})),
+      jobEmpty:jobList.length===0, jobRows:jobList.map(j=>({...j,pick:()=>S({job:j.id}),bg:st.job===j.id?'#1b1e22':'transparent',border:sel(st.job===j.id)})),
+      jobNone:!jbSel, jobSelected:!!jbSel, jb:jbSel||{title:'',company:'',location:'',text:''},
+      goJobs:()=>S({page:'jobs'}), useJob:()=>{ S({adText:jbSel.text,adMode:'search',usedJob:jbSel.id,page:'inputs'}); this.toast(`Using "${jbSel.title} — ${jbSel.company}".`); },
+      toastOn:!!st.toast, toast:st.toast||'',
+    };
+  }
+}
+</script>
+</body>
+</html>

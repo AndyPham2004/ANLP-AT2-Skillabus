@@ -271,8 +271,13 @@ def empty_result(role: str) -> dict:
                                                                      "demand_covered_pct": 0.0}}}
 
 
-def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str = DEFAULT_ROLE) -> tuple[dict, str]:
-    """Return (gap result, engine name). ad_text None = role mode: the resume against `role`."""
+def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str = DEFAULT_ROLE,
+            home_course: str | None = "C04372", use_llm: bool = True) -> tuple[dict, str]:
+    """Return (gap result, engine name). ad_text None = role mode: the resume against `role`.
+
+    home_course: the student's course for the prerequisite rules (C04372 = MDSI; None = not enrolled,
+    so "admission into ..." conditions are not met). use_llm: run the GPT-4o-mini tier when a key is set.
+    """
     try:
         from skillabus.extract import extract
         from skillabus.match import match, slug, soft_skills
@@ -280,7 +285,7 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str =
         from skillabus.recommend import recommend
 
         def rank(gaps):  # subjects already taken are never recommended
-            rec = recommend(gaps, exclude=set(taken))
+            rec = recommend(gaps, exclude=set(taken), home_course=home_course)
             return {key: rec[key] for key in ("recommendations", "learning_path", "outside_recommendations")}
 
         resume_skills = normalise(extract(resume_text)) if resume_text else []
@@ -304,7 +309,7 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str =
             result.update({"role": None if ad_text else DEFAULT_ROLE, "outside_recommendations": []})
             engine = f"baseline (pipeline error: {e})"
 
-    if ad_text and llm_enabled():
+    if ad_text and use_llm and llm_enabled():
         try:
             result = augment_with_llm(result, resume_text, ad_text, taken, rank)
             engine += " + GPT-4o-mini"
@@ -318,6 +323,25 @@ def subjects() -> list[tuple[str, str]]:
     lay = baseline.resources().layers
     pairs = lay[["subject_code", "subject_name"]].drop_duplicates().sort_values("subject_code")
     return list(pairs.itertuples(index=False, name=None))
+
+
+def mdsi_subjects() -> list[tuple[str, str]]:
+    """(code, name) of the MDSI (C04372) subjects in the profiles: the "subjects taken" picker shows these first."""
+    lay = baseline.resources().layers
+    if "course" not in lay.columns:
+        return subjects()
+    rows = lay[lay.course.astype(str).str.contains("C04372")][["subject_code", "subject_name"]]
+    return list(rows.drop_duplicates().sort_values("subject_code").itertuples(index=False, name=None))
+
+
+def vote_counts() -> dict[tuple[str, str], list[int]]:
+    """(subject_code, skill_label) -> [thumbs up, thumbs down] from feedback.csv; empty until someone votes."""
+    out: dict[tuple[str, str], list[int]] = {}
+    if not paths.FEEDBACK.exists():
+        return out
+    for row in _read(paths.FEEDBACK):
+        out.setdefault((row["subject_code"], row["skill_label"]), [0, 0])[0 if row["vote"] == "up" else 1] += 1
+    return out
 
 
 def dictionary_size() -> int:
