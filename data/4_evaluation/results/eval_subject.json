@@ -1,0 +1,61 @@
+{
+ "n_pairs": 33,
+ "n_skills": 13,
+ "methods": {
+  "keyword": {
+   "with_partly": {
+    "k": 3,
+    "p_at_k": 0.95,
+    "relevant": 19,
+    "labelled": 20,
+    "total_recommended": 37,
+    "coverage": 0.5405405405405406
+   },
+   "y_only": {
+    "k": 3,
+    "p_at_k": 0.9,
+    "relevant": 18,
+    "labelled": 20,
+    "total_recommended": 37,
+    "coverage": 0.5405405405405406
+   }
+  },
+  "tfidf": {
+   "with_partly": {
+    "k": 3,
+    "p_at_k": 0.95,
+    "relevant": 19,
+    "labelled": 20,
+    "total_recommended": 37,
+    "coverage": 0.5405405405405406
+   },
+   "y_only": {
+    "k": 3,
+    "p_at_k": 0.9,
+    "relevant": 18,
+    "labelled": 20,
+    "total_recommended": 37,
+    "coverage": 0.5405405405405406
+   }
+  },
+  "embed": {
+   "with_partly": {
+    "k": 3,
+    "p_at_k": 1.0,
+    "relevant": 19,
+    "labelled": 19,
+    "total_recommended": 37,
+    "coverage": 0.5135135135135135
+   },
+   "y_only": {
+    "k": 3,
+    "p_at_k": 0.9473684210526315,
+    "relevant": 18,
+    "labelled": 19,
+    "total_recommended": 37,
+    "coverage": 0.5135135135135135
+   }
+  }
+ },
+ "skipped": {}
+}

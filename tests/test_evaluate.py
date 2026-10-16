@@ -231,3 +231,38 @@ class Files(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EvalRunTables(unittest.TestCase):
+    """--all must say what it could not run instead of failing or leaving a table out silently."""
+
+    def test_skipped_tier_and_missing_files_are_listed(self):
+        from skillabus.eval_run import tables_md
+        text = tables_md({}, {"ner": "RuntimeError: needs spaCy"}, "not run: one annotator", {"Chat judge": "not run: file missing"})
+        self.assertIn("| ner | not run |", text)
+        self.assertIn("RuntimeError: needs spaCy", text)
+        self.assertIn("not run: one annotator", text)
+        self.assertIn("- Chat judge: not run: file missing", text)
+
+    def test_subject_and_chat_tables(self):
+        from skillabus.eval_run import tables_md
+        pk = {"k": 3, "p_at_k": 0.5, "relevant": 1, "labelled": 2, "total_recommended": 4, "coverage": 0.5}
+        subject = {"n_pairs": 2, "n_skills": 1, "methods": {"tfidf": {"with_partly": pk, "y_only": pk}}, "skipped": {"embed": "ImportError: no model"}}
+        chat = {"n_questions": 1, "retrieval": {"tfidf": {"hit_at_k": 1.0, "subject_recall_at_k": 0.5}}, "skipped": {}}
+        text = tables_md({}, {}, "k", {"subject": subject, "chat": chat, "Chat LLM judge": "not run: no key"})
+        self.assertIn("| tfidf | 0.500 | 0.500 | 2 / 4 | 0.500 |", text)
+        self.assertIn("| embed | not run |", text)
+        self.assertIn("| tfidf | 1.000 | 0.500 |", text)
+        self.assertIn("- Chat LLM judge: not run: no key", text)
+
+    def test_run_all_dictionary_tier_writes_the_tables(self):
+        """Smoke test on the committed labels: the run must reach the tables, not stop on a missing helper."""
+        import tempfile
+        from pathlib import Path
+        from skillabus import paths
+        from skillabus.eval_run import run_all
+        if not (paths.AD_SKILLS.exists() and paths.CV_JD_PAIRS.exists() and paths.SEEK_ADS.exists() and paths.RESUMES.exists()):
+            self.skipTest("labelled sets or their inputs are not in this checkout")
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(run_all(("dictionary",), tmp), 0)
+            self.assertIn("## Extraction (", (Path(tmp) / "eval_tables.md").read_text(encoding="utf-8"))
