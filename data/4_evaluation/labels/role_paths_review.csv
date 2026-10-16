@@ -1,33 +1,33 @@
 role,subject_code,subject_name,covers,verdict,why,reviewer
-Data Scientist,94692,Data Science Practice,Python; SQL,,,
-Data Scientist,31250,Introduction to Data Analytics,,,,
-Data Scientist,43007,Advanced Artificial Intelligence,Artificial intelligence; Large language models; Generative AI; AI agents,,,
-Business Analyst,36104,Data Visualisation and Narratives,User stories; Microsoft Office; Power BI,,,
-Business Analyst,94692,Data Science Practice,SQL,,,
-Business Analyst,33116,"Design, Data, and Decisions",Excel,,,
-QA/Test Engineer,48023,Programming Fundamentals,Java,,,
-QA/Test Engineer,42889,iOS Application Development,Test automation; Git,,,
-QA/Test Engineer,94692,Data Science Practice,SQL; Python,,,
-Data Analyst,41193,IS Data Visualisation Studio,Data quality; Data visualisation; Data modelling,,,
-Data Analyst,94692,Data Science Practice,SQL; Python,,,
-Data Analyst,36104,Data Visualisation and Narratives,Data visualisation; Power BI; Tableau,,,
-Machine Learning Engineer,31250,Introduction to Data Analytics,,,,
-Machine Learning Engineer,43007,Advanced Artificial Intelligence,Artificial intelligence; Large language models; AI agents; Generative AI,,,
-Machine Learning Engineer,43031,Python Programming for Data Processing,Python,,,
-Network/Systems Administrator,94692,Data Science Practice,Linux; Python; Shell scripting,,,
-Network/Systems Administrator,41092,Network Fundamentals,DNS,,,
-Network/Systems Administrator,41909,Cybersecurity Capstone Studio,cyber security,,,
-Software Engineer,94692,Data Science Practice,Python; Docker,,,
-Software Engineer,48023,Programming Fundamentals,Java,,,
-Software Engineer,42889,iOS Application Development,Git; Test automation,,,
-Data Engineer,36100,Data Science for Innovation,Data quality,,,
-Data Engineer,94693,Big Data Engineering,ETL; Data warehousing; Data modelling; Databricks; Spark,,,
-Data Engineer,94692,Data Science Practice,SQL; Python,,,
-DevOps/SRE,94692,Data Science Practice,Python; Shell scripting; Docker; Linux,,,
-DevOps/SRE,41039,Programming 1,,,,
-DevOps/SRE,41889,Application Development in the iOS Environment,Git,,,
-Cybersecurity Analyst,41909,Cybersecurity Capstone Studio,cyber security,,,
-Cybersecurity Analyst,31266,Introduction to Information Systems,,,,
-Cybersecurity Analyst,41182,System Security,Vulnerability management; Data security; Identity and access management,,,
-Cloud Engineer,94692,Data Science Practice,Shell scripting; Python; Linux,,,
-Cloud Engineer,37242,Introduction to Optimisation,Optimisation,,,
+Data Scientist,94692,Data Science Practice,Python; SQL,ok,,tompham9016
+Data Scientist,31250,Introduction to Data Analytics,,odd,covers basic data analysis techniques,tompham9016
+Data Scientist,43007,Advanced Artificial Intelligence,Artificial intelligence; Large language models; Generative AI; AI agents,ok,,tompham9016
+Business Analyst,36104,Data Visualisation and Narratives,User stories; Microsoft Office; Power BI,ok,,tompham9016
+Business Analyst,94692,Data Science Practice,SQL,ok,,tompham9016
+Business Analyst,33116,"Design, Data, and Decisions",Excel,ok,,tompham9016
+QA/Test Engineer,48023,Programming Fundamentals,Java,ok,,tompham9016
+QA/Test Engineer,42889,iOS Application Development,Test automation; Git,ok,,tompham9016
+QA/Test Engineer,94692,Data Science Practice,SQL; Python,ok,,tompham9016
+Data Analyst,41193,IS Data Visualisation Studio,Data quality; Data visualisation; Data modelling,ok,,tompham9016
+Data Analyst,94692,Data Science Practice,SQL; Python,ok,,tompham9016
+Data Analyst,36104,Data Visualisation and Narratives,Data visualisation; Power BI; Tableau,ok,,tompham9016
+Machine Learning Engineer,31250,Introduction to Data Analytics,,ok,,tompham9016
+Machine Learning Engineer,43007,Advanced Artificial Intelligence,Artificial intelligence; Large language models; AI agents; Generative AI,ok,,tompham9016
+Machine Learning Engineer,43031,Python Programming for Data Processing,Python,ok,,tompham9016
+Network/Systems Administrator,94692,Data Science Practice,Linux; Python; Shell scripting,ok,,tompham9016
+Network/Systems Administrator,41092,Network Fundamentals,DNS,ok,,tompham9016
+Network/Systems Administrator,41909,Cybersecurity Capstone Studio,cyber security,ok,,tompham9016
+Software Engineer,94692,Data Science Practice,Python; Docker,ok,,tompham9016
+Software Engineer,48023,Programming Fundamentals,Java,ok,,tompham9016
+Software Engineer,42889,iOS Application Development,Git; Test automation,ok,,tompham9016
+Data Engineer,36100,Data Science for Innovation,Data quality,ok,,tompham9016
+Data Engineer,94693,Big Data Engineering,ETL; Data warehousing; Data modelling; Databricks; Spark,ok,,tompham9016
+Data Engineer,94692,Data Science Practice,SQL; Python,ok,,tompham9016
+DevOps/SRE,94692,Data Science Practice,Python; Shell scripting; Docker; Linux,ok,,tompham9016
+DevOps/SRE,41039,Programming 1,,odd,covers basic programming,tompham9016
+DevOps/SRE,41889,Application Development in the iOS Environment,Git,ok,,tompham9016
+Cybersecurity Analyst,41909,Cybersecurity Capstone Studio,cyber security,ok,,tompham9016
+Cybersecurity Analyst,31266,Introduction to Information Systems,,odd,covers basic information systems,tompham9016
+Cybersecurity Analyst,41182,System Security,Vulnerability management; Data security; Identity and access management,ok,,tompham9016
+Cloud Engineer,94692,Data Science Practice,Shell scripting; Python; Linux,ok,,tompham9016
+Cloud Engineer,37242,Introduction to Optimisation,Optimisation,ok,,tompham9016
