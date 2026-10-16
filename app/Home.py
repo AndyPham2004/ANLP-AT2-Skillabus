@@ -708,11 +708,9 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
     if notes:
         st.caption(" ".join(notes))
     if ss.whatif:
-        st.button("Reset what-if", key="whatif_reset", type="tertiary", on_click=reset_whatif)
-    elif lp["subjects"]:
-        first = lp["subjects"][0]
-        st.button(f"What if I had taken {subject_name(first)}?", key="whatif_first", type="tertiary",
-                  on_click=set_whatif, args=(first, True))
+        st.button("Reset: count no subject as taken", key="whatif_reset", type="tertiary", on_click=reset_whatif)
+    elif subjects:
+        st.caption("Tick \"Already taken\" on a subject to see how your gaps and the path change.")
 
 
 def outside_section(res: dict, by: dict) -> None:

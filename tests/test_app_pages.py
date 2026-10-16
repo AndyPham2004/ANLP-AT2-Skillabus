@@ -212,7 +212,7 @@ def test_what_if_taken_reruns_the_path():
     assert path
     first = path[0]
     show_tab(at, "Your path")
-    at.button(key="whatif_first").click().run()
+    at.checkbox(key=f"wi_path_{first}").check().run()                           # "Already taken" on the first card
     assert not at.exception, at.exception
     assert at.session_state.whatif == [first]
     assert first not in at.session_state.result["learning_path"]["subjects"]
