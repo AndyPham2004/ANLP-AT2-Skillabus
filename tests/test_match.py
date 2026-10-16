@@ -42,13 +42,18 @@ def test_gap_result_follows_the_data_contract():
 def test_reproduces_the_poster_gap_skills():
     """archive/poster_AT2A/data/gap.csv: 8 technical skills, the resume covers Python and SQL. Its bars were
     the 2019-22 Seek shares; since C2 the bars are the 2026 Data Scientist ads and 2019-22 is the trend
-    column, counted again with the app's matcher (within 2 points of the poster: Python 82.8 -> 84.5)."""
+    column, counted again with the app's matcher (within 2 points of the poster: Python 82.8 -> 84.5).
+    Artificial intelligence is lower (22.5 -> 17.3): the poster counted every bare 'AI', and since 17 Oct
+    only the phrases ads use for the skill count (test_extract.test_bare_ai_needs_context)."""
     with open(paths.POSTER_GAP, encoding="utf-8") as f:
         gap = list(csv.DictReader(line for line in f if not line.startswith("#")))
     skills = match(extract(AD), extract(RESUME))
     poster = {r["skill"]: float(r["pct_ads"]) for r in gap}
     assert {s["skill_label"] for s in skills} == set(poster)
-    assert all(abs(s["demand_pct_2019_22"] - poster[s["skill_label"]]) <= 2.0 for s in skills)
+    same_aliases = [s for s in skills if s["skill_label"] != "Artificial intelligence"]
+    assert all(abs(s["demand_pct_2019_22"] - poster[s["skill_label"]]) <= 2.0 for s in same_aliases)
+    ai = next(s for s in skills if s["skill_label"] == "Artificial intelligence")
+    assert ai["demand_pct_2019_22"] < poster["Artificial intelligence"]
     assert {s["skill_label"] for s in skills if s["status"] == "have"} == {r["skill"] for r in gap if r["covered"] == "1"}
     assert [s["demand_pct"] for s in skills] == sorted((s["demand_pct"] for s in skills), reverse=True)
     assert {s["skill_label"] for s in skills if s["emerging"]} == {"Large language models", "Generative AI"}
@@ -125,7 +130,7 @@ def test_role_profile_matches_like_an_ad():
     assert len(role) == 15 and role[0]["canonical"] == "Python"
     skills = match(role, extract(RESUME))
     assert {k for k, v in status(skills).items() if v == "have"} == {"Python", "SQL", "Statistics", "Data visualisation"}
-    assert skills[1]["ad_evidence"] == "Asked for in 73% of 71 JobsPipe Data Scientist ads (Sep-Oct 2026)."
+    assert skills[1]["ad_evidence"] == "Asked for in 63% of 71 JobsPipe Data Scientist ads (Sep-Oct 2026)."   # SQL
 
 
 def test_each_role_takes_the_first_source_with_a_block(demand_sample):
