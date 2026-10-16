@@ -1,5 +1,7 @@
 # role_profiles.csv
 
+> Superseded by `role_skill_demand.csv` for the report; the app still reads this file until after 17 Oct. There the same 7 roles are recounted on the skill vocabulary (`source = data_jobs_2023`); `data/2_demand/README.md` compares the two.
+
 Tool profiles for 7 data and IT roles, so the app can offer roles other than Data Scientist
 (ideas doc 4.7, issue #65).
 

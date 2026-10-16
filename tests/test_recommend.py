@@ -1,7 +1,10 @@
 """Tests for recommend() and the learning path. Run: pytest tests/
 
 They read tests/fixtures/subject_profiles_sample.csv: the 2026 Handbook rows of the 19 MDSI
-subjects and 12 others, taken from the 3 Oct mock (archive/mock_2026-10-03/subject_layers.csv).
+subjects and 12 others, taken from the 3 Oct mock (archive/mock_2026-10-03/subject_layers.csv),
+and the prerequisites and teaching periods of the same 31 subjects (prerequisites_sample.csv,
+offerings_sample.csv, re-cut from the scrape of #98). Demand weights are pinned, so the tests do not
+move when skill_counts_2026.csv is rebuilt.
 """
 from pathlib import Path
 
@@ -9,16 +12,29 @@ import numpy as np
 import pytest
 
 import skillabus.recommend as recommend_module
+import skillabus.requisites as requisites_module
 import skillabus.similarity as similarity_module
 from skillabus.extract import extract
 from skillabus.match import match
 from skillabus.recommend import MAX_PATH, _weight, learning_path, recommend, subject_evidence
+from skillabus.requisites import Rules, enrolment, load_rules
 from skillabus.similarity import embeddings_available
 
 ROOT = Path(__file__).resolve().parents[1]
 PROFILES = str(ROOT / "tests/fixtures/subject_profiles_sample.csv")
 AD = (ROOT / "tests/fixtures/ad_rw_2026-09-23.txt").read_text(encoding="utf-8")
 RESUME = (ROOT / "tests/fixtures/resume_synthetic.txt").read_text(encoding="utf-8")
+START = ("Autumn", 2027)
+# The 2026 lower bounds as of 13 Oct (22 ads). Pinned: the real file grows as Van Thong adds ads.
+DEMAND_2026_LOW = {"Large language models": 19.7, "Generative AI": 10.1, "Artificial intelligence": 72.2}
+
+
+@pytest.fixture(autouse=True)
+def sample_data(monkeypatch):
+    monkeypatch.setattr(requisites_module, "PREREQUISITES_CSV", ROOT / "tests/fixtures/prerequisites_sample.csv")
+    monkeypatch.setattr(requisites_module, "OFFERINGS_CSV", ROOT / "tests/fixtures/offerings_sample.csv")
+    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: DEMAND_2026_LOW)
+    monkeypatch.setattr(recommend_module, "EXTERNAL_CSV", ROOT / "tests/fixtures/external_courses_sample.csv")
 
 
 def gap(label, demand=10.0, demand_2026=None):
@@ -39,24 +55,29 @@ def covering(result, label):
 def test_result_follows_the_data_contract(method):
     gaps = poster_gaps()
     result = recommend(gaps, PROFILES, method=method)
-    assert set(result) == {"recommendations", "learning_path"}
+    assert set(result) == {"recommendations", "learning_path", "outside_recommendations"}
     labels = {g["skill_label"] for g in gaps}
     for rec in result["recommendations"]:
-        assert {"subject_code", "subject_name", "source_url", "score", "covers", "evidence"} == set(rec)
-        assert 0 < rec["score"] <= 1.0 and set(rec["covers"]) <= labels
+        assert {"subject_code", "subject_name", "source_url", "score", "covers", "evidence", "needs", "offered",
+                "unverified"} == set(rec)
+        assert 0 <= rec["score"] <= 1.0 and set(rec["covers"]) <= labels
+        assert rec["score"] > 0 or not rec["covers"]          # score 0 only for a prerequisite the path adds
         assert [e["skill_label"] for e in rec["evidence"]] == rec["covers"]
         assert all(e["layer"] in ("learning_objective", "assessment", "weekly_topic", "description")
                    and e["text"] for e in rec["evidence"])
     assert max(rec["score"] for rec in result["recommendations"]) == 1.0
     path = result["learning_path"]
-    assert set(path) == {"subjects", "gaps_closed", "gaps_total", "demand_covered_pct"}
+    assert set(path) == {"subjects", "gaps_closed", "gaps_total", "demand_covered_pct", "plan", "dropped", "outside"}
     assert len(path["subjects"]) <= MAX_PATH and path["gaps_total"] == len(gaps)
+    assert sorted(step["subject_code"] for step in path["plan"]) == sorted(path["subjects"])
+    assert all({"subject_code", "subject_name", "reason", "covers"} == set(d) for d in path["dropped"])
     assert path["subjects"] == [r["subject_code"] for r in result["recommendations"]][:len(path["subjects"])]
 
 
 def test_no_gaps_and_bad_inputs():
-    assert recommend([], PROFILES) == {"recommendations": [], "learning_path": {
-        "subjects": [], "gaps_closed": 0, "gaps_total": 0, "demand_covered_pct": 0.0}}
+    assert recommend([], PROFILES) == {"recommendations": [], "outside_recommendations": [], "learning_path": {
+        "subjects": [], "gaps_closed": 0, "gaps_total": 0, "demand_covered_pct": 0.0, "plan": [], "dropped": [],
+        "outside": {"courses": [], "gaps_closed": 0, "gaps_open_before": 0, "still_open": [], "demand_covered_pct": 0.0}}}
     with pytest.raises(ValueError):
         recommend([gap("Deep learning")], PROFILES, method="bm25")
     with pytest.raises(FileNotFoundError):
@@ -120,12 +141,88 @@ def test_similar_rows_count_with_embeddings(monkeypatch, tmp_path):
 # ----------------------------------------------------------------------- learning path
 
 def test_learning_path_for_the_poster_ad():
-    result = recommend(poster_gaps(), PROFILES, method="keyword")
+    """The Robert Walters ad: machine learning (72% of ads) first; 43023 teaches AI and LLMs but
+    needs 42172 or 41040, which an MDSI student cannot take, so it is dropped with the reason."""
+    result = recommend(poster_gaps(), PROFILES, method="keyword", start=START)
     path = result["learning_path"]
-    assert path["subjects"][0] == "36106"                    # machine learning: the largest gap
-    assert "43023" in path["subjects"]                       # artificial intelligence and LLMs together
+    assert path["subjects"] == ["36106", "32130", "36121"]
     assert path["gaps_closed"] == 5 and path["gaps_total"] == 6
-    assert 85 < path["demand_covered_pct"] < 100             # deep learning (16% of ads) is left open
+    assert 85 < path["demand_covered_pct"] < 100             # large language models stay open
+    dropped = {d["subject_code"]: d for d in path["dropped"]}
+    assert "42172" in dropped["43023"]["reason"] and "Large language models" in dropped["43023"]["covers"]
+    assert "43023" not in [r["subject_code"] for r in result["recommendations"]]
+    assert [step["session"] for step in path["plan"]] == ["Autumn 2027"] * 3
+
+
+def test_a_student_who_took_the_core_can_take_36118():
+    """36118 needs 36100, 36103 and 36106: closed for a new student, open once they are taken."""
+    llm = [gap("Large language models", 0.0)]
+    new = recommend(llm, PROFILES, method="keyword", start=START)
+    assert "36118" in [d["subject_code"] for d in new["learning_path"]["dropped"]]
+    taken = recommend(llm, PROFILES, method="keyword", exclude={"36100", "36103", "36106"}, start=START)
+    assert taken["learning_path"]["subjects"] == ["36118"]
+
+
+def test_a_prerequisite_is_added_before_the_subject(monkeypatch):
+    """Deep learning only in 94691, which needs 36106: the path takes both, 36106 a session earlier."""
+    monkeypatch.setattr(recommend_module, "subject_evidence", lambda labels, *a, **k: {
+        "Deep learning": [{"subject_code": "94691", "subject_name": "Deep Learning", "source_url": "", "strength": 1.4,
+                           "layer": "learning_objective", "text": "Deep learning", "match": "named", "similarity": 1.0}]})
+    path = recommend([gap("Deep learning", 16.1)], PROFILES, method="keyword", start=START)["learning_path"]
+    assert path["subjects"] == ["36106", "94691"]
+    assert [(s["subject_code"], s["session"], s["after"]) for s in path["plan"]] == [
+        ("36106", "Autumn 2027", []), ("94691", "Autumn 2028", ["36106"])]     # 94691 runs in Autumn only
+
+
+def test_an_antirequisite_list_closes_on_any_one_subject():
+    """Regression (#82 review): 32130's anti-requisites print as "(1 AND 2 AND 3)" (31250 and two
+    offshore copies of 32130), so all three can never be taken; 31250 alone must close it."""
+    rules = load_rules()                                  # the fixture files, via sample_data
+    assert enrolment("32130", {"31250"}, rules)["reason"] == "antirequisite: already took 31250"
+    path = recommend(poster_gaps(), PROFILES, method="keyword", exclude={"31250"}, start=START)["learning_path"]
+    assert "32130" not in path["subjects"]
+    assert "32130" in [d["subject_code"] for d in path["dropped"]]
+
+
+def test_without_requisite_data_every_subject_is_open():
+    result = recommend(poster_gaps(), PROFILES, method="keyword", rules=Rules())
+    assert "43023" in result["learning_path"]["subjects"] and result["learning_path"]["dropped"] == []
+
+
+def test_a_step_with_a_prerequisite_is_valued_per_place():
+    weight = {"a": 30.0, "b": 25.0}
+    covers = {"S1": {"a"}, "S2": {"a", "b"}, "P": set()}
+    needs = {"S1": set(), "S2": {"P"}, "P": set()}
+    path = learning_path(covers, weight, {}, needs=lambda code, done: needs[code] - done)
+    assert path["subjects"] == ["S1", "P", "S2"]           # 30 for one place beats 55 for two
+    assert learning_path(covers, weight, {}, max_subjects=1,
+                         needs=lambda code, done: needs[code] - done)["subjects"] == ["S1"]
+    assert learning_path(covers, weight, {}, needs=lambda code, done: None)["subjects"] == []
+
+
+# ------------------------------------------------------------------ second tier: outside
+
+def test_outside_courses_close_what_the_uts_path_leaves_open():
+    """Large language models: no UTS subject a new MDSI student can take; the Hugging Face course."""
+    result = recommend(poster_gaps(), PROFILES, method="keyword", start=START)
+    path, outside = result["learning_path"], result["learning_path"]["outside"]
+    assert outside["gaps_open_before"] == 1 and outside["courses"] == ["EXT-HF-LLM"]
+    assert outside["still_open"] == [] and path["demand_covered_pct"] < outside["demand_covered_pct"] == 100.0
+    first = result["outside_recommendations"][0]
+    assert (first["subject_code"], first["cost"], first["covers"]) == ("EXT-HF-LLM", "free", ["Large language models"])
+    assert {"provider", "cost", "source_url", "evidence", "score"} <= set(first)
+    # Outside courses only see the open gaps: none of them covers a skill the UTS path closed.
+    closed_by_uts = {k for r in result["recommendations"] if r["subject_code"] in path["subjects"] for k in r["covers"]}
+    assert not closed_by_uts & {k for r in result["outside_recommendations"] for k in r["covers"]}
+
+
+def test_at_most_three_outside_courses_and_none_without_the_file():
+    gaps = [gap(label, 0.0) for label in ("Large language models", "PyTorch", "scikit-learn", "Prompt engineering")]
+    outside = recommend(gaps, PROFILES, method="keyword", start=START)["learning_path"]["outside"]
+    assert 1 <= len(outside["courses"]) <= 3
+    none = recommend(poster_gaps(), PROFILES, method="keyword", start=START, external_csv="")
+    assert none["outside_recommendations"] == [] and none["learning_path"]["outside"]["courses"] == []
+    assert none["learning_path"]["outside"]["demand_covered_pct"] == none["learning_path"]["demand_covered_pct"]
 
 
 def test_greedy_takes_the_largest_uncovered_demand_first():
@@ -149,7 +246,7 @@ def test_ties_go_to_the_higher_scoring_subject():
 
 
 def test_a_zero_demand_skill_still_gets_a_subject():
-    result = recommend([gap("Large language models", 0.0)], PROFILES, method="keyword")
+    result = recommend([gap("Large language models", 0.0)], PROFILES, method="keyword", exclude={"36100", "36103", "36106"})
     assert result["learning_path"]["subjects"] and result["learning_path"]["demand_covered_pct"] == 100.0
 
 
@@ -160,6 +257,14 @@ def test_weight_uses_the_low_end_of_the_2026_interval(monkeypatch):
     monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Artificial intelligence": 72.2})
     assert _weight(gap("Artificial intelligence", 22.5, 90.9)) == 23.5  # asked for before 2023: 2019-22 stays
     assert _weight(gap("Python", 82.8)) == 83.8                         # no 2026 row
+
+
+def test_weight_of_a_role_outside_the_2026_sample_has_no_2026_fallback(monkeypatch):
+    """match_role() leaves demand_pct_2026 empty for a role the 2026 data-role sample does not cover,
+    so its own share is the only weight, even for a skill new since 2022."""
+    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Large language models": 18.0})
+    assert _weight(gap("Large language models", 0.0, 36.4)) == 19.0    # Data Scientist or an ad
+    assert _weight(gap("Large language models", 0.0, None)) == 1.0     # e.g. Business Analyst
 
 
 # ------------------------------------------------- real embedding model, when installed

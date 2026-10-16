@@ -14,8 +14,8 @@ embedding similarity between skill names (notebooks/pn_calibrate_matching.py, 8 
 substitutes scored lower than unrelated pairs (Tableau~Power BI 0.30, AWS~Azure 0.44, but
 Airflow~MLflow 0.54, machine learning~artificial intelligence 0.70), so no threshold works.
 
-Also here: soft_skills() for the skills left out of the gap list, role_profile() so a role
-can be matched like an ad, rank_evidence() to rank the resume sentences for one skill (the
+Also here: soft_skills() for the skills left out of the gap list, roles(), role_profile() and
+match_role() so a role (Data Scientist, Data Engineer, ...) can be matched like an ad, rank_evidence() to rank the resume sentences for one skill (the
 P@5 / MRR evaluation on the CV-JD pairs), and score_matrix() to rank ads for a resume.
 """
 
@@ -34,7 +34,10 @@ ROOT = paths.ROOT
 COUNTS_CSV = paths.SKILL_COUNTS
 COUNTS_2026_CSV = paths.SKILL_COUNTS_2026
 TOP_CSV = paths.TOP_SKILLS
+ROLES_CSV = paths.ROLE_PROFILES   # Van Thong, #65 (data contract section 5)
+DEFAULT_ROLE = "Data Scientist"
 N_ADS = 3204
+DEFAULT_SOURCE, DEFAULT_PERIOD = "Seek", "2019-22"   # the full-text Data Scientist ads behind _demand()
 
 SOFT_CATEGORIES = {"Professional"}        # real skills, but they do not map to subjects
 # The skill that names its whole category: asking for it is met in part by any skill in it.
@@ -129,17 +132,30 @@ def _is_soft(mention: dict) -> bool:
 
 # ----------------------------------------------------------------------------- match
 
-def _related(skill: str, resume: dict[str, list[dict]]) -> str | None:
+def _related(skill: str, resume: dict[str, list[dict]], demand: dict[str, float] | None = None) -> str | None:
     """The resume skill that partly meets an umbrella skill (the most in-demand one), or None."""
     category = _category().get(skill)
     if category is None or category in NOT_TRANSFERABLE or UMBRELLA.get(skill) != category:
         return None
+    demand = _demand() if demand is None else demand
     parts = [k for k in resume if k != skill and _category().get(k) == category]
-    return max(parts, key=lambda k: _demand().get(k, 0.0), default=None)
+    return max(parts, key=lambda k: demand.get(k, 0.0), default=None)
 
 
-def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool = False) -> list[dict]:
-    """Return the `skills` list of the gap result (data contract section 2), most in-demand first."""
+def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool = False,
+          demand: dict[str, float] | None = None, demand_2026: dict[str, float] | None = None,
+          source: str = DEFAULT_SOURCE, period: str = DEFAULT_PERIOD) -> list[dict]:
+    """Return the `skills` list of the gap result (data contract section 2), most in-demand first.
+
+    demand          skill -> share of ads, for `demand_pct`; default: the 3,204 Seek Data Scientist ads.
+                    match_role() passes the role's own shares.
+    demand_2026     skill -> 2026 share, for `demand_pct_2026`; default: the 2026 data-role sample
+                    when `demand` is the default too, else none (the sample has data roles only).
+    source, period  where `demand` comes from, copied to every row for the app's caption.
+    """
+    if demand_2026 is None:
+        demand_2026 = _demand_2026() if demand is None else {}
+    demand = _demand() if demand is None else demand
     resume = _group(resume_skills)
     resume_ids = {m["skill_id"]: key for key, ms in resume.items() for m in ms if m.get("skill_id")}
     out = []
@@ -159,13 +175,15 @@ def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool =
         # share one broad ESCO concept (PyTorch and matplotlib, Tableau and Power BI), so a resume
         # naming one must not count as having the other.
         same = key if key in resume else (None if canonical else resume_ids.get(first.get("skill_id")))
-        related = None if same else (_related(canonical, resume) if canonical else None)
+        related = None if same else (_related(canonical, resume, demand) if canonical else None)
         skill = {
             "skill_id": skill_id,
             "skill_label": label,
             "status": "have" if same else "partial" if related else "missing",
-            "demand_pct": round(_demand().get(canonical, 0.0), 1),
-            "demand_pct_2026": _demand_2026().get(canonical),
+            "demand_pct": round(demand.get(canonical, 0.0), 1),
+            "demand_pct_2026": demand_2026.get(canonical),
+            "demand_source": source,
+            "demand_period": period,
             "emerging": emerging,
             "ad_evidence": _evidence(mentions),
             "resume_evidence": _evidence(resume[same or related]) if (same or related) else None,
@@ -178,22 +196,106 @@ def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool =
     return sorted(out, key=lambda s: -s["demand_pct"])
 
 
-def soft_skills(ad_skills: list[dict]) -> list[str]:
-    """Professional skills the ad names (communication, teamwork): shown, but not part of the gap list."""
+def soft_skills(ad_skills: list[dict], demand: dict[str, float] | None = None) -> list[str]:
+    """Professional skills the ad names (communication, teamwork): shown, but not part of the gap list,
+    most in-demand first by `demand` (default: the Seek Data Scientist ads; a role passes its own)."""
+    demand = _demand() if demand is None else demand
     names = {m.get("canonical") or m["text"] for m in ad_skills if _is_soft(m)}
-    return sorted(names, key=lambda k: -_demand().get(k, 0.0))
+    return sorted(names, key=lambda k: (-demand.get(k, 0.0), k))
 
 
-def role_profile(top_n: int = 15) -> list[dict]:
-    """A role as skill mentions: the most-asked technical skills (top_skills.csv), ready for match()."""
+def _period(row: dict) -> str:
+    """The file's `period` column, else the years named in its `source` ("... (2023, Australia)")."""
+    if row.get("period"):
+        return row["period"]
+    years = re.findall(r"\b(?:19|20)\d\d\b", row.get("source") or "")
+    return "-".join(dict.fromkeys([years[0], years[-1]])) if years else ""
+
+
+def _where(source: str) -> str:
+    """A short name for a demand source in a sentence: "Seek", or the country the file names
+    ("lukebarousse/data_jobs (2023, Australia)" -> "Australian"), else the dataset name."""
+    for country, adjective in (("Australia", "Australian"), ("United States", "US"), ("USA", "US")):
+        if country in source:
+            return adjective
+    return re.sub(r"\s*\(.*?\)", "", source).strip()
+
+
+@lru_cache(maxsize=1)
+def _role_rows() -> dict[str, list[dict]]:
+    """role -> its skills, most asked first. Data Scientist from the full-text Seek ads
+    (top_skills.csv): the 2023 file has tool lists only, so it lacks machine learning or statistics.
+    The other roles from role_profiles.csv (Van Thong, #65) when it exists."""
+    roles: dict[str, list[dict]] = {}
+    if ROLES_CSV.exists():
+        for row in _rows(ROLES_CSV):
+            if row.get("role") and row.get("skill") and row["role"] != DEFAULT_ROLE:
+                roles.setdefault(row["role"], []).append({
+                    "role": row["role"], "skill": row["skill"], "pct_ads": row["pct_ads"],
+                    "total_ads": row.get("total_ads") or "0",
+                    "source": row.get("source") or "", "period": _period(row)})
+    roles[DEFAULT_ROLE] = [{"role": DEFAULT_ROLE, "skill": row["skill"], "pct_ads": row["pct_ads"],
+                            "total_ads": str(N_ADS), "source": DEFAULT_SOURCE, "period": DEFAULT_PERIOD}
+                           for row in _rows(TOP_CSV)]
+    for rows in roles.values():
+        rows.sort(key=lambda r: -float(r["pct_ads"]))
+    return roles
+
+
+def roles() -> list[dict]:
+    """The roles the app can offer: name, number of ads behind the profile, source and period."""
+    out = []
+    for name, rows in _role_rows().items():
+        first = rows[0]
+        out.append({"role": name, "n_ads": int(float(first["total_ads"])),
+                    "source": first["source"], "period": first["period"]})
+    return sorted(out, key=lambda r: (r["role"] != DEFAULT_ROLE, -r["n_ads"], r["role"]))
+
+
+def role_demand(role: str = DEFAULT_ROLE) -> dict[str, float]:
+    """skill -> share of the role's ads that ask for it.
+
+    Data Scientist: every dictionary skill's Seek share (skill_counts_v2.csv), not only the 15 of
+    top_skills.csv, so _related() can rank the resume's part skills (Excel over Microsoft Office) as
+    in ad mode; the 15 shares are the same in both files. Other roles: their file's rows."""
+    if role == DEFAULT_ROLE:
+        return _demand()
+    return {row["skill"]: float(row["pct_ads"]) for row in _role_rows()[role]}
+
+
+def role_profile(role: str = DEFAULT_ROLE, top_n: int = 15) -> list[dict]:
+    """A role as skill mentions, ready for match(): its most-asked technical skills.
+
+    Only dictionary skills (the profile is counted with the same dictionary) outside the
+    Professional category. Raises KeyError for an unknown role.
+    """
+    rows = _role_rows()[role]
+    category = _category()
     mentions = []
-    for row in _rows(TOP_CSV)[:top_n]:
-        pct = float(row["pct_ads"])
+    for row in rows:
+        skill = row["skill"]
+        if skill not in category or category[skill] in SOFT_CATEGORIES:
+            continue
+        pct, n = float(row["pct_ads"]), int(float(row["total_ads"]))
+        where = " ".join(x for x in (_where(row.get("source", "")), role) if x)
         mentions.append({
-            "text": row["skill"], "canonical": row["skill"], "method": "dictionary",
-            "sentence": f"Asked for in {pct:.0f}% of {N_ADS:,} Seek Data Scientist ads (2019-22).",
+            "text": skill, "canonical": skill, "method": "dictionary",
+            "sentence": f"Asked for in {pct:.0f}% of {n:,} {where} ads ({row.get('period', '')}).".replace(" ()", ""),
         })
+        if len(mentions) == top_n:
+            break
     return mentions
+
+
+def match_role(resume_skills: list[dict], role: str = DEFAULT_ROLE, top_n: int = 15) -> list[dict]:
+    """match() against a role instead of an ad; `demand_pct` is the share of that role's ads.
+
+    `demand_pct_2026` only for Data Scientist: the 2026 sample counts data roles, so its shares
+    say nothing about a Business Analyst or a DevOps engineer."""
+    first = _role_rows()[role][0]
+    return match(role_profile(role, top_n), resume_skills, demand=role_demand(role),
+                 demand_2026=_demand_2026() if role == DEFAULT_ROLE else {},
+                 source=first["source"], period=first["period"])
 
 
 # ------------------------------------------------------ ranking resume evidence for a skill

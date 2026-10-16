@@ -10,7 +10,7 @@ Scripts outside src/ (data-eda/src/*.py, notebooks/) first put src/ on sys.path,
 
     data/1_knowledge/   what the app looks up: skills, taxonomies, UTS subjects, outside courses
     data/2_demand/      what employers ask for: counts, role profiles, cleaned ads, collection lists
-    data/3_tuning/      README only: which threshold was set on which data
+    data/3_tuning/      which threshold was set on which data (README), and the rows judged to set it
     data/4_evaluation/  test labels, the inputs they were made on, results, the committed GPT cache
     data/5_crosscheck/  other markets and platforms, ESCO coverage
     data/raw/           downloads (not in git)
@@ -76,6 +76,9 @@ EXTERNAL_COURSES = LEARNING_RESOURCES / "external_courses.csv"
 EXTERNAL_COURSES_MD = LEARNING_RESOURCES / "external_courses.md"
 CERTIFICATIONS = LEARNING_RESOURCES / "certifications.csv"    # 49 industry certifications, 11 IT roles, "hot" signal (D11)
 CERTIFICATIONS_MD = LEARNING_RESOURCES / "certifications.md"
+RESOURCES = LEARNING_RESOURCES / "resources.csv"                # every self-study resource: level, format, hours, cost (D9)
+RESOURCE_MODULES = LEARNING_RESOURCES / "resource_modules.csv"  # text rows of the D9 resources, same schema as external_courses.csv
+PRIORITY_SKILLS = LEARNING_RESOURCES / "priority_skills.csv"    # the top 15 skills of each role that D9 covers
 
 # ------------------------------------------------------------------ 2_demand
 SKILL_COUNTS = DEMAND / "skill_counts_v2.csv"             # 3,204 Seek Data Scientist ads 2019-22
@@ -83,6 +86,11 @@ SKILL_COUNTS_2026 = DEMAND / "skill_counts_2026.csv"
 TOP_SKILLS = DEMAND / "top_skills.csv"
 ROLE_PROFILES = DEMAND / "role_profiles.csv"
 SKILLS_NOT_TAUGHT = DEMAND / "skills_not_taught_by_uts.csv"
+
+# One demand table (plan D6): python data-eda/src/build_role_skill_demand.py. For the report it supersedes
+# SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS and ROLE_PROFILES; the app reads those until after 17 Oct.
+ROLE_SKILL_DEMAND = DEMAND / "role_skill_demand.csv"     # role x skill x source x period, long format
+DATA_JOBS_AU_RAW = RAW / "jobs_au_datajobs_2023.parquet"  # data_jobs, its 12,955 Australian rows (not in git)
 
 ADS = DEMAND / "ads"
 SEEK_ADS = ADS / "jobs_au_seek_datascientist_2019-2022_clean.csv"
@@ -94,6 +102,9 @@ ATS_CANDIDATES = COLLECTION / "ats_candidates.csv"
 
 EMERGING = DEMAND / "emerging"
 EMERGING_CANDIDATES = EMERGING / "emerging_candidates.csv"
+
+# ------------------------------------------------------------------ 3_tuning
+T1_IT_ROWS = TUNING / "t1_it_unnamed_rows.csv"            # T1: unnamed subject rows for 12 IT skills, judged by hand
 
 # ------------------------------------------------------------------ 4_evaluation
 LABELS = EVALUATION / "labels"
@@ -113,11 +124,8 @@ LLM_CACHE_EVAL = EVALUATION / "llm_cache"                 # the 30 committed GPT
 SKILL_COUNTS_PRIMARY = CROSSCHECK / "skill_counts_PRIMARY.csv"
 SKILL_COUNTS_LINKEDIN_US = CROSSCHECK / "skill_counts_linkedin_us.csv"
 SKILL_COUNTS_GLASSDOOR_AU = CROSSCHECK / "skill_counts_glassdoor_au_2022.csv"
-AU_VS_US = CROSSCHECK / "au_vs_us_comparison.csv"
 EXTRACTOR_AGREEMENT = CROSSCHECK / "extractor_agreement.csv"
 EXTRACTOR_AGREEMENT_DECOMPOSED = CROSSCHECK / "extractor_agreement_decomposed.csv"
-SOURCE_COUNTS = CROSSCHECK / "source_counts.csv"
-ESCO_COVERAGE = CROSSCHECK / "esco_coverage"
 
 # ------------------------------------------------------------------ raw (not in git; data/README.md says where each comes from)
 ESCO_RAW = RAW / "taxonomy_esco_v1.2.1" / "skills_en.csv"
@@ -158,12 +166,12 @@ COMMITTED = (
     ADDED_SKILLS, ONET_TOOL_MAP, VOCAB_AD_COUNTS,
     ESCO_SKILLS_CLEAN, ESCO_LABEL_LOOKUP, ROLE_OCCUPATIONS, OCCUPATION_SKILLS,
     SUBJECT_PROFILES, PREREQUISITES, OFFERINGS, ASSESSMENTS_SCRAPED, SUBJECTS_TEMPLATE, EXTERNAL_COURSES,
-    EXTERNAL_COURSES_MD, CERTIFICATIONS, CERTIFICATIONS_MD, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS,
-    ROLE_PROFILES, SKILLS_NOT_TAUGHT, SEEK_ADS, RECENT_ADS, ATS_COMPANIES, ATS_CANDIDATES, EMERGING_CANDIDATES, AD_SKILLS, CV_JD_PAIRS,
+    EXTERNAL_COURSES_MD, CERTIFICATIONS, CERTIFICATIONS_MD, RESOURCES, RESOURCE_MODULES, PRIORITY_SKILLS, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS,
+    ROLE_PROFILES, ROLE_SKILL_DEMAND, SKILLS_NOT_TAUGHT, SEEK_ADS, RECENT_ADS, ATS_COMPANIES, ATS_CANDIDATES, EMERGING_CANDIDATES, AD_SKILLS, CV_JD_PAIRS,
     SKILL_SUBJECT_PAIRS, CHAT_QUESTIONS, LABEL_SAMPLE, RESUMES, LLM_CACHE_EVAL, SKILL_COUNTS_PRIMARY,
-    SKILL_COUNTS_LINKEDIN_US, SKILL_COUNTS_GLASSDOOR_AU, AU_VS_US, EXTRACTOR_AGREEMENT,
-    EXTRACTOR_AGREEMENT_DECOMPOSED, SOURCE_COUNTS, ESCO_COVERAGE, SAMPLE_AD, SAMPLE_RESUME, FIGURES,
-    POSTER_GAP, POSTER_AD_SKILL_LONG,
+    SKILL_COUNTS_LINKEDIN_US, SKILL_COUNTS_GLASSDOOR_AU, EXTRACTOR_AGREEMENT,
+    EXTRACTOR_AGREEMENT_DECOMPOSED, SAMPLE_AD, SAMPLE_RESUME, FIGURES,
+    POSTER_GAP, POSTER_AD_SKILL_LONG, T1_IT_ROWS,
 )
 # Written while the app or pipeline runs; .gitignore keeps all of it out of git.
 NOT_IN_GIT = (RAW, RUNTIME)
