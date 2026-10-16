@@ -219,10 +219,12 @@ def test_analyse_job_mode_still_works(monkeypatch):
     assert engine.startswith("pipeline")
     assert result["role"] is None and result["skills"]
     assert "outside_recommendations" in result
-    # Weighed by the 71 JobsPipe Data Scientist ads since C2: the same three subjects as with the 2019-22
-    # Seek shares (36106, 36121, 32130 at 87.9%), now 84.9% because LLMs weigh 34%, not 0% + a floor
+    # Weighed by the 71 JobsPipe Data Scientist ads since C2. 17 Oct: a bare "AI" no longer names the skill,
+    # so finance subjects titled "AI-..." stop outranking 43007 Advanced Artificial Intelligence, which then
+    # covers AI, LLMs and generative AI; 31250 is its prerequisite and covers predictive modelling. Before:
+    # 36121, 36106, 32130 at 84.9%, LLMs not covered.
     path = result["learning_path"]
-    assert (path["subjects"], path["demand_covered_pct"]) == (["36121", "36106", "32130"], 84.9)
+    assert (path["subjects"], path["demand_covered_pct"]) == (["31250", "43007", "36106"], 95.5)
     assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", 71)}
 
 

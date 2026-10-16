@@ -94,11 +94,12 @@ def test_the_subject_about_the_skill_beats_a_subject_that_mentions_it():
 
 
 def test_one_passing_mention_does_not_cover_a_skill():
-    """32130's 'collaboration with AI tools' is evidence, but far weaker than the AI subjects."""
+    """42028's 'build an AI system' is evidence, but far weaker than the AI subjects. (Until 17 Oct this was
+    32130's 'collaboration with AI tools'; a bare 'AI' no longer names the skill, see test_extract.)"""
     evidence = subject_evidence(["Artificial intelligence"], PROFILES, "keyword")["Artificial intelligence"]
-    assert "32130" in [e["subject_code"] for e in evidence]
+    assert "42028" in [e["subject_code"] for e in evidence]
     result = recommend([gap("Artificial intelligence", 22.5)], PROFILES, method="keyword")
-    assert "32130" not in covering(result, "Artificial intelligence")
+    assert "42028" not in covering(result, "Artificial intelligence")
     assert covering(result, "Artificial intelligence")[0] == "36121"
 
 
