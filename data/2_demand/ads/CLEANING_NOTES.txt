@@ -151,3 +151,19 @@ esco_label_lookup.csv                           100,886 rows
    python src/clean_esco.py
    python src/make_label_sample.py      (needs the clean Seek file first)
    python src/build_recent_sample.py
+
+--------------------------------------------------------------------------------
+ ats_2026_clean.csv  --  job-board ads of Oct 2026 with a role (D2, #116)   Claude for Quan, 16 Oct
+--------------------------------------------------------------------------------
+ Source: data/raw/ats_ads_2026-10-13.csv (601) and ats_ads_2026-10-16.csv (584), the
+ Australian postings of the 65 public job boards in collection/ats_companies.csv
+ (fetch_ats.py --australia-only), all professions.
+ Cleaning (classify_ats_roles.py): one row per ad_id, then one per company + title +
+ text (same ad on two fetch days counted once); ads under 200 characters dropped;
+ emails and phone numbers masked as in build_recent_sample.py; whitespace tidied.
+ Result: 586 ads. Role from the title, first matching rule wins (rules in the
+ script): Software Engineer 60, Machine Learning Engineer 20, Data Scientist 13, Cybersecurity Analyst 11, DevOps/SRE 9, Network/Systems Administrator 7, Data Analyst 5, Business Analyst 4, Data Engineer 2, Cloud Engineer 1; other 454.
+ Hand check: 30 random ads (20 with a role, 10 other) read against the ad text, 28
+ agree, 2 debatable (a Salesforce lead whose text is platform security; a datacenter
+ engineer read as Network/Systems Administrator). Counted in role_skill_demand.csv as
+ source ats_2026 by build_role_skill_demand.py (roles with 30+ ads on their own).

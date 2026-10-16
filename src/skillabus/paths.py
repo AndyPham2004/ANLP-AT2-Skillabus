@@ -95,6 +95,7 @@ DATA_JOBS_AU_RAW = RAW / "jobs_au_datajobs_2023.parquet"  # data_jobs, its 12,95
 ADS = DEMAND / "ads"
 SEEK_ADS = ADS / "jobs_au_seek_datascientist_2019-2022_clean.csv"
 RECENT_ADS = ADS / "jobs_au_recent_2024-2026_clean.csv"
+ATS_2026_ADS = DEMAND / "ads" / "ats_2026_clean.csv"        # 2026 job-board ads with a role (plan D2, #116)
 
 COLLECTION = DEMAND / "collection"
 ATS_COMPANIES = COLLECTION / "ats_companies.csv"

@@ -10,9 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data-eda" / "src")
 
 import build_role_profiles as brp  # noqa: E402
 from build_role_skill_demand import (  # noqa: E402
-    COLUMNS, COUNTED, EXTRA_TOKEN_MAP, MIN_ROLE_ADS, MIXED_FAMILY, MIXED_ROLE, SOURCES, TEXT_TYPE,
-    committed_inputs, data_jobs_rows, load_data_jobs, recent_rows, seek_rows, taxonomy_rows, to_frame,
-    to_label, tool_lookup,
+    ATS_PERIOD, COLUMNS, COUNTED, EXTRA_TOKEN_MAP, IT_MIXED_FAMILY, IT_MIXED_ROLE, MIN_ROLE_ADS, MIXED_FAMILY,
+    MIXED_ROLE, SOURCES, TEXT_TYPE, ats_rows, committed_inputs, data_jobs_rows, load_data_jobs, recent_rows,
+    seek_rows, taxonomy_rows, to_frame, to_label, tool_lookup,
 )
 from build_vocabulary import read_table, read_table_text, to_csv_text  # noqa: E402
 from recount_recent import wilson  # noqa: E402
@@ -54,8 +54,9 @@ def test_columns_and_allowed_values():
     assert (COUNTS.importance == "").all()
     assert set(TABLE.importance[TABLE.source == "esco_occupation"]) == {"essential", "optional"}
     assert set(TABLE.importance[TABLE.source == "onet"]) == {"in_demand"}
-    assert set(TABLE.role) <= set(FAMILIES) | {MIXED_ROLE}
-    assert (TABLE.role_family == TABLE.role.map({**FAMILIES, MIXED_ROLE: MIXED_FAMILY})).all()
+    assert set(TABLE.role) <= set(FAMILIES) | {MIXED_ROLE, IT_MIXED_ROLE}
+    assert (TABLE.role_family == TABLE.role.map({**FAMILIES, MIXED_ROLE: MIXED_FAMILY, IT_MIXED_ROLE: IT_MIXED_FAMILY})).all()
+    assert set(TABLE.period[TABLE.source == "ats_2026"]) == {ATS_PERIOD}
     assert not TABLE.duplicated(["role", "skill_id", "source", "period"]).any()
     assert set(TABLE.period[TABLE.source == "recent_2024_26"]) == {"2024-01", "2026"}
 
@@ -220,10 +221,35 @@ def rebuilt(rows) -> pd.DataFrame:
     return read_table_text(to_csv_text(to_frame(rows)))
 
 
+def test_ats_blocks_follow_the_30_ad_rule_and_skip_other():
+    own = COUNTS[(COUNTS.source == "ats_2026") & ~COUNTS.role.isin([MIXED_ROLE, IT_MIXED_ROLE])]
+    assert (own.total_ads >= MIN_ROLE_ADS).all()
+    n = MIN_ROLE_ADS
+    ats = pd.DataFrame({
+        "role": ["Software Engineer"] * n + ["Data Scientist"] * 2 + ["Cybersecurity Analyst"] * 3 + ["other"] * 4,
+        "description": ["Java and Python."] * n + ["Python."] * 2 + ["Splunk."] * 3 + ["Python sales."] * 4})
+    rows, notes = ats_rows(VOCAB, ats, FAMILIES)
+    blocks = pd.DataFrame(rows).groupby("role").total_ads.first().to_dict()
+    assert blocks == {"Software Engineer": n, MIXED_ROLE: 2, IT_MIXED_ROLE: 3}      # "other" is not counted
+    assert {r["period"] for r in rows} == {ATS_PERIOD} and {r["text_type"] for r in rows} == {"full_text"}
+    with pytest.raises(ValueError):
+        ats_rows(VOCAB, pd.DataFrame({"role": ["Astronaut"], "description": ["Python."]}), FAMILIES)
+
+
+def test_committed_ats_file_has_roles_and_masked_text():
+    ats = INPUTS["ats"]
+    assert list(ats.columns) == ["ad_id", "source", "company", "title", "role", "location", "posted", "snapshot", "description", "url"]
+    assert set(ats.role) <= set(FAMILIES) | {"other"} and (ats.role != "other").sum() >= MIN_ROLE_ADS
+    assert not ats.duplicated(["company", "title", "description"]).any() and not ats.duplicated("ad_id").any()
+    assert not ats.description.str.contains(r"[\w.+-]+@[\w-]+\.[\w.-]+", regex=True).any()       # emails masked
+    assert (ats.description.str.len() >= 200).all()
+
+
 def test_committed_seek_recent_and_taxonomy_rows_are_what_the_builder_writes():
     v, f = VOCAB, FAMILIES
     assert committed("seek_2019_22").equals(rebuilt(seek_rows(v, INPUTS["seek"], f["Data Scientist"])))
     assert committed("recent_2024_26").equals(rebuilt(recent_rows(v, INPUTS["recent"], f)[0]))
+    assert committed("ats_2026").equals(rebuilt(ats_rows(v, INPUTS["ats"], f)[0]))
     tax, _ = taxonomy_rows(v, INPUTS["occupation_skills"], INPUTS["onet_map"], f)
     assert committed(["esco_occupation", "onet"]).equals(rebuilt(tax))
 
