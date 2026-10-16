@@ -54,10 +54,14 @@ class PhraseIgnored(RuntimeError):
     pass
 
 
-def count_ads(session, query, *, match="phrase", where="", category=None, max_days_old=None,
+def count_ads(session, query, *, match="phrase", where="", category=None, max_days_old=None, title_only=None,
               app_id, app_key, country="au", insecure=False, retry_wait=60.0):
-    """Adzuna's `count` for one query (None if the call failed). Empty query = all live ads."""
+    """Adzuna's `count` for one query (None if the call failed). Empty query = all live ads.
+
+    `title_only` keeps only ads whose title has all of its words (count_role_skills_adzuna.py)."""
     what, extra = "", {}
+    if title_only:
+        extra["title_only"] = title_only
     if query:
         if match == "phrase":
             extra["what_phrase"] = query

@@ -15,6 +15,8 @@ from the repo root.
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
 | `ads/CLEANING_NOTES.txt` | What each cleaned file is, who uses it, how it was cleaned (was `data-eda/data/clean/README.txt`) | Van Thong | Text |
+| `adzuna_counts_2026-10.csv` | Live Adzuna search counts per skill x role, 11 roles (plan D12): `role, role_query, skill, skill_query, count, role_total, date`. Section below | Van Thong, 16 Oct | `python data-eda/src/count_role_skills_adzuna.py` (needs an Adzuna key; 173 calls) |
+| `collection/adzuna_queries.csv` | The title query of each role and the phrase searched for each of its 15 priority skills, with a note wherever the phrase is a judgement | Van Thong, 16 Oct | `count_role_skills_adzuna.py --write-queries`, then by hand |
 | `collection/ats_companies.csv` | The 65 job boards `fetch_ats.py` reads | Van Thong, Quan | Edited by hand |
 | `collection/ats_candidates.csv` | 206 candidate employers with a slug guess per platform | Quan, 13 Oct | Edited by hand |
 | `collection/ats_probe_2026-10-13.csv` | Which boards answered, with how many Australian data roles | Quan, 13 Oct | `python data-eda/src/probe_ats.py` (writes `ats_probe_<date>.csv`) |
@@ -28,6 +30,19 @@ with a 95% Wilson interval. `match.py` reads `pct_2026` as `demand_pct_2026` (tr
 `pct_2026_all_low` as the 2026 floor of the gap weight in `recommend._weight` (via
 `match.demand_2026_low`). **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
 5, so one ad moves a data-scientist share by 11 points. Show 2026 as "n of 9", not as a bare percentage.
+
+## Adzuna search counts (plan D12): `adzuna_counts_2026-10.csv`
+
+A **search count** is the number of live ads on Adzuna Australia on `date` whose title has all the words of
+`role_query` (Adzuna's `title_only`) and whose text has `skill_query` as an exact phrase (`what_phrase`);
+`role_total` is the same without the phrase, so the share is `count / role_total`. Only the numbers are
+kept, never ad text. Checked on 16 Oct before the run: `what_phrase` searches the **whole ad**, not only the
+title and the 500-character snippet the API returns (of 50 ads returned for "stakeholder management", 11
+show the phrase in title or snippet). So a share here is comparable to the full-text counts, with three
+differences: it is one phrase per skill, not every alias (`adzuna_queries.csv` notes where that under- or
+over-counts: R, Excel, React, Spark); a role is one set of title words (DevOps/SRE is "devops", QA/Test
+Engineer is "test analyst"); and the ads are whatever is live on Adzuna that day, re-listings included.
+Three skills in ESCO's wording that no ad uses have no phrase and a blank count.
 
 Owner of the folder: Van Thong. Planned here (plan D1, D13): `roles.csv`, `role_outlook.csv`. Once the app
 reads `role_skill_demand.csv` (plan C2, after 17 Oct), `skill_counts_*`, `top_skills.csv` and `role_profiles.*`
