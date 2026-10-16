@@ -296,3 +296,11 @@ subject_code,skill_id,skill,collected_by,period
 94693,,Airflow DAG,Van Thong (Canvas),Spring 2026
 94693,esco:http://data.europa.eu/esco/skill/633a3637-2c6b-40ae-ac38-289eb2a62aa6,Business analysis,Van Thong (Canvas),Spring 2026
 94693,esco:http://data.europa.eu/esco/skill/97bd1c21-66b2-4b7e-ad0f-e3cda590e378,data analytics,Van Thong (Canvas),Spring 2026
+94693,skillabus:spark,Spark,Phuong Nhi (own assessments),Spring 2026
+94693,,Spark MLlib,Phuong Nhi (own assessments),Spring 2026
+94693,,Medallion architecture,Phuong Nhi (own assessments),Spring 2026
+94693,,Slowly changing dimensions,Phuong Nhi (own assessments),Spring 2026
+94693,esco:http://data.europa.eu/esco/skill/fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5,Data modelling,Phuong Nhi (own assessments),Spring 2026
+94693,esco:http://data.europa.eu/esco/skill/713fb616-118e-40bc-9366-4a69879a49d5,Data quality,Phuong Nhi (own assessments),Spring 2026
+94693,,Cloud Composer,Phuong Nhi (own assessments),Spring 2026
+94693,,Cloud SQL,Phuong Nhi (own assessments),Spring 2026
