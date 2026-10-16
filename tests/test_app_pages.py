@@ -79,7 +79,10 @@ def test_role_picker_lists_eleven_roles_with_their_source():
     assert "3,204 Seek Data Scientist ads 2019-22, full text" in page_text(at)
     pick_role(at, "Cybersecurity Analyst")
     assert "No Australian ad counts yet" in page_text(at)
-    assert at.segmented_control(key="stage_box").value == "Studying MDSI"
+    assert at.segmented_control(key="stage_box").value == "Studying at UTS"
+    assert at.selectbox(key="course_box").value == "C04372"                       # MDSI by default
+    at.segmented_control(key="stage_box").set_value("Already working").run()
+    assert at.selectbox(key="course_box").value == ""                            # not enrolled
 
 
 def test_role_mode_data_engineer():
@@ -120,8 +123,10 @@ def test_role_mode_cybersecurity_shows_core_skills_without_bars():
 def test_elective_mode_counts_taken_subjects():
     at = start("elective")
     pick_role(at, "Data Engineer")
-    assert any(o.startswith("94693 ") for o in at.pills(key="taken_box").options)   # MDSI subjects, by name
-    at.pills(key="taken_box").set_value(["94693"]).run()
+    picker = at.multiselect(key="taken_box")                  # AppTest lists the options as shown: names, no codes
+    assert picker.options[:2] == ["Data Science for Innovation", "Leading Data Science Initiatives"]   # MDSI first
+    assert "Big Data Engineering" in picker.options and not any(o.startswith("94693") for o in picker.options)
+    picker.set_value(["94693"]).run()
     show_gaps(at)
     assert "94693" not in [r["subject_code"] for r in at.session_state.result["recommendations"]]
     spark = next(s for s in at.session_state.result["skills"] if s["skill_label"] == "Spark")

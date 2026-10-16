@@ -77,7 +77,10 @@ div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] p { whit
 .k-ad mark { color: #e8e6e1; padding: 0 2px; border-radius: 2px 2px 0 0; border-bottom: 2px solid; }
 .k-layer { font-size: 13px; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
 .k-preview { font-family: 'Literata', Georgia, serif; font-size: 16px; line-height: 1.65; color: #c9c8c2; white-space: pre-line; max-height: 380px; overflow: auto; }
-div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] { justify-content: flex-start; padding-left: 0; padding-right: 0; text-align: left; }
+div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"],
+div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] div,
+div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] span { justify-content: flex-start; text-align: left; }
+div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] { padding-left: 0; padding-right: 0; }
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] p { font-size: 15px; }
 button[data-testid="stBaseButton-primary"] { color: #0a0b0c !important; }
 button[data-testid="stBaseButton-primary"] p { font-weight: 500; font-size: 16px; color: #0a0b0c !important; }

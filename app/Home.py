@@ -48,7 +48,10 @@ USER_TYPES = {   # key -> card label, the question it answers, the call to actio
 CARD_ACCENT = {"elective": ui.HAVE, "job": ui.LINK, "switch": ui.PARTIAL}   # one colour per card and its CTA
 INPUT_TITLES = {"job": "The ad and your resume", "elective": "The role and your subjects",
                 "switch": "The role and your resume"}
-STAGES = {"About to enrol": "C04372", "Studying MDSI": "C04372", "Already working": None}   # -> home course
+STAGES = ("About to enrol", "Studying at UTS", "Already working")
+NOT_ENROLLED = ""                                              # the course picker's "not enrolled" value
+COURSES = backend.courses()                                    # (code, name) for all 44 courses, MDSI first
+COURSE_NAME = dict(COURSES)
 AD_MODES = ("Browse ads", "Paste an ad", "Try a sample")
 RESUME_MODES = ("Upload a file", "Paste text", "Use a sample")
 MIN_AD_WORDS = 20
@@ -58,6 +61,11 @@ CORE_SOURCE = {"onet": "O*NET in-demand tool", "esco": "ESCO essential skill"}
 CHAT_SUGGESTIONS = ("Which subject teaches LLMs?", "What does 36118 cover?",
                     "What should I build for data engineering?")
 STEP_OF = {"start": 1, "inputs": 2, "jobs": 2, "results": 3, "evidence": 3}
+SUBJECT_NAME = dict(backend.subjects())                      # code -> name, all 360 subjects
+_name_count: dict[str, int] = {}
+for _n in SUBJECT_NAME.values():
+    _name_count[_n] = _name_count.get(_n, 0) + 1
+SHARED_NAMES = {n for n, k in _name_count.items() if k > 1}    # "Machine Learning" exists under several codes
 
 st.set_page_config(page_title="Skillabus", page_icon="🎓", layout="wide")
 st.markdown(ui.CSS, unsafe_allow_html=True)
@@ -108,7 +116,7 @@ def enrol_note(r: dict) -> str:
     if r.get("offered"):
         parts.append("Runs in " + ", ".join(r["offered"]))
     if r.get("needs"):
-        parts.append("needs " + " and ".join(r["needs"]) + " first")
+        parts.append("needs " + names(r["needs"]) + " first")
     elif r.get("unverified"):
         parts.append("prerequisites not confirmed")
     elif r.get("offered"):          # the baseline has no session data, so it claims nothing
@@ -140,6 +148,21 @@ def cert_line(c: dict) -> str:
     return line
 
 
+def subject_name(code: str) -> str:
+    """The subject's name; the code is shown only where it is needed (the design hides codes)."""
+    return SUBJECT_NAME.get(code, code)
+
+
+def subject_label(code: str) -> str:
+    """Name, plus the code only when another subject has the same name."""
+    name = subject_name(code)
+    return f"{name} ({code})" if name in SHARED_NAMES else name
+
+
+def names(codes) -> str:
+    return " and ".join(subject_name(c) for c in codes)
+
+
 def regex_for(label: str):
     """The pattern that finds a skill in text: the dictionary's aliases, or the label itself."""
     return baseline.skill_regex(label)
@@ -152,7 +175,8 @@ DEFAULTS = {
     "step": "start", "user_type": None, "messages": [], "chat_open": False, "show_ad": False,
     "show_details": False, "ad_keep": "", "ad_mode_keep": "Try a sample", "ad_pick": None, "taken_keep": [],
     "whatif": [], "result": None, "engine": "", "ran": False, "gap": None, "resume_text": "", "resume_label": None,
-    "role_keep": backend.DEFAULT_ROLE, "stage_keep": "Studying MDSI", "gpt_keep": backend.llm_enabled(),
+    "role_keep": backend.DEFAULT_ROLE, "stage_keep": "Studying at UTS", "course_keep": backend.HOME_COURSE,
+    "gpt_keep": backend.llm_enabled(),
     "level_keep": list(backend.LEVELS), "cost_keep": "Include free-to-audit", "toast": None,
 }
 for k, v in DEFAULTS.items():
@@ -215,7 +239,7 @@ def run_analysis() -> None:
     """Run the pipeline on what the Inputs page kept; subjects ticked as taken (what-if) count as taken."""
     taken = tuple(sorted(set(ss.taken_keep) | set(ss.whatif)))
     ad = ss.ad_keep if ss.user_type == "job" else None
-    result, engine = cached_analyse(ss.resume_text, ad, taken, ss.role_keep, STAGES.get(ss.stage_keep),
+    result, engine = cached_analyse(ss.resume_text, ad, taken, ss.role_keep, ss.course_keep or None,
                                     bool(ss.gpt_keep))
     ss.update(result=result, engine=engine, ran=True)
 
@@ -276,6 +300,14 @@ def ad_mode_changed() -> None:
         ss.ad_box, ss.ad_pick = "", None
 
 
+def stage_changed() -> None:
+    """Already working: not enrolled, unless a course was picked; a student without a course gets MDSI."""
+    if ss.stage_box == "Already working":
+        ss.course_box = NOT_ENROLLED
+    elif not ss.course_box:
+        ss.course_box = backend.HOME_COURSE
+
+
 def keep_role() -> None:
     if ss.role_box is None:               # pills can be deselected; a role is always needed
         ss.role_box = ss.role_keep
@@ -303,6 +335,8 @@ with st.sidebar:
                   width="stretch", disabled=not enabled, on_click=go, args=(step,))
     if ss.ran and current == 3 and ss.user_type:
         lines = [ui.esc(f"{USER_TYPES[ss.user_type][0]} · {ss.stage_keep}")]
+        if ss.course_keep:
+            lines.append(ui.esc(COURSE_NAME.get(ss.course_keep, ss.course_keep)))
         if ss.user_type == "job":
             lines.append(f"<span style='color:{ui.INK}'>{ui.esc(ad_title())}</span>")
         elif ss.result and ss.result.get("role"):
@@ -310,7 +344,7 @@ with st.sidebar:
         if ss.resume_label:
             lines.append(ui.esc(ss.resume_label))
         if ss.whatif:
-            lines.append(ui.esc("Counting as taken: " + ", ".join(ss.whatif)))
+            lines.append(ui.esc("Counting as taken: " + ", ".join(subject_name(c) for c in ss.whatif)))
         st.markdown("<div class='k-small k-mute' style='padding:8px 0 0 6px;line-height:1.7'>"
                     + "<br>".join(lines) + "</div>", unsafe_allow_html=True)
     st.markdown("<div style='height:18vh'></div>", unsafe_allow_html=True)
@@ -398,20 +432,15 @@ def role_block() -> None:
 
 
 def taken_block() -> None:
-    mdsi = backend.mdsi_subjects()
-    names = dict(mdsi)
-    other = {c: n for c, n in backend.subjects() if c not in names}
-    ss.setdefault("taken_box", [c for c in ss.taken_keep if c in names])
-    ss.setdefault("taken_more", [c for c in ss.taken_keep if c in other])
-    n = len(ss.taken_box) + len(ss.taken_more)
-    st.markdown(ui.eyebrow(f"Subjects you've already taken <span style='color:{ui.HAVE}'>· {n}</span>"),
-                unsafe_allow_html=True)
-    st.pills("MDSI subjects", list(names), key="taken_box", selection_mode="multi",
-             format_func=lambda c: f"{c} {names[c]}", label_visibility="collapsed")
-    with st.expander("Other UTS subjects"):
-        st.multiselect("Subjects", list(other), key="taken_more", format_func=lambda c: f"{c} {other[c]}",
-                       label_visibility="collapsed")
-    ss.taken_keep = list(ss.taken_box) + list(ss.taken_more)
+    mine = backend.course_subjects(ss.course_keep or backend.HOME_COURSE)   # the student's course first
+    options = mine + [c for c in SUBJECT_NAME if c not in set(mine)]
+    ss.setdefault("taken_box", [c for c in ss.taken_keep if c in SUBJECT_NAME])
+    st.markdown(ui.eyebrow(f"Subjects you've already taken <span style='color:{ui.HAVE}'>· {len(ss.taken_box)}"
+                           "</span>"), unsafe_allow_html=True)
+    st.multiselect("Subjects taken", options, key="taken_box", format_func=subject_label,
+                   placeholder="Type a subject name (your course's subjects come first)",
+                   label_visibility="collapsed")
+    ss.taken_keep = list(ss.taken_box)
 
 
 def resume_block() -> str:
@@ -452,10 +481,21 @@ def page_inputs() -> None:
     ut = ss.user_type
     st.markdown(ui.h1(INPUT_TITLES[ut], "md"), unsafe_allow_html=True)
 
-    st.markdown(ui.eyebrow("Where are you in your studies?"), unsafe_allow_html=True)
     ss.setdefault("stage_box", ss.stage_keep)
-    st.segmented_control("Stage", list(STAGES), key="stage_box", label_visibility="collapsed")
+    ss.setdefault("course_box", ss.course_keep)
+    stage_col, course_col = st.columns([1.1, 1], gap="large", vertical_alignment="bottom")
+    with stage_col:
+        st.markdown(ui.eyebrow("Where are you in your studies?"), unsafe_allow_html=True)
+        st.segmented_control("Stage", list(STAGES), key="stage_box", label_visibility="collapsed",
+                             on_change=stage_changed)
     ss.stage_keep = ss.stage_box or ss.stage_keep
+    with course_col:
+        st.markdown(ui.eyebrow("Your course <span class='k-dim'>· decides which subjects are open to you</span>"),
+                    unsafe_allow_html=True)
+        st.selectbox("Course", [NOT_ENROLLED] + [c for c, _ in COURSES], key="course_box",
+                     format_func=lambda c: "Not enrolled at UTS" if c == NOT_ENROLLED else COURSE_NAME[c],
+                     label_visibility="collapsed")
+    ss.course_keep = ss.course_box or NOT_ENROLLED
 
     resume = ""
     if ut == "job":                     # ad and resume side by side: both in view on a short screen
@@ -577,7 +617,7 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
             continue
         session = (plan.get(code) or {}).get("session") or ", ".join(r.get("offered") or [])
         with st.container(border=True):
-            if st.button(f"{code} {r['subject_name']}", key=f"path_{code}", type="tertiary", width="stretch"):
+            if st.button(r["subject_name"], key=f"path_{code}", type="tertiary", width="stretch"):
                 subject_dialog(code)
             chips = "".join(ui.chip(lc(c), by.get(c, {}).get("status", "missing")) for c in r["covers"])
             st.markdown(chips or ui.chip("a prerequisite, no gap itself"), unsafe_allow_html=True)
@@ -615,7 +655,7 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
         left.button("Reset what-if", key="whatif_reset", type="tertiary", on_click=reset_whatif)
     elif lp["subjects"]:
         first = lp["subjects"][0]
-        left.button(f"What if I had taken {first}?", key="whatif_first", type="tertiary",
+        left.button(f"What if I had taken {subject_name(first)}?", key="whatif_first", type="tertiary",
                     on_click=set_whatif, args=(first, True))
     right.download_button("Download plan", plan_markdown(res), file_name="skillabus_plan.md",
                           mime="text/markdown", key="download_plan", type="tertiary")
@@ -774,7 +814,7 @@ def uts_block(label: str, res: dict) -> None:
     for i, (r, e) in enumerate(hits[:3]):
         with st.container(border=True):
             name_col, layer_col = st.columns([3, 1.4], vertical_alignment="center")
-            if name_col.button(f"{r['subject_code']} {r['subject_name']}", key=f"ev_{i}", type="tertiary"):
+            if name_col.button(r["subject_name"], key=f"ev_{i}", type="tertiary"):
                 subject_dialog(r["subject_code"])
             layer_col.markdown(f"<div style='text-align:right'>{ui.layer_pill(e['layer'])}</div>",
                                unsafe_allow_html=True)
@@ -792,7 +832,7 @@ def uts_block(label: str, res: dict) -> None:
     # Subjects that teach it but the student cannot take (recommend()'s learning_path.dropped), the two strongest.
     for d in [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]][:2]:
         reason = d["reason"] if len(d["reason"]) <= 120 else d["reason"][:117].rstrip() + "…"
-        st.caption(f"{d['subject_code']} {d['subject_name']} also teaches it, but {reason}.")
+        st.caption(f"{d['subject_name']} also teaches it, but {reason}.")
 
 
 @st.fragment
@@ -849,7 +889,7 @@ def page_evidence() -> None:
 
 def subject_dialog(code: str) -> None:
     """Open the subject dialog; the title is the code, as a dialog's title is fixed when it is declared."""
-    st.dialog(code, width="large")(subject_body)(code)
+    st.dialog(subject_name(code), width="large")(subject_body)(code)
 
 
 def subject_body(code: str) -> None:
@@ -859,15 +899,13 @@ def subject_body(code: str) -> None:
     r = recs.get(code)
     dropped = next((d for d in res["learning_path"].get("dropped", []) if d["subject_code"] == code), None)
     info = r or dropped or {}
-    st.markdown(f"<div class='k-h1 md' style='font-size:30px'>{ui.esc(info.get('subject_name', code))}</div>",
-                unsafe_allow_html=True)
     plan = {p["subject_code"]: p for p in res["learning_path"].get("plan", []) if isinstance(p, dict)}
     when = (plan.get(code) or {}).get("session") or ", ".join(info.get("offered") or []) or "not in the 2026 sessions we have"
-    before = " and ".join(info.get("needs") or []) or ("not confirmed" if info.get("unverified") else "no prerequisite")
+    before = names(info.get("needs") or []) or ("not confirmed" if info.get("unverified") else "no prerequisite")
     if dropped:
         access, colour = dropped["reason"], ui.PARTIAL
     elif r and r.get("needs"):
-        access, colour = f"Needs {' and '.join(r['needs'])} first", ui.PARTIAL
+        access, colour = f"Needs {names(r['needs'])} first", ui.PARTIAL
     elif r and r.get("provider"):
         access, colour = f"Outside UTS ({r['provider']}, {r['cost']}) · not for credit", ui.MUTE
     else:
@@ -889,8 +927,8 @@ def subject_body(code: str) -> None:
             st.markdown(f"<div class='k-small' style='color:{lcolour}'>{ui.esc(name)} · {ui.esc(e['skill_label'])}</div>"
                         + ui.quote(e["text"], lcolour), unsafe_allow_html=True)
     if info.get("source_url"):
-        st.markdown(f"<a href='{ui.esc(info['source_url'])}' target='_blank'>Open in UTS Handbook ↗</a>",
-                    unsafe_allow_html=True)
+        st.markdown(f"<a href='{ui.esc(info['source_url'])}' target='_blank'>Open in UTS Handbook ↗</a> "
+                    f"<span class='k-mono k-small k-dim'>{ui.esc(code)}</span>", unsafe_allow_html=True)
     if not (r and r.get("provider")):
         whatif_box(code, f"wi_dlg_{code}", "I've already taken this")
 

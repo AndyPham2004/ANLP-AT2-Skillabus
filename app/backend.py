@@ -325,6 +325,69 @@ def subjects() -> list[tuple[str, str]]:
     return list(pairs.itertuples(index=False, name=None))
 
 
+HOME_COURSE = "C04372"
+COURSE_NAMES = [   # the 44 courses in subject_profiles.csv (subject_profiles.md "Courses"), MDSI first
+    ("C04372", "Master of Data Science and Innovation"),
+    ("C04370", "Executive Master of Data Science and Innovation"),
+    ("C04379", "Master of Business Analytics"), ("C04380", "Master of Business Analytics (C04380)"),
+    ("C04467", "Master of Business Analytics (C04467)"),
+    ("C04295", "Master of Information Technology"), ("C04296", "Master of Information Technology (C04296)"),
+    ("C04373", "Master of Quantitative Finance"),
+    ("C04443", "Master of Artificial Intelligence"), ("C04256", "Master of Artificial Intelligence (Online)"),
+    ("C04430", "Master of Cybersecurity"), ("C04431", "Master of Cybersecurity (C04431)"),
+    ("C04434", "Master of Technology Management"), ("C04435", "Master of Technology Management (C04435)"),
+    ("C04450", "Master of Technology Innovation"),
+    ("C04265", "Master of Science (Extension)"), ("C04277", "Master of Engineering (Extension)"),
+    ("C06113", "Graduate Diploma in Information Technology"),
+    ("C06124", "Graduate Diploma in Data Science and Innovation"),
+    ("C06147", "Graduate Diploma in Artificial Intelligence"),
+    ("C11142", "Graduate Certificate in Information Technology"),
+    ("C11247", "Graduate Certificate in Information Technology (C11247)"),
+    ("C11191", "Graduate Certificate in Artificial Intelligence"),
+    ("C11274", "Graduate Certificate in Data Science and Innovation"),
+    ("C11280", "Graduate Certificate in Business Analytics"),
+    ("C11385", "Graduate Certificate in Business Analytics (C11385)"),
+    ("C11308", "Graduate Certificate in Quantitative Finance"),
+    ("C11329", "Graduate Certificate in Health Analytics"),
+    ("C11339", "Graduate Certificate in AI Management"),
+    ("C11340", "Graduate Certificate in Cybersecurity Management"),
+    ("C11350", "Graduate Certificate in Data Visualisation and Storytelling"),
+    ("C11376", "Graduate Certificate in Applied AI for Finance"),
+    ("C10148", "Bachelor of Information Technology"), ("C10143", "Bachelor of Information Technology (C10143)"),
+    ("C10474", "Bachelor of Artificial Intelligence"), ("C10476", "Bachelor of Computing Science"),
+    ("C10471", "Bachelor of Cybersecurity"), ("C10457", "Bachelor of Mathematical Sciences"),
+    ("C10395", "Bachelor of Information Systems"), ("C10229", "Bachelor of Games Development"),
+    ("C10242", "Bachelor of Science"), ("C10347", "Bachelor of Advanced Science"),
+    ("C09019", "Bachelor of Information Technology (Honours)"),
+    ("C09119", "Bachelor of Computing Science (Honours)"),
+    ("C09129", "Bachelor of Mathematical Sciences (Honours)"),
+    ("C09168", "Bachelor of Science (Honours)"), ("C09066", "Bachelor of Engineering (Honours)"),
+]
+
+
+def _course_codes() -> set[str]:
+    lay = baseline.resources().layers
+    if "course" not in lay.columns:
+        return set()
+    return {c.strip() for cell in lay.course.astype(str) for c in cell.split("|") if c.strip()}
+
+
+def courses() -> list[tuple[str, str]]:
+    """(code, name) of every UTS course in the subject profiles, MDSI first; a code without a name is labelled by its code."""
+    present = _course_codes()
+    named = [(c, n) for c, n in COURSE_NAMES if c in present]
+    known = {c for c, _ in COURSE_NAMES}
+    return named + [(c, f"UTS course {c}") for c in sorted(present - known)]
+
+
+def course_subjects(course: str) -> list[str]:
+    """Codes of the subjects that belong to a course (a subject can belong to several)."""
+    lay = baseline.resources().layers
+    if "course" not in lay.columns or not course:
+        return []
+    return sorted(lay[lay.course.astype(str).str.contains(course, regex=False)].subject_code.astype(str).unique())
+
+
 def mdsi_subjects() -> list[tuple[str, str]]:
     """(code, name) of the MDSI (C04372) subjects in the profiles: the "subjects taken" picker shows these first."""
     lay = baseline.resources().layers
