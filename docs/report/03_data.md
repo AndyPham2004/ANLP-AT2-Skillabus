@@ -276,6 +276,9 @@ skills and O\*NET's "In Demand" software give each role its core skills, without
 We use O\*NET's "In Demand" flag, not its "Hot Technology" flag: in O\*NET's Technology Skills
 file, 37 tools (Hadoop, Kafka and Tableau among them) are "hot" for all ten of our occupations,
 while only Python is "in demand" for all ten, so only the second flag tells the roles apart.
+In the app, the four taxonomy-only roles show these core skills (`occupation_skills.csv`) as
+have or missing, with no percentage bars, and every role lists its certifications (49 from 19
+vendors, `certifications.csv`).
 
 ## 3.9 Market against curriculum
 
