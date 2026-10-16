@@ -173,6 +173,13 @@ def test_elective_mode_counts_taken_subjects():
     assert "94693" not in [r["subject_code"] for r in at.session_state.result["recommendations"]]
     spark = next(s for s in at.session_state.result["skills"] if s["skill_label"] == "Spark")
     assert spark["status"] == "have" and spark["resume_evidence"].startswith("From 94693")
+    # a UTS student's tick on a path card joins the one list of subjects taken (no separate what-if)
+    show_tab(at, "Your path")
+    first = at.session_state.result["learning_path"]["subjects"][0]
+    at.checkbox(key=f"wi_path_{first}").check().run()
+    assert not at.exception, at.exception
+    assert first in at.session_state.taken_keep and at.session_state.whatif == []
+    assert first not in at.session_state.result["learning_path"]["subjects"]
 
 
 def test_job_seeker_mode_with_the_sample_ad():

@@ -248,10 +248,20 @@ def run_analysis() -> None:
 
 
 def set_whatif(code: str, on: bool) -> None:
-    """'Already taken' on a subject: count it as taken and redo the gaps and the path (what-if, issue #60)."""
-    codes = set(ss.whatif)
-    (codes.add if on else codes.discard)(code)
-    ss.whatif = sorted(codes)
+    """'Already taken' on a subject: count it as taken and redo the gaps and the path (what-if, issue #60).
+
+    A UTS student keeps one list, the subjects taken on the Inputs page, so the tick edits that list;
+    the other two kinds of user have no such list and get a separate what-if set with a reset.
+    """
+    if ss.user_type == "elective":
+        taken = set(ss.taken_keep)
+        (taken.add if on else taken.discard)(code)
+        ss.taken_keep = sorted(taken)
+        ss.taken_box = list(ss.taken_keep)          # the Inputs page picker shows the same list
+    else:
+        codes = set(ss.whatif)
+        (codes.add if on else codes.discard)(code)
+        ss.whatif = sorted(codes)
     run_analysis()
 
 
@@ -265,9 +275,11 @@ def reset_whatif() -> None:
 
 
 def whatif_box(code: str, key: str, label: str = "Already taken") -> None:
-    """The what-if tick box for one subject; every copy of it shows the same state."""
-    ss[key] = code in ss.whatif
-    st.checkbox(label, key=key, on_change=whatif_from_box, args=(code, key))
+    """The tick box for one subject; every copy of it shows the same state."""
+    taken = ss.taken_keep if ss.user_type == "elective" else ss.whatif
+    ss[key] = code in taken
+    st.checkbox("I've taken this" if ss.user_type == "elective" else label, key=key,
+                on_change=whatif_from_box, args=(code, key))
 
 
 def open_gap(label: str) -> None:
@@ -707,7 +719,11 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
         notes.append(f"The path covers {lp['demand_covered_pct']:.0f}% of the employer demand behind your gaps.")
     if notes:
         st.caption(" ".join(notes))
-    if ss.whatif:
+    if ss.user_type == "elective":
+        if subjects:
+            st.caption("Tick \"I've taken this\" on a subject and it joins your subjects from the Inputs page; "
+                       "the gaps and the path are recomputed.")
+    elif ss.whatif:
         st.button("Reset: count no subject as taken", key="whatif_reset", type="tertiary", on_click=reset_whatif)
     elif subjects:
         st.caption("Tick \"Already taken\" on a subject to see how your gaps and the path change.")
