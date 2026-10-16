@@ -54,6 +54,9 @@ source, esco_uri, esco_label, esco_match, reviewed_by, aliases_ads, strict, used
   own product not counted) and are used to detect; 11 O\*NET in-demand tools below it (Selenium, Appium, JMeter,
   ServiceNow, Firewalls, ...) are core skills without aliases; 28 are left out. A new alias may not repeat or
   contain another skill's alias (it would take that skill's mentions), so the dictionary's counts do not move.
+  One alias is shared on purpose: `pl/sql` belongs to both SQL and Oracle, because PL/SQL is Oracle's SQL and
+  an ad asking for it asks for both. `extract()` gives one hit per skill for it, the same as the per-skill
+  counters behind the demand files; a test keeps it the only shared alias (#93).
   (2) ESCO's essential skills of the 11 roles that no row above already is: 211 rows, no aliases; they include
   ESCO's research items for data scientist ("apply for research funding"). (+) The 49 certifications of
   `learning_resources/certifications.csv`, `strict = 1` so a certificate name cannot take a skill's mention,
