@@ -14,15 +14,16 @@ import pandas as pd
 import backend  # noqa: F401  (puts src/ on sys.path)
 from skillabus import paths  # noqa: E402
 
-ROLES = [                      # chip label, pattern on the title (first match wins), as the design's role chips
+ROLES = [                      # the app's role name, pattern on the title (first match wins)
     ("Data Scientist", r"data scien"),
     ("Data Engineer", r"data engineer|data platform|etl"),
     ("Data Analyst", r"data analyst|analytics|insights"),
     ("Machine Learning Engineer", r"machine learning|\bml\b|mlops"),
-    ("AI Engineer", r"\bai\b|artificial intelligence|gen(erative)? ?ai|llm"),
-    ("BI Developer", r"\bbi\b|business intelligence|tableau|power bi|reporting"),
+    ("Machine Learning Engineer", r"\bai\b|artificial intelligence|gen(erative)? ?ai|llm"),     # AI Engineer ads
+    ("Data Analyst", r"\bbi\b|business intelligence|tableau|power bi|reporting"),             # BI Developer ads
 ]
-ROLE_CHIPS = ["All roles"] + [label for label, _ in ROLES] + ["Other"]
+# A chip only for a role that has ads; the few "Other" ads stay under All roles.
+ROLE_CHIPS = ["All roles"] + sorted({label for label, _ in ROLES})
 LOCATIONS = ["Anywhere", "Sydney", "Melbourne", "Brisbane", "Perth", "Canberra", "Remote"]
 STATES = {"New South Wales": "NSW", "Victoria": "VIC", "Queensland": "QLD", "Western Australia": "WA",
           "South Australia": "SA", "Australian Capital Territory": "ACT", "Tasmania": "TAS"}

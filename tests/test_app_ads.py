@@ -19,9 +19,13 @@ def test_only_full_text_ads_newest_first():
 
 
 def test_role_and_location_chips():
+    # The chips use the app's role names and show only roles that have ads (17 Oct UI check):
+    # AI Engineer ads count as Machine Learning Engineer, BI Developer ads as Data Analyst.
+    assert ads.ROLE_CHIPS == ["All roles", "Data Analyst", "Data Engineer", "Data Scientist", "Machine Learning Engineer"]
     assert ads.role_of("Senior Data Scientist, Personalisation") == "Data Scientist"
     assert ads.role_of("Machine Learning Engineer - AI Platform") == "Machine Learning Engineer"
-    assert ads.role_of("Tableau - BI Developer") == "BI Developer"
+    assert ads.role_of("Applied AI Engineer, Codex") == "Machine Learning Engineer"
+    assert ads.role_of("Tableau - BI Developer") == "Data Analyst"
     assert ads.role_of("Accountant") == "Other"
     assert ads.short_location("Sydney, New South Wales, Australia") == "Sydney, NSW"
     assert ads.short_location("Sydney, Sydney Region") == "Sydney"

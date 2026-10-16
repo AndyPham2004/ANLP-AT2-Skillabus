@@ -78,7 +78,7 @@ def test_start_page_has_the_three_cards():
     for cta in ("Pick a role →", "Add ad and resume →", "Pick role, add resume →"):
         assert cta in text
     assert "Who you are" in text and "Your inputs" in text and "Results" in text      # the stepper in the top bar
-    assert at.button(key="chat_toggle")
+    assert at.button(key="chat_go")
 
 
 def test_role_picker_lists_eleven_roles_with_their_source():
@@ -182,6 +182,20 @@ def test_elective_mode_counts_taken_subjects():
     assert first not in at.session_state.result["learning_path"]["subjects"]
 
 
+def test_certifications_are_cards_with_the_ad_count():
+    # 8A (17 Oct): cards in rows of three, six at first; "hot" carries the ad count, the long reason moves to a note.
+    at = start("switch")
+    pick_role(at, "Software Engineer")
+    show_gaps(at)
+    show_tab(at, "Certifications")
+    text = page_text(at)
+    assert text.count("class='k-cert'") == 6
+    assert "hot · 39 AU ads" in text                                   # AWS Certified Cloud Practitioner
+    assert "top third of certificates for" not in text
+    at.button(key="certs_all").click().run()
+    assert page_text(at).count("class='k-cert'") == 11
+
+
 def test_subject_picker_enter_picks_one_subject_not_every_match():
     # Typing "Statistical" + Enter added all 8 fuzzy matches via "Select 8 matches" (17 Oct UI check).
     from streamlit.proto.MultiSelect_pb2 import MultiSelect
@@ -283,26 +297,52 @@ def test_what_if_taken_reruns_the_path():
 
 
 def test_browse_ads_and_use_one():
+    # 7A (17 Oct): one full-width list, an ad opens in a dialog with "Use this ad"; no split, no table.
+    import ads
     at = start("job")
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     assert not at.exception
     assert "Pick a job ad" in page_text(at)
     at.pills(key="job_role").set_value("Data Scientist").run()
-    assert at.dataframe                                                          # the ads to pick from
-    at.button(key="use_job").click().run()                                       # no row chosen: the newest ad
+    assert not at.dataframe
+    first = ads.search(role="Data Scientist")[0]
+    at.button(key=f"ad_{first['id']}").click().run()                            # opens the ad
+    assert not at.exception, at.exception
+    assert any(first["text"][:80] in m.value for m in at.markdown)
+    at.button(key="use_job").click().run()
     assert not at.exception, at.exception
     assert at.session_state.step == "inputs"
-    assert len(at.text_area(key="ad_box").value) > 500
+    assert at.text_area(key="ad_box").value == first["text"]
     show_gaps(at)
     assert "Skills the ad asks for" in page_text(at)
     assert "Robert Walters" not in page_text(at)
 
 
-def test_handbook_chat_panel_opens_and_answers():
+def test_browse_ads_says_1_ad():
+    at = start("job")
+    at.segmented_control(key="ad_mode").set_value("Browse ads").run()
+    at.text_input(key="job_q").set_value("carsales").run()
+    assert any(c.value.startswith("1 ad, ") for c in at.caption), [c.value for c in at.caption]
+
+
+def test_handbook_chat_is_its_own_page_and_names_no_codes():
+    # 6B (17 Oct): a page with a way back, not a column that squeezes the results; no subject codes.
+    import re
     at = start("switch")
-    at.button(key="chat_toggle").click().run()
-    assert "Ask anything about UTS subjects" in page_text(at)
-    at.chat_input(key="chat_in").set_value("Which subject teaches machine learning?").run()
+    pick_role(at, "Data Engineer")
+    show_gaps(at)
+    show_tab(at, "Your path")
+    at.button(key="chat_go").click().run()
     assert not at.exception, at.exception
+    assert at.session_state.step == "chat"
+    suggestions = [b.label for b in at.button if (b.key or "").startswith("chat_sug_")]
+    assert len(suggestions) == 3 and not any(re.search(r"\b\d{5}\b", s) for s in suggestions)
+    at.button(key="chat_sug_0").click().run()                                   # "Which subject teaches LLMs?"
+    assert not at.exception, at.exception
+    reply = at.session_state.messages[-1]
+    assert reply["role"] == "assistant" and "Applied Natural Language Processing" in reply["content"]
+    assert not re.search(r"\b\d{5}\b", reply["content"]), reply["content"]
+    at.chat_input(key="chat_in").set_value("Which subject teaches machine learning?").run()
     assert at.session_state.messages[-1]["role"] == "assistant"
-    assert "Handbook" in at.session_state.messages[-1]["content"]
+    at.button(key="chat_back").click().run()
+    assert at.session_state.step == "results" and at.session_state.results_tab == "Your path"
