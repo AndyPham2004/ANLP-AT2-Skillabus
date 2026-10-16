@@ -259,6 +259,14 @@ def test_weight_uses_the_low_end_of_the_2026_interval(monkeypatch):
     assert _weight(gap("Python", 82.8)) == 83.8                         # no 2026 row
 
 
+def test_weight_of_a_role_outside_the_2026_sample_has_no_2026_fallback(monkeypatch):
+    """match_role() leaves demand_pct_2026 empty for a role the 2026 data-role sample does not cover,
+    so its own share is the only weight, even for a skill new since 2022."""
+    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Large language models": 18.0})
+    assert _weight(gap("Large language models", 0.0, 36.4)) == 19.0    # Data Scientist or an ad
+    assert _weight(gap("Large language models", 0.0, None)) == 1.0     # e.g. Business Analyst
+
+
 # ------------------------------------------------- real embedding model, when installed
 
 @pytest.mark.skipif(not embeddings_available(), reason="sentence-transformers model not available")
