@@ -246,6 +246,8 @@ def test_committed_ats_file_has_roles_and_masked_text():
     assert not ats.duplicated(["company", "title", "description"]).any() and not ats.duplicated("ad_id").any()
     assert not ats.description.str.contains(r"[\w.+-]+@[\w-]+\.[\w.-]+", regex=True).any()       # emails masked
     assert (ats.description.str.len() >= 200).all()
+    age = (pd.to_datetime(ats.snapshot) - pd.to_datetime(ats.posted.replace("", pd.NA))).dt.days
+    assert (age.dropna() <= 60).all() and not ats.duplicated(["company", "title"]).any()      # the 60-day rule
 
 
 def test_committed_seek_recent_adzuna_and_taxonomy_rows_are_what_the_builder_writes():

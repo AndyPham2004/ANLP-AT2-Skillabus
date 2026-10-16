@@ -85,7 +85,7 @@ DATA_JOBS_PERIOD = "2023"
 TAXONOMY_PERIOD = {"esco_occupation": "v1.2.1", "onet": "v31.0"}
 MIXED_ROLE, MIXED_FAMILY = "Data roles (mixed)", "Data & AI"
 IT_MIXED_ROLE, IT_MIXED_FAMILY = "IT roles (mixed)", "IT (mixed)"   # ats_2026: the small roles outside Data & AI
-ATS_PERIOD, ATS_OTHER = "2026", "other"                            # classify_ats_roles.py's period and non-role label
+ATS_PERIOD, ATS_OTHER = "2026-10", "other"       # the October fetches; not "2026", so no accidental join with recent_2024_26
 MIN_ROLE_ADS = 30  # plan D15: a role's trend is shown only when each period has at least this many of its ads
 
 # Vocabulary rows a tool name may map to: the skills and tools, not the ESCO core skills ("apply for

@@ -2,9 +2,11 @@
 
 Input: the raw fetches of fetch_ats.py in data/raw/ (ats_ads_2026-10-13.csv, ats_ads_2026-10-16.csv, ...):
 every Australian posting of the 65 public job boards, all professions. Output: the committed
-data/2_demand/ads/ats_2026_clean.csv: one row per unique ad (same company, title and text counted once),
-contact details masked as in build_recent_sample.py, and a `role` column that build_role_skill_demand.py
-counts skills by (source = ats_2026).
+data/2_demand/ads/ats_2026_clean.csv: the ads posted at most MAX_AGE_DAYS before their fetch (job boards keep
+evergreen ads open for years; the same 60-day rule as build_recent_sample.py), one row per company and title
+(the latest fetch wins, so a re-listing in a second city counts once), contact details masked as in
+build_recent_sample.py, and a `role` column that build_role_skill_demand.py counts skills by (source = ats_2026,
+period 2026-10).
 
 The role comes from the title alone, so the rule is reviewable: RULES below is tried in order and the
 first match wins. Management titles ("Engineering Manager - Data", "Head of Engineering") and pre-sales,
@@ -38,6 +40,7 @@ log = logging.getLogger("classify_ats_roles")
 RAW_GLOB = "ats_ads_2026-10-*.csv"           # the October fetches (the September file holds data roles only)
 OUT = paths.ATS_2026_ADS
 MIN_TEXT = 200                               # an ad with less text than this is a stub, not an ad
+MAX_AGE_DAYS = 60                            # posted at most this long before the fetch (build_recent_sample's rule)
 COLUMNS = ["ad_id", "source", "company", "title", "role", "location", "posted", "snapshot", "description", "url"]
 OTHER = "other"
 
@@ -45,6 +48,8 @@ ENG = r"engineers?\b"                        # "engineer", "engineers"; never "e
 RULES: list[tuple[str, re.Pattern]] = [
     # Management titles are not individual-contributor roles.
     (OTHER, re.compile(r"\b(?:managers?|director|head of|chief|vp|vice president|officer|team lead|engineering lead)\b", re.I)),
+    # DevOps named in the title stays DevOps even when the role is support ("Senior DevOps Support Engineer").
+    ("DevOps/SRE", re.compile(rf"\bdevops\b.*\b{ENG}", re.I)),
     # Pre-sales, consulting, enablement and support "engineers" and "architects".
     (OTHER, re.compile(
         rf"\b(?:sales|solutions?|customer success|customer|support|services?|escalations?|enablement|onboarding|"
@@ -58,7 +63,8 @@ RULES: list[tuple[str, re.Pattern]] = [
         r"|\bengineers?\s*[-–(]\s*(?:salesforce|c#|\.net)", re.I)),
     ("Cybersecurity Analyst", re.compile(
         rf"security (?:{ENG}|analysts?\b|archi\w*|specialists?\b|consultants?\b|operations|researchers?\b)|cyber|infosec"
-        r"|information security|penetration|\bsoc\b|identity (?:&|and) access|\biam engineer|devsecops|\bsiem\b", re.I)),
+        r"|information security|penetration|\bsoc\b|identity (?:&|and) access|\biam engineer|devsecops|\bsiem\b"
+        r"|threat (?:detection|intelligence|hunting)", re.I)),
     ("Cloud Engineer", re.compile(rf"\bcloud\b.*\b(?:{ENG}|architects?\b)|\b(?:aws|azure|gcp) (?:engineer|architect)", re.I)),
     ("DevOps/SRE", re.compile(
         rf"devops|site reliability|\bsre\b|(?:platform|production|infrastructure|reliability|release|build|observability) {ENG}"
@@ -96,7 +102,8 @@ def role_of(title: str) -> str:
 
 
 def read_raw(files: list[Path]) -> pd.DataFrame:
-    """The fetches as one table: one row per unique ad (ad_id, then company + title + text), earliest fetch kept."""
+    """The fetches as one table: ads posted within MAX_AGE_DAYS of their fetch (an unknown date is kept, as in
+    build_recent_sample.py), one row per ad_id and then per company + title, the latest fetch first."""
     parts = []
     for path in sorted(files):
         a = pd.read_csv(path, dtype=str, keep_default_na=False)
@@ -111,9 +118,15 @@ def read_raw(files: list[Path]) -> pd.DataFrame:
         log.info("%s: %d ads, fetched %s", path.name, len(a), snap.date())
     ads = pd.concat(parts, ignore_index=True)
     before = len(ads)
-    ads = ads.drop_duplicates("ad_id").drop_duplicates(["company", "title", "description"])
-    ads = ads[ads.description.str.len() >= MIN_TEXT].reset_index(drop=True)
-    log.info("%d rows -> %d unique ads with text (%d dropped)", before, len(ads), before - len(ads))
+    age = (pd.to_datetime(ads.snapshot) - pd.to_datetime(ads.posted.replace("", pd.NA))).dt.days
+    fresh = age.isna() | (age <= MAX_AGE_DAYS)
+    stale = int((~fresh).sum())
+    ads = ads[fresh & (ads.description.str.len() >= MIN_TEXT)]
+    # The latest fetch first, ad_id breaking ties, so the row kept never depends on input order.
+    ads = ads.sort_values(["snapshot", "posted", "ad_id"], ascending=False, kind="stable")
+    ads = ads.drop_duplicates("ad_id").drop_duplicates(["company", "title"]).reset_index(drop=True)
+    log.info("%d rows -> %d ads: %d posted more than %d days before their fetch dropped, the rest duplicates or stubs",
+             before, len(ads), stale, MAX_AGE_DAYS)
     return ads
 
 

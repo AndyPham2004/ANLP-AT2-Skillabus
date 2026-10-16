@@ -14,7 +14,7 @@ from the repo root.
 | `skills_not_taught_by_uts.csv` | 73 skills: 54 that no UTS subject names, plus 19 named but asked for in 10%+ of 2026 ads (was `uncovered_skills_2026-10-13.csv`) | Quan's session, 13 Oct | Recompute after the vocabulary (D5) and the IT subjects (D8) |
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
-| `ads/ats_2026_clean.csv` | **The 2026 job-board ads with a role** (plan D2): 586 unique Australian ads from the 65 boards (fetches of 13 and 16 Oct 2026, all professions), each given one of the 11 roles or `other` from its title; 132 have a role (Software Engineer 60, Machine Learning Engineer 20, Data Scientist 13, Cybersecurity Analyst 11, DevOps/SRE 9, Network/Systems Administrator 7, Data Analyst 5, Business Analyst 4, Data Engineer 2, Cloud Engineer 1). Contacts masked. Section below | Claude for Quan, 16 Oct | `python data-eda/src/classify_ats_roles.py` (needs the raw fetches in `data/raw/`) |
+| `ads/ats_2026_clean.csv` | **The 2026 job-board ads with a role** (plan D2): 392 Australian ads from the 65 boards (fetches of 13 and 16 Oct 2026, all professions) posted within 60 days of their fetch, one row per company and title, each given one of the 11 roles or `other` from its title; 85 have a role (Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1). Contacts masked. Section below | Claude for Quan, 16 Oct | `python data-eda/src/classify_ats_roles.py` (needs the raw fetches in `data/raw/`) |
 | `ads/CLEANING_NOTES.txt` | What each cleaned file is, who uses it, how it was cleaned (was `data-eda/data/clean/README.txt`) | Van Thong | Text |
 | `adzuna_counts_2026-10.csv` | Live Adzuna search counts per skill x role, 11 roles (plan D12): `role, role_query, skill, skill_query, count, role_total, date`. Section below | Van Thong, 16 Oct | `python data-eda/src/count_role_skills_adzuna.py` (needs an Adzuna key; 173 calls) |
 | `collection/adzuna_queries.csv` | The title query of each role and the phrase searched for each of its 15 priority skills, with a note wherever the phrase is a judgement | Van Thong, 16 Oct | `count_role_skills_adzuna.py --write-queries`, then by hand |
@@ -75,7 +75,7 @@ Not in it yet: **`pct_required`** (plan D14, required vs preferred), which waits
 | `seek_2019_22` | `2019-22` | full_text | Data Scientist | 3,204 | 197 | Seek Data Scientist ads whose cleaned text names the skill |
 | `data_jobs_2023` | `2023` | tool_list | the 7 roles of `role_profiles.csv` | 263 (ML Engineer) to 4,438 (Data Engineer) | 576 | the role's Australian ads whose tool list names the tool |
 | `recent_2024_26` | `2024-01`, `2026` | full_text | `Data roles (mixed)` | 122, 22 | 149 + 74 | in-sample full-text ads of `ads/jobs_au_recent_2024-2026_clean.csv` naming the skill |
-| `ats_2026` | `2026` | full_text | `Software Engineer`; `Data roles (mixed)`; `IT roles (mixed)` | 60; 40; 32 | 287 | ads of `ads/ats_2026_clean.csv` with that role (or folded into a mixed block) naming the skill |
+| `ats_2026` | `2026-10` | full_text | `Software Engineer`; `Data roles (mixed)`; `IT roles (mixed)` | 33; 26; 26 | 244 | ads of `ads/ats_2026_clean.csv` with that role (or folded into a mixed block) naming the skill |
 | `adzuna_2026` | `2026-10` | search_count | all 11 | 62 (ML Engineer) to 1,171 (Software Engineer) | 153 | live Adzuna AU ads on 16 Oct whose title has the role's words and whose text has the skill's phrase; only each role's 15 priority skills searched (section on Adzuna counts) |
 | `esco_occupation` | `v1.2.1` | taxonomy | all 11 | | 456 | (no share) ESCO lists the skill as essential or optional for the role's occupation |
 | `onet` | `v31.0` | taxonomy | all 11 | | 207 | (no share) O\*NET marks the tool In Demand for the role's occupation |
@@ -97,11 +97,13 @@ How each source is counted:
   `2026` = the September and October 2026 job-board fetches together. No role is guessed for an ad.
 - **`ats_2026`: the job-board ads by role (plan D2), one role at a time only with 30 ads (plan D15).** The role
   comes from the title (`classify_ats_roles.py`, rules in the script; the 30-ad hand check is in `ads/CLEANING_NOTES.txt`).
-  A role with at least 30 ads gets its own block; a smaller role folds into `Data roles (mixed)` when its family is
-  Data & AI, else into `IT roles (mixed)`; the 454 ads with role `other` (sales, marketing, management,
-  pre-sales engineers) are not counted. Today: Software Engineer 60, Machine Learning Engineer 20, Data Scientist 13, Cybersecurity Analyst 11, DevOps/SRE 9, Network/Systems Administrator 7, Data Analyst 5, Business Analyst 4, Data Engineer 2, Cloud Engineer 1. The 22 in-sample 2026 ads of `recent_2024_26` are among
-  these ads (same boards), so the two sources overlap; they are not added together anywhere. Bias to state: 65
-  employers that use a modern ATS, mostly technology companies, mostly Sydney and Melbourne; not the whole market.
+  Only ads posted within 60 days of their fetch count, one per company and title: job boards keep evergreen ads open
+  for years, and the same rule makes this source consistent with `recent_2024_26` (#64, #87). A role with at least
+  30 ads gets its own block; a smaller role folds into `Data roles (mixed)` when its family is Data & AI, else into
+  `IT roles (mixed)`; the 307 ads with role `other` (sales, marketing, management, pre-sales engineers) are not
+  counted. Today: Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1. The period is `2026-10`, not `2026`, because the 22 in-sample 2026 ads of
+  `recent_2024_26` are among these ads (same boards): the two sources overlap and must never be added together.
+  Bias to state: 65 employers that use a modern ATS, mostly technology companies, mostly Sydney and Melbourne.
 - **`data_jobs_2023`**: the Australian rows, de-duplication and title map of `build_role_profiles.py`
   (senior titles fold into their role), and its denominator: the role's ads naming at least one tool (9,234
   of 10,925 ads). Each tool name maps to a vocabulary label: the 148 dictionary rows exactly as
