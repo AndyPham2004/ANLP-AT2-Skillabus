@@ -14,6 +14,8 @@ import csv
 import io
 import os
 import threading
+
+import pandas as pd
 from datetime import datetime
 from pathlib import Path
 
@@ -481,12 +483,16 @@ def page_inputs() -> None:
     ut = ss.user_type
     st.markdown(ui.h1(INPUT_TITLES[ut], "md"), unsafe_allow_html=True)
 
-    ss.setdefault("stage_box", ss.stage_keep)
+    stages = list(STAGES[:2]) if ut == "elective" else list(STAGES)     # a UTS student is not "already working"
+    if ss.get("stage_box") not in stages:
+        ss.stage_box = ss.stage_keep if ss.stage_keep in stages else "Studying at UTS"
     ss.setdefault("course_box", ss.course_keep)
+    if ut == "elective" and not ss.course_box:
+        ss.course_box = backend.HOME_COURSE
     stage_col, course_col = st.columns([1.1, 1], gap="large", vertical_alignment="bottom")
     with stage_col:
         st.markdown(ui.eyebrow("Where are you in your studies?"), unsafe_allow_html=True)
-        st.segmented_control("Stage", list(STAGES), key="stage_box", label_visibility="collapsed",
+        st.segmented_control("Stage", stages, key="stage_box", label_visibility="collapsed",
                              on_change=stage_changed)
     ss.stage_keep = ss.stage_box or ss.stage_keep
     with course_col:
@@ -545,21 +551,28 @@ def page_inputs() -> None:
 def page_jobs() -> None:
     st.button("← Back", key="jobs_back", type="tertiary", on_click=go, args=("inputs",))
     st.markdown(ui.h1("Pick a job ad", "md"), unsafe_allow_html=True)
-    query = st.text_input("Search", key="job_q", placeholder="Search a title, company or skill",
-                          label_visibility="collapsed")
+    search_col, _ = st.columns([1.2, 1])
+    query = search_col.text_input("Search", key="job_q", placeholder="Search a title, company or skill",
+                                  label_visibility="collapsed")
     role = st.pills("Role", ads.ROLE_CHIPS, key="job_role", default="All roles", label_visibility="collapsed")
     loc = st.pills("Location", ads.LOCATIONS, key="job_loc", default="Anywhere", label_visibility="collapsed")
     rows = ads.search(query, role or "All roles", loc or "Anywhere")
-    list_col, view_col = st.columns([1, 1.1], gap="large")
+    list_col, view_col = st.columns([1.15, 1], gap="large")
     with list_col:
         if not rows:
             st.markdown("<div class='k-serif k-mute' style='font-size:18px;padding:24px 0'>No ads match. "
                         "Try a broader role or location.</div>", unsafe_allow_html=True)
             return
-        st.caption(f"{len(rows)} ads, newest first" + (" (the first 30)" if len(rows) == 30 else ""))
-        labels = {a["id"]: ads.label(a) for a in rows}
-        pick = st.radio("Ads", list(labels), format_func=labels.get, label_visibility="collapsed")
-    ad = ads.by_id(pick)
+        st.caption(f"{len(rows)} ads, newest first" + (" (the first 30)" if len(rows) == 30 else "")
+                   + " · click a row to read it")
+        table = pd.DataFrame([{"Title": a["title"], "Company": a["company"], "Where": a["location"],
+                               "Posted": a["posted"]} for a in rows])
+        picked = st.dataframe(table, hide_index=True, width="stretch", height=min(440, 40 + 35 * len(rows)),
+                              on_select="rerun", selection_mode="single-row", key="job_table",
+                              column_config={"Title": st.column_config.TextColumn(width="large"),
+                                             "Posted": st.column_config.TextColumn(width="small")})
+        chosen = picked.selection.rows[0] if picked.selection.rows else 0
+    ad = rows[min(chosen, len(rows) - 1)]
     with view_col, st.container(border=True):
         st.markdown(f"<h2 class='k-h2' style='font-size:24px'>{ui.esc(ad['title'])}</h2>"
                     f"<div class='k-mute' style='font-size:14px;margin:2px 0 12px'>{ui.esc(ad['company'])} · "
@@ -655,53 +668,12 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
         st.caption(f"No subject text names: {', '.join(lc(u) for u in no_subject)}.")
     if counted and lp["subjects"]:
         st.caption(f"The path covers {lp['demand_covered_pct']:.0f}% of the employer demand behind your gaps.")
-    left, right = st.columns(2)
     if ss.whatif:
-        left.button("Reset what-if", key="whatif_reset", type="tertiary", on_click=reset_whatif)
+        st.button("Reset what-if", key="whatif_reset", type="tertiary", on_click=reset_whatif)
     elif lp["subjects"]:
         first = lp["subjects"][0]
-        left.button(f"What if I had taken {subject_name(first)}?", key="whatif_first", type="tertiary",
-                    on_click=set_whatif, args=(first, True))
-    right.download_button("Download plan", plan_markdown(res), file_name="skillabus_plan.md",
-                          mime="text/markdown", key="download_plan", type="tertiary")
-
-
-def plan_markdown(res: dict) -> str:
-    """The results as a one-page Markdown plan the student can keep (the design's "Download plan")."""
-    skills, lp = res["skills"], res["learning_path"]
-    recs = {r["subject_code"]: r for r in res["recommendations"]}
-    plan = {p["subject_code"]: p for p in lp.get("plan", []) if isinstance(p, dict)}
-    target = ad_title() if ss.user_type == "job" else (res.get("role") or "")
-    gaps = [s for s in skills if s["status"] != "have"]
-    lines = ["# Skillabus study plan", "", f"Target: {target}  ", f"Date: {datetime.now():%d %b %Y}", "",
-             f"{len(gaps)} of {len(skills)} skills still to learn.", "", "## Skills", "",
-             "| Skill | Status | Employers asking |", "|---|---|---|"]
-    for s in skills:
-        pct = f"{s['demand_pct']:.0f}%" if s.get("demand_pct") is not None else "core skill"
-        lines.append(f"| {s['skill_label']}{' (emerging)' if s['emerging'] else ''} | {s['status']} | {pct} |")
-    lines += ["", "## Your path at UTS", ""]
-    for i, code in enumerate(lp["subjects"], start=1):
-        r = recs.get(code)
-        if not r:
-            continue
-        when = (plan.get(code) or {}).get("session") or ", ".join(r.get("offered") or []) or "session not listed"
-        covers = ", ".join(lc(c) for c in r["covers"]) or "a prerequisite"
-        need = f"; needs {' and '.join(r['needs'])} first" if r.get("needs") else ""
-        lines.append(f"{i}. {code} {r['subject_name']} ({when}): covers {covers}{need}")
-    if not lp["subjects"]:
-        lines.append("No subject needed." if not gaps else "No UTS subject covers these gaps.")
-    outside = (lp.get("outside") or {}).get("courses", [])
-    if outside:
-        names = {r["subject_code"]: r for r in res.get("outside_recommendations", [])}
-        lines += ["", "## Outside UTS (not for credit)", ""]
-        for code in outside:
-            o = names.get(code)
-            if o:
-                lines.append(f"- {o['subject_name']} ({o.get('provider', '')}, {o.get('cost', '')}): "
-                             f"covers {', '.join(lc(c) for c in o['covers'])}")
-    lines += ["", "Suggestions, not advice. Built from the UTS Handbook 2026 and Australian job ads "
-              f"(engine: {ss.engine}).", ""]
-    return "\n".join(lines)
+        st.button(f"What if I had taken {subject_name(first)}?", key="whatif_first", type="tertiary",
+                  on_click=set_whatif, args=(first, True))
 
 
 def certs_section(role: str) -> None:

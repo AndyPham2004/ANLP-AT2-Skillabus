@@ -2,7 +2,9 @@
 # Skillabus v2 design (docs/design/README.md): dark charcoal, light ink text; teal/amber/rose for
 # have/partial/missing are set in app/ui.py. The fonts are loaded by app/ui.py (Google Fonts).
 base = "dark"
-primaryColor = "#e8e6e1"
+# One accent for everything interactive (the design's CTA blue): primary button, chosen pills, toggles,
+# focus rings. Status colours (teal / amber / rose) stay semantic and live in app/ui.py.
+primaryColor = "#8fbcff"
 backgroundColor = "#121416"
 secondaryBackgroundColor = "#1b1e22"
 textColor = "#e8e6e1"

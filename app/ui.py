@@ -82,10 +82,20 @@ div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] div,
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] span { justify-content: flex-start; text-align: left; }
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] { padding-left: 0; padding-right: 0; }
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] p { font-size: 15px; }
-button[data-testid="stBaseButton-primary"] { color: #0a0b0c !important; }
+button[data-testid="stBaseButton-primary"] { color: #0a0b0c !important; transition: transform .12s, filter .15s; }
 button[data-testid="stBaseButton-primary"] p { font-weight: 500; font-size: 16px; color: #0a0b0c !important; }
+button[data-testid="stBaseButton-primary"]:hover { filter: brightness(1.08); }
+button[data-testid="stBaseButton-primary"]:active { transform: translateY(1px); }
 button[data-testid="stBaseButton-primary"]:disabled { background: #2a2d31 !important; border-color: #2a2d31 !important; }
 button[data-testid="stBaseButton-primary"]:disabled p { color: #6b6c68 !important; }
+/* Chosen pill / segment: a quiet tinted fill with the accent as its border, not a solid light block. */
+button[data-testid="stBaseButton-pillsActive"], button[data-testid="stBaseButton-segmented_controlActive"] {
+  background: rgba(143,188,255,.14) !important; border-color: #8fbcff !important; color: #e8e6e1 !important; }
+button[data-testid="stBaseButton-pillsActive"] p, button[data-testid="stBaseButton-segmented_controlActive"] p { color: #e8e6e1 !important; font-weight: 500; }
+button[data-testid="stBaseButton-pills"], button[data-testid="stBaseButton-segmented_control"] { transition: border-color .15s, background .15s; }
+button[data-testid="stBaseButton-pills"]:hover, button[data-testid="stBaseButton-segmented_control"]:hover { border-color: rgba(255,255,255,.4) !important; }
+.k-mono, .k-count b { font-variant-numeric: tabular-nums; }
+div[data-testid="stDataFrame"] { border-radius: 6px; overflow: hidden; }
 div[data-testid="stTextArea"] textarea { font-family: 'Literata', Georgia, serif; font-size: 16px; line-height: 1.6; }
 /* A chosen item in a multiselect: Streamlit paints it in the (light) primary colour with light text. Dark chip instead. */
 div[data-testid="stMultiSelect"] span[data-baseweb="tag"] { background: #2a2d31 !important; border: 1px solid rgba(255,255,255,.14); }

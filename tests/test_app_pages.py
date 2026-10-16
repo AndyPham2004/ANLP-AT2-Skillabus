@@ -88,6 +88,12 @@ def test_role_picker_lists_eleven_roles_with_their_source():
     assert at.selectbox(key="course_box").value == ""                            # not enrolled
 
 
+def test_uts_student_is_never_already_working():
+    at = start("elective")
+    assert at.segmented_control(key="stage_box").options == ["About to enrol", "Studying at UTS"]
+    assert at.selectbox(key="course_box").value == "C04372"
+
+
 def test_role_mode_data_engineer():
     at = start("switch")
     pick_role(at, "Data Engineer")
@@ -98,7 +104,6 @@ def test_role_mode_data_engineer():
     assert "Skills the role asks for" in text and "<span style='width:" in text        # the percentage bars
     assert "Your path" in text
     assert "Certifications worth having" in text and "Databricks Certified Data Engineer Associate" in text
-    assert at.download_button(key="download_plan")
     at.button(key="toggle_details").click().run()
     assert "Engine: pipeline" in page_text(at)
     open_skill(at)
@@ -202,8 +207,8 @@ def test_browse_ads_and_use_one():
     assert not at.exception
     assert "Pick a job ad" in page_text(at)
     at.pills(key="job_role").set_value("Data Scientist").run()
-    assert at.radio[0].options                                                   # some ads to pick from
-    at.button(key="use_job").click().run()
+    assert at.dataframe                                                          # the ads to pick from
+    at.button(key="use_job").click().run()                                       # no row chosen: the newest ad
     assert not at.exception, at.exception
     assert at.session_state.step == "inputs"
     assert len(at.text_area(key="ad_box").value) > 500

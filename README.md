@@ -92,7 +92,7 @@ biggest gaps.
 - **Your path**: the fewest subjects that close the most gaps, each with its session, the gaps it
   closes and whether it needs a prerequisite first; dashed cards are outside courses for the gaps
   no UTS subject covers. Tick *Already taken* on a subject (or *What if I had taken …*) and the
-  gaps and the path are recomputed. *Download plan* saves the page as Markdown.
+  gaps and the path are recomputed.
 - **Click a skill** to see what the ad said, what your resume said, the UTS subjects that teach it
   with the exact Handbook sentence (labelled learning objective, assessment, weekly topic or
   description), 👍 / 👎 to say whether the match is right, and self-study resources filtered by
