@@ -262,11 +262,11 @@ def test_weight_uses_the_low_end_of_the_2026_interval(monkeypatch):
 
 
 def test_weight_of_a_role_outside_the_2026_sample_has_no_2026_fallback(monkeypatch):
-    """match_role() leaves demand_pct_2026 empty for a role the 2026 data-role sample does not cover,
-    so its own share is the only weight, even for a skill new since 2022."""
+    """A gap with no 2026 share (before C2 a role outside the 2026 data-role sample; now a skill only GPT
+    found) keeps its own share as the only weight, even for a skill new since 2022."""
     monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Large language models": 18.0})
     assert _weight(gap("Large language models", 0.0, 36.4)) == 19.0    # Data Scientist or an ad
-    assert _weight(gap("Large language models", 0.0, None)) == 1.0     # e.g. Business Analyst
+    assert _weight(gap("Large language models", 0.0, None)) == 1.0     # no 2026 share
 
 
 # ------------------------------------------------- real embedding model, when installed

@@ -183,8 +183,10 @@ def _weight(gap: dict) -> float:
     2026 sample is only 22 data roles from 12 employers (9 of them data scientists). Skills that
     were already asked for keep their 2019-22 share: the 2026 sample over-represents AI work
     ("Artificial intelligence" in 86% of the 22), so it would outweigh 3,204 ads. +1 so a skill at 0% still counts for something.
-    Only a gap that carries a 2026 share gets the fallback: match() leaves `demand_pct_2026` empty
-    for a role outside the data roles of that sample, whose own share is then the only weight."""
+    Only a gap that carries a 2026 share gets the fallback; one without (a skill only GPT found) keeps
+    its own share. Since C2 every role's gap carries its 2026 JobsPipe share, but a role other than Data
+    Scientist is counted on those same ads (every skill of its 15 is above 1% today), so the fallback only
+    ever lifts a Data Scientist or ad-mode gap."""
     old = gap.get("demand_pct") or 0.0
     if old < NEW_SKILL_PCT and gap.get("demand_pct_2026") is not None:
         old = max(old, demand_2026_low().get(gap["skill_label"], 0.0))

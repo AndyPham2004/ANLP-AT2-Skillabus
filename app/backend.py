@@ -5,9 +5,10 @@ returns the same shape (Job seeker and Data Scientist only). With an OpenAI key,
 GPT-4o-mini tier then adds skills the dictionary does not know (e.g. "agentic AI"),
 normalised to ESCO / Lightcast / emerging. The app shows which engine produced the result.
 
-Also here, for the role pages: the 11 roles by family, where each role's demand comes from,
-the core skills of the four roles with no Australian ad counts, certifications per role and
-the self-study resources per skill.
+Also here, for the role pages: the 11 roles by family, where each role's demand comes from
+(role_skill_demand.csv, through match.py), the core skills shown for a role with no ad counts
+(none since JobsPipe counted all 11; kept as the fallback), certifications per role and the
+self-study resources per skill.
 """
 
 from __future__ import annotations
@@ -76,9 +77,9 @@ def role_families() -> dict[str, list[str]]:
 
 
 def has_ad_counts(role: str) -> bool:
-    """True for the 7 roles with Australian ad counts; False for the 4 shown as core skills only."""
-    from skillabus.match import roles
-    return role in {r["role"] for r in roles()}
+    """True when the demand table counts the role's ads (all 11 roles since C2); False: core skills only."""
+    from skillabus.match import demand_block
+    return demand_block(role) is not None
 
 
 def occupation(role: str, source: str) -> dict | None:
@@ -87,24 +88,27 @@ def occupation(role: str, source: str) -> dict | None:
 
 
 def role_source(role: str, source: str | None = None, period: str | None = None) -> str:
-    """Where a role's demand comes from: source, year, n and kind of data (the caption under the picker).
+    """Where a role's demand comes from: n, source, when and kind of text (the caption under the picker and
+    under the bars), e.g. "71 JobsPipe Data Engineer ads, Sep-Oct 2026, full text."
 
-    source, period: a gap row's demand_source and demand_period (match.py); default: match.roles(),
-    which reads the same values from the files before any resume is matched.
+    source, period: a gap row's demand_source and demand_period (match.py); default: the role's demand
+    block (match.demand_block), the same one match_role() uses.
     """
-    from skillabus.match import roles
-    info = next((r for r in roles() if r["role"] == role), None)
-    if info is None:
+    from skillabus.match import demand_block, demand_caption
+    block = demand_block(role, source, period)
+    if block is None:
         esco, onet = occupation(role, "esco"), occupation(role, "onet")
         return (f"No Australian ad counts yet: core skills of the ESCO occupation '{esco['occupation_title']}' "
                 f"and O*NET {onet['occupation_code']} {onet['occupation_title']}.")
-    source, period = source or info["source"], period or info["period"]
-    if source == "Seek":   # match.py takes Data Scientist from the full-text Seek ads
-        return f"{info['n_ads']:,} Seek {role} ads {period}, full text."
-    # "lukebarousse/data_jobs (2023, Australia)" -> "data_jobs"; that file has each ad's tool list, no text
-    dataset = source.split(" (")[0].split("/")[-1]
-    where = "Australian " if "Australia" in source else ""
-    return f"{info['n_ads']:,} {where}{role} postings {period} ({dataset}, the tools each ad lists)."
+    return demand_caption(block) + "."
+
+
+def trend_source(role: str | None = None) -> str | None:
+    """Where `demand_pct_2026` comes from (the 2026 share a bar shows when the older ads never named the
+    skill): the role's 2026 ads; for a pasted ad (role None), the Data Scientist ones. None: no 2026 ads."""
+    from skillabus.match import demand_caption, trend_block
+    block = trend_block(role or DEFAULT_ROLE)
+    return demand_caption(block) + "." if block else None
 
 
 # ---------------------------------------------------------------- core skills (roles with no ad counts)
@@ -156,7 +160,7 @@ def core_skills(role: str, resume_skills: list[dict], top_n: int = MAX_CORE_SKIL
             "skill_id": c["skill_id"], "skill_label": c["label"],
             "status": "have" if sentence else "missing",
             "demand_pct": None, "demand_pct_2026": None,      # no Australian ad counts for this role
-            "demand_source": None, "demand_period": None,
+            "demand_source": None, "demand_period": None, "total_ads": None, "text_type": None,
             "emerging": False, "ad_evidence": c["why"], "resume_evidence": sentence,
             "core_source": c["source"],
         })
@@ -164,7 +168,7 @@ def core_skills(role: str, resume_skills: list[dict], top_n: int = MAX_CORE_SKIL
 
 
 def role_gaps(role: str, resume_skills: list[dict]) -> list[dict]:
-    """match_role() for the 7 roles with ad counts; core skills for the 4 without."""
+    """match_role() for a role with ad counts (all 11 since C2); its core skills for one without."""
     from skillabus.match import match_role
     return match_role(resume_skills, role) if has_ad_counts(role) else core_skills(role, resume_skills)
 
@@ -223,10 +227,11 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
     rank(gaps) -> {"recommendations", "learning_path", "outside_recommendations"}; the baseline ranker when not given.
     """
     from skillabus.llm_extract import extract_llm
-    from skillabus.match import DEFAULT_PERIOD, DEFAULT_SOURCE, _demand_2026
+    from skillabus.match import _demand_2026, block_meta
     from skillabus.normalise import normalise
 
     trend = _demand_2026()   # ad mode is weighted by the Seek shares, so the 2026 trend applies as in match()
+    meta = block_meta()      # the Seek block those shares come from
     ad = normalise(extract_llm(ad_text))
     cv = normalise(extract_llm(resume_text)) if resume_text else []
     cv_ids = {m["skill_id"]: m for m in cv} | {m["canonical"]: m for m in cv if m["canonical"]}
@@ -247,7 +252,7 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
             "status": "have" if have else "missing",
             "demand_pct": round(res.demand.get(m["canonical"], 0.0), 1) if m["canonical"] else 0.0,
             "demand_pct_2026": trend.get(m["canonical"]) if m["canonical"] else None,
-            "demand_source": DEFAULT_SOURCE, "demand_period": DEFAULT_PERIOD,
+            **meta,
             "emerging": m["vocab"] in ("emerging", "lightcast"),
             "ad_evidence": m["sentence"],
             "resume_evidence": have["sentence"] if have else None,

@@ -41,9 +41,11 @@ and Phuong Nhi**.
       "skill_label": "machine learning",
       "status": "missing",
       "demand_pct": 72.2,
-      "demand_pct_2026": 80.0,
-      "demand_source": "Seek",
+      "demand_pct_2026": 62.0,
+      "demand_source": "seek_2019_22",
       "demand_period": "2019-22",
+      "total_ads": 3204,
+      "text_type": "full_text",
       "emerging": false,
       "ad_evidence": "Implement and evaluate advanced machine learning ...",
       "resume_evidence": null
@@ -111,12 +113,12 @@ and Phuong Nhi**.
 | `emerging` | `true` when the skill has no ESCO concept (vocab `lightcast` or `emerging`, e.g. LLMs, generative AI, agentic AI); the app flags them with ✦ |
 | `found_by` | Optional: `llm` when only the GPT-4o-mini tier found the skill |
 | `score` | Subject score scaled so the best subject is 1.0 |
-| `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3. For the four roles with core skills only, every gap has `demand_pct` null and weighs 1, so `learning_path.demand_covered_pct` is the share of core gaps covered |
-| `demand_pct` | Share of the ads behind `demand_source` that mention the skill: for an ad and for Data Scientist, the 3,204 Seek ads 2019-22 (`skill_counts_v2.csv`); for another role, that role's own ads (`role_profiles.csv`). `null` for a core skill of a role with no Australian ad counts (below) |
-| `demand_pct_2026` | Same over the 2026 data-role sample, for an ad and for Data Scientist only; `null` for other roles (the sample has data roles only) and for a skill the sample lacks. Only a gap with a 2026 share falls back on it when its `demand_pct` is under 1% |
-| `demand_source`, `demand_period` | Where `demand_pct` comes from, read from the file: `Seek` / `2019-22`, or a role file's `source` and `period` (the years in `source` when the file has no `period` column), e.g. `lukebarousse/data_jobs (2023, Australia)` / `2023`. For the app's caption |
+| `learning_path` | Greedy: repeatedly take the subject covering the most uncovered demand (`demand_pct + 1`, so 0% skills still count), at most 3. For a role shown as core skills only (none since C2: the demand table counts the ads of all 11 roles), every gap has `demand_pct` null and weighs 1, so `learning_path.demand_covered_pct` is the share of core gaps covered |
+| `demand_pct` | Share of the ads behind `demand_source` that mention the skill, from `data/2_demand/role_skill_demand.csv` (`match.demand_block`): for an ad and for Data Scientist, the 3,204 Seek ads 2019-22, with the poster's counts for its 148 skills (`skill_counts_v2.csv`, raw text) so the poster and the sample ad reproduce; for another role, the block of the first source in `jobspipe_2026` > `adzuna_2026` > `ats_2026` > `data_jobs_2023` > `seek_2019_22` that counted its ads (JobsPipe for all ten today). `null` for a core skill of a role with no ad counts (below) |
+| `demand_pct_2026` | Share of the role's 2026 ads (`match.trend_block`: the first 2026 source in the same order, JobsPipe for every role today); for an ad, the Data Scientist ones (71 JobsPipe ads). Equal to `demand_pct` for a role whose demand block is already from 2026 (all but Data Scientist). `0.0` for a skill a full-text block looked for and no ad named; `null` for a skill outside the vocabulary (GPT-only). A gap whose `demand_pct` is under 1% and that carries a 2026 share is weighted by the low end of the 2026 share over the 22 in-sample data roles (`match.demand_2026_low`, unchanged by C2) |
+| `demand_source`, `demand_period`, `total_ads`, `text_type` | The block `demand_pct` comes from, as the demand table names it: `source` (`seek_2019_22`, `jobspipe_2026`, ...), `period` (`2019-22`, `2026-10`), the number of ads (`3204`, `71`) and `text_type` (`full_text`, `tool_list`, `search_count`). For the app's caption: `backend.role_source` turns them into "71 JobsPipe Data Engineer ads, Sep-Oct 2026, full text."; `backend.trend_source` does the same for `demand_pct_2026` |
 | `role` | Result level, not a skill row. Role mode: the target role, a `role` of `role_occupations.csv` (11 roles); `null` for a pasted ad |
-| `core_source` | Only for the four roles with no Australian ad counts (QA/Test Engineer, DevOps/SRE, Network/Systems Administrator, Cybersecurity Analyst), whose skills are their core skills (`app/backend.py`, `core_skills()`): `onet` (an O*NET in-demand tool, through `onet_tool_map.csv`) or `esco` (an essential ESCO skill in ESCO's digital collection), O*NET first, at most 15; `status` is `have` or `missing`; `demand_source` and `demand_period` are `null` |
+| `core_source` | Only for a role with no ad counts in the demand table (until C2: QA/Test Engineer, DevOps/SRE, Network/Systems Administrator, Cybersecurity Analyst; none now, the fallback stays), whose skills are its core skills (`app/backend.py`, `core_skills()`): `onet` (an O*NET in-demand tool, through `onet_tool_map.csv`) or `esco` (an essential ESCO skill in ESCO's digital collection), O*NET first, at most 15; `status` is `have` or `missing`; `demand_source`, `demand_period`, `total_ads` and `text_type` are `null` |
 | `layer` | `learning_objective`, `assessment`, `weekly_topic`, `description` (strongest first) |
 | `match` | `named` (the row names the skill) or `similar` (TF-IDF or embedding similarity only) |
 | `needs` | Prerequisites the student has not taken yet (at most two, each open now); `[]` = can enrol now, unless `unverified` is true (no record on the access-conditions site, so "no prerequisite" is not confirmed). A recommended subject may still need them; the path adds them before it |
@@ -166,20 +168,16 @@ share the `subject_code` key:
 
 `timestamp, subject_code, skill_label, vote (up|down), has_taken_subject (y|n)`. No names.
 
-## 5. Role profiles: `data/2_demand/role_profiles.csv`
+## 5. Role demand: `data/2_demand/role_skill_demand.csv`
 
-Built by Van Thong (`data-eda/src/build_role_profiles.py`, #65) from 10,925 Australian 2023 postings
-(lukebarousse/data_jobs). One row per role and skill. `match.role_profile(role)` takes the role's 15
-most-asked technical skills; `match.match_role(resume_skills, role)` matches them like an ad, with
-`demand_pct` = the role's own share. Data Scientist always comes from `top_skills.csv` (3,204
-full-text Seek ads): the 2023 file has tool lists only, so it has no concepts such as machine learning.
+The one demand table (plan D6; columns and sources in `data/2_demand/README.md`, section "The demand table").
+Since plan C2 `match.py` reads it with one loader (`_blocks`): a block is one role, source and period
+of a counted text type (`full_text`, `tool_list`, `search_count`; `taxonomy` rows have no share).
+`match.role_profile(role)` takes the 15 most-asked skills of the role's demand block that are in the
+vocabulary, leaving out the Professional category (soft skills) and certifications (the role page lists
+those); `match.match_role(resume_skills, role)` matches them like an ad. Each profile row's evidence reads
+"Asked for in 87% of 70 JobsPipe Data Engineer ads (Sep-Oct 2026)." (SQL)
 
-| Column | Example |
-|---|---|
-| `role` | `Data Engineer` |
-| `skill` | `Spark`: the canonical name in `skills_seed_v2.csv`; other names are skipped |
-| `n_ads` | `1331`: ads naming the skill |
-| `pct_ads` | `30.0`: share of the role's ads (0-100) |
-| `pct_low`, `pct_high` | 95% Wilson interval |
-| `total_ads` | `4438`: the role's ads with a tool list (shown as "Asked for in 30% of 4,438 Australian Data Engineer ads (2023).") |
-| `category`, `source` | the dictionary category; the dataset (`lukebarousse/data_jobs (2023, Australia)`) |
+`role_profiles.csv` (7 roles, data_jobs 2023), `top_skills.csv` and `skill_counts_2026.csv` are no longer
+read by the app; `skill_counts_v2.csv` only for the poster's 148 Seek shares (and by the fallback engine,
+`app/baseline.py`, with `top_skills.csv`). They move to `archive/` later.
