@@ -1,6 +1,7 @@
 """Drive the Streamlit page (app/Home.py) the way a student would, with no OpenAI key. Run: pytest tests/
 
-Role mode for a role with ad counts (Data Engineer) and one without (Cybersecurity Analyst), and Job
+Role mode for roles with ad counts (Data Engineer, Cybersecurity Analyst: every role since C2), the
+core-skills page of a role without them (Cybersecurity Analyst in the sample demand table), and Job
 seeker mode with the sample ad; each must render the Self-study column and, in role mode, the
 certifications. Uses streamlit.testing (AppTest), so no browser is needed.
 """
@@ -57,17 +58,18 @@ def test_role_picker_lists_eleven_roles_by_family():
     assert at.radio(key="family_box").options == ["Data & AI", "Software", "Cloud & infrastructure", "Security",
                                                   "Business analysis"]
     assert at.selectbox(key="role_box").value == "Data Scientist"
-    assert "3,204 Seek Data Scientist ads 2019-22, full text" in page_text(at)
+    assert "JobsPipe Data Scientist ads, Sep-Oct 2026, full text." in page_text(at)
     at.radio(key="family_box").set_value("Security").run()
     assert at.selectbox(key="role_box").value == "Cybersecurity Analyst"       # the new family's first role
-    assert "No Australian ad counts yet" in page_text(at)
+    assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)
+    assert "No Australian ad counts yet" not in page_text(at)
     assert "More roles once the 2026 ads are in" not in page_text(at)
 
 
 def test_role_mode_data_engineer():
     at = start("switch")
     pick_role(at, "Data & AI", "Data Engineer")
-    assert "4,438 Australian Data Engineer postings 2023" in page_text(at)
+    assert "JobsPipe Data Engineer ads, Sep-Oct 2026, full text." in page_text(at)
     show_gaps(at)
     text = page_text(at)
     assert "a Data Engineer role" in text
@@ -78,7 +80,19 @@ def test_role_mode_data_engineer():
     assert "Engine: pipeline" in text
 
 
-def test_role_mode_cybersecurity_shows_core_skills_without_bars():
+def test_role_mode_cybersecurity_has_bars_since_c2():
+    at = start("switch")
+    pick_role(at, "Security", "Cybersecurity Analyst")
+    show_gaps(at)
+    text = page_text(at)
+    assert "How often employers ask for each skill" in text and "Core skills of the role" not in text
+    assert at.get("vega_lite_chart")                                     # the percentage bars
+    assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in text
+    assert "Self-study" in text and "Certifications worth having" in text and "CompTIA Security+" in text
+
+
+def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sample):
+    """The fallback page: the sample demand table has no block for Cybersecurity Analyst."""
     at = start("switch")
     pick_role(at, "Security", "Cybersecurity Analyst")
     show_gaps(at)

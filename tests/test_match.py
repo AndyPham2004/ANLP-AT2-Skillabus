@@ -15,8 +15,9 @@ from skillabus.similarity import embeddings_available, similarity
 ROOT = Path(__file__).resolve().parents[1]
 AD = (ROOT / "tests/fixtures/ad_rw_2026-09-23.txt").read_text(encoding="utf-8")
 RESUME = (ROOT / "tests/fixtures/resume_synthetic.txt").read_text(encoding="utf-8")
-CONTRACT_KEYS = {"skill_id", "skill_label", "status", "demand_pct", "demand_pct_2026",
-                 "demand_source", "demand_period", "emerging", "ad_evidence", "resume_evidence"}
+CONTRACT_KEYS = {"skill_id", "skill_label", "status", "demand_pct", "demand_pct_2026", "demand_pct_2019_22",
+                 "demand_source", "demand_period", "total_ads", "text_type", "emerging", "ad_evidence",
+                 "resume_evidence"}
 
 
 def mention(text, canonical=None, sentence=None, **extra):
@@ -38,12 +39,16 @@ def test_gap_result_follows_the_data_contract():
         assert (s["resume_evidence"] is None) == (s["status"] == "missing")
 
 
-def test_reproduces_the_poster_gap_chart():
-    """archive/poster_AT2A/data/gap.csv: 8 technical skills, the resume covers Python and SQL."""
+def test_reproduces_the_poster_gap_skills():
+    """archive/poster_AT2A/data/gap.csv: 8 technical skills, the resume covers Python and SQL. Its bars were
+    the 2019-22 Seek shares; since C2 the bars are the 2026 Data Scientist ads and 2019-22 is the trend
+    column, counted again with the app's matcher (within 2 points of the poster: Python 82.8 -> 84.5)."""
     with open(paths.POSTER_GAP, encoding="utf-8") as f:
         gap = list(csv.DictReader(line for line in f if not line.startswith("#")))
     skills = match(extract(AD), extract(RESUME))
-    assert {s["skill_label"]: s["demand_pct"] for s in skills} == {r["skill"]: float(r["pct_ads"]) for r in gap}
+    poster = {r["skill"]: float(r["pct_ads"]) for r in gap}
+    assert {s["skill_label"] for s in skills} == set(poster)
+    assert all(abs(s["demand_pct_2019_22"] - poster[s["skill_label"]]) <= 2.0 for s in skills)
     assert {s["skill_label"] for s in skills if s["status"] == "have"} == {r["skill"] for r in gap if r["covered"] == "1"}
     assert [s["demand_pct"] for s in skills] == sorted((s["demand_pct"] for s in skills), reverse=True)
     assert {s["skill_label"] for s in skills if s["emerging"]} == {"Large language models", "Generative AI"}
@@ -120,36 +125,58 @@ def test_role_profile_matches_like_an_ad():
     assert len(role) == 15 and role[0]["canonical"] == "Python"
     skills = match(role, extract(RESUME))
     assert {k for k, v in status(skills).items() if v == "have"} == {"Python", "SQL", "Statistics", "Data visualisation"}
-    assert skills[1]["ad_evidence"] == "Asked for in 72% of 3,204 Seek Data Scientist ads (2019-22)."
+    assert skills[1]["ad_evidence"] == "Asked for in 73% of 71 JobsPipe Data Scientist ads (Sep-Oct 2026)."
 
 
-@pytest.fixture
-def role_file(monkeypatch):
-    import skillabus.match as match_module
-    monkeypatch.setattr(match_module, "ROLES_CSV", ROOT / "tests/fixtures/role_profiles_sample.csv")
-    match_module._role_rows.cache_clear()
-    yield
-    match_module._role_rows.cache_clear()
-
-
-def test_roles_come_from_the_role_file(role_file):
+def test_each_role_takes_the_first_source_with_a_block(demand_sample):
     from skillabus.match import roles
-    assert [r["role"] for r in roles()] == ["Data Scientist", "Data Engineer", "ML Engineer"]
-    assert roles()[1] == {"role": "Data Engineer", "n_ads": 4438,                # source and period from the file
-                          "source": "lukebarousse/data_jobs (2023, Australia)", "period": "2023"}
-    assert roles()[0]["n_ads"] == 3204          # Data Scientist stays on the full-text Seek ads
+    assert roles() == [   # jobspipe_2026 > adzuna_2026 > ats_2026 > data_jobs_2023 > seek_2019_22
+        {"role": "Data Scientist", "n_ads": 71, "source": "jobspipe_2026", "period": "2026-10", "text_type": "full_text"},
+        {"role": "Business Analyst", "n_ads": 576, "source": "data_jobs_2023", "period": "2023", "text_type": "tool_list"},
+        {"role": "Cloud Engineer", "n_ads": 395, "source": "adzuna_2026", "period": "2026-10", "text_type": "search_count"},
+        {"role": "Data Engineer", "n_ads": 70, "source": "jobspipe_2026", "period": "2026-10", "text_type": "full_text"},
+        {"role": "Software Engineer", "n_ads": 33, "source": "ats_2026", "period": "2026-10", "text_type": "full_text"},
+    ]   # no "(mixed)" block, and no QA/Test Engineer: it has taxonomy rows only
 
 
-def test_match_role_uses_the_role_s_own_demand(role_file):
+def test_match_role_uses_the_role_s_own_demand(demand_sample):
     from skillabus.match import match_role
     profile = role_profile("Data Engineer")
-    assert [m["canonical"] for m in profile] == ["SQL", "Python", "Spark", "AWS", "Airflow"]   # no soft skills
-    assert profile[0]["sentence"] == "Asked for in 70% of 4,438 Australian Data Engineer ads (2023)."
+    assert [m["canonical"] for m in profile] == ["SQL", "Python", "Spark", "AWS"]   # no soft skill, no certification
+    assert profile[0]["sentence"] == "Asked for in 87% of 70 JobsPipe Data Engineer ads (Sep-Oct 2026)."
     skills = {s["skill_label"]: s for s in match_role(extract(RESUME), "Data Engineer")}
-    assert skills["SQL"]["status"] == "have" and skills["Spark"]["demand_pct"] == 40.0
-    assert match_role(extract(RESUME))[0]["demand_pct"] == 82.8             # Data Scientist: the Seek shares
+    assert skills["SQL"]["status"] == "have" and skills["Spark"]["demand_pct"] == 51.4
+    assert match_role(extract(RESUME))[0]["demand_pct"] == 80.3             # Data Scientist: its 2026 ads too
     with pytest.raises(KeyError):
         role_profile("Astronaut")
+    with pytest.raises(KeyError):
+        role_profile("QA/Test Engineer")     # taxonomy rows only: the app shows its core skills instead
+
+
+def test_data_scientist_is_counted_on_2026_ads_with_2019_22_as_the_trend(demand_sample):
+    from skillabus.match import block_2019_22, demand_block, match_role
+    assert (demand_block()["source"], block_2019_22()["source"]) == ("jobspipe_2026", "seek_2019_22")
+    assert block_2019_22("Data Engineer") is None          # the Seek ads are Data Scientist titles only
+    skills = {s["skill_label"]: s for s in match_role(extract(RESUME))}
+    python, llm = skills["Python"], skills["Large language models"]
+    assert (python["demand_pct"], python["demand_pct_2026"], python["demand_pct_2019_22"]) == (80.3, 80.3, 84.5)
+    assert (llm["demand_pct"], llm["demand_pct_2019_22"]) == (33.8, 0.0)    # counted in 2019-22, named in none
+    assert (python["demand_source"], python["demand_period"], python["total_ads"], python["text_type"]) == (
+        "jobspipe_2026", "2026-10", 71, "full_text")
+    assert all(s["demand_pct_2019_22"] is None for s in match_role(extract(RESUME), "Data Engineer"))
+
+
+def test_captions_say_n_source_when_and_kind_of_text(demand_sample):
+    from skillabus.match import demand_block, demand_caption
+    assert demand_caption(demand_block()) == "71 JobsPipe Data Scientist ads, Sep-Oct 2026, full text"
+    assert demand_caption(demand_block("Data Scientist", "seek_2019_22")) == (
+        "3,204 Seek Data Scientist ads, 2019-22, full text")
+    assert demand_caption(demand_block("Cloud Engineer")) == (
+        "395 Adzuna Cloud Engineer ads, 16 Oct 2026, live ads, one phrase search per skill")
+    assert demand_caption(demand_block("Software Engineer")) == "33 job-board Software Engineer ads, Aug-Oct 2026, full text"
+    assert demand_caption(demand_block("Business Analyst")) == (
+        "576 data_jobs Business Analyst ads, 2023, the tools each ad lists")
+    assert demand_block("Data Engineer", "seek_2019_22") is None and demand_block("QA/Test Engineer") is None
 
 
 def test_skill_overlap_is_demand_weighted():
@@ -237,17 +264,39 @@ def test_dictionary_skills_sharing_an_esco_concept_are_not_the_same_skill():
 
 # ------------------------------------------- demand belongs to the role (C2b, review #83)
 
-def test_role_rows_carry_the_role_s_source_and_period(role_file):
+def test_role_rows_carry_the_role_s_source_and_period(demand_sample):
     from skillabus.match import match_role
     engineer = match_role(extract(RESUME), "Data Engineer")
-    assert {(s["demand_source"], s["demand_period"]) for s in engineer} == {
-        ("lukebarousse/data_jobs (2023, Australia)", "2023")}
-    assert all(s["demand_pct_2026"] is None for s in engineer)      # the 2026 sample has data roles only
+    assert {(s["demand_source"], s["demand_period"], s["total_ads"], s["text_type"]) for s in engineer} == {
+        ("jobspipe_2026", "2026-10", 70, "full_text")}
+    assert all(s["demand_pct_2026"] == s["demand_pct"] for s in engineer)   # its demand already is its 2026 block
+    cloud = match_role(extract(RESUME), "Cloud Engineer")
+    assert {(s["demand_source"], s["text_type"]) for s in cloud} == {("adzuna_2026", "search_count")}
     scientist = match_role(extract(RESUME))
-    assert {(s["demand_source"], s["demand_period"]) for s in scientist} == {("Seek", "2019-22")}
-    assert any(s["demand_pct_2026"] is not None for s in scientist)    # Data Scientist keeps the 2026 trend
+    assert {(s["demand_source"], s["demand_period"]) for s in scientist} == {("jobspipe_2026", "2026-10")}
+    assert any(s["demand_pct_2019_22"] is not None for s in scientist)   # Data Scientist keeps the 2019-22 trend
     ad = match(extract(AD), extract(RESUME))
-    assert {s["demand_source"] for s in ad} == {"Seek"}
+    assert {(s["demand_source"], s["total_ads"]) for s in ad} == {("jobspipe_2026", 71)}   # an ad: Data Scientist ads
+
+
+# ------------------------------------------------------- the committed demand table (C2)
+
+def table_blocks():
+    """(role, source) -> total_ads of every counted block in the committed role_skill_demand.csv."""
+    with open(paths.ROLE_SKILL_DEMAND, encoding="utf-8") as f:
+        return {(r["role"], r["source"]): int(float(r["total_ads"])) for r in csv.DictReader(f) if r["total_ads"]}
+
+
+def test_every_role_has_ad_counts_from_the_demand_table():
+    from skillabus.match import block_2019_22, block_2026, roles
+    blocks = table_blocks()
+    by = {r["role"]: r for r in roles()}
+    assert len(by) == 11 and not any("(mixed)" in role for role in by)
+    for role, r in by.items():            # JobsPipe has a full-text block for every role, Data Scientist too
+        assert (r["source"], r["text_type"], r["n_ads"]) == ("jobspipe_2026", "full_text", blocks[role, "jobspipe_2026"])
+        assert block_2026(role)["source"] == "jobspipe_2026"
+        assert (block_2019_22(role) is None) == (role != "Data Scientist")
+    assert block_2019_22()["total_ads"] == 3204
 
 
 def test_partial_credit_and_soft_skills_follow_the_given_demand():
@@ -262,21 +311,12 @@ def test_partial_credit_and_soft_skills_follow_the_given_demand():
     assert soft_skills(ad, {"Problem solving": 40.0, "Teamwork": 10.0}) == ["Problem solving", "Teamwork"]
 
 
-def test_data_scientist_role_ranks_part_skills_by_every_seek_share():
-    # Review #108: with only the 15 top_skills shares as demand, Excel (9.0% of Seek ads) and
-    # Microsoft Office (4.4%) both scored 0 and whichever came first on the resume was shown.
+def test_data_scientist_role_ranks_part_skills_by_every_share():
+    # Review #108: with only the 15 top_skills shares as demand, Excel and Microsoft Office both scored 0
+    # and whichever came first on the resume was shown. role_demand() has every skill of the block.
     from skillabus.match import match_role, role_demand
-    assert role_demand()["Excel"] == 9.0 and len(role_demand()) > 15
+    assert role_demand()["Excel"] > role_demand().get("Microsoft Office", 0.0) and len(role_demand()) > 15
     resume = extract("I build reports in Microsoft Office and model budgets in Excel.")
     viz = next(s for s in match_role(resume) if s["skill_label"] == "Data visualisation")
     assert viz["status"] == "partial" and viz["related_skill"] == "Excel"
 
-
-def test_period_is_read_from_the_file():
-    from skillabus.match import _period, _where
-    assert _period({"source": "lukebarousse/data_jobs (2023, Australia)"}) == "2023"
-    assert _period({"source": "Adzuna", "period": "2026-10"}) == "2026-10"
-    assert _period({"source": "Seek 2019 to 2022"}) == "2019-2022"
-    assert _period({"source": ""}) == ""
-    assert _where("lukebarousse/data_jobs (2023, Australia)") == "Australian"
-    assert _where("Adzuna (2026)") == "Adzuna"

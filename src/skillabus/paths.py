@@ -88,7 +88,8 @@ ROLE_PROFILES = DEMAND / "role_profiles.csv"
 SKILLS_NOT_TAUGHT = DEMAND / "skills_not_taught_by_uts.csv"
 
 # One demand table (plan D6): python data-eda/src/build_role_skill_demand.py. For the report it supersedes
-# SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS and ROLE_PROFILES; the app reads those until after 17 Oct.
+# SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS and ROLE_PROFILES; the pipeline reads only it since plan C2
+# (the fallback engine, app/baseline.py, still reads SKILL_COUNTS and TOP_SKILLS).
 ROLE_SKILL_DEMAND = DEMAND / "role_skill_demand.csv"     # role x skill x source x period, long format
 ROLE_OUTLOOK = DEMAND / "role_outlook.csv"               # JSA shortage rating + vacancies per role (plan D13, #118)
 DATA_JOBS_AU_RAW = RAW / "jobs_au_datajobs_2023.parquet"  # data_jobs, its 12,955 Australian rows (not in git)

@@ -120,7 +120,7 @@ def save_vote(subject_code: str, skill: str, vote: str, taken: bool) -> None:
         w.writerow([datetime.now().isoformat(timespec="seconds"), subject_code, skill, vote, "y" if taken else "n"])
 
 
-def gap_chart(skills: list[dict], share_of: str = "% of Seek ads") -> alt.Chart:
+def gap_chart(skills: list[dict], share_of: str = "% of the ads") -> alt.Chart:
     df = pd.DataFrame(skills)
     df["label"] = df.skill_label + df.emerging.map({True: "  ✦", False: ""})
     df["pct_text"] = df.demand_pct.map(lambda v: f"{v:.0f}%")
@@ -288,8 +288,8 @@ if ss.step == "start":
             st.button("Start", key=f"role_{key}", type="primary", width="stretch",
                       on_click=go, args=("input",), kwargs={"role": key})
     st.markdown(
-        f"<p class='muted'>{len(FAMILY_OF)} data and IT roles, built on Australian job ads (Seek 2019-22, "
-        "data_jobs 2023), the ESCO and O*NET occupation skills and the UTS Handbook 2026. "
+        f"<p class='muted'>{len(FAMILY_OF)} data and IT roles, built on Australian job ads (JobsPipe 2026; "
+        "Seek 2019-22 for the trend), the ESCO and O*NET occupation skills and the UTS Handbook 2026. "
         "Results are suggestions, not advice.</p>",
         unsafe_allow_html=True)
 
@@ -398,10 +398,12 @@ elif ss.step == "results":
     with chart_col:
         if counted:
             st.markdown("#### How often employers ask for each skill")
-            st.altair_chart(gap_chart(skills, "% of Seek ads" if target_role is None else "% of the role's ads"),
+            st.altair_chart(gap_chart(skills, "% of the ads" if target_role is None else "% of the role's ads"),
                             width="stretch")
-            if target_role is None:
-                cap = "Bar = share of 3,204 Seek Australia Data Scientist ads (2019-22) naming the skill."
+            if target_role is None:      # a pasted ad is weighed by the Data Scientist ads (match.py)
+                source = backend.role_source(backend.DEFAULT_ROLE, skills[0].get("demand_source"),
+                                             skills[0].get("demand_period"))
+                cap = f"Bar = share of Data Scientist ads naming the skill: {source}"
             else:
                 # demand_source / demand_period travel on every gap row (match.py), so the caption says
                 # exactly where these bars come from.
@@ -420,8 +422,8 @@ elif ss.step == "results":
             cap += " ✦ = no ESCO concept yet, kept as an emerging skill."
         if target_role in (None, backend.DEFAULT_ROLE) and any(
                 s["skill_label"] in ("Large language models", "Generative AI") for s in skills):
-            cap += (" LLMs and generative AI are 0% in these ads because the ads predate ChatGPT; "
-                    "15.8% of 247 US Data Scientist ads in 2023-24 ask for LLMs.")
+            cap += (" LLMs and generative AI were 0% of the 3,204 Seek Data Scientist ads of 2019-22, "
+                    "which predate ChatGPT.")
         if any(s.get("found_by") == "llm" for s in skills):
             cap += (" Skills outside our dictionary were found by GPT-4o-mini; their bars are 0% "
                     "because the dictionary never counted them.")
