@@ -48,6 +48,20 @@ def test_off_topic_question_returns_nothing(method):
     assert rag.retrieve("best pizza recipe in Naples", k=5, method=method) == []
 
 
+def test_an_alias_in_the_question_is_spelled_out():
+    # The chat's first suggested question. The embedding model reads "LLMs" as "LMS" (17 Oct UI check).
+    # In place: a leftover "LLMs" still pulled the LMS exam into the top five.
+    assert rag.spell_out("Which subject teaches LLMs?") == "Which subject teaches Large language models?"
+    assert rag.spell_out("What does 36118 cover?") == "What does 36118 cover?"     # nothing to spell out
+    assert rag.spell_out("deep learning subjects") == "deep learning subjects"     # already the full name
+
+
+@pytest.mark.parametrize("method", METHODS)
+def test_an_acronym_question_finds_the_subject_that_teaches_it(method):
+    out = rag.retrieve("Which subject teaches LLMs?", k=3, method=method)
+    assert "36118" in {r["subject_code"] for r in out}, [r["source"] for r in out]
+
+
 def test_empty_question_or_zero_k():
     assert rag.retrieve("") == []
     assert rag.retrieve("deep learning", k=0) == []

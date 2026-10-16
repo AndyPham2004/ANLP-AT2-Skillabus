@@ -115,11 +115,12 @@ button[data-testid="stBaseButton-pills"]:hover, button[data-testid="stBaseButton
 .k-mono, .k-count b { font-variant-numeric: tabular-nums; }
 div[data-testid="stDataFrame"] { border-radius: 6px; overflow: hidden; }
 div[data-testid="stTextArea"] textarea { font-family: 'Literata', Georgia, serif; font-size: 16px; line-height: 1.6; }
-/* A chosen item in a multiselect: Streamlit paints it in the (light) primary colour with light text. Dark chip instead. */
-div[data-testid="stMultiSelect"] span[data-baseweb="tag"] { background: #2a2d31 !important; border: 1px solid rgba(255,255,255,.14); }
-div[data-testid="stMultiSelect"] span[data-baseweb="tag"] span { color: #e8e6e1 !important; }
-div[data-testid="stMultiSelect"] span[data-baseweb="tag"] svg { fill: #e8e6e1 !important; }
+/* A chosen item in a multiselect: Streamlit paints it in the (light) primary colour with light text. Dark chip instead.
+   Streamlit 1.65 marks each chip with data-tag (it was BaseWeb's span[data-baseweb="tag"] before). */
+div[data-testid="stMultiSelect"] [data-tag] { background: #2a2d31 !important; border: 1px solid rgba(255,255,255,.14); }
+div[data-testid="stMultiSelect"] [data-tag] * { color: #e8e6e1 !important; fill: #e8e6e1 !important; }
 div[data-testid="stChatMessage"] { background: transparent; padding: 4px 0; }
+div[data-testid="stElementContainer"]:has(.k-top) { display: none; }
 </style>
 """
 
@@ -188,6 +189,14 @@ def note(text: str) -> str:
 def layer_pill(layer: str) -> str:
     label, colour, _ = LAYER.get(layer, (layer, MUTE, ""))
     return f"<span class='k-layer' style='background:{colour}1f;color:{colour}'>{esc(label)}</span>"
+
+
+def scroll_top(n: int) -> str:
+    """A script that scrolls the page to the top. Streamlit keeps the scroll offset across reruns, so a
+    skill opened from low in the list opened half-way down its page. `n` makes each copy different, so
+    the browser runs it again on the next new page."""
+    return (f"<span class='k-top'></span><script>/* {n} */ "
+            "document.querySelector('[data-testid=\"stMain\"]')?.scrollTo(0, 0);</script>")
 
 
 def card(inner: str, dashed: bool = False) -> str:

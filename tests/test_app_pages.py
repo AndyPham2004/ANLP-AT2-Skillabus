@@ -182,6 +182,46 @@ def test_elective_mode_counts_taken_subjects():
     assert first not in at.session_state.result["learning_path"]["subjects"]
 
 
+def test_subject_picker_enter_picks_one_subject_not_every_match():
+    # Typing "Statistical" + Enter added all 8 fuzzy matches via "Select 8 matches" (17 Oct UI check).
+    from streamlit.proto.MultiSelect_pb2 import MultiSelect
+    at = start("elective")
+    picker = at.multiselect(key="taken_box").proto
+    assert picker.select_all == 0                                   # no "Select N matches" row
+    assert picker.filter_mode == MultiSelect.DESCRIPTOR.fields_by_name["filter_mode"].enum_type \
+        .values_by_name["FILTER_MODE_CONTAINS"].number              # "Statistical" no longer finds "Fundamentals of ..."
+
+
+def test_skill_page_tells_apart_dropped_subjects_that_share_a_name():
+    # Two "Database" subjects of other courses printed the same caption twice (17 Oct UI check).
+    at = start("elective")
+    pick_role(at, "Data Scientist")
+    at.multiselect(key="taken_box").set_value(["36103", "36118"]).run()
+    show_gaps(at)
+    open_skill(at, next(i for i, s in enumerate(at.session_state.result["skills"]) if s["skill_label"] == "SQL"))
+    notes = [c.value for c in at.caption if "also teaches it" in c.value]
+    assert len(notes) == 2 and len(set(notes)) == 2, notes
+
+
+def scroll_scripts(at: AppTest) -> list:
+    return [h for h in at.get("html") if "scrollTo" in h.proto.body]
+
+
+def test_a_new_page_starts_at_the_top():
+    # A skill opened from low in the list kept the list's scroll offset (17 Oct UI check).
+    at = start("switch")
+    pick_role(at, "Data Engineer")
+    show_gaps(at)
+    assert scroll_scripts(at)                                       # inputs -> results
+    show_tab(at, "Your path")
+    assert not scroll_scripts(at)                                   # a tab of the same page stays where it is
+    show_tab(at, "Skills")
+    open_skill(at)
+    assert scroll_scripts(at)                                       # results -> one skill
+    at.segmented_control(key="cost_filter").set_value("Free only").run()
+    assert not scroll_scripts(at)                                   # a filter on the same page too
+
+
 def test_job_seeker_mode_with_the_sample_ad():
     at = start("job")
     assert at.segmented_control(key="ad_mode").value == "Try a sample"
