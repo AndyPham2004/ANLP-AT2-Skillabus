@@ -87,6 +87,10 @@ button[data-testid="stBaseButton-primary"] p { font-weight: 500; font-size: 16px
 button[data-testid="stBaseButton-primary"]:disabled { background: #2a2d31 !important; border-color: #2a2d31 !important; }
 button[data-testid="stBaseButton-primary"]:disabled p { color: #6b6c68 !important; }
 div[data-testid="stTextArea"] textarea { font-family: 'Literata', Georgia, serif; font-size: 16px; line-height: 1.6; }
+/* A chosen item in a multiselect: Streamlit paints it in the (light) primary colour with light text. Dark chip instead. */
+div[data-testid="stMultiSelect"] span[data-baseweb="tag"] { background: #2a2d31 !important; border: 1px solid rgba(255,255,255,.14); }
+div[data-testid="stMultiSelect"] span[data-baseweb="tag"] span { color: #e8e6e1 !important; }
+div[data-testid="stMultiSelect"] span[data-baseweb="tag"] svg { fill: #e8e6e1 !important; }
 div[data-testid="stChatMessage"] { background: transparent; padding: 4px 0; }
 </style>
 """
