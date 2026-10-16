@@ -120,6 +120,20 @@ div[data-testid="stTextArea"] textarea { font-family: 'Literata', Georgia, serif
 div[data-testid="stMultiSelect"] [data-tag] { background: #2a2d31 !important; border: 1px solid rgba(255,255,255,.14); }
 div[data-testid="stMultiSelect"] [data-tag] * { color: #e8e6e1 !important; fill: #e8e6e1 !important; }
 div[data-testid="stChatMessage"] { background: transparent; padding: 4px 0; }
+/* The chat page: one reading width; avatars in the page's colours, not Streamlit's red and orange squares. */
+.st-key-chat_box { max-width: 860px; }
+div[data-testid="stChatMessageAvatarUser"], div[data-testid="stChatMessageAvatarAssistant"] {
+  background: #1b1e22 !important; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; color: #9a9a94 !important; }
+div[data-testid="stChatMessageAvatarAssistant"] { border-color: #8fbcff; color: #8fbcff !important; }
+div[data-testid="stChatMessageAvatarUser"] svg, div[data-testid="stChatMessageAvatarAssistant"] svg { fill: currentColor; color: inherit; }
+/* Certifications: cards in rows of three, like the path's subject cards. */
+.k-certs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 4px 0 6px; }
+.k-cert { background: #1b1e22; border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 14px 16px;
+  display: grid; gap: 6px; align-content: start; }
+.k-cert a { color: #e8e6e1; font-weight: 500; text-decoration: none; line-height: 1.35; }
+.k-cert a:hover { text-decoration: underline; text-decoration-color: #8fbcff; }
+.k-cert .k-mono { font-family: 'DM Mono', monospace; font-size: 15px; color: #e8e6e1; }
+.k-cert .k-chip { justify-self: start; }
 div[data-testid="stElementContainer"]:has(.k-top) { display: none; }
 </style>
 """

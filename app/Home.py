@@ -16,8 +16,7 @@ import os
 import re
 import threading
 
-import pandas as pd
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 import streamlit as st
@@ -61,9 +60,11 @@ MIN_AD_WORDS = 20
 FAMILIES = backend.role_families()
 ROLE_LIST = [role for roles in FAMILIES.values() for role in roles]        # all 11 roles, family by family
 CORE_SOURCE = {"onet": "O*NET in-demand tool", "esco": "ESCO essential skill"}
-CHAT_SUGGESTIONS = ("Which subject teaches LLMs?", "What does 36118 cover?",
-                    "What should I build for data engineering?")
-STEP_OF = {"start": 1, "inputs": 2, "jobs": 2, "results": 3, "evidence": 3}
+CHAT_SUGGESTIONS = ("Which subject teaches LLMs?", "What does Applied NLP cover?", "Where can I learn SQL?")
+STEP_OF = {"start": 1, "inputs": 2, "jobs": 2, "results": 3, "evidence": 3}     # the chat page shows the step it came from
+CHAT_BACK = {"start": "← Back", "inputs": "← Back to your inputs", "jobs": "← Back to the ads",
+             "results": "← Back to results", "evidence": "← Back to the skill"}
+CERTS_SHOWN = 6                                                # then "Show all 11"
 SUBJECT_NAME = dict(backend.subjects())                      # code -> name, all 360 subjects
 
 
@@ -162,16 +163,19 @@ def resource_html(r: dict) -> str:
     return ui.card(head + meta, dashed=True)
 
 
-def cert_line(c: dict) -> str:
-    """One certification: name linked, vendor, exam code, level, exam price; "hot" only once it is measured."""
-    price = f"A${c['cost_aud']}" if c["cost_aud"] and c["cost_aud"] != "varies" else "price varies by country"
+def cert_card(c: dict) -> str:
+    """One certification as a card: name linked, vendor, level, exam code, exam price, and "hot" with its ad count.
+    The long reason behind "hot" is in one note under the cards."""
+    price = (f"<div class='k-mono'>A${ui.esc(c['cost_aud'])}</div>" if c["cost_aud"] and c["cost_aud"] != "varies"
+             else "<div class='k-small k-mute'>Exam price varies by country</div>")
     exam = f" · exam {c['exam_code']}" if c["exam_code"] else ""
-    line = f"**[{c['cert']}]({c['official_url']})** · {c['vendor']}{exam} · {c['level']} · {price}"
-    if c.get("hot", "").strip().lower() == "yes":    # blank until the Adzuna counts are in
-        line += " · " + ui.chip("hot", colour=ui.PARTIAL)
-        if c.get("hot_reason"):
-            line += f" <span class='k-small k-mute'>{ui.esc(c['hot_reason'])}</span>"
-    return line
+    hot = ""
+    if c.get("hot", "").strip().lower() == "yes":
+        n = re.search(r"\((\d[\d,]*) AU ads", c.get("hot_reason") or "")
+        hot = ui.chip(f"hot · {n.group(1)} AU ads" if n else "hot · salary guide", colour=ui.PARTIAL)
+    return (f"<div class='k-cert'><a href='{ui.esc(c['official_url'])}' target='_blank'>{ui.esc(c['cert'])}</a>"
+            f"<div class='k-small k-mute'>{ui.esc(c['vendor'])} · {ui.esc(c['level'])}{ui.esc(exam)}</div>"
+            f"{price}{hot}</div>")
 
 
 def subject_name(code: str) -> str:
@@ -197,7 +201,8 @@ def regex_for(label: str):
 
 ss = st.session_state
 DEFAULTS = {
-    "step": "start", "user_type": None, "messages": [], "chat_open": False, "show_ad": False,
+    "step": "start", "user_type": None, "messages": [], "chat_from": "start", "ad_open": None, "certs_more": False,
+    "show_ad": False,
     "show_details": False, "ad_keep": "", "ad_mode_keep": "Try a sample", "ad_pick": None, "taken_keep": [],
     "whatif": [], "result": None, "engine": "", "ran": False, "gap": None, "resume_text": "", "resume_label": None,
     "role_keep": backend.DEFAULT_ROLE, "stage_keep": "Studying at UTS", "course_keep": backend.HOME_COURSE,
@@ -355,8 +360,14 @@ def ask(question: str) -> None:
     ss.messages.append({"role": "user", "content": question})
     reply, sources = chat.answer(question, ss.result)
     if sources and chat.has_llm():
-        reply += "\n\n" + "\n".join(f"[{i + 1}] {s['source']}" for i, s in enumerate(sources))
+        reply += "\n\n" + "  \n".join(f"[{i + 1}] {chat.source_name(s)}" for i, s in enumerate(sources))
     ss.messages.append({"role": "assistant", "content": reply})
+
+
+def open_chat() -> None:
+    if ss.step != "chat":
+        ss.chat_from = ss.step
+    ss.step = "chat"
 
 
 # ---------------------------------------------------------------- sidebar: steps and the chat button
@@ -381,7 +392,7 @@ def step_note(n: int) -> str:
 
 def top_bar() -> None:
     """One strip above every page: the name, the three steps, what was chosen so far, the chat button."""
-    current = STEP_OF[ss.step]
+    current = STEP_OF[ss.chat_from if ss.step == "chat" else ss.step]
     parts = []
     for n, label in enumerate(("Who you are", "Your inputs", "Results"), start=1):
         done, active = current > n, current == n
@@ -398,39 +409,36 @@ def top_bar() -> None:
                       "margin-right:8px;vertical-align:2px'></span>Skillabus</div>", unsafe_allow_html=True)
     steps_col.markdown(f"<div class='k-hsteps'>{stepper}</div>", unsafe_allow_html=True)
     ctx_col.markdown(f"<div class='k-hctx' title='{ui.esc(ctx)}'>{ui.esc(ctx)}</div>", unsafe_allow_html=True)
-    chat_col.button("Ask the Handbook", key="chat_toggle", width="stretch", on_click=toggle, args=("chat_open",))
+    chat_col.button("Ask the Handbook", key="chat_go", width="stretch", on_click=open_chat, disabled=ss.step == "chat")
     st.markdown("<div class='k-rule'></div>", unsafe_allow_html=True)
 
 
-# ---------------------------------------------------------------- the chat panel
+# ---------------------------------------------------------------- the chat page
 
-def chat_panel() -> None:
-    with st.container(border=True):
-        head, close = st.columns([6, 1], vertical_alignment="center")
-        head.markdown(ui.h2("Ask the Handbook"), unsafe_allow_html=True)
-        close.button("×", key="chat_close", type="tertiary", on_click=toggle, args=("chat_open",))
-        st.caption("Answers quote the UTS Handbook 2026; your resume is never sent to the model."
-                   + ("" if chat.has_llm() else " No OpenAI key set: the matching passages are shown instead of a written answer."))
-        chat_thread()
+def page_chat() -> None:
+    """Ask the Handbook as a page of its own (Quan's pick, 17 Oct): a column beside the results squeezed them."""
+    st.button(CHAT_BACK.get(ss.chat_from, "← Back"), key="chat_back", type="tertiary", on_click=go, args=(ss.chat_from,))
+    st.markdown(ui.h1("Ask the Handbook", "md"), unsafe_allow_html=True)
+    st.caption("Answers quote the UTS Handbook 2026. Your resume is never sent to the model."
+               + ("" if chat.has_llm() else " No OpenAI key set: the matching passages are shown instead of a written answer."))
+    chat_thread()
 
 
 @st.fragment
 def chat_thread() -> None:
-    """Messages, suggestions and the input. A fragment: a question redraws the chat, not the whole page."""
-    thread = st.container()                      # filled after the input is read, so a new answer shows at once
-    question = st.chat_input("Ask a question", key="chat_in")
-    if question:
-        ask(question)
-    with thread:
-        if not ss.messages:
-            st.markdown("<div class='k-mute k-body'>Ask anything about UTS subjects or skills. "
-                        "Answers quote the Handbook.</div>", unsafe_allow_html=True)
-        for m in ss.messages:
-            with st.chat_message(m["role"]):
-                st.markdown(m["content"])
-        if not ss.messages:
-            for i, text in enumerate(CHAT_SUGGESTIONS):
-                st.button(text, key=f"chat_sug_{i}", width="stretch", on_click=ask, args=(text,))
+    """Suggestions or messages, then the input. A fragment: a question redraws the chat, not the whole page."""
+    with st.container(key="chat_box"):           # one reading width (ui.CSS)
+        thread = st.container()                  # filled after the input is read, so a new answer shows at once
+        question = st.chat_input("Ask a question", key="chat_in")
+        if question:
+            ask(question)
+        with thread:
+            if not ss.messages:
+                for col, (i, text) in zip(st.columns(3, gap="small"), enumerate(CHAT_SUGGESTIONS)):
+                    col.button(text, key=f"chat_sug_{i}", width="stretch", on_click=ask, args=(text,))
+            for m in ss.messages:
+                with st.chat_message(m["role"]):
+                    st.markdown(m["content"])
 
 
 # ---------------------------------------------------------------- step 1: who you are
@@ -597,8 +605,27 @@ def page_inputs() -> None:
 
 # ---------------------------------------------------------------- step 2b: browse ads
 
+def posted(day: str) -> str:
+    """'2026-09-15' -> '15 Sep 2026'."""
+    try:
+        d = date.fromisoformat(day)
+    except ValueError:
+        return day
+    return f"{d.day} {d:%b %Y}"
+
+
+def open_ad(ad_id: str) -> None:
+    ss.ad_open = ad_id
+
+
+def close_ad() -> None:
+    ss.ad_open = None
+
+
 def page_jobs() -> None:
-    st.button("← Back", key="jobs_back", type="tertiary", on_click=go, args=("inputs",))
+    """One full-width list of ads; an ad opens in a dialog with "Use this ad" (Quan's pick, 17 Oct: the list and
+    the ad side by side cut the company names)."""
+    st.button("← Back", key="jobs_back", type="tertiary", on_click=go, args=("inputs",), kwargs={"ad_open": None})
     st.markdown(ui.h1("Pick a job ad", "md"), unsafe_allow_html=True)
     search_col, _ = st.columns([1.2, 1])
     query = search_col.text_input("Search", key="job_q", placeholder="Search a title, company or skill",
@@ -606,35 +633,42 @@ def page_jobs() -> None:
     role = st.pills("Role", ads.ROLE_CHIPS, key="job_role", default="All roles", label_visibility="collapsed")
     loc = st.pills("Location", ads.LOCATIONS, key="job_loc", default="Anywhere", label_visibility="collapsed")
     rows = ads.search(query, role or "All roles", loc or "Anywhere")
-    list_col, view_col = st.columns([1.15, 1], gap="large")
-    with list_col:
-        if not rows:
-            st.markdown("<div class='k-serif k-mute' style='font-size:18px;padding:24px 0'>No ads match. "
-                        "Try a broader role or location.</div>", unsafe_allow_html=True)
-            return
-        st.caption(f"{len(rows)} ads, newest first" + (" (the first 30)" if len(rows) == 30 else "")
-                   + " · click a row to read it")
-        table = pd.DataFrame([{"Title": a["title"], "Company": a["company"], "Where": a["location"],
-                               "Posted": a["posted"]} for a in rows])
-        picked = st.dataframe(table, hide_index=True, width="stretch", height=min(440, 40 + 35 * len(rows)),
-                              on_select="rerun", selection_mode="single-row", key="job_table",
-                              column_config={"Title": st.column_config.TextColumn(width="large"),
-                                             "Posted": st.column_config.TextColumn(width="small")})
-        chosen = picked.selection.rows[0] if picked.selection.rows else 0
-    ad = rows[min(chosen, len(rows) - 1)]
-    with view_col, st.container(border=True):
-        st.markdown(f"<h2 class='k-h2' style='font-size:24px'>{ui.esc(ad['title'])}</h2>"
-                    f"<div class='k-mute' style='font-size:14px;margin:2px 0 12px'>{ui.esc(ad['company'])} · "
-                    f"{ui.esc(ad['location'])} · {ad['posted']} · {ui.esc(ad['source'])}</div>"
-                    f"<div class='k-preview'>{ui.esc(ad['text'])}</div>", unsafe_allow_html=True)
-        if ad["url"]:
-            st.markdown(f"<a href='{ui.esc(ad['url'])}' target='_blank' class='k-small'>Open the original ↗</a>",
-                        unsafe_allow_html=True)
-        if st.button("Use this ad", key="use_job", type="primary"):
-            ss.update(ad_box=ad["text"], ad_keep=ad["text"], ad_pick=ad, ad_mode_keep="Browse ads")
-            ss.toast = f"Using “{ad['title']} — {ad['company']}”."
-            go("inputs")
-            st.rerun()
+    if not rows:
+        st.markdown("<div class='k-serif k-mute' style='font-size:18px;padding:24px 0'>No ads match. "
+                    "Try a broader role or location.</div>", unsafe_allow_html=True)
+        return
+    n = len(rows)
+    st.caption(f"{n} ad{'' if n == 1 else 's'}, newest first" + (" (the first 30)" if n == 30 else "")
+               + " · click one to read it")
+    for a in rows:
+        title_col, where_col, meta_col = st.columns([2.8, 2.2, 1.6], vertical_alignment="center")
+        title_col.button(a["title"], key=f"ad_{a['id']}", type="tertiary", on_click=open_ad, args=(a["id"],))
+        where_col.markdown(f"<span class='k-mute'>{ui.esc(a['company'])} · {ui.esc(a['location'])}</span>",
+                           unsafe_allow_html=True)
+        meta_col.markdown(f"<span class='k-small k-dim'>{posted(a['posted'])}</span> "
+                          + (ui.chip(a["role"], colour=ui.LINK) if a["role"] != "Other" else ""),
+                          unsafe_allow_html=True)
+    ad = ads.by_id(ss.ad_open) if ss.ad_open else None
+    if ad:
+        st.dialog(ad["title"], width="large", on_dismiss=close_ad)(ad_body)(ad)
+
+
+def ad_body(ad: dict) -> None:
+    """The ad in its dialog; the button comes before the text, so a short screen shows it without scrolling."""
+    st.markdown(f"<div class='k-mute' style='font-size:14px;margin:-4px 0 4px'>{ui.esc(ad['company'])} · "
+                f"{ui.esc(ad['location'])} · {posted(ad['posted'])} · {ui.esc(ad['source'])}</div>",
+                unsafe_allow_html=True)
+    use_col, link_col = st.columns([1, 3], vertical_alignment="center")
+    if ad["url"]:
+        link_col.markdown(f"<a href='{ui.esc(ad['url'])}' target='_blank' class='k-small'>Open the original ↗</a>",
+                          unsafe_allow_html=True)
+    if use_col.button("Use this ad", key="use_job", type="primary"):
+        ss.update(ad_box=ad["text"], ad_keep=ad["text"], ad_pick=ad, ad_mode_keep="Browse ads", ad_open=None)
+        ss.toast = f"Using “{ad['title']} — {ad['company']}”."
+        go("inputs")
+        st.rerun()
+    text = re.sub(r"\n\s*\n\s*\n+", "\n\n", ad["text"])           # scraped ads carry runs of blank lines
+    st.markdown(f"<div class='k-preview'>{ui.esc(text)}</div>", unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------- step 3: results
@@ -783,9 +817,14 @@ def certs_section(role: str) -> None:
                 unsafe_allow_html=True)
     certs = backend.certifications(role)
     if certs:
-        st.markdown("\n".join(f"- {cert_line(c)}" for c in certs), unsafe_allow_html=True)
-        st.caption("Exam price for one attempt, from the vendor's page. A \"hot\" tag appears once live "
-                   "Australian ads have been counted.")
+        shown = certs if ss.certs_more else certs[:CERTS_SHOWN]
+        st.markdown("<div class='k-certs'>" + "".join(cert_card(c) for c in shown) + "</div>", unsafe_allow_html=True)
+        if len(certs) > CERTS_SHOWN:
+            st.button("Show fewer" if ss.certs_more else f"Show all {len(certs)}", key="certs_all", type="tertiary",
+                      on_click=toggle, args=("certs_more",))
+        st.caption("\"hot\": in the top third of certificates that live Australian ads for the role name "
+                   "(Adzuna, 16 Oct 2026), or in the Robert Half 2027 Salary Guide. Exam price for one attempt, "
+                   "from the vendor's page.")
     else:
         st.markdown("<span class='k-mute'>No certification in our list for this role yet.</span>",
                     unsafe_allow_html=True)
@@ -1030,16 +1069,9 @@ if ss.step in ("results", "evidence") and not ss.result:
 if ss.step in ("inputs", "jobs") and not ss.user_type:
     ss.step = "start"
 PAGES = {"start": page_start, "inputs": page_inputs, "jobs": page_jobs, "results": page_results,
-         "evidence": page_evidence}
+         "evidence": page_evidence, "chat": page_chat}
 top_bar()
-if ss.chat_open:
-    main_col, chat_col = st.columns([1, 0.48], gap="large")
-    with main_col:
-        PAGES[ss.step]()
-    with chat_col:
-        chat_panel()
-else:
-    PAGES[ss.step]()
+PAGES[ss.step]()
 view = (ss.step, ss.gap if ss.step == "evidence" else None)
 if ss.get("view_shown") != view:          # a new page starts at the top; a tab, tick or filter keeps the place
     ss.view_shown = view
