@@ -1,0 +1,166 @@
+role,role_query,skill,skill_query,count,role_total,date
+Business Analyst,business analyst,SQL,sql,105,876,2026-10-16
+Business Analyst,business analyst,Excel,excel,148,876,2026-10-16
+Business Analyst,business analyst,Power BI,power bi,66,876,2026-10-16
+Business Analyst,business analyst,Python,python,10,876,2026-10-16
+Business Analyst,business analyst,Tableau,tableau,15,876,2026-10-16
+Business Analyst,business analyst,Microsoft Office,microsoft office,19,876,2026-10-16
+Business Analyst,business analyst,AWS,aws,18,876,2026-10-16
+Business Analyst,business analyst,Azure,azure,65,876,2026-10-16
+Business Analyst,business analyst,R,r programming,0,876,2026-10-16
+Business Analyst,business analyst,SAP,sap,33,876,2026-10-16
+Business Analyst,business analyst,SQL Server,sql server,8,876,2026-10-16
+Business Analyst,business analyst,Oracle,oracle,27,876,2026-10-16
+Business Analyst,business analyst,Jira,jira,159,876,2026-10-16
+Business Analyst,business analyst,Redshift,redshift,1,876,2026-10-16
+Business Analyst,business analyst,SAS,sas,2,876,2026-10-16
+Cloud Engineer,cloud engineer,Azure,azure,107,395,2026-10-16
+Cloud Engineer,cloud engineer,AWS,aws,81,395,2026-10-16
+Cloud Engineer,cloud engineer,Python,python,31,395,2026-10-16
+Cloud Engineer,cloud engineer,SQL,sql,20,395,2026-10-16
+Cloud Engineer,cloud engineer,Terraform,terraform,87,395,2026-10-16
+Cloud Engineer,cloud engineer,Shell scripting,bash,22,395,2026-10-16
+Cloud Engineer,cloud engineer,Linux,linux,12,395,2026-10-16
+Cloud Engineer,cloud engineer,Windows,windows,19,395,2026-10-16
+Cloud Engineer,cloud engineer,Kubernetes,kubernetes,34,395,2026-10-16
+Cloud Engineer,cloud engineer,Git,git,19,395,2026-10-16
+Cloud Engineer,cloud engineer,Java,java,12,395,2026-10-16
+Cloud Engineer,cloud engineer,Google Cloud,google cloud,10,395,2026-10-16
+Cloud Engineer,cloud engineer,Docker,docker,29,395,2026-10-16
+Cloud Engineer,cloud engineer,JavaScript,javascript,3,395,2026-10-16
+Cloud Engineer,cloud engineer,SQL Server,sql server,3,395,2026-10-16
+Data Analyst,data analyst,SQL,sql,130,290,2026-10-16
+Data Analyst,data analyst,Python,python,69,290,2026-10-16
+Data Analyst,data analyst,Power BI,power bi,115,290,2026-10-16
+Data Analyst,data analyst,Excel,excel,73,290,2026-10-16
+Data Analyst,data analyst,Tableau,tableau,41,290,2026-10-16
+Data Analyst,data analyst,R,r programming,2,290,2026-10-16
+Data Analyst,data analyst,Azure,azure,21,290,2026-10-16
+Data Analyst,data analyst,SQL Server,sql server,10,290,2026-10-16
+Data Analyst,data analyst,AWS,aws,12,290,2026-10-16
+Data Analyst,data analyst,Snowflake,snowflake,14,290,2026-10-16
+Data Analyst,data analyst,Microsoft Office,microsoft office,6,290,2026-10-16
+Data Analyst,data analyst,SAS,sas,18,290,2026-10-16
+Data Analyst,data analyst,Oracle,oracle,5,290,2026-10-16
+Data Analyst,data analyst,SAP,sap,4,290,2026-10-16
+Data Analyst,data analyst,Jira,jira,8,290,2026-10-16
+Data Engineer,data engineer,SQL,sql,341,811,2026-10-16
+Data Engineer,data engineer,Python,python,263,811,2026-10-16
+Data Engineer,data engineer,Azure,azure,218,811,2026-10-16
+Data Engineer,data engineer,AWS,aws,165,811,2026-10-16
+Data Engineer,data engineer,Spark,spark,147,811,2026-10-16
+Data Engineer,data engineer,Databricks,databricks,195,811,2026-10-16
+Data Engineer,data engineer,Java,java,40,811,2026-10-16
+Data Engineer,data engineer,SQL Server,sql server,52,811,2026-10-16
+Data Engineer,data engineer,Snowflake,snowflake,141,811,2026-10-16
+Data Engineer,data engineer,Git,git,71,811,2026-10-16
+Data Engineer,data engineer,Power BI,power bi,97,811,2026-10-16
+Data Engineer,data engineer,Scala,scala,43,811,2026-10-16
+Data Engineer,data engineer,Kafka,kafka,84,811,2026-10-16
+Data Engineer,data engineer,Airflow,airflow,82,811,2026-10-16
+Data Engineer,data engineer,Redshift,redshift,45,811,2026-10-16
+Machine Learning Engineer,machine learning engineer,Python,python,34,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,SQL,sql,5,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,AWS,aws,16,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,PyTorch,pytorch,31,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,TensorFlow,tensorflow,14,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Java,java,2,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Azure,azure,9,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Google Cloud,google cloud,0,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Linux,linux,4,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Git,git,3,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Kubernetes,kubernetes,14,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Docker,docker,12,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,Spark,spark,2,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,R,r programming,0,62,2026-10-16
+Machine Learning Engineer,machine learning engineer,scikit-learn,scikit-learn,9,62,2026-10-16
+Software Engineer,software engineer,AWS,aws,370,1171,2026-10-16
+Software Engineer,software engineer,Python,python,348,1171,2026-10-16
+Software Engineer,software engineer,Java,java,247,1171,2026-10-16
+Software Engineer,software engineer,SQL,sql,166,1171,2026-10-16
+Software Engineer,software engineer,Azure,azure,166,1171,2026-10-16
+Software Engineer,software engineer,JavaScript,javascript,180,1171,2026-10-16
+Software Engineer,software engineer,Git,git,135,1171,2026-10-16
+Software Engineer,software engineer,Linux,linux,160,1171,2026-10-16
+Software Engineer,software engineer,Kubernetes,kubernetes,181,1171,2026-10-16
+Software Engineer,software engineer,React,react,303,1171,2026-10-16
+Software Engineer,software engineer,Docker,docker,186,1171,2026-10-16
+Software Engineer,software engineer,Google Cloud,google cloud,41,1171,2026-10-16
+Software Engineer,software engineer,Terraform,terraform,113,1171,2026-10-16
+Software Engineer,software engineer,C#,c#,160,1171,2026-10-16
+Software Engineer,software engineer,Shell scripting,bash,27,1171,2026-10-16
+Data Scientist,data scientist,Python,python,115,171,2026-10-16
+Data Scientist,data scientist,Machine learning,machine learning,96,171,2026-10-16
+Data Scientist,data scientist,SQL,sql,75,171,2026-10-16
+Data Scientist,data scientist,Statistics,statistics,108,171,2026-10-16
+Data Scientist,data scientist,Predictive modelling,predictive modelling,32,171,2026-10-16
+Data Scientist,data scientist,Spark,spark,16,171,2026-10-16
+Data Scientist,data scientist,Data visualisation,data visualisation,19,171,2026-10-16
+Data Scientist,data scientist,Cloud platforms,cloud,42,171,2026-10-16
+Data Scientist,data scientist,Artificial intelligence,ai,112,171,2026-10-16
+Data Scientist,data scientist,AWS,aws,31,171,2026-10-16
+Data Scientist,data scientist,Optimisation,optimisation,40,171,2026-10-16
+Data Scientist,data scientist,Tableau,tableau,16,171,2026-10-16
+Data Scientist,data scientist,Hadoop,hadoop,10,171,2026-10-16
+Data Scientist,data scientist,Natural language processing,nlp,15,171,2026-10-16
+Data Scientist,data scientist,Deep learning,deep learning,19,171,2026-10-16
+QA/Test Engineer,test analyst,AWS,aws,2,105,2026-10-16
+QA/Test Engineer,test analyst,JMeter,jmeter,1,105,2026-10-16
+QA/Test Engineer,test analyst,Appium,appium,1,105,2026-10-16
+QA/Test Engineer,test analyst,Jira,jira,26,105,2026-10-16
+QA/Test Engineer,test analyst,C#,c#,4,105,2026-10-16
+QA/Test Engineer,test analyst,C++,c++,0,105,2026-10-16
+QA/Test Engineer,test analyst,Git,git,2,105,2026-10-16
+QA/Test Engineer,test analyst,JavaScript,javascript,5,105,2026-10-16
+QA/Test Engineer,test analyst,Jenkins,jenkins,6,105,2026-10-16
+QA/Test Engineer,test analyst,Linux,linux,0,105,2026-10-16
+QA/Test Engineer,test analyst,Azure,azure,29,105,2026-10-16
+QA/Test Engineer,test analyst,Excel,excel,6,105,2026-10-16
+QA/Test Engineer,test analyst,Microsoft Office,microsoft office,0,105,2026-10-16
+QA/Test Engineer,test analyst,Playwright,playwright,9,105,2026-10-16
+QA/Test Engineer,test analyst,Java,java,7,105,2026-10-16
+DevOps/SRE,devops,AWS,aws,161,330,2026-10-16
+DevOps/SRE,devops,Kafka,kafka,30,330,2026-10-16
+DevOps/SRE,devops,Jira,jira,36,330,2026-10-16
+DevOps/SRE,devops,C,c,6,330,2026-10-16
+DevOps/SRE,devops,C#,c#,16,330,2026-10-16
+DevOps/SRE,devops,C++,c++,4,330,2026-10-16
+DevOps/SRE,devops,CSS,css,5,330,2026-10-16
+DevOps/SRE,devops,Docker,docker,104,330,2026-10-16
+DevOps/SRE,devops,Git,git,55,330,2026-10-16
+DevOps/SRE,devops,Go,golang,15,330,2026-10-16
+DevOps/SRE,devops,Angular,angular,0,330,2026-10-16
+DevOps/SRE,devops,HTML,html,5,330,2026-10-16
+DevOps/SRE,devops,Terraform,terraform,175,330,2026-10-16
+DevOps/SRE,devops,JavaScript,javascript,24,330,2026-10-16
+DevOps/SRE,devops,Jenkins,jenkins,71,330,2026-10-16
+Network/Systems Administrator,systems administrator,AWS,aws,23,210,2026-10-16
+Network/Systems Administrator,systems administrator,Ansible,ansible,21,210,2026-10-16
+Network/Systems Administrator,systems administrator,Shell scripting,bash,20,210,2026-10-16
+Network/Systems Administrator,systems administrator,Firewalls,firewall,17,210,2026-10-16
+Network/Systems Administrator,systems administrator,Linux,linux,62,210,2026-10-16
+Network/Systems Administrator,systems administrator,Active Directory,active directory,49,210,2026-10-16
+Network/Systems Administrator,systems administrator,Azure,azure,49,210,2026-10-16
+Network/Systems Administrator,systems administrator,Excel,excel,51,210,2026-10-16
+Network/Systems Administrator,systems administrator,Microsoft Office,microsoft office,9,210,2026-10-16
+Network/Systems Administrator,systems administrator,SharePoint,sharepoint,21,210,2026-10-16
+Network/Systems Administrator,systems administrator,Windows,windows,76,210,2026-10-16
+Network/Systems Administrator,systems administrator,Python,python,30,210,2026-10-16
+Network/Systems Administrator,systems administrator,ServiceNow,servicenow,7,210,2026-10-16
+Network/Systems Administrator,systems administrator,SQL,sql,14,210,2026-10-16
+Network/Systems Administrator,systems administrator,administer ICT system,,,210,2026-10-16
+Cybersecurity Analyst,security analyst,AWS,aws,16,139,2026-10-16
+Cybersecurity Analyst,security analyst,Firewalls,firewall,10,139,2026-10-16
+Cybersecurity Analyst,security analyst,Linux,linux,8,139,2026-10-16
+Cybersecurity Analyst,security analyst,Azure,azure,20,139,2026-10-16
+Cybersecurity Analyst,security analyst,Excel,excel,6,139,2026-10-16
+Cybersecurity Analyst,security analyst,Microsoft Office,microsoft office,0,139,2026-10-16
+Cybersecurity Analyst,security analyst,Shell scripting,bash,9,139,2026-10-16
+Cybersecurity Analyst,security analyst,MITRE ATT&CK,mitre,16,139,2026-10-16
+Cybersecurity Analyst,security analyst,Python,python,16,139,2026-10-16
+Cybersecurity Analyst,security analyst,Splunk,splunk,18,139,2026-10-16
+Cybersecurity Analyst,security analyst,Nessus,nessus,0,139,2026-10-16
+Cybersecurity Analyst,security analyst,attack vectors,attack vectors,9,139,2026-10-16
+Cybersecurity Analyst,security analyst,cyber security,cyber security,59,139,2026-10-16
+Cybersecurity Analyst,security analyst,collect cyber defence data,,,139,2026-10-16
+Cybersecurity Analyst,security analyst,cyber attack counter-measures,,,139,2026-10-16
