@@ -82,7 +82,8 @@ resume as PDF or text, paste it, or use the sample (a synthetic early-career MDS
 in memory for the session and is never stored. Press **Find my gaps**.
 
 **3. Results.** One line says how many of the skills you still have to learn and names the
-biggest gaps.
+biggest gaps. Below it, one section at a time: Skills, Your path, Certifications (role modes) and
+How this works.
 
 - **Skills the ad (or role) asks for**: one row per skill with a bar for how often the 2026 ads ask
   for it (hover for the 2019-22 share; hatched = a skill the older ads never named) and its status:
@@ -97,7 +98,7 @@ biggest gaps.
   with the exact Handbook sentence (labelled learning objective, assessment, weekly topic or
   description), 👍 / 👎 to say whether the match is right, and self-study resources filtered by
   level and cost. Click a subject name for its sessions, prerequisites, the gaps it closes and the
-  Handbook link. *How this works*, under the results, names the data and the engine behind them.
+  Handbook link. *How this works* names the data and the engine behind the numbers.
 
 **4. Ask the Handbook.** The button in the sidebar opens a chat that answers from the UTS
 Handbook 2026 text and cites the passages it used ("Which subject teaches LLMs?"). Without an

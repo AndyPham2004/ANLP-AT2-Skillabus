@@ -535,7 +535,7 @@ def page_inputs() -> None:
                    else "One moment: reading your inputs and matching 360 UTS subjects…")
         with st.spinner(waiting):
             run_analysis()
-        go("results", show_ad=False, show_details=False)
+        go("results", show_ad=False, results_tab_keep="Skills")
         st.rerun()
     hint_col.markdown(f"<span class='k-mute'>{ui.esc(hint)}</span>", unsafe_allow_html=True)
     if backend.llm_enabled():
@@ -594,7 +594,7 @@ def skills_section(skills: list[dict], counted: bool, noun: str) -> None:
     aside = "bar = how often employers ask" if counted else "core skills · no Australian ad counts yet"
     st.markdown(ui.h2(f"Skills the {noun} asks for", aside), unsafe_allow_html=True)
     for i, s in enumerate(skills):
-        name_col, bar_col, status_col = st.columns([2.7, 2.8, 1.2], vertical_alignment="center")
+        name_col, bar_col, status_col = st.columns([2.4, 4.4, 1.1], vertical_alignment="center")
         name_col.button(s["skill_label"] + (" ✦" if s["emerging"] else ""), key=f"open_{i}", type="tertiary",
                         on_click=open_gap, args=(s["skill_label"],))
         if counted:
@@ -611,6 +611,7 @@ def skills_section(skills: list[dict], counted: bool, noun: str) -> None:
             bar_col.markdown(f"<span class='k-small k-mute'>{CORE_SOURCE.get(s.get('core_source'), '')}</span>",
                              unsafe_allow_html=True)
         status_col.markdown(ui.status_html(s["status"]), unsafe_allow_html=True)
+    st.caption("Click a skill for the evidence, the UTS subjects that teach it and self-study options.")
     if ss.user_type == "job" and ss.ad_keep.strip():
         st.button("Hide the ad" if ss.show_ad else "Show where these appear in the ad", key="toggle_ad",
                   type="tertiary", on_click=toggle, args=("show_ad",))
@@ -618,56 +619,68 @@ def skills_section(skills: list[dict], counted: bool, noun: str) -> None:
             st.markdown(ui.highlight(ss.ad_keep, skills, regex_for), unsafe_allow_html=True)
 
 
+def path_card(code: str, r: dict, by: dict, plan: dict) -> None:
+    """One UTS subject of the path: name, the gaps it closes, when it runs, the what-if tick box."""
+    session = (plan.get(code) or {}).get("session") or ", ".join(r.get("offered") or [])
+    with st.container(border=True):
+        if st.button(r["subject_name"], key=f"path_{code}", type="tertiary", width="stretch"):
+            subject_dialog(code)
+        chips = "".join(ui.chip(lc(c), by.get(c, {}).get("status", "missing")) for c in r["covers"])
+        st.markdown(chips or ui.chip("a prerequisite, no gap itself"), unsafe_allow_html=True)
+        note = enrol_note(r)
+        when = " · ".join(x for x in (session, note) if x)
+        if when:
+            colour = ui.PARTIAL if r.get("needs") else ui.MUTE
+            st.markdown(f"<div class='k-small' style='color:{colour}'>{ui.esc(when)}</div>", unsafe_allow_html=True)
+        whatif_box(code, f"wi_path_{code}")
+
+
+def outside_card(o: dict, by: dict) -> None:
+    """One outside course (the second tier): dashed, no credit."""
+    inner = (f"<div style='display:flex;justify-content:space-between;gap:10px'>"
+             f"<span style='font-weight:500;font-size:16px'>{ui.esc(o['subject_name'])}</span>"
+             f"<span class='k-small k-mute' style='white-space:nowrap'>{ui.esc(o.get('provider', ''))} · "
+             f"{ui.esc(o.get('cost', ''))}</span></div>"
+             + "".join(ui.chip(lc(c), by.get(c, {}).get("status", "missing")) for c in o["covers"])
+             + "<div class='k-small k-mute'>No UTS subject you can take covers this · not for credit</div>")
+    st.markdown(ui.card(inner, dashed=True), unsafe_allow_html=True)
+
+
 def path_section(res: dict, by: dict, counted: bool) -> None:
     lp, recs = res["learning_path"], {r["subject_code"]: r for r in res["recommendations"]}
     aside = (f"<span style='color:{ui.HAVE}'>closes {lp['gaps_closed']} of {lp['gaps_total']} gaps</span>"
              if lp["gaps_total"] else "")
     st.markdown(ui.h2("Your path", aside), unsafe_allow_html=True)
-    if not lp["subjects"]:
+    plan = {p["subject_code"]: p for p in lp.get("plan", []) if isinstance(p, dict)}
+    outside_names = {r["subject_code"]: r for r in res.get("outside_recommendations", [])}
+    cards = [("uts", code) for code in lp["subjects"] if code in recs]
+    cards += [("out", code) for code in (lp.get("outside") or {}).get("courses", []) if code in outside_names]
+    if not cards:
         msg = ("You already have every skill on the list." if not lp["gaps_total"]
                else "No subject in the Handbook text covers these gaps.")
         st.markdown(f"<div class='k-serif k-mute' style='font-size:18px;line-height:1.5'>{msg}</div>",
                     unsafe_allow_html=True)
-    plan = {p["subject_code"]: p for p in lp.get("plan", []) if isinstance(p, dict)}
-    for code in lp["subjects"]:
-        r = recs.get(code)
-        if not r:
-            continue
-        session = (plan.get(code) or {}).get("session") or ", ".join(r.get("offered") or [])
-        with st.container(border=True):
-            if st.button(r["subject_name"], key=f"path_{code}", type="tertiary", width="stretch"):
-                subject_dialog(code)
-            chips = "".join(ui.chip(lc(c), by.get(c, {}).get("status", "missing")) for c in r["covers"])
-            st.markdown(chips or ui.chip("a prerequisite, no gap itself"), unsafe_allow_html=True)
-            note = enrol_note(r)
-            when = " · ".join(x for x in (session, note) if x)
-            if when:
-                colour = ui.PARTIAL if r.get("needs") else ui.MUTE
-                st.markdown(f"<div class='k-small' style='color:{colour}'>{ui.esc(when)}</div>",
-                            unsafe_allow_html=True)
-            whatif_box(code, f"wi_path_{code}")
-    names = {r["subject_code"]: r for r in res.get("outside_recommendations", [])}
-    for code in (lp.get("outside") or {}).get("courses", []):
-        o = names.get(code)
-        if not o:
-            continue
-        inner = (f"<div style='display:flex;justify-content:space-between;gap:10px'>"
-                 f"<span style='font-weight:500;font-size:16px'>{ui.esc(o['subject_name'])}</span>"
-                 f"<span class='k-small k-mute'>{ui.esc(o.get('provider', ''))} · {ui.esc(o.get('cost', ''))}</span></div>"
-                 + "".join(ui.chip(lc(c), by.get(c, {}).get("status", "missing")) for c in o["covers"])
-                 + "<div class='k-small k-mute'>No UTS subject you can take covers this · not for credit</div>")
-        st.markdown(ui.card(inner, dashed=True), unsafe_allow_html=True)
+    for i in range(0, len(cards), 3):                       # three cards to a row, in the order of the path
+        for col, (kind, code) in zip(st.columns(3, gap="medium"), cards[i:i + 3]):
+            with col:
+                if kind == "uts":
+                    path_card(code, recs[code], by, plan)
+                else:
+                    outside_card(outside_names[code], by)
     open_gaps = [k for k in by if by[k]["status"] != "have"
                  and not any(k in recs[c]["covers"] for c in lp["subjects"] if c in recs)]
     no_subject = [k for k in open_gaps if not any(k in r["covers"] for r in res["recommendations"])]
     later = [k for k in open_gaps if k not in no_subject]
+    notes = []
     if later:
-        st.caption(f"Still open after this path: {', '.join(lc(u) for u in later)}. "
-                   "Click a skill for the other subjects that teach it.")
+        notes.append(f"Still open after this path: {', '.join(lc(u) for u in later)}. "
+                     "Click a skill for the other subjects that teach it.")
     if no_subject:
-        st.caption(f"No subject text names: {', '.join(lc(u) for u in no_subject)}.")
+        notes.append(f"No subject text names: {', '.join(lc(u) for u in no_subject)}.")
     if counted and lp["subjects"]:
-        st.caption(f"The path covers {lp['demand_covered_pct']:.0f}% of the employer demand behind your gaps.")
+        notes.append(f"The path covers {lp['demand_covered_pct']:.0f}% of the employer demand behind your gaps.")
+    if notes:
+        st.caption(" ".join(notes))
     if ss.whatif:
         st.button("Reset what-if", key="whatif_reset", type="tertiary", on_click=reset_whatif)
     elif lp["subjects"]:
@@ -690,10 +703,7 @@ def certs_section(role: str) -> None:
 
 
 def details_section(res: dict, skills: list[dict], counted: bool, role: str | None) -> None:
-    st.button("Hide how this works" if ss.show_details else "How this works", key="toggle_details",
-              type="tertiary", on_click=toggle, args=("show_details",))
-    if not ss.show_details:
-        return
+    st.markdown(ui.h2("How this works"), unsafe_allow_html=True)
     if not counted:
         onet, esco = backend.occupation(role, "onet"), backend.occupation(role, "esco")
         cap = (f"Core skills of the role: no percentages, because there are no Australian ad counts for {role} yet. "
@@ -727,7 +737,7 @@ def details_section(res: dict, skills: list[dict], counted: bool, role: str | No
             f"{' and the GPT-4o-mini tier' if ss.gpt_keep and backend.llm_enabled() else ''}; subjects matched on the "
             "Handbook learning objectives, assessments, topics and descriptions of 360 UTS subjects. "
             "Soft skills are not charted. Results are suggestions, not advice.")
-    st.markdown(f"<div class='k-small k-mute' style='line-height:1.6;max-width:760px'>{ui.esc(cap)}</div>",
+    st.markdown(f"<div class='k-body k-mute' style='line-height:1.65;max-width:72ch'>{ui.esc(cap)}</div>",
                 unsafe_allow_html=True)
 
 
@@ -764,14 +774,21 @@ def page_results() -> None:
                       f"{ui.esc(tail)}", "lg"), unsafe_allow_html=True)
     st.markdown(ui.counts(n_have, n_part, len(gaps) - n_part), unsafe_allow_html=True)
 
-    left, right = st.columns([1.2, 1], gap="large")
-    with left:
+    # One section at a time, full width (Quan's pick): the tabs below the verdict.
+    tabs = ["Skills", "Your path"] + (["Certifications"] if role else []) + ["How this works"]
+    if ss.get("results_tab") not in tabs:
+        ss.results_tab = ss.get("results_tab_keep") if ss.get("results_tab_keep") in tabs else "Skills"
+    st.segmented_control("Section", tabs, key="results_tab", label_visibility="collapsed")
+    tab = ss.results_tab or "Skills"
+    ss.results_tab_keep = tab
+    if tab == "Skills":
         skills_section(skills, counted, "ad" if ss.user_type == "job" else "role")
-    with right:
+    elif tab == "Your path":
         path_section(res, by, counted)
-    if role:
+    elif tab == "Certifications":
         certs_section(role)
-    details_section(res, skills, counted, role)
+    else:
+        details_section(res, skills, counted, role)
 
 
 # ---------------------------------------------------------------- step 3b: the evidence for one skill

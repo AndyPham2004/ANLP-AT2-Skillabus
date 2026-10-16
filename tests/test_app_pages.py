@@ -52,6 +52,13 @@ def open_skill(at: AppTest, n: int | None = None) -> AppTest:
     return at
 
 
+def show_tab(at: AppTest, tab: str) -> AppTest:
+    """Pick a section of the results page: Skills, Your path, Certifications, How this works."""
+    at.segmented_control(key="results_tab").set_value(tab).run()
+    assert not at.exception, at.exception
+    return at
+
+
 def page_text(at: AppTest) -> str:
     parts = [m.value for m in at.markdown] + [c.value for c in at.caption]
     parts += [e.label for e in at.expander] + [b.label for b in at.button]
@@ -101,11 +108,16 @@ def test_role_mode_data_engineer():
     show_gaps(at)
     text = page_text(at)
     assert "Data Engineer" in text and "skills still to learn" in text
+    assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Certifications", "How this works"]
     assert "Skills the role asks for" in text and "<span style='width:" in text        # the percentage bars
-    assert "Your path" in text
+    show_tab(at, "Your path")
+    assert "Your path" in page_text(at) and "closes" in page_text(at)
+    show_tab(at, "Certifications")
+    text = page_text(at)
     assert "Certifications worth having" in text and "Databricks Certified Data Engineer Associate" in text
-    at.button(key="toggle_details").click().run()
+    show_tab(at, "How this works")
     assert "Engine: pipeline" in page_text(at)
+    show_tab(at, "Skills")
     open_skill(at)
     text = page_text(at)
     assert "Employers say" in text and "UTS subjects that teach it" in text and "Self-study" in text
@@ -119,9 +131,12 @@ def test_role_mode_cybersecurity_has_bars_since_c2():
     show_gaps(at)
     text = page_text(at)
     assert "<span style='width:" in text and "core skills · no Australian ad counts yet" not in text
+    show_tab(at, "Certifications")
+    text = page_text(at)
     assert "Certifications worth having" in text and "CompTIA Security+" in text
-    at.button(key="toggle_details").click().run()
+    show_tab(at, "How this works")
     assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)
+    show_tab(at, "Skills")
     open_skill(at)
     assert "Employers say" in page_text(at) and "Self-study" in page_text(at)
 
@@ -136,7 +151,10 @@ def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sampl
     assert "core skills · no Australian ad counts yet" in text
     assert "<span style='width:" not in text                                          # no percentage bars
     assert "O*NET in-demand tool" in text or "ESCO essential skill" in text        # where each core skill comes from
+    show_tab(at, "Certifications")
+    text = page_text(at)
     assert "Certifications worth having" in text and "CompTIA Security+" in text
+    show_tab(at, "Skills")
     open_skill(at)
     text = page_text(at)
     assert "Why it is a core skill" in text
@@ -164,7 +182,7 @@ def test_job_seeker_mode_with_the_sample_ad():
     text = page_text(at)
     assert "Data Scientist · Robert Walters · Sydney CBD" in text
     assert "Skills the ad asks for" in text
-    assert "Certifications worth having" not in text                           # no role in this mode
+    assert "Certifications" not in at.segmented_control(key="results_tab").options   # no role in this mode
     at.button(key="toggle_ad").click().run()
     assert "<mark" in page_text(at)                                            # skills highlighted on the ad
     open_skill(at)
@@ -192,6 +210,7 @@ def test_what_if_taken_reruns_the_path():
     path = at.session_state.result["learning_path"]["subjects"]
     assert path
     first = path[0]
+    show_tab(at, "Your path")
     at.button(key="whatif_first").click().run()
     assert not at.exception, at.exception
     assert at.session_state.whatif == [first]
