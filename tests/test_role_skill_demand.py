@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data-eda" / "src")
 import build_role_profiles as brp  # noqa: E402
 from build_role_skill_demand import (  # noqa: E402
     COLUMNS, COUNTED, EXTRA_TOKEN_MAP, MIN_ROLE_ADS, MIXED_FAMILY, MIXED_ROLE, SOURCES, TEXT_TYPE,
-    committed_inputs, data_jobs_rows, load_data_jobs, recent_rows, seek_rows, taxonomy_rows, to_frame,
+    adzuna_rows, committed_inputs, data_jobs_rows, load_data_jobs, recent_rows, seek_rows, taxonomy_rows, to_frame,
     to_label, tool_lookup,
 )
 from build_vocabulary import read_table, read_table_text, to_csv_text  # noqa: E402
@@ -90,6 +90,9 @@ def test_one_denominator_per_block_and_the_known_totals():
     c26 = pd.read_csv(paths.SKILL_COUNTS_2026).iloc[0]
     recent = COUNTS[COUNTS.source == "recent_2024_26"].groupby(["period", "role"]).total_ads.first()
     assert recent.to_dict() == {("2024-01", MIXED_ROLE): c26.total_2024_01, ("2026", MIXED_ROLE): c26.total_2026_all}
+    adz = COUNTS[COUNTS.source == "adzuna_2026"].groupby("role").total_ads.first()
+    live = INPUTS["adzuna"].groupby("role").role_total.first().astype(int)
+    assert adz.to_dict() == live.to_dict() and set(adz.index) == set(FAMILIES)   # every one of the 11 roles
 
 
 def test_every_role_has_taxonomy_rows_and_every_essential_skill():
@@ -220,12 +223,13 @@ def rebuilt(rows) -> pd.DataFrame:
     return read_table_text(to_csv_text(to_frame(rows)))
 
 
-def test_committed_seek_recent_and_taxonomy_rows_are_what_the_builder_writes():
+def test_committed_seek_recent_adzuna_and_taxonomy_rows_are_what_the_builder_writes():
     v, f = VOCAB, FAMILIES
     assert committed("seek_2019_22").equals(rebuilt(seek_rows(v, INPUTS["seek"], f["Data Scientist"])))
     assert committed("recent_2024_26").equals(rebuilt(recent_rows(v, INPUTS["recent"], f)[0]))
     tax, _ = taxonomy_rows(v, INPUTS["occupation_skills"], INPUTS["onet_map"], f)
     assert committed(["esco_occupation", "onet"]).equals(rebuilt(tax))
+    assert committed("adzuna_2026").equals(rebuilt(adzuna_rows(v, INPUTS["adzuna"], f)))
 
 
 def test_committed_data_jobs_rows_are_what_the_builder_writes():
