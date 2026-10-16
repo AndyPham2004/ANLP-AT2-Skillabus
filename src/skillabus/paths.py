@@ -92,6 +92,7 @@ SKILLS_NOT_TAUGHT = DEMAND / "skills_not_taught_by_uts.csv"
 ROLE_SKILL_DEMAND = DEMAND / "role_skill_demand.csv"     # role x skill x source x period, long format
 ROLE_OUTLOOK = DEMAND / "role_outlook.csv"               # JSA shortage rating + vacancies per role (plan D13, #118)
 DATA_JOBS_AU_RAW = RAW / "jobs_au_datajobs_2023.parquet"  # data_jobs, its 12,955 Australian rows (not in git)
+ADZUNA_COUNTS = DEMAND / "adzuna_counts_2026-10.csv"      # live Adzuna search counts, skill x role (plan D12)
 
 ADS = DEMAND / "ads"
 SEEK_ADS = ADS / "jobs_au_seek_datascientist_2019-2022_clean.csv"
@@ -99,6 +100,7 @@ RECENT_ADS = ADS / "jobs_au_recent_2024-2026_clean.csv"
 
 COLLECTION = DEMAND / "collection"
 ATS_COMPANIES = COLLECTION / "ats_companies.csv"
+ADZUNA_QUERIES = COLLECTION / "adzuna_queries.csv"      # title query per role, phrase per skill
 ATS_CANDIDATES = COLLECTION / "ats_candidates.csv"
 
 EMERGING = DEMAND / "emerging"
@@ -126,6 +128,7 @@ SKILL_COUNTS_PRIMARY = CROSSCHECK / "skill_counts_PRIMARY.csv"
 SKILL_COUNTS_LINKEDIN_US = CROSSCHECK / "skill_counts_linkedin_us.csv"
 SKILL_COUNTS_GLASSDOOR_AU = CROSSCHECK / "skill_counts_glassdoor_au_2022.csv"
 EXTRACTOR_AGREEMENT = CROSSCHECK / "extractor_agreement.csv"
+ROLE_RANK_AGREEMENT = CROSSCHECK / "role_rank_agreement.csv"   # Adzuna 2026 vs data_jobs / Seek (D7)
 EXTRACTOR_AGREEMENT_DECOMPOSED = CROSSCHECK / "extractor_agreement_decomposed.csv"
 
 # ------------------------------------------------------------------ raw (not in git; data/README.md says where each comes from)
@@ -168,7 +171,7 @@ COMMITTED = (
     ESCO_SKILLS_CLEAN, ESCO_LABEL_LOOKUP, ROLE_OCCUPATIONS, OCCUPATION_SKILLS,
     SUBJECT_PROFILES, PREREQUISITES, OFFERINGS, ASSESSMENTS_SCRAPED, SUBJECTS_TEMPLATE, EXTERNAL_COURSES,
     EXTERNAL_COURSES_MD, CERTIFICATIONS, CERTIFICATIONS_MD, RESOURCES, RESOURCE_MODULES, PRIORITY_SKILLS, SKILL_COUNTS, SKILL_COUNTS_2026, TOP_SKILLS,
-    ROLE_PROFILES, ROLE_SKILL_DEMAND, ROLE_OUTLOOK, SKILLS_NOT_TAUGHT, SEEK_ADS, RECENT_ADS, ATS_COMPANIES, ATS_CANDIDATES, EMERGING_CANDIDATES, AD_SKILLS, CV_JD_PAIRS,
+    ROLE_PROFILES, ROLE_SKILL_DEMAND, ROLE_OUTLOOK, ADZUNA_COUNTS, ADZUNA_QUERIES, ROLE_RANK_AGREEMENT, SKILLS_NOT_TAUGHT, SEEK_ADS, RECENT_ADS, ATS_COMPANIES, ATS_CANDIDATES, EMERGING_CANDIDATES, AD_SKILLS, CV_JD_PAIRS,
     SKILL_SUBJECT_PAIRS, CHAT_QUESTIONS, LABEL_SAMPLE, RESUMES, LLM_CACHE_EVAL, SKILL_COUNTS_PRIMARY,
     SKILL_COUNTS_LINKEDIN_US, SKILL_COUNTS_GLASSDOOR_AU, EXTRACTOR_AGREEMENT,
     EXTRACTOR_AGREEMENT_DECOMPOSED, SAMPLE_AD, SAMPLE_RESUME, FIGURES,

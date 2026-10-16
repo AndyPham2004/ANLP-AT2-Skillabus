@@ -6,8 +6,10 @@ Writes data/2_demand/role_skill_demand.csv, long format, one row per role, skill
   role, role_family   one of the 11 roles of role_occupations.csv, or "Data roles (mixed)" (below)
   skill_id, skill     the skill's id and label in skills_vocabulary.csv; every row's skill is in it
   source, period      seek_2019_22 / 2019-22, data_jobs_2023 / 2023, recent_2024_26 / 2024-01 or 2026,
-                      esco_occupation / v1.2.1, onet / v31.0 (for a taxonomy the period is its release)
-  text_type           full_text (ad text), tool_list (a list of tool names, no text), taxonomy (no counts)
+                      adzuna_2026 / 2026-10, esco_occupation / v1.2.1, onet / v31.0 (for a taxonomy the
+                      period is its release)
+  text_type           full_text (ad text), tool_list (a list of tool names, no text), search_count (live
+                      search counts), taxonomy (no counts)
   n_ads, total_ads    ads naming the skill at least once; the ads of that role, source and period
   pct, pct_low, pct_high   100 * n_ads / total_ads (1 decimal) and its 95% Wilson interval
                       (recount_recent.wilson); blank for taxonomy rows
@@ -29,6 +31,10 @@ Sources:
                   its own block only with at least MIN_ROLE_ADS ads (plan D15); every other ad of the
                   period (role_group "data role", or a role below the floor) is counted under
                   "Data roles (mixed)". No role is guessed for an ad the file does not classify.
+  adzuna_2026     All 11 roles: live Adzuna Australia search counts of 16 Oct 2026 (2_demand/
+                  adzuna_counts_2026-10.csv, count_role_skills_adzuna.py): ads whose title has the role's
+                  words, and of those the ads whose text has the skill's phrase; only each role's 15
+                  priority skills were searched, and a skill with 0 ads has no row, as in the other sources.
   esco_occupation The ESCO essential and optional skills of each role's occupation (occupation_skills.csv,
                   plan D4). ESCO concept URI -> vocabulary skill_id "esco:<uri>"; the vocabulary holds every
                   essential skill, and the optional skills it does not hold are left out (they stay in
@@ -68,10 +74,11 @@ log = logging.getLogger("build_role_skill_demand")
 OUT = paths.ROLE_SKILL_DEMAND
 COLUMNS = ["role", "role_family", "skill_id", "skill", "source", "period", "text_type",
            "n_ads", "total_ads", "pct", "pct_low", "pct_high", "importance"]
-SOURCES = ("seek_2019_22", "data_jobs_2023", "recent_2024_26", "esco_occupation", "onet")
+SOURCES = ("seek_2019_22", "data_jobs_2023", "recent_2024_26", "adzuna_2026", "esco_occupation", "onet")
 TEXT_TYPE = {"seek_2019_22": "full_text", "data_jobs_2023": "tool_list", "recent_2024_26": "full_text",
-             "esco_occupation": "taxonomy", "onet": "taxonomy"}
-COUNTED = ("seek_2019_22", "data_jobs_2023", "recent_2024_26")
+             "adzuna_2026": "search_count", "esco_occupation": "taxonomy", "onet": "taxonomy"}
+COUNTED = ("seek_2019_22", "data_jobs_2023", "recent_2024_26", "adzuna_2026")
+ADZUNA_PERIOD = "2026-10"
 IMPORTANCE = ("essential", "optional", "in_demand")
 SEEK_ROLE, SEEK_PERIOD = "Data Scientist", "2019-22"
 DATA_JOBS_PERIOD = "2023"
@@ -132,6 +139,17 @@ def share_rows(counts: Counter, total: int, *, role: str, family: str, source: s
                      "source": source, "period": period, "text_type": TEXT_TYPE[source], "n_ads": n,
                      "total_ads": total, "pct": round(100 * n / total, 1), "pct_low": low, "pct_high": high,
                      "importance": ""})
+    return rows
+
+
+def adzuna_rows(vocab: pd.DataFrame, counts: pd.DataFrame, families: dict[str, str]) -> list[dict]:
+    """Live Adzuna search counts (plan D12): one block per role, its title-matched ads as the denominator."""
+    by_label = dict(zip(vocab.label, vocab.skill_id))
+    rows = []
+    for role, g in counts[counts["count"] != ""].groupby("role"):
+        hits = Counter({skill: int(n) for skill, n in zip(g.skill, g["count"])})
+        rows += share_rows(hits, int(g.role_total.iloc[0]), role=role, family=families[role],
+                           source="adzuna_2026", period=ADZUNA_PERIOD, by_label=by_label)
     return rows
 
 
@@ -311,7 +329,8 @@ def committed_inputs() -> dict:
             "dictionary_labels": set(read_table(paths.SKILLS_SEED).canonical),
             "seek": pd.read_csv(paths.SEEK_ADS, dtype=str, keep_default_na=False),
             "recent": pd.read_csv(paths.RECENT_ADS, dtype=str, keep_default_na=False),
-            "occupation_skills": read_table(paths.OCCUPATION_SKILLS), "onet_map": read_table(paths.ONET_TOOL_MAP)}
+            "occupation_skills": read_table(paths.OCCUPATION_SKILLS), "onet_map": read_table(paths.ONET_TOOL_MAP),
+            "adzuna": read_table(paths.ADZUNA_COUNTS)}
 
 
 def build(raw: Path = paths.RAW) -> tuple[pd.DataFrame, dict]:
@@ -321,7 +340,8 @@ def build(raw: Path = paths.RAW) -> tuple[pd.DataFrame, dict]:
     dj_rows, unmapped, dj_totals = data_jobs_rows(vocab, load_data_jobs(raw), families, i["dictionary_labels"])
     rec_rows, recent_notes = recent_rows(vocab, i["recent"], families)
     tax_rows, left_out = taxonomy_rows(vocab, i["occupation_skills"], i["onet_map"], families)
-    table = to_frame(rows + dj_rows + rec_rows + tax_rows)
+    adz_rows = adzuna_rows(vocab, i["adzuna"], families)
+    table = to_frame(rows + dj_rows + rec_rows + adz_rows + tax_rows)
     clash = table[table.duplicated(["role", "skill_id", "source", "period"], keep=False)]
     if not clash.empty:
         raise ValueError(f"rows repeat a role, skill, source and period:\n{clash.head()}")
