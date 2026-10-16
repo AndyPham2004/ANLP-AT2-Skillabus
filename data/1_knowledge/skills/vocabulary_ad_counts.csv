@@ -118,7 +118,7 @@ Econometrics,123,51,120,3,0
 Data governance,56,46,32,19,5
 Data quality,138,101,89,32,17
 Data privacy,35,15,6,4,25
-Data security,65,41,27,8,30
+Data security,23,16,2,8,13
 Responsible AI,23,12,3,9,11
 Communication,963,435,746,45,172
 Stakeholder management,579,245,443,16,120
@@ -270,3 +270,5 @@ Speech recognition,2,2,2,0,0
 Reinforcement learning,31,18,29,2,0
 Object detection,15,13,14,1,0
 Weights & Biases,0,0,0,0,0
+cyber security,39,28,25,1,13
+Perl,33,20,32,0,1

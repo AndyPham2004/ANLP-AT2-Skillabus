@@ -91,10 +91,11 @@ Data Scientist,Data & AI,skillabus:hypothesis-testing,Hypothesis testing,seek_20
 Data Scientist,Data & AI,skillabus:google-analytics,Google Analytics,seek_2019_22,2019-22,full_text,52,3204,1.6,1.2,2.1,
 Data Scientist,Data & AI,skillabus:sap,SAP,seek_2019_22,2019-22,full_text,52,3204,1.6,1.2,2.1,
 Data Scientist,Data & AI,skillabus:experimental-design,Experimental design,seek_2019_22,2019-22,full_text,51,3204,1.6,1.2,2.1,
-Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/86d2e2ea-1ba2-4aa6-b465-8a1f9abc81b8,Data security,seek_2019_22,2019-22,full_text,46,3204,1.4,1.1,1.9,
 Data Scientist,Data & AI,skillabus:kubernetes,Kubernetes,seek_2019_22,2019-22,full_text,45,3204,1.4,1.1,1.9,
 Data Scientist,Data & AI,skillabus:linear-regression,Linear regression,seek_2019_22,2019-22,full_text,44,3204,1.4,1.0,1.8,
 Data Scientist,Data & AI,skillabus:confluence,Confluence,seek_2019_22,2019-22,full_text,43,3204,1.3,1.0,1.8,
+Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/8088750d-8388-4170-a76f-48354c469c44,cyber security,seek_2019_22,2019-22,full_text,43,3204,1.3,1.0,1.8,
+Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,seek_2019_22,2019-22,full_text,41,3204,1.3,0.9,1.7,
 Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/e5d1f825-60ed-4bdd-872a-e748c387f777,CSS,seek_2019_22,2019-22,full_text,40,3204,1.2,0.9,1.7,
 Data Scientist,Data & AI,skillabus:data-governance,Data governance,seek_2019_22,2019-22,full_text,39,3204,1.2,0.9,1.7,
 Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/b758675a-b03b-4e4b-897c-57ca14b1a3d0,Probability,seek_2019_22,2019-22,full_text,39,3204,1.2,0.9,1.7,
@@ -178,6 +179,7 @@ Data Scientist,Data & AI,skillabus:terraform,Terraform,seek_2019_22,2019-22,full
 Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/1ffac4ac-fda7-407d-8ed1-ca8f4a8dc146,Angular,seek_2019_22,2019-22,full_text,3,3204,0.1,0.0,0.3,
 Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/6f8a40d6-f9ce-43ec-a72f-d4213a53f3ed,Ansible,seek_2019_22,2019-22,full_text,3,3204,0.1,0.0,0.3,
 Data Scientist,Data & AI,skillabus:dask,Dask,seek_2019_22,2019-22,full_text,3,3204,0.1,0.0,0.3,
+Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/86d2e2ea-1ba2-4aa6-b465-8a1f9abc81b8,Data security,seek_2019_22,2019-22,full_text,3,3204,0.1,0.0,0.3,
 Data Scientist,Data & AI,skillabus:fivetran,Fivetran,seek_2019_22,2019-22,full_text,3,3204,0.1,0.0,0.3,
 Data Scientist,Data & AI,skillabus:itil-foundation-version-5,ITIL Foundation (Version 5),seek_2019_22,2019-22,full_text,3,3204,0.1,0.0,0.3,
 Data Scientist,Data & AI,skillabus:microservices,Microservices,seek_2019_22,2019-22,full_text,3,3204,0.1,0.0,0.3,
@@ -235,6 +237,7 @@ Business Analyst,Business analysis,esco:http://data.europa.eu/esco/skill/76ef6ed
 Business Analyst,Business analysis,esco:http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f,C++,data_jobs_2023,2023,tool_list,7,576,1.2,0.6,2.5,
 Business Analyst,Business analysis,skillabus:cognos,Cognos,data_jobs_2023,2023,tool_list,6,576,1.0,0.5,2.3,
 Business Analyst,Business analysis,esco:http://data.europa.eu/esco/skill/4da171e5-779c-4983-a76f-91c16751e99f,MySQL,data_jobs_2023,2023,tool_list,6,576,1.0,0.5,2.3,
+Business Analyst,Business analysis,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,data_jobs_2023,2023,tool_list,6,576,1.0,0.5,2.3,
 Business Analyst,Business analysis,esco:http://data.europa.eu/esco/skill/3cd569a2-4f88-4c1e-9995-8dce8c5e51a7,JavaScript,data_jobs_2023,2023,tool_list,5,576,0.9,0.4,2.0,
 Business Analyst,Business analysis,esco:http://data.europa.eu/esco/skill/0ccdfe98-f845-4598-84a1-3dca66e9d9a3,Ruby,data_jobs_2023,2023,tool_list,5,576,0.9,0.4,2.0,
 Business Analyst,Business analysis,skillabus:spss,SPSS,data_jobs_2023,2023,tool_list,5,576,0.9,0.4,2.0,
@@ -305,6 +308,7 @@ Cloud Engineer,Cloud & infrastructure,skillabus:mongodb,MongoDB,data_jobs_2023,2
 Cloud Engineer,Cloud & infrastructure,skillabus:bigquery,BigQuery,data_jobs_2023,2023,tool_list,8,350,2.3,1.2,4.4,
 Cloud Engineer,Cloud & infrastructure,esco:http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f,C++,data_jobs_2023,2023,tool_list,8,350,2.3,1.2,4.4,
 Cloud Engineer,Cloud & infrastructure,esco:http://data.europa.eu/esco/skill/4da171e5-779c-4983-a76f-91c16751e99f,MySQL,data_jobs_2023,2023,tool_list,8,350,2.3,1.2,4.4,
+Cloud Engineer,Cloud & infrastructure,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,data_jobs_2023,2023,tool_list,8,350,2.3,1.2,4.4,
 Cloud Engineer,Cloud & infrastructure,esco:http://data.europa.eu/esco/skill/a8d07b5a-c1a1-42c6-9d53-db9c7a2ca996,PostgreSQL,data_jobs_2023,2023,tool_list,7,350,2.0,1.0,4.1,
 Cloud Engineer,Cloud & infrastructure,skillabus:react,React,data_jobs_2023,2023,tool_list,7,350,2.0,1.0,4.1,
 Cloud Engineer,Cloud & infrastructure,skillabus:elasticsearch,Elasticsearch,data_jobs_2023,2023,tool_list,6,350,1.7,0.8,3.7,
@@ -390,6 +394,7 @@ Data Analyst,Data & AI,esco:http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-
 Data Analyst,Data & AI,esco:http://data.europa.eu/esco/skill/f47a1998-0beb-43be-9f46-380aa4d183da,Jenkins,data_jobs_2023,2023,tool_list,8,1362,0.6,0.3,1.2,
 Data Analyst,Data & AI,skillabus:microstrategy,MicroStrategy,data_jobs_2023,2023,tool_list,8,1362,0.6,0.3,1.2,
 Data Analyst,Data & AI,skillabus:mongodb,MongoDB,data_jobs_2023,2023,tool_list,8,1362,0.6,0.3,1.2,
+Data Analyst,Data & AI,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,data_jobs_2023,2023,tool_list,8,1362,0.6,0.3,1.2,
 Data Analyst,Data & AI,skillabus:tensorflow,TensorFlow,data_jobs_2023,2023,tool_list,8,1362,0.6,0.3,1.2,
 Data Analyst,Data & AI,skillabus:splunk,Splunk,data_jobs_2023,2023,tool_list,7,1362,0.5,0.2,1.1,
 Data Analyst,Data & AI,skillabus:docker,Docker,data_jobs_2023,2023,tool_list,6,1362,0.4,0.2,1.0,
@@ -483,6 +488,7 @@ Data Engineer,Data & AI,skillabus:numpy,NumPy,data_jobs_2023,2023,tool_list,38,4
 Data Engineer,Data & AI,skillabus:spring,Spring,data_jobs_2023,2023,tool_list,36,4438,0.8,0.6,1.1,
 Data Engineer,Data & AI,skillabus:scikit-learn,scikit-learn,data_jobs_2023,2023,tool_list,30,4438,0.7,0.5,1.0,
 Data Engineer,Data & AI,skillabus:tensorflow,TensorFlow,data_jobs_2023,2023,tool_list,30,4438,0.7,0.5,1.0,
+Data Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,data_jobs_2023,2023,tool_list,27,4438,0.6,0.4,0.9,
 Data Engineer,Data & AI,skillabus:pytorch,PyTorch,data_jobs_2023,2023,tool_list,23,4438,0.5,0.3,0.8,
 Data Engineer,Data & AI,skillabus:sharepoint,SharePoint,data_jobs_2023,2023,tool_list,23,4438,0.5,0.3,0.8,
 Data Engineer,Data & AI,skillabus:neo4j,Neo4j,data_jobs_2023,2023,tool_list,22,4438,0.5,0.3,0.7,
@@ -575,6 +581,7 @@ Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/f47a1998-0beb-43b
 Data Scientist,Data & AI,skillabus:tidyverse,tidyverse,data_jobs_2023,2023,tool_list,11,1047,1.1,0.6,1.9,
 Data Scientist,Data & AI,skillabus:windows,Windows,data_jobs_2023,2023,tool_list,11,1047,1.1,0.6,1.9,
 Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/6f8a40d6-f9ce-43ec-a72f-d4213a53f3ed,Ansible,data_jobs_2023,2023,tool_list,10,1047,1.0,0.5,1.7,
+Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,data_jobs_2023,2023,tool_list,10,1047,1.0,0.5,1.7,
 Data Scientist,Data & AI,skillabus:splunk,Splunk,data_jobs_2023,2023,tool_list,10,1047,1.0,0.5,1.7,
 Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/a4346013-a967-4a58-a533-6b32ad1364c5,Data privacy,data_jobs_2023,2023,tool_list,9,1047,0.9,0.5,1.6,
 Data Scientist,Data & AI,esco:http://data.europa.eu/esco/skill/4350c38d-0fe9-4ca7-bab9-40ed7f72b04f,PHP,data_jobs_2023,2023,tool_list,9,1047,0.9,0.5,1.6,
@@ -672,6 +679,7 @@ Machine Learning Engineer,Data & AI,skillabus:html,HTML,data_jobs_2023,2023,tool
 Machine Learning Engineer,Data & AI,skillabus:julia,Julia,data_jobs_2023,2023,tool_list,2,263,0.8,0.2,2.7,
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,data_jobs_2023,2023,tool_list,2,263,0.8,0.2,2.7,
 Machine Learning Engineer,Data & AI,skillabus:matplotlib,matplotlib,data_jobs_2023,2023,tool_list,2,263,0.8,0.2,2.7,
+Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,data_jobs_2023,2023,tool_list,2,263,0.8,0.2,2.7,
 Machine Learning Engineer,Data & AI,skillabus:qlik,Qlik,data_jobs_2023,2023,tool_list,2,263,0.8,0.2,2.7,
 Machine Learning Engineer,Data & AI,skillabus:rust,Rust,data_jobs_2023,2023,tool_list,2,263,0.8,0.2,2.7,
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/e5d1f825-60ed-4bdd-872a-e748c387f777,CSS,data_jobs_2023,2023,tool_list,1,263,0.4,0.1,2.1,
@@ -738,6 +746,7 @@ Software Engineer,Software,esco:http://data.europa.eu/esco/skill/6417a4cc-6f61-4
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/51586df8-1c46-4b47-8583-773cb63bf00b,R,data_jobs_2023,2023,tool_list,24,1198,2.0,1.3,3.0,
 Software Engineer,Software,skillabus:cassandra,Cassandra,data_jobs_2023,2023,tool_list,23,1198,1.9,1.3,2.9,
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/be80acfc-b6f2-4411-9b8d-b19d9cd2556a,Swift,data_jobs_2023,2023,tool_list,21,1198,1.8,1.1,2.7,
+Software Engineer,Software,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,data_jobs_2023,2023,tool_list,20,1198,1.7,1.1,2.6,
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/4350c38d-0fe9-4ca7-bab9-40ed7f72b04f,PHP,data_jobs_2023,2023,tool_list,20,1198,1.7,1.1,2.6,
 Software Engineer,Software,skillabus:flask,Flask,data_jobs_2023,2023,tool_list,19,1198,1.6,1.0,2.5,
 Software Engineer,Software,skillabus:pandas,pandas,data_jobs_2023,2023,tool_list,18,1198,1.5,1.0,2.4,
@@ -894,6 +903,7 @@ Data roles (mixed),Data & AI,skillabus:adobe-analytics,Adobe Analytics,recent_20
 Data roles (mixed),Data & AI,skillabus:argo-cd,Argo CD,recent_2024_26,2024-01,full_text,1,122,0.8,0.1,4.5,
 Data roles (mixed),Data & AI,esco:http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f,C++,recent_2024_26,2024-01,full_text,1,122,0.8,0.1,4.5,
 Data roles (mixed),Data & AI,skillabus:cassandra,Cassandra,recent_2024_26,2024-01,full_text,1,122,0.8,0.1,4.5,
+Data roles (mixed),Data & AI,esco:http://data.europa.eu/esco/skill/8088750d-8388-4170-a76f-48354c469c44,cyber security,recent_2024_26,2024-01,full_text,1,122,0.8,0.1,4.5,
 Data roles (mixed),Data & AI,skillabus:data-storytelling,Data storytelling,recent_2024_26,2024-01,full_text,1,122,0.8,0.1,4.5,
 Data roles (mixed),Data & AI,esco:http://data.europa.eu/esco/skill/3cee858e-79e8-4a4b-b99f-93c7f735d58b,DB2,recent_2024_26,2024-01,full_text,1,122,0.8,0.1,4.5,
 Data roles (mixed),Data & AI,skillabus:django,Django,recent_2024_26,2024-01,full_text,1,122,0.8,0.1,4.5,
@@ -1102,9 +1112,9 @@ IT roles (mixed),IT (mixed),skillabus:linux,Linux,ats_2026,2026-10,full_text,8,2
 IT roles (mixed),IT (mixed),skillabus:agile,Agile,ats_2026,2026-10,full_text,7,26,26.9,13.7,46.1,
 IT roles (mixed),IT (mixed),skillabus:kubernetes,Kubernetes,ats_2026,2026-10,full_text,7,26,26.9,13.7,46.1,
 IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/adc6dc11-3376-467b-96c5-9b0a21edc869,Problem solving,ats_2026,2026-10,full_text,7,26,26.9,13.7,46.1,
-IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/86d2e2ea-1ba2-4aa6-b465-8a1f9abc81b8,Data security,ats_2026,2026-10,full_text,6,26,23.1,11.0,42.1,
 IT roles (mixed),IT (mixed),skillabus:google-cloud,Google Cloud,ats_2026,2026-10,full_text,6,26,23.1,11.0,42.1,
 IT roles (mixed),IT (mixed),skillabus:jira,Jira,ats_2026,2026-10,full_text,6,26,23.1,11.0,42.1,
+IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/8088750d-8388-4170-a76f-48354c469c44,cyber security,ats_2026,2026-10,full_text,5,26,19.2,8.5,37.9,
 IT roles (mixed),IT (mixed),skillabus:siem,SIEM,ats_2026,2026-10,full_text,5,26,19.2,8.5,37.9,
 IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/1af2db15-2af9-44dd-9639-bf1fc69d4c34,Stakeholder management,ats_2026,2026-10,full_text,5,26,19.2,8.5,37.9,
 IT roles (mixed),IT (mixed),skillabus:terraform,Terraform,ats_2026,2026-10,full_text,5,26,19.2,8.5,37.9,
@@ -1129,6 +1139,7 @@ IT roles (mixed),IT (mixed),skillabus:shell-scripting,Shell scripting,ats_2026,2
 IT roles (mixed),IT (mixed),skillabus:soc-2,SOC 2,ats_2026,2026-10,full_text,3,26,11.5,4.0,29.0,
 IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f,C++,ats_2026,2026-10,full_text,2,26,7.7,2.1,24.1,
 IT roles (mixed),IT (mixed),skillabus:cisco-certified-network-associate-ccna,Cisco Certified Network Associate (CCNA),ats_2026,2026-10,full_text,2,26,7.7,2.1,24.1,
+IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/86d2e2ea-1ba2-4aa6-b465-8a1f9abc81b8,Data security,ats_2026,2026-10,full_text,2,26,7.7,2.1,24.1,
 IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/071233c4-ad2b-4f50-b79f-768d2231163e,DNS,ats_2026,2026-10,full_text,2,26,7.7,2.1,24.1,
 IT roles (mixed),IT (mixed),skillabus:elasticsearch,Elasticsearch,ats_2026,2026-10,full_text,2,26,7.7,2.1,24.1,
 IT roles (mixed),IT (mixed),skillabus:go,Go,ats_2026,2026-10,full_text,2,26,7.7,2.1,24.1,
@@ -1155,6 +1166,7 @@ IT roles (mixed),IT (mixed),skillabus:llmops,LLMOps,ats_2026,2026-10,full_text,1
 IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/3a2d5b45-56e4-4f5a-a55a-4a4a65afdc43,Machine learning,ats_2026,2026-10,full_text,1,26,3.8,0.7,18.9,
 IT roles (mixed),IT (mixed),skillabus:microservices,Microservices,ats_2026,2026-10,full_text,1,26,3.8,0.7,18.9,
 IT roles (mixed),IT (mixed),skillabus:nist,NIST,ats_2026,2026-10,full_text,1,26,3.8,0.7,18.9,
+IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,ats_2026,2026-10,full_text,1,26,3.8,0.7,18.9,
 IT roles (mixed),IT (mixed),skillabus:pulumi,Pulumi,ats_2026,2026-10,full_text,1,26,3.8,0.7,18.9,
 IT roles (mixed),IT (mixed),esco:http://data.europa.eu/esco/skill/6417a4cc-6f61-4459-a114-761a7fa0279d,Puppet,ats_2026,2026-10,full_text,1,26,3.8,0.7,18.9,
 IT roles (mixed),IT (mixed),skillabus:site-reliability-engineering,Site reliability engineering,ats_2026,2026-10,full_text,1,26,3.8,0.7,18.9,
@@ -2723,6 +2735,7 @@ Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/19a829
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/3cd569a2-4f88-4c1e-9995-8dce8c5e51a7,JavaScript,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/3e2ab38a-4519-4bef-b762-a8bf4836a775,perform dimensionality reduction,esco_occupation,v1.2.1,taxonomy,,,,,,optional
+Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/4350c38d-0fe9-4ca7-bab9-40ed7f72b04f,PHP,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/38d49d88-9069-467b-b29e-3cae739bdd4d,Predictive modelling,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Machine Learning Engineer,Data & AI,esco:http://data.europa.eu/esco/skill/51586df8-1c46-4b47-8583-773cb63bf00b,R,esco_occupation,v1.2.1,taxonomy,,,,,,optional
@@ -2793,6 +2806,7 @@ QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/6014921e-1d25-40
 QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389,Java,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/3cd569a2-4f88-4c1e-9995-8dce8c5e51a7,JavaScript,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,esco_occupation,v1.2.1,taxonomy,,,,,,optional
+QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/4350c38d-0fe9-4ca7-bab9-40ed7f72b04f,PHP,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d,Python,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 QA/Test Engineer,Software,esco:http://data.europa.eu/esco/skill/9cf681c7-89ec-470c-b651-7fe03786f586,query languages,esco_occupation,v1.2.1,taxonomy,,,,,,optional
@@ -2843,6 +2857,7 @@ Software Engineer,Software,esco:http://data.europa.eu/esco/skill/f47a1998-0beb-4
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/020918ef-4b55-47c1-8430-ab7b8f6a7377,migrate existing data,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/76ef6ed3-1658-4a1a-9593-204d799c6d0c,NoSQL,esco_occupation,v1.2.1,taxonomy,,,,,,optional
+Software Engineer,Software,esco:http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8,Perl,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/4350c38d-0fe9-4ca7-bab9-40ed7f72b04f,PHP,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/6417a4cc-6f61-4459-a114-761a7fa0279d,Puppet,esco_occupation,v1.2.1,taxonomy,,,,,,optional
 Software Engineer,Software,esco:http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d,Python,esco_occupation,v1.2.1,taxonomy,,,,,,optional

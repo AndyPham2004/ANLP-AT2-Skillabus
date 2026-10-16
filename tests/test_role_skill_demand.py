@@ -185,6 +185,9 @@ def classify(new: float, old: float, clean: float, skill: str) -> str:
     return "unexplained"
 
 
+ALIASES_MOVED = {"Data security"}
+
+
 def test_seek_shares_agree_with_skill_counts_v2():
     """The 148 dictionary skills, Data Scientist, the 3,204 Seek ads.
 
@@ -201,8 +204,13 @@ def test_seek_shares_agree_with_skill_counts_v2():
     clean = pd.read_csv(paths.SKILL_COUNTS_2026).set_index("skill").pct_2019_22
     assert set(v2.index) == set(SEED.canonical)
     why = {s: classify(new.get(s, 0.0), v2[s], clean[s], s) for s in SEED.canonical}
+    # #120 (16 Oct): "cyber security" / "cybersecurity" moved from Data security to ESCO cyber security,
+    # so Data security can only be lower than the counts made with the old aliases.
+    for skill in ALIASES_MOVED:
+        if why[skill] == "unexplained" and new.get(skill, 0.0) < v2[skill]:
+            why[skill] = "aliases moved"
     assert [s for s, w in why.items() if w == "unexplained"] == []
-    assert sum(w == "same" for w in why.values()) >= 120
+    assert sum(w in ("same", "aliases moved") for w in why.values()) >= 120
 
 
 @pytest.mark.parametrize("period, column", [("2024-01", "pct_2024_01"), ("2026", "pct_2026_all")])

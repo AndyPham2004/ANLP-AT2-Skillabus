@@ -20,7 +20,11 @@ cannot take (43023 needs 42172 or 41040, which an MDSI student cannot enrol in) 
 and listed under `learning_path.dropped`. The path is then laid out over sessions.
 
 Second tier (ideas doc 4.5): the gaps the UTS path leaves open get the same greedy cover over
-outside courses (external_courses.csv: free or free-to-audit, no UTS credit), at most three.
+outside courses (the text rows of external_courses.csv and resource_modules.csv, through
+resources.text_rows(): free, free-to-audit or paid, with the cost on each row; no UTS credit),
+at most three. A course counts for a gap only when its hand-checked `skills` in resources.csv
+list it: the text alone also matches passing mentions ("Sign up for an AWS account" in a Redshift
+course, a Scala course asking for "Java or C#", "Search for Similar Vectors" for attack vectors).
 The two are never mixed in one pass: a short course aimed at one skill would push UTS subjects
 out. Output: `outside_recommendations`, and `learning_path.outside` with the share of demand
 the UTS path and outside courses close together.
@@ -35,7 +39,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import paths
+from . import paths, resources
 from .extract import _dictionary_hits, load_dictionary
 from .match import demand_2026_low, skill_query
 from .requisites import Rules, enrolment, load_rules, schedule, sessions_offered
@@ -64,28 +68,37 @@ COVER_RATIO = 0.60          # a subject covers a skill if it is at least this st
 SUBJECTS_PER_SKILL = 5      # and is among this many strongest subjects for it
 MAX_PATH = 3
 MAX_SUBJECTS = 10           # recommendations returned: the path first, then the next best
-EXTERNAL_CSV = paths.EXTERNAL_COURSES
+EXTERNAL_CSV = (paths.EXTERNAL_COURSES, paths.RESOURCE_MODULES)   # the files resources.text_rows() reads
 MAX_OUTSIDE = 3             # outside courses in the second tier
 MAX_OUTSIDE_SHOWN = 6       # outside recommendations returned
 
 
 # -------------------------------------------------------------------------- profiles
 
-def _profiles_path(profiles_csv: str | None) -> Path:
+def _absolute(path) -> Path:
+    path = Path(path)
+    return path if path.is_absolute() else ROOT / path
+
+
+def _profiles_paths(profiles_csv) -> tuple[Path, ...]:
+    """One profile file, or several read as one (str, Path, or a list or tuple of them)."""
     if profiles_csv:
-        path = Path(profiles_csv)
-        return path if path.is_absolute() else ROOT / path
+        many = profiles_csv if isinstance(profiles_csv, (list, tuple)) else (profiles_csv,)
+        return tuple(_absolute(p) for p in many)
     for path in PROFILE_PATHS:
         if path.exists():
-            return path
+            return (path,)
     raise FileNotFoundError(f"No subject profiles found; looked for {', '.join(str(p) for p in PROFILE_PATHS)}")
 
 
 @lru_cache(maxsize=4)
-def _load(path: str, mtime: float) -> tuple[list[dict], list[frozenset], dict[str, frozenset]]:
-    """(rows, dictionary skills named in each row, dictionary skills named in each subject title)."""
-    with open(path, encoding="utf-8-sig", newline="") as f:
-        rows = [{k: (v or "").strip() for k, v in row.items()} for row in csv.DictReader(f)]
+def _load(files: tuple[str, ...], mtimes: tuple[float, ...]) -> tuple[list[dict], list[frozenset], dict[str, frozenset]]:
+    """(rows, dictionary skills named in each row, dictionary skills named in each subject title).
+    Several files are read in order, as one; `mtimes` only invalidates the cache when a file changes."""
+    rows = []
+    for path in files:
+        with open(path, encoding="utf-8-sig", newline="") as f:
+            rows += [{k: (v or "").strip() for k, v in row.items()} for row in csv.DictReader(f)]
     rows = [row for row in rows if row.get("text") and row.get("subject_code")]
     named = [frozenset(c for _, _, c in _dictionary_hits(row["text"])) for row in rows]
     titles = {row["subject_code"]: row["subject_name"] for row in rows}
@@ -93,9 +106,10 @@ def _load(path: str, mtime: float) -> tuple[list[dict], list[frozenset], dict[st
     return rows, named, in_title
 
 
-def load_profiles(profiles_csv: str | None = None):
-    path = _profiles_path(profiles_csv)
-    return _load(str(path), path.stat().st_mtime)
+def load_profiles(profiles_csv=None):
+    """Rows of one profile file or several (see _profiles_paths), named skills, title skills."""
+    files = _profiles_paths(profiles_csv)
+    return _load(tuple(str(p) for p in files), tuple(p.stat().st_mtime for p in files))
 
 
 @lru_cache(maxsize=1)
@@ -323,12 +337,37 @@ def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | N
     return {"recommendations": shown, "learning_path": path, "outside_recommendations": outside_recs}
 
 
-def _external_path(external_csv: str | None) -> Path | None:
+def _external_paths(external_csv=None) -> tuple[Path, ...] | None:
+    """The outside-course text files that exist; None for "" (no second tier) or when none exists."""
     if external_csv == "":
         return None
-    path = Path(external_csv) if external_csv else EXTERNAL_CSV
-    path = path if path.is_absolute() else ROOT / path
-    return path if path.exists() else None
+    many = external_csv or EXTERNAL_CSV
+    many = many if isinstance(many, (list, tuple)) else (many,)
+    found = tuple(p for p in (_absolute(m) for m in many) if p.exists())
+    return found or None
+
+
+@lru_cache(maxsize=1)
+def _course_skills() -> dict[str, frozenset]:
+    """resource_id -> the skills resources.csv lists for it (lower case); empty without the file."""
+    if not paths.RESOURCES.exists():
+        return {}
+    return {r["resource_id"]: frozenset(s.lower() for s in r["skills"]) for r in resources.resources()}
+
+
+@lru_cache(maxsize=1)
+def _course_cost_aud() -> dict[str, float]:
+    """resource_id -> price in A$ for a paid course (resources.csv `cost_aud`), shown next to `cost`."""
+    if not paths.RESOURCES.exists():
+        return {}
+    return {r["resource_id"]: float(r["cost_aud"]) for r in resources.resources() if r.get("cost_aud")}
+
+
+def _tagged(course: str, label: str) -> bool:
+    """A course with a resources.csv row counts only for the skills listed there; one without
+    a row (a test fixture, a course not yet tagged) keeps every match."""
+    tags = _course_skills().get(course)
+    return tags is None or label.lower() in tags
 
 
 def outside(open_gaps: list[str], weight: dict[str, float], external_csv: str | None = None,
@@ -343,21 +382,23 @@ def outside(open_gaps: list[str], weight: dict[str, float], external_csv: str | 
     closed_by_uts = sum(w for k, w in weight.items() if k not in open_gaps)
     block = {"courses": [], "gaps_closed": 0, "gaps_open_before": len(open_gaps), "still_open": list(open_gaps),
              "demand_covered_pct": round(100 * closed_by_uts / total, 1) if total else 0.0}
-    path = _external_path(external_csv)
-    if not open_gaps or path is None:
+    files = _external_paths(external_csv)
+    if not open_gaps or files is None:
         return [], block
 
-    evidence = subject_evidence(open_gaps, str(path), method, home_course=None)
-    meta = {row["subject_code"]: row for row in load_profiles(str(path))[0]}
+    files = [str(f) for f in files]
+    evidence = subject_evidence(open_gaps, files, method, home_course=None)
+    meta = {row["subject_code"]: row for row in load_profiles(files)[0]}
     courses: dict[str, dict] = {}
     for label in sorted(open_gaps, key=lambda k: -weight[k]):
-        found = evidence[label]
+        found = [e for e in evidence[label] if _tagged(e["subject_code"], label)]
         floor = COVER_RATIO * found[0]["strength"] if found else 0.0
         for e in [e for e in found if e["strength"] >= floor][:SUBJECTS_PER_SKILL]:
             row = meta[e["subject_code"]]
             rec = courses.setdefault(e["subject_code"], {
                 "subject_code": e["subject_code"], "subject_name": e["subject_name"], "source_url": e["source_url"],
-                "provider": row.get("provider", ""), "cost": row.get("cost", ""), "score": 0.0,
+                "provider": row.get("provider", ""), "cost": row.get("cost", ""),
+                "cost_aud": _course_cost_aud().get(e["subject_code"]), "score": 0.0,
                 "covers": [], "evidence": []})
             rec["covers"].append(label)
             rec["evidence"].append({"skill_label": label, "layer": e["layer"], "text": e["text"], "match": e["match"]})
