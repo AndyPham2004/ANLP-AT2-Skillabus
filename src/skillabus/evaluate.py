@@ -10,6 +10,7 @@ Command line (numbers for the report; the report names this file as the script):
     python -m skillabus.evaluate kappa  A.csv B.csv --a-name "Hoai Thuong" --b-name Akash \
         --dictionary data/1_knowledge/skills/skills_seed_v2.csv
     python -m skillabus.evaluate extraction gold.csv pred.json [--method dictionary]
+    python -m skillabus.evaluate --all [--methods dictionary,ner,llm]    # every table of report section 6
 """
 from __future__ import annotations
 
@@ -407,6 +408,16 @@ def _fmt(d: Mapping) -> str:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    args_in = list(sys.argv[1:] if argv is None else argv)
+    if "--all" in args_in:  # the whole evaluation; needs the pipeline, so it lives in eval_run.py
+        runner = argparse.ArgumentParser(prog="python -m skillabus.evaluate --all")
+        runner.add_argument("--all", action="store_true")
+        runner.add_argument("--methods", default="dictionary,ner,llm", help="comma-separated extraction tiers to try")
+        runner.add_argument("--out", help="output folder (default data/4_evaluation/results)")
+        runner.add_argument("--gold-annotator", default="hoaithuongnguyen-uts", help="whose ad_skills.csv rows are the extraction gold set")
+        ns = runner.parse_args(args_in)
+        from .eval_run import run_all
+        return run_all(tuple(ns.methods.split(",")), ns.out, ns.gold_annotator)
     parser = argparse.ArgumentParser(prog="python -m skillabus.evaluate")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
