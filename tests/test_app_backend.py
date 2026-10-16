@@ -228,6 +228,24 @@ def test_analyse_job_mode_still_works(monkeypatch):
     assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", 71)}
 
 
+def test_llm_terms_outside_the_vocabulary_are_listed_apart_not_counted(monkeypatch):
+    """17 Oct UI check: GPT added "business problems", "complex data" and the like, each counted as a missing
+    skill ("28 of 29"). A GPT-only skill counts only when the vocabulary knows it; the rest are listed apart."""
+    from skillabus import llm_extract
+
+    found = [{"text": "LLMs", "kind": "hard", "method": "llm", "sentence": "Experience with LLMs."},
+             {"text": "two-tower architectures", "kind": "hard", "method": "llm",
+              "sentence": "Build two-tower architectures."}]
+    monkeypatch.setattr(llm_extract, "extract_llm", lambda text, **kw: found if "LLMs" in text else [])
+    ranked = []
+    empty = {"skills": [], "recommendations": [], "learning_path": {}, "outside_recommendations": []}
+    out = backend.augment_with_llm(empty, "I write Python.", "Experience with LLMs. Build two-tower architectures.",
+                                   [], rank=lambda gaps: ranked.append([g["skill_label"] for g in gaps]) or {})
+    assert [s["skill_label"] for s in out["skills"]] == ["Large language models"]
+    assert out["also_in_ad"] == ["two-tower architectures"]
+    assert ranked == [["Large language models"]]                  # the path never weighs an uncounted term
+
+
 def test_llm_only_gaps_are_weighed_like_the_ad_s_other_skills(monkeypatch):
     """A skill only the GPT tier finds in an ad is weighed like the dictionary's rows: the 2026 Data Scientist
     share, with the 2019-22 trend."""
