@@ -224,6 +224,8 @@ def baseline_ranking(gaps: list[dict], taken: list[str]) -> dict:
 def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken: list[str], rank=None) -> dict:
     """Add the hard skills only the LLM tier finds in the ad, then recompute subjects and path.
 
+    Only a skill the vocabulary knows becomes a gap. Anything else GPT names ("Metaflow", but also "business
+    problems", "complex data") has no demand count and is listed apart in `also_in_ad`: shown, never counted.
     rank(gaps) -> {"recommendations", "learning_path", "outside_recommendations"}; the baseline ranker when not given.
     """
     from skillabus.llm_extract import extract_llm
@@ -238,7 +240,7 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
     known = {s["skill_label"].lower() for s in result["skills"]} | {s["skill_id"] for s in result["skills"]}
     res = baseline.resources()
 
-    extra, seen = [], set()
+    extra, apart, seen = [], [], set()
     for m in ad:
         label = m["canonical"] or m["skill_label"]
         if m["kind"] != "hard" or label.lower() in known or m["skill_id"] in known or label.lower() in seen:
@@ -246,19 +248,23 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
         if m["canonical"] and res.category.get(m["canonical"]) in baseline.SOFT_CATEGORIES:
             continue
         seen.add(label.lower())
+        if not m["canonical"]:
+            apart.append(label)
+            continue
         have = cv_ids.get(m["skill_id"]) or cv_ids.get(m["canonical"])
         extra.append({
             "skill_id": m["skill_id"], "skill_label": label,
             "status": "have" if have else "missing",
-            "demand_pct": round(demand.get(m["canonical"], 0.0), 1) if m["canonical"] else 0.0,
-            "demand_pct_2026": demand_2026.get(m["canonical"]) if m["canonical"] else None,
-            "demand_pct_2019_22": demand_2019_22.get(m["canonical"]) if m["canonical"] else None,
+            "demand_pct": round(demand.get(m["canonical"], 0.0), 1),
+            "demand_pct_2026": demand_2026.get(m["canonical"]),
+            "demand_pct_2019_22": demand_2019_22.get(m["canonical"]),
             **meta,
             "emerging": m["vocab"] in ("emerging", "lightcast"),
             "ad_evidence": m["sentence"],
             "resume_evidence": have["sentence"] if have else None,
             "found_by": "llm",
         })
+    result = {**result, "also_in_ad": apart}
     if not extra:
         return result
     skills = result["skills"] + extra

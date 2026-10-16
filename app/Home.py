@@ -647,8 +647,6 @@ def bars_note(skills: list[dict], counted: bool, role: str | None) -> str:
     note = "Bars: share of " + backend.role_source(who, skills[0].get("demand_source"), skills[0].get("demand_period"))
     if backend.source_2019_22(role):
         note += " Hover a bar for the 2019-22 share; a hatched bar is a skill those older ads never named."
-    if any(s.get("found_by") == "llm" for s in skills):
-        note += " Skills found only by GPT-4o-mini have no bar."
     return note
 
 
@@ -673,6 +671,10 @@ def skills_section(skills: list[dict], counted: bool, noun: str, role: str | Non
             bar_col.markdown(f"<span class='k-small k-mute'>{CORE_SOURCE.get(s.get('core_source'), '')}</span>",
                              unsafe_allow_html=True)
         status_col.markdown(ui.status_html(s["status"]), unsafe_allow_html=True)
+    also = ss.result.get("also_in_ad") or []       # GPT-4o-mini found them; the vocabulary has no count for them
+    if also:
+        st.caption(f"Also in the ad, outside our skills list: {', '.join(also)}. Found by GPT-4o-mini; "
+                   "not counted above.")
     st.caption(bars_note(skills, counted, role) + " Click a skill for the evidence and where to learn it.")
     if ss.user_type == "job" and ss.ad_keep.strip():
         st.button("Hide the ad" if ss.show_ad else "Show where these appear in the ad", key="toggle_ad",
@@ -876,8 +878,6 @@ def demand_fact(s: dict, counted: bool, role: str | None) -> tuple[str, str, str
     if not counted:
         return ("Core skill", ui.esc(CORE_SOURCE.get(s.get("core_source"), "core skill of the role")),
                 "no Australian ad counts for this role yet", False)
-    if s.get("found_by") == "llm":
-        return ("Employers ask", "Found by GPT-4o-mini", "not in our dictionary, so it has no count", False)
     pct, old = s.get("demand_pct"), s.get("demand_pct_2019_22")
     who = role or backend.DEFAULT_ROLE
     value = f"{pct:.0f}% of {s.get('total_ads') or 'the'} {ui.esc(who)} ads" if pct is not None else "no count"

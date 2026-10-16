@@ -239,6 +239,20 @@ def test_job_seeker_mode_with_the_sample_ad():
     assert "k-dashed" in text                                                  # at least one resource card
 
 
+def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
+    # What augment_with_llm() lists apart (no key in tests, so it is set by hand) gets one line, no rows.
+    at = start("job")
+    show_gaps(at)
+    res = dict(at.session_state.result)
+    n = len(res["skills"])
+    at.session_state.result = {**res, "also_in_ad": ["Metaflow", "problem framing"]}
+    at.run()
+    assert not at.exception, at.exception
+    text = page_text(at)
+    assert "Also in the ad, outside our skills list: Metaflow, problem framing." in text
+    assert f"of {n}</span>" in text and "Metaflow" not in [b.label for b in at.button]
+
+
 def test_self_study_filters_change_the_column():
     at = start("switch")
     pick_role(at, "Data Engineer")
