@@ -72,6 +72,20 @@ def test_strict_aliases_are_case_sensitive():
     assert skills("Proficiency in Python and R.") == {"Python", "R"}
 
 
+def test_bare_ai_needs_context():
+    """'AI' alone is a recruiter tool, an application note or a company name as often as a skill
+    (JobsPipe 2026, 17 Oct); it counts only in the phrases ads use for the skill, like bare 'R'."""
+    ai = "Artificial intelligence"
+    assert ai not in skills("Our after-hours AI screening assistant may contact you first.")
+    assert ai not in skills("We accept AI use in applications, but keep yours genuine.")
+    assert ai not in skills("About Sharon AI: we build sovereign data centres.")
+    assert ai not in skills("Sierra.ai for voice bots and Sprinklr for chat.")
+    assert ai in skills("Experience building AI/ML solutions.")
+    assert ai in skills("Deploy AI models to production.")
+    assert ai in skills("Knowledge of Artificial Intelligence.")
+    assert skills("Experience with AI and machine learning.") == {ai, "Machine learning"}
+
+
 def test_longest_alias_wins():
     assert skills("Experience with SQL Server.") == {"SQL Server"}
     assert skills("Deployed on Google Cloud Platform.") == {"Google Cloud"}

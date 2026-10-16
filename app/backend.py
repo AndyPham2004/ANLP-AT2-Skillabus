@@ -277,8 +277,13 @@ def empty_result(role: str) -> dict:
                                                                      "demand_covered_pct": 0.0}}}
 
 
-def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str = DEFAULT_ROLE) -> tuple[dict, str]:
-    """Return (gap result, engine name). ad_text None = role mode: the resume against `role`."""
+def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str = DEFAULT_ROLE,
+            home_course: str | None = "C04372", use_llm: bool = True) -> tuple[dict, str]:
+    """Return (gap result, engine name). ad_text None = role mode: the resume against `role`.
+
+    home_course: the student's course for the prerequisite rules (C04372 = MDSI; None = not enrolled,
+    so "admission into ..." conditions are not met). use_llm: run the GPT-4o-mini tier when a key is set.
+    """
     try:
         from skillabus.extract import extract
         from skillabus.match import match, slug, soft_skills
@@ -286,7 +291,7 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str =
         from skillabus.recommend import recommend
 
         def rank(gaps):  # subjects already taken are never recommended
-            rec = recommend(gaps, exclude=set(taken))
+            rec = recommend(gaps, exclude=set(taken), home_course=home_course)
             return {key: rec[key] for key in ("recommendations", "learning_path", "outside_recommendations")}
 
         resume_skills = normalise(extract(resume_text)) if resume_text else []
@@ -310,7 +315,7 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str =
             result.update({"role": None if ad_text else DEFAULT_ROLE, "outside_recommendations": []})
             engine = f"baseline (pipeline error: {e})"
 
-    if ad_text and llm_enabled():
+    if ad_text and use_llm and llm_enabled():
         try:
             result = augment_with_llm(result, resume_text, ad_text, taken, rank)
             engine += " + GPT-4o-mini"
@@ -324,6 +329,98 @@ def subjects() -> list[tuple[str, str]]:
     lay = baseline.resources().layers
     pairs = lay[["subject_code", "subject_name"]].drop_duplicates().sort_values("subject_code")
     return list(pairs.itertuples(index=False, name=None))
+
+
+HOME_COURSE = "C04372"
+COURSE_NAMES = [   # the 44 courses in subject_profiles.csv (subject_profiles.md "Courses"), MDSI first
+    ("C04372", "Master of Data Science and Innovation"),
+    ("C04370", "Executive Master of Data Science and Innovation"),
+    ("C04379", "Master of Business Analytics"), ("C04380", "Master of Business Analytics (C04380)"),
+    ("C04467", "Master of Business Analytics (C04467)"),
+    ("C04295", "Master of Information Technology"), ("C04296", "Master of Information Technology (C04296)"),
+    ("C04373", "Master of Quantitative Finance"),
+    ("C04443", "Master of Artificial Intelligence"), ("C04256", "Master of Artificial Intelligence (Online)"),
+    ("C04430", "Master of Cybersecurity"), ("C04431", "Master of Cybersecurity (C04431)"),
+    ("C04434", "Master of Technology Management"), ("C04435", "Master of Technology Management (C04435)"),
+    ("C04450", "Master of Technology Innovation"),
+    ("C04265", "Master of Science (Extension)"), ("C04277", "Master of Engineering (Extension)"),
+    ("C06113", "Graduate Diploma in Information Technology"),
+    ("C06124", "Graduate Diploma in Data Science and Innovation"),
+    ("C06147", "Graduate Diploma in Artificial Intelligence"),
+    ("C11142", "Graduate Certificate in Information Technology"),
+    ("C11247", "Graduate Certificate in Information Technology (C11247)"),
+    ("C11191", "Graduate Certificate in Artificial Intelligence"),
+    ("C11274", "Graduate Certificate in Data Science and Innovation"),
+    ("C11280", "Graduate Certificate in Business Analytics"),
+    ("C11385", "Graduate Certificate in Business Analytics (C11385)"),
+    ("C11308", "Graduate Certificate in Quantitative Finance"),
+    ("C11329", "Graduate Certificate in Health Analytics"),
+    ("C11339", "Graduate Certificate in AI Management"),
+    ("C11340", "Graduate Certificate in Cybersecurity Management"),
+    ("C11350", "Graduate Certificate in Data Visualisation and Storytelling"),
+    ("C11376", "Graduate Certificate in Applied AI for Finance"),
+    ("C10148", "Bachelor of Information Technology"), ("C10143", "Bachelor of Information Technology (C10143)"),
+    ("C10474", "Bachelor of Artificial Intelligence"), ("C10476", "Bachelor of Computing Science"),
+    ("C10471", "Bachelor of Cybersecurity"), ("C10457", "Bachelor of Mathematical Sciences"),
+    ("C10395", "Bachelor of Information Systems"), ("C10229", "Bachelor of Games Development"),
+    ("C10242", "Bachelor of Science"), ("C10347", "Bachelor of Advanced Science"),
+    ("C09019", "Bachelor of Information Technology (Honours)"),
+    ("C09119", "Bachelor of Computing Science (Honours)"),
+    ("C09129", "Bachelor of Mathematical Sciences (Honours)"),
+    ("C09168", "Bachelor of Science (Honours)"), ("C09066", "Bachelor of Engineering (Honours)"),
+]
+
+
+def _course_codes() -> set[str]:
+    lay = baseline.resources().layers
+    if "course" not in lay.columns:
+        return set()
+    return {c.strip() for cell in lay.course.astype(str) for c in cell.split("|") if c.strip()}
+
+
+def courses() -> list[tuple[str, str]]:
+    """(code, name) of every UTS course in the subject profiles, MDSI first; a code without a name is labelled by its code."""
+    present = _course_codes()
+    named = [(c, n) for c, n in COURSE_NAMES if c in present]
+    known = {c for c, _ in COURSE_NAMES}
+    return named + [(c, f"UTS course {c}") for c in sorted(present - known)]
+
+
+def course_subjects(course: str) -> list[str]:
+    """Codes of the subjects that belong to a course (a subject can belong to several)."""
+    lay = baseline.resources().layers
+    if "course" not in lay.columns or not course:
+        return []
+    return sorted(lay[lay.course.astype(str).str.contains(course, regex=False)].subject_code.astype(str).unique())
+
+
+def subject_courses() -> dict[str, list[str]]:
+    """subject code -> the course codes it belongs to (the profiles' pipe-joined `course` column)."""
+    lay = baseline.resources().layers
+    if "course" not in lay.columns:
+        return {}
+    pairs = lay[["subject_code", "course"]].drop_duplicates("subject_code")
+    return {str(r.subject_code): [c.strip() for c in str(r.course).split("|") if c.strip()]
+            for r in pairs.itertuples(index=False)}
+
+
+def mdsi_subjects() -> list[tuple[str, str]]:
+    """(code, name) of the MDSI (C04372) subjects in the profiles: the "subjects taken" picker shows these first."""
+    lay = baseline.resources().layers
+    if "course" not in lay.columns:
+        return subjects()
+    rows = lay[lay.course.astype(str).str.contains("C04372")][["subject_code", "subject_name"]]
+    return list(rows.drop_duplicates().sort_values("subject_code").itertuples(index=False, name=None))
+
+
+def vote_counts() -> dict[tuple[str, str], list[int]]:
+    """(subject_code, skill_label) -> [thumbs up, thumbs down] from feedback.csv; empty until someone votes."""
+    out: dict[tuple[str, str], list[int]] = {}
+    if not paths.FEEDBACK.exists():
+        return out
+    for row in _read(paths.FEEDBACK):
+        out.setdefault((row["subject_code"], row["skill_label"]), [0, 0])[0 if row["vote"] == "up" else 1] += 1
+    return out
 
 
 def dictionary_size() -> int:

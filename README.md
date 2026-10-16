@@ -55,60 +55,60 @@ copy .env.example .env   # then paste the OpenAI key
 streamlit run app/Home.py
 ```
 
-It works without any key: the analysis falls back to `app/baseline.py` (dictionary + keyword
-match) until the stages in `src/skillabus/` are implemented, and the chat shows Handbook passages
-instead of a written answer until `OPENAI_API_KEY` is set. Screens: `docs/wireframes/`. To put it
-online, see [docs/deploy.md](docs/deploy.md).
+It works without any key: the pipeline in `src/skillabus/` runs on the dictionary tiers (and falls
+back to `app/baseline.py` if a stage fails); with `OPENAI_API_KEY` set, the GPT-4o-mini tier adds
+the skills the dictionary does not know and the chat writes answers instead of quoting passages.
+The look and flow follow the Claude Design prototype kept in `docs/design/` (dark theme, Literata
+and Public Sans). To put it online, see [docs/deploy.md](docs/deploy.md).
 
 ## Using the app
 
 Skillabus compares what employers ask for with what your resume shows, then points to the
-UTS subjects that teach the missing skills, quoting the Handbook text it relied on.
+UTS subjects that teach the missing skills, quoting the Handbook text it relied on. A bar at the
+top shows the three steps, what you chose so far, and opens the Handbook chat.
 
-**1. Choose a question.** The start screen offers three:
+**1. Who you are.** Three cards:
 
-| Mode | Question it answers | What you give it |
+| Card | Question it answers | What you give it |
 | --- | --- | --- |
-| Job seeker | What does my resume lack for this ad? | a job ad (paste it, or use the sample) and your resume |
-| Elective chooser | Which subject moves me closest to my target role? | your resume and the UTS subjects you have taken |
-| Career switcher | How far is my profile from a new role? | your resume |
+| UTS student | Which elective moves me closest to the job I want? | a target role and the UTS subjects you have taken |
+| Job seeker | What does my resume lack for this ad? | a job ad (browse 160 Australian ads from 2024-26, paste one, or try the sample) and your resume |
+| Career switcher | How far am I from a new field? | a target role and your resume |
 
-In Elective chooser and Career switcher the target role is Data Scientist, the only option in
-the role picker for now: the 15 skills most often asked for in 3,204 Seek Data Scientist ads.
+**2. Your inputs.** Say where you are in your studies (about to enrol, studying MDSI, already
+working, and your course: it decides which subjects count as open to you). Pick one of 11 data and
+IT roles: each comes with the 15 skills most often asked for in its JobsPipe ads of 2026. Upload a
+resume as PDF or text, paste it, or use the sample (a synthetic early-career MDSI student); it stays
+in memory for the session and is never stored. Press **Find my gaps**.
 
-**2. Add your inputs.** Upload a resume as PDF or text, or tick *Use the sample resume*
-(a synthetic early-career MDSI student). The resume stays in memory for the session and is
-never stored. In Elective chooser, subjects you have taken count as skills you already have.
-Press **Show my gaps**.
+**3. Results.** One line says how many of the skills you still have to learn and names the
+biggest gaps. Below it, one section at a time: Skills, Your path, Outside UTS and, in the role
+modes, Certifications.
 
-**3. Read the results.**
+- **Skills the ad (or role) asks for**: one row per skill with a bar for how often the 2026 ads ask
+  for it (hover for the 2019-22 share; hatched = a skill the older ads never named) and its status:
+  have, partial (your resume names a related skill, not this one) or missing. A ✦ marks an emerging
+  skill with no ESCO concept yet.
+  *Show where these appear in the ad* colours the skills on the ad text.
+- **Your path**: the fewest subjects that close the most gaps, each with its session, the gaps it
+  closes and whether it needs a prerequisite first. Tick *Already taken* on a subject (or *What if I
+  had taken …*) and the gaps and the path are recomputed.
+- **Outside UTS**: free or low-cost courses for the gaps the UTS path leaves open; not for credit.
+- **Click a skill** to see what the ad said, what your resume said, the UTS subjects that teach it
+  with the exact Handbook sentence (labelled learning objective, assessment, weekly topic or
+  description), 👍 / 👎 to say whether the match is right, and self-study resources filtered by
+  level and cost. Click a subject name for its sessions, prerequisites, the gaps it closes and the
+  Handbook link. A line under the skill rows names the ads behind the bars.
 
-- **The headline** counts the skills the role asks for that are missing or partial in your
-  profile. *Partial* means your resume names a related skill (scikit-learn for machine
-  learning) but not the skill itself.
-- **How often employers ask for each skill**: each bar is the share of 3,204 Seek Australia
-  Data Scientist ads (2019–22) naming the skill. A ✦ marks an emerging skill with no ESCO
-  concept yet. LLMs and generative AI show 0% because those ads predate ChatGPT; the caption
-  notes that 15.8% of 247 US Data Scientist ads in 2023–24 ask for LLMs (for Australian ads
-  in 2026, see report section 3.7).
-- **Your shortest path**: the fewest subjects that close the most gaps, and the share of
-  employer demand behind those gaps they cover. Gaps no subject names are listed under it.
-- **Why these subjects?**: pick a gap to see what the ad (or employers) said and the exact
-  Handbook sentence for up to three subjects, labelled by where it came from: learning
-  objective, assessment, weekly topic or description. *👍 Teaches it* / *👎 Not really*
-  records whether the match is right, and *I've taken it* marks a subject you have done, so
-  votes from students who took it can be told apart; the votes help us check the matcher.
-- **All recommended subjects** lists every match with its score and a link to the Handbook.
-
-**4. Ask about subjects.** The chat in the sidebar answers from the UTS Handbook 2026 text
-and cites the passages it used ("Which subject teaches LLMs?"). Without an OpenAI key it
-shows the matching passages instead of a written answer. Your resume is never sent to the
-model.
+**4. Ask the Handbook.** The button at the top right opens a chat that answers from the UTS
+Handbook 2026 text and cites the passages it used ("Which subject teaches LLMs?"). Without an
+OpenAI key it shows the matching passages instead of a written answer. Your resume is never sent
+to the model.
 
 **Good to know.** Results are suggestions, not academic advice: check prerequisites and
 teaching sessions in the Handbook before enrolling. A subject "names" a skill when its
 Handbook text mentions it, which says nothing about depth. Demand figures come from
-Australian Data Scientist ads; other roles and the 2026 sample are described in
+Australian ads per role; the sources and the 2026 sample are described in
 `docs/report/03_data.md`.
 
 ## Rebuild the poster

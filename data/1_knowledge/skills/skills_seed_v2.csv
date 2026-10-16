@@ -1,4 +1,4 @@
-# Van Thong's 133-alias dictionary (data-eda/config/skills_seed.csv) plus 5 generic rows added 25 Sep 2026 so the gap chart and the top-15 chart use one dictionary. 10 tool rows added 14 Oct 2026 (Kafka to Ansible) for the IT role profiles (#65).
+# Van Thong's 133-alias dictionary (data-eda/config/skills_seed.csv) plus 5 generic rows added 25 Sep 2026 so the gap chart and the top-15 chart use one dictionary. 10 tool rows added 14 Oct 2026 (Kafka to Ansible) for the IT role profiles (#65). 17 Oct 2026: Artificial intelligence no longer matches a bare 'AI' (recruiter tools, application notes, company names); only the phrases ads use for the skill, case-sensitive like R.
 canonical,category,strict,aliases
 Python,Programming,0,python
 R,Programming,1,R programming|R language|RStudio|R Studio|programming in R|R and Python|Python and R|R/Python|Python/R
@@ -134,7 +134,7 @@ Leadership,Professional,0,leadership|team lead|mentoring|coaching
 Requirements gathering,Professional,0,requirements gathering|requirements elicitation|business requirements
 Documentation,Professional,0,documentation|technical writing|document findings
 Machine learning,Machine learning,0,machine learning|machine-learning
-Artificial intelligence,Machine learning,0,artificial intelligence|ai
+Artificial intelligence,Machine learning,1,artificial intelligence|Artificial intelligence|Artificial Intelligence|ARTIFICIAL INTELLIGENCE|AI/ML|ML/AI|AI / ML|AI & ML|AI and ML|ML and AI|AI and machine learning|AI and Machine Learning|AI & machine learning|AI & Machine Learning|AI/machine learning|AI/Machine Learning|machine learning and AI|Machine Learning and AI|machine learning & AI|Machine Learning & AI|AI model|AI models|AI system|AI systems|AI solution|AI solutions|AI application|AI applications|AI technology|AI technologies|AI capabilities|AI engineering|AI development|AI techniques|AI algorithms|AI frameworks|AI research|AI Model|AI Models|AI System|AI Systems|AI Solution|AI Solutions|AI Application|AI Applications|AI Technology|AI Technologies|AI Capabilities|AI Engineering|AI Development|AI Techniques|AI Algorithms|AI Frameworks|AI Research
 Predictive modelling,Machine learning,0,predictive model|predictive models|predictive modelling|predictive modeling|predictive analytics
 Generative AI,NLP,0,generative ai|gen ai|genai|generative artificial intelligence
 Cloud platforms,Cloud,0,cloud|cloud computing|cloud platform|cloud platforms|cloud-based
