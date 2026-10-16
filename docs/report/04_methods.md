@@ -162,9 +162,12 @@ student cannot enrol in). The path is then laid out over Autumn and Spring sessi
 per place breaks the (1 − 1/e) guarantee of plain greedy, which holds for unit costs only; with three places this is a
 small price for a path the student can actually take.
 
-**Outside courses.** The gaps the UTS path leaves open get a second greedy pass, over 56 free or free-to-audit courses from
-42 providers (`external_courses.csv`), at most three, never mixed with UTS subjects in one pass (a short course aimed at one
-skill would push subjects out). For the Robert Walters ad and the sample resume, the UTS path is 36106 → 36121 → 32130
+**Outside courses.** The gaps the UTS path leaves open get a second greedy pass, over 248 self-study resources from 145
+providers (`external_courses.csv` and `resource_modules.csv`; 237 free, 9 free-to-audit, 2 paid with the A$ price shown),
+at most three, never mixed with UTS subjects in one pass (a short course aimed at one skill would push subjects out). A
+course counts for a gap only when its hand-checked skill list (`resources.csv`) names the gap: matching the text alone
+picked courses that mention a skill in passing ("Sign up for an AWS account" in a Redshift course, a Scala course whose
+entry requirement is "Java or C#", "Search for Similar Vectors" for *attack vectors*). For the Robert Walters ad and the sample resume, the UTS path is 36106 → 36121 → 32130
 (5 of 6 gaps, 87.9% of the demand, with the 2026 counts of 15 Oct; 36106 → 32130 → 36121 and 88.3% with those of 13 Oct)
 and the Hugging Face LLM Course closes the last gap.
 
