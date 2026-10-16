@@ -26,8 +26,14 @@ the job-board ads, classify_ats_roles.role_of).
 Usage (from the repo root; needs JOBSPIPE_API_KEY in .env):
     python data-eda/src/fetch_jobspipe.py --dry-run            # show the plan and the credits left, no fetch
     python data-eda/src/fetch_jobspipe.py                      # fetch TARGET ads per role, write the three files
-    python data-eda/src/fetch_jobspipe.py --rehit              # recompute the skills column from the raw file
+    python data-eda/src/fetch_jobspipe.py --rehit              # recompute the skills column from the raw files
                                                                  (no API calls), after a vocabulary change
+    python data-eda/src/fetch_jobspipe.py --older --date <d>   # top-up with a new key (17 Oct): per role, only ads
+                                                                 posted before its oldest fetched ad and on or after
+                                                                 --since (default 2026-09-01, so the period stays
+                                                                 Sep-Oct 2026); no credit is spent on ads we have
+
+Every raw file (jobspipe_ads_<date>.csv) is read together; an ad fetched twice keeps its first row.
 """
 from __future__ import annotations
 
@@ -36,6 +42,7 @@ import datetime as dt
 import json
 import logging
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -53,6 +60,25 @@ log = logging.getLogger("fetch_jobspipe")
 
 API = "https://api.jobspipe.dev/v1/jobs/search"
 COUNTRY, MAX_AGE_DAYS, PAGE = "AU", 60, 25
+# An ad whose text is mostly another kept ad of the same role is the same job reposted (one federal cloud tender came
+# back from 27 agencies on 17 Oct). Share of the shorter ad's word 5-grams found in the other; read off the pairs
+# of the 17 Oct fetch: 195 pairs at >= 0.9 and 44 at 0.8-0.9 were reposts, while different jobs of one employer
+# (TikTok's graduate and intern ads, 0.77) stay below.
+NEAR_DUPLICATE = 0.8
+# Tenders that many agencies advertise in their own words: one client's demand, counted once (the first ad kept).
+# Found by hand on 17 Oct because the texts barely overlap (median 0.06), so drop_near_duplicates() cannot see them.
+KNOWN_TENDERS = [
+    {"role": "Cloud Engineer", "posted": ("2026-09-14", "2026-09-25"), "title": "architect", "text": "Dynamics 365",
+     "why": "one federal Azure + Dynamics 365 CRM tender, rewritten by 23 agencies on 16-18 Sep"},
+]
+# Not Australian demand, found on 17 Oct in both fetches: platforms hiring remote contractors to train or grade AI
+# models under ordinary job titles (Alignerr's "Cybersecurity Analyst", Ethos' "Expert Opportunity - Data Scientist
+# ($80/hr)"), matched on the exact company name; and ads whose title names another country (a Virginia college job
+# geocoded to "Senior, South Australia", a GitLab UK role).
+AI_TRAINING_PLATFORMS = {"alignerr", "ethos", "synthires", "crossing hurdles", "mercor", "the ai training company",
+                         "outlier", "dataannotation", "micro1"}
+FOREIGN_TITLE = re.compile(r"\b(?:UK|United Kingdom|USA|United States|Canada|India|Singapore|London|New York|"
+                           r"California|Texas|Virginia|EMEA|Philippines|New Zealand)\b")
 TARGET = 85                                   # ads per role: 11 x 85 = 935 of the 1,000 one-off credits
 NOT_TITLE = ["manager", "director", "head of", "chief", "vice president"]
 # Title phrases per role (substring match, case-insensitive; words of 4 letters or fewer match whole words).
@@ -106,10 +132,30 @@ def search(key: str, body: dict, retries: int = 3) -> dict:
     raise RuntimeError("unreachable")
 
 
-def fetch_role(key: str, role: str, target: int, dry_run: bool) -> tuple[list[dict], int, int]:
-    """Up to `target` ads for the role, newest first; returns (ads, total_results, credits_remaining)."""
+def older_than_kept(kept: pd.DataFrame, since: str) -> dict[str, dict]:
+    """Per role, the posting-date filters for ads older than its oldest kept ad and not older than `since`.
+    A role whose oldest kept ad is already at `since` gets no window."""
+    windows = {}
+    for role, dates in kept.groupby("role").date_posted:
+        before = (dt.date.fromisoformat(min(dates)[:10]) - dt.timedelta(days=1)).isoformat()
+        if before >= since:
+            windows[role] = {"posted_at_lte": before, "posted_at_gte": since}
+    return windows
+
+
+def union_raw(folder: Path = RAW_DIR) -> pd.DataFrame:
+    """Every raw fetch in date order; an ad fetched again for the same role keeps the row of its first fetch.
+    An ad fetched for two roles keeps both rows: derive() keeps the one whose query matches the title."""
+    files = sorted(folder.glob("jobspipe_ads_*.csv"))
+    raw = pd.concat([pd.read_csv(f, dtype=str, keep_default_na=False) for f in files], ignore_index=True)
+    return raw.drop_duplicates(["ad_id", "role_query"]).reset_index(drop=True)
+
+
+def fetch_role(key: str, role: str, target: int, dry_run: bool, window: dict | None = None) -> tuple[list[dict], int, int]:
+    """Up to `target` ads for the role, newest first; returns (ads, total_results, credits_remaining).
+    `window` adds posting-date filters (older_than_kept)."""
     base = {"job_title_or": QUERIES[role], "job_title_not": NOT_TITLE, "job_country_code_or": [COUNTRY],
-            "posted_at_max_age_days": MAX_AGE_DAYS, "status": "active", "include_total_results": True}
+            "posted_at_max_age_days": MAX_AGE_DAYS, "status": "active", "include_total_results": True, **(window or {})}
     if dry_run:
         return [], -1, -1
     ads, cursor, total, remaining = [], None, -1, -1
@@ -143,13 +189,58 @@ def flatten(role: str, ad: dict) -> dict:
     }
 
 
+def _shingles(text: str) -> set[str]:
+    words = re.findall(r"[a-z0-9]+", text.lower())
+    return {" ".join(words[i:i + 5]) for i in range(max(0, len(words) - 4))}
+
+
+def drop_near_duplicates(ads: pd.DataFrame, threshold: float = NEAR_DUPLICATE) -> pd.DataFrame:
+    """Keep the first of each group of ads of one role whose texts overlap by `threshold` or more."""
+    keep, seen = [], {}
+    for i, ad in ads.iterrows():
+        mine = _shingles(ad.description)
+        others = seen.setdefault(ad.role, [])
+        if any(mine and s and len(mine & s) / min(len(mine), len(s)) >= threshold for s in others):
+            continue
+        others.append(mine)
+        keep.append(i)
+    return ads.loc[keep]
+
+
+def drop_not_local(ads: pd.DataFrame) -> pd.DataFrame:
+    """Drop AI-training gig platforms and ads whose title names another country."""
+    gig = ads.company.str.strip().str.lower().isin(AI_TRAINING_PLATFORMS)
+    foreign = ads.title.str.contains(FOREIGN_TITLE)
+    return ads[~(gig | foreign)]
+
+
+def drop_known_tenders(ads: pd.DataFrame) -> pd.DataFrame:
+    """Keep only the first ad of each KNOWN_TENDERS group."""
+    drop = set()
+    for t in KNOWN_TENDERS:
+        hit = ads[(ads.role == t["role"]) & ads.date_posted.between(*t["posted"])
+                  & ads.title.str.contains(t["title"], case=False) & ads.description.str.contains(t["text"], regex=False)]
+        drop |= set(hit.index[1:])
+    return ads.drop(index=list(drop))
+
+
 def derive(raw: pd.DataFrame) -> pd.DataFrame:
     """The committed table: role from the title (same rules as the job-board ads), vocabulary skills from the text."""
     raw = raw.copy()
     raw["role"] = raw.title.map(role_of)
     keep = raw.role == raw.role_query                     # the title really is that role (no managers, no pre-sales)
     log.info("%d ads fetched, %d whose title is the queried role", len(raw), int(keep.sum()))
-    kept = raw[keep].drop_duplicates("ad_id").drop_duplicates(["company", "title"]).reset_index(drop=True)
+    kept = raw[keep]
+    before = len(kept)
+    kept = drop_not_local(kept)
+    log.info("%d ads dropped as not Australian demand (AI-training platforms, foreign titles)", before - len(kept))
+    kept = kept.drop_duplicates("ad_id").drop_duplicates(["company", "title"])
+    before = len(kept)
+    kept = drop_near_duplicates(kept)
+    log.info("%d near-duplicate reposts dropped (same role, text overlap >= %.1f)", before - len(kept), NEAR_DUPLICATE)
+    before = len(kept)
+    kept = drop_known_tenders(kept).reset_index(drop=True)
+    log.info("%d ads of known tenders dropped (each tender kept once)", before - len(kept))
     vocab = read_table(paths.SKILLS_VOCABULARY)
     detection = vocab[vocab.used_for.str.contains("extract")].reset_index(drop=True)
     hits = skill_hits(detection, kept.description.fillna(""))
@@ -164,37 +255,45 @@ def main() -> None:
     parser.add_argument("--roles", nargs="*", default=list(QUERIES), help="roles to fetch (default: all 11)")
     parser.add_argument("--date", default=dt.date.today().isoformat())
     parser.add_argument("--dry-run", action="store_true", help="show the plan and the credits left, fetch nothing")
-    parser.add_argument("--rehit", action="store_true", help="recompute skills from the raw file, no API calls")
+    parser.add_argument("--rehit", action="store_true", help="recompute skills from the raw files, no API calls")
+    parser.add_argument("--older", action="store_true", help="only ads older than each role's oldest kept ad (top-up)")
+    parser.add_argument("--since", default="2026-09-01", help="with --older: earliest posting date")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s", force=True)
     raw_csv = RAW_DIR / f"jobspipe_ads_{args.date}.csv"
 
     if args.rehit:
-        raw = pd.read_csv(raw_csv, dtype=str, keep_default_na=False)
-        table = derive(raw)
+        table = derive(union_raw())
         table.to_csv(OUT, index=False, encoding="utf-8", lineterminator="\n")
         log.info("rewrote %s: %d ads", OUT, len(table))
         return
 
+    # The oldest ad fetched for each role query, kept or not, so no credit goes on an ad dropped as a repost.
+    fetched = union_raw().rename(columns={"role_query": "role"}) if args.older else None
+    windows = older_than_kept(fetched, args.since) if args.older else {}
+    roles = [r for r in args.roles if r in windows] if args.older else args.roles
+    for role, window in windows.items():
+        log.info("  %s: posted %s to %s", role, window["posted_at_gte"], window["posted_at_lte"])
     key = api_key()
     probe = search(key, {"job_country_code_or": [COUNTRY], "limit": 1, "include_total_results": True})
     meta = probe.get("metadata", {})
     log.info("credits remaining %s of %s; %s live AU ads in all", meta.get("credits_remaining"),
              meta.get("credits_allowance"), meta.get("total_results"))
-    need = args.target * len(args.roles)
-    log.info("plan: %d roles x %d ads = %d credits, %d days, country %s", len(args.roles), args.target, need, MAX_AGE_DAYS, COUNTRY)
+    need = args.target * len(roles)
+    log.info("plan: %d roles x %d ads = %d credits, %d days, country %s", len(roles), args.target, need, MAX_AGE_DAYS, COUNTRY)
     if args.dry_run:
         return
     if meta.get("credits_remaining", 0) < need:
         sys.exit(f"not enough credits: {meta.get('credits_remaining')} left, {need} needed; lower --target or --roles")
 
     rows, totals = [], []
-    for role in args.roles:
-        ads, total, remaining = fetch_role(key, role, args.target, dry_run=False)
+    for role in roles:
+        window = windows.get(role)
+        ads, total, remaining = fetch_role(key, role, args.target, dry_run=False, window=window)
         rows += [flatten(role, ad) for ad in ads]
         totals.append({"role": role, "title_query": "|".join(QUERIES[role]), "title_not": "|".join(NOT_TITLE),
-                       "country": COUNTRY, "max_age_days": MAX_AGE_DAYS, "total_results": total, "fetched": len(ads),
-                       "date": args.date})
+                       "country": COUNTRY, "max_age_days": MAX_AGE_DAYS, **(window or {}), "total_results": total,
+                       "fetched": len(ads), "date": args.date})
         RAW_DIR.mkdir(parents=True, exist_ok=True)
         (RAW_DIR / f"{args.date}_{role.replace('/', '-').replace(' ', '_')}.json").write_text(json.dumps(ads), encoding="utf-8")
         if remaining >= 0 and remaining < PAGE:
@@ -204,8 +303,8 @@ def main() -> None:
     raw.to_csv(raw_csv, index=False, encoding="utf-8", lineterminator="\n")
     log.info("raw: %s (%d ads, gitignored)", raw_csv, len(raw))
 
-    table = derive(raw)
-    kept_by_role = table.role.value_counts()
+    table = derive(union_raw())
+    kept_by_role = table[table.ad_id.isin(set(raw.ad_id))].role.value_counts()   # this fetch's ads that were kept
     for t in totals:
         t["kept"] = int(kept_by_role.get(t["role"], 0))
     tot = pd.DataFrame(totals)

@@ -130,7 +130,7 @@ def test_role_profile_matches_like_an_ad():
     assert len(role) == 15 and role[0]["canonical"] == "Python"
     skills = match(role, extract(RESUME))
     assert {k for k, v in status(skills).items() if v == "have"} == {"Python", "SQL", "Statistics", "Data visualisation"}
-    assert skills[1]["ad_evidence"] == "Asked for in 63% of 71 JobsPipe Data Scientist ads (Sep-Oct 2026)."   # SQL
+    assert skills[1]["ad_evidence"] == "Asked for in 68% of 89 JobsPipe Data Scientist ads (Sep-Oct 2026)."   # SQL
 
 
 def test_each_role_takes_the_first_source_with_a_block(demand_sample):

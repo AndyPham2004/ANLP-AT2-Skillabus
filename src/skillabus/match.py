@@ -51,7 +51,7 @@ MIXED = "(mixed)"                                      # "Data roles (mixed)": a
 # For captions: source -> (its name in a sentence, when its ads were posted or counted)
 SOURCE_NAMES = {
     "seek_2019_22": ("Seek", "2019-22"),
-    "jobspipe_2026": ("JobsPipe", "Sep-Oct 2026"),     # posted 23 Sep to 16 Oct
+    "jobspipe_2026": ("JobsPipe", "Sep-Oct 2026"),     # posted 1 Sep to 16 Oct
     "adzuna_2026": ("Adzuna", "16 Oct 2026"),          # live ads on the day of the search
     "ats_2026": ("job-board", "Aug-Oct 2026"),         # posted within 60 days of the 13 and 16 Oct fetches
     "data_jobs_2023": ("data_jobs", "2023"),

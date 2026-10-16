@@ -142,12 +142,12 @@ def test_similar_rows_count_with_embeddings(monkeypatch, tmp_path):
 # ----------------------------------------------------------------------- learning path
 
 def test_learning_path_for_the_poster_ad():
-    """The Robert Walters ad: 36121 first, for artificial intelligence (73% of the 2026 Data Scientist ads;
-    machine learning led when the 2019-22 shares weighed the gaps); 43023 teaches AI and LLMs but
+    """The Robert Walters ad: 36106 first, for machine learning (67% of the 89 2026 Data Scientist ads after the
+    17 Oct top-up, artificial intelligence 54%; 36121 led on the 71 ads of 16 Oct); 43023 teaches AI and LLMs but
     needs 42172 or 41040, which an MDSI student cannot take, so it is dropped with the reason."""
     result = recommend(poster_gaps(), PROFILES, method="keyword", start=START)
     path = result["learning_path"]
-    assert path["subjects"] == ["36121", "36106", "32130"]
+    assert path["subjects"] == ["36106", "36121", "32130"]
     assert path["gaps_closed"] == 5 and path["gaps_total"] == 6
     assert 80 < path["demand_covered_pct"] < 100             # large language models (34%) stay open
     dropped = {d["subject_code"]: d for d in path["dropped"]}

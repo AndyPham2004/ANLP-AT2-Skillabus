@@ -16,7 +16,7 @@ from the repo root.
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
 | `ads/ats_2026_clean.csv` | **The 2026 job-board ads with a role** (plan D2): 392 Australian ads from the 65 boards (fetches of 13 and 16 Oct 2026, all professions) posted within 60 days of their fetch, one row per company and title, each given one of the 11 roles or `other` from its title; 85 have a role (Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1). Contacts masked. Section below | Claude for Quan, 16 Oct | `python data-eda/src/classify_ats_roles.py` (needs the raw fetches in `data/raw/`) |
-| `ads/jobspipe_2026_skills.csv` | **The JobsPipe 2026 ads, without their text**: 793 Australian ads posted 23 Sep to 16 Oct 2026, fetched 16 Oct from the JobsPipe API (Indeed 183, LinkedIn 576, ATS boards the rest), 85 per role by title query, kept when the title is that role; per ad: id, role, title, company, location, date, employer type (209 agencies), seniority, link, the vocabulary skills its text names (tier-1 matcher) and JobsPipe's own ESCO tags. Business Analyst 79, Data Analyst 78, QA/Test Engineer 78, Network/Systems Administrator 77, Software Engineer 73, Data Scientist 71, Data Engineer 70, Machine Learning Engineer 69, Cybersecurity Analyst 68, DevOps/SRE 67, Cloud Engineer 63. Section below | Claude for Quan, 16 Oct | `python data-eda/src/fetch_jobspipe.py` (one-off: the free key has 1,000 credits once; `--rehit` recomputes the skills from the raw file without calls) |
+| `ads/jobspipe_2026_skills.csv` | **The JobsPipe 2026 ads, without their text**: 1,932 Australian ads posted 1 Sep to 16 Oct 2026, fetched 16-17 Oct from the JobsPipe API in three batches (LinkedIn 1,427, Indeed 441, ATS boards the rest), kept when the title is that role and after dropping AI-training gigs, foreign jobs, reposts and one tender (section below); per ad: id, role, title, company, location, date, employer type (408 agencies), seniority, link, the vocabulary skills its text names (tier-1 matcher) and JobsPipe's own ESCO tags. Business Analyst 216, QA/Test Engineer 212, Data Analyst 205, Machine Learning Engineer 204, Network/Systems Administrator 203, Software Engineer 195, Data Engineer 188, DevOps/SRE 187, Cybersecurity Analyst 132, Cloud Engineer 101, Data Scientist 89. Section below | Claude for Quan, 16-17 Oct | `python data-eda/src/fetch_jobspipe.py` (`--older --date <d>` tops up with a new key; `--rehit` recomputes the skills from the raw files without calls) |
 | `ads/seek_2020_21_skills.csv` | **The IT ads of the PromptCloud Seek samples, without their text**: 2366 ads with an IT title out of 65,840 Seek Australia ads of every profession (Jan 2020, Oct–Dec 2020, Jan–Mar 2021; Kaggle, CC0), the pre-2022 baseline for roles other than Data Scientist; per ad: id, role, title, company, state, date, source file, link, the vocabulary skills its text names. Software Engineer 944, Business Analyst 389, Network/Systems Administrator 269, Cybersecurity Analyst 179, QA/Test Engineer 174, Data Analyst 145, DevOps/SRE 130, Data Engineer 59, Cloud Engineer 43, Data Scientist 30, Machine Learning Engineer 4. Section below | Claude for Quan, 17 Oct | `python data-eda/src/build_seek_it_2020_21.py` (needs the three raw files in `data/raw/`) |
 | `collection/jobspipe_totals_2026-10-16.csv` | Per role: the JobsPipe title query, its total live Australian ads in the 60-day window on 16 Oct (170 Data Scientist to 1,450 Software Engineer), fetched and kept | Claude for Quan | same script |
 | `ads/CLEANING_NOTES.txt` | What each cleaned file is, who uses it, how it was cleaned (was `data-eda/data/clean/README.txt`) | Van Thong | Text |
@@ -128,15 +128,22 @@ How each source is counted:
   counted. Today: Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1. The period is `2026-10`, not `2026`, because the 22 in-sample 2026 ads of
   `recent_2024_26` are among these ads (same boards): the two sources overlap and must never be added together.
   Bias to state: 65 employers that use a modern ATS, mostly technology companies, mostly Sydney and Melbourne.
-- **`jobspipe_2026`: the JobsPipe ads by role, every role its own block.** 85 ads per role were fetched on 16 Oct
-  (`fetch_jobspipe.py`): country AU, posted in the last 60 days, active, title containing one of the role's phrases
-  (`collection/jobspipe_totals_2026-10-16.csv`), management words excluded; the title is then checked with the
-  job-board rules (`classify_ats_roles.role_of`) and one row kept per company and title: 793 ads, 63
-  to 79 per role. The text is not committed (JobsPipe's terms forbid redistributing the data in bulk and
+- **`jobspipe_2026`: the JobsPipe ads by role, every role its own block.** Three batches, each with the free key of a
+  team member (1,000 credits each): 85 ads per role on 16 Oct, newest first; then on 17 Oct up to 88 and 99 per role
+  posted before the oldest ad already fetched for that role and not before 1 Sep (`--older`, so no credit went on an ad
+  we had and the period stays Sep-Oct 2026; Data Scientist had no older ad left). Filters: country AU, posted in the
+  last 60 days, active, title containing one of the role's phrases (`collection/jobspipe_totals_2026-10-16.csv`,
+  `_2026-10-17.csv`, `_2026-10-17b.csv`), management words excluded; the title is then checked with the job-board
+  rules (`classify_ats_roles.role_of`). Dropped next, all in `fetch_jobspipe.derive()`: AI-training platforms that
+  hire remote contractors under ordinary titles (Alignerr, Ethos, Synthires, Mercor, ...) and titles naming another
+  country (`AI_TRAINING_PLATFORMS`, `FOREIGN_TITLE`; 71 rows); one row per ad and per company + title; reposts, an ad
+  whose word 5-grams are at least 80% in another kept ad of the role (`NEAR_DUPLICATE`; 297; 676 of the 793 ads of the 16 Oct
+  batch survive these rules); and a federal Azure + Dynamics 365 tender rewritten by 23 agencies, kept once (`KNOWN_TENDERS`). Result:
+  1,932 ads, 89 to 216 per role. The text is not committed (JobsPipe's terms forbid redistributing the data in bulk and
   the text belongs to the employers), so the skills each ad names were found at fetch time with the same tier-1
   matcher and committed per ad; `fetch_jobspipe.py --rehit` recomputes them from the raw file after a vocabulary
-  change. JobsPipe aggregates Indeed and LinkedIn postings itself; we used its API within its quota and keep the
-  link to every posting, as its terms ask. 209 of the 793 ads are from recruitment agencies
+  change. JobsPipe aggregates Indeed and LinkedIn postings itself; each batch stayed within its key's quota, and we
+  keep the link to every posting, as its terms ask. 408 of the 1,932 ads are from recruitment agencies
   (`employer_type`), which repeat skill lists across clients. Overlaps with `ats_2026` are possible (ATS boards are
   among JobsPipe's sources) and the two are never added together.
 - **`seek_2020_21`: the IT titles in Seek's all-professions samples, the pre-2022 baseline per role.** PromptCloud's
