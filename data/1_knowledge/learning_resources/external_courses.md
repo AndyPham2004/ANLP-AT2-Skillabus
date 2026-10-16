@@ -11,7 +11,8 @@ data-backed version). Same shape as `subject_profiles.csv` plus `provider`, `cos
 | Built by | `Claude (web)`, 2026-10-13; rebuilt by `data-eda/src/external/build_external.py` from the course pages in `data/raw/external_courses_pages/` |
 | Codes | `EXT-<PROVIDER>-<slug>`, `course` = `external` |
 | Layers | `description` = one row per sentence of the course's own description; `weekly_topic` = one row per module / lesson / chapter / section title, copied verbatim |
-| Cost | `free`, `free-to-audit` (Coursera), `paid` (none used) |
+| Cost | `free`, `free-to-audit` (Coursera), `paid` (Econometrics since 15 Oct) |
+| 15 Oct | Ten courses moved (four DeepLearning.AI, four Google Skills, Hive, OpenCV) and Econometrics is no longer free to audit: `source_url` and `cost` updated here from the 15 Oct check (`resources.csv`); `build_external.py` still holds the 13 Oct values. New resources are in `resource_modules.csv`, not here |
 
 ## How it was built
 

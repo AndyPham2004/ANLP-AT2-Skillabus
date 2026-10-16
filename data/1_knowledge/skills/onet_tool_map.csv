@@ -1,0 +1,80 @@
+onet_tool,label,note
+Amazon Web Services AWS CloudFormation,CloudFormation,
+Amazon Web Services AWS SageMaker,SageMaker,
+Amazon Web Services AWS software,AWS,
+Ansible software,Ansible,
+Apache Hadoop,Hadoop,
+Apache JMeter,JMeter,
+Apache Kafka,Kafka,
+Apache Spark,Spark,
+Appium,Appium,
+Atlassian JIRA,Jira,
+Bash,Shell scripting,'bash' is an alias of the Shell scripting row
+C,C,
+C#,C#,
+C++,C++,
+Cascading style sheets CSS,CSS,
+Docker,Docker,
+Firewall software,Firewalls,"O*NET's category name, not a product"
+Git,Git,
+GitHub,Git,'github' is an alias of the Git row
+Go,Go,
+Google Angular,Angular,
+Grafana Labs Grafana Cloud,Grafana,
+Hugging Face,Hugging Face,
+Hypertext markup language HTML,HTML,
+IBM Terraform,Terraform,
+JavaScript,JavaScript,
+Jenkins CI,Jenkins,
+Kubernetes,Kubernetes,
+LangChain,LangChain,
+Linux,Linux,
+MITRE ATT&CK software,MITRE ATT&CK,
+Microsoft Active Directory,Active Directory,
+Microsoft Azure DevOps Services,Azure,Azure's DevOps suite; the alias 'azure' already fires on 'Azure DevOps'
+Microsoft Azure software,Azure,
+Microsoft Excel,Excel,
+Microsoft Office software,Microsoft Office,
+Microsoft Outlook,Microsoft Office,part of the Office suite
+Microsoft Playwright,Playwright,
+Microsoft Power BI,Power BI,
+Microsoft PowerPoint,Microsoft Office,'powerpoint' is an alias of the Microsoft Office row
+Microsoft PowerShell,Shell scripting,'powershell' is an alias of the Shell scripting row
+Microsoft SharePoint,SharePoint,
+Microsoft Windows Server,Windows,'windows server' is an alias of the Windows row
+NoSQL,NoSQL,
+Node.js,JavaScript,'node.js' is an alias of the JavaScript row
+NumPy,NumPy,
+Oracle Java,Java,
+PostgreSQL,PostgreSQL,
+Postman,Postman,
+Prometheus,Prometheus,
+PyTorch,PyTorch,
+Python,Python,
+R,R,
+REST Assured,REST Assured,
+RESTful API,API development,'restful api' is an alias of the API development row
+React,React,
+Red Hat Enterprise Linux,Linux,'rhel' is an alias of the Linux row
+SAP software,SAP,
+SAS,SAS,
+Salesforce software,Salesforce,
+Scala,Scala,
+Scikit-learn,scikit-learn,
+Selenium,Selenium,
+ServiceNow,ServiceNow,
+Snowflake,Snowflake,
+Splunk Enterprise,Splunk,
+Spring Boot,Spring,
+Spring Framework,Spring,
+Structured query language SQL,SQL,
+Tableau,Tableau,
+Tenable Nessus,Nessus,
+TensorFlow,TensorFlow,
+TestNG,TestNG,
+The MathWorks MATLAB,MATLAB,
+TypeScript,JavaScript,'typescript' is an alias of the JavaScript row (ESCO has a separate TypeScript concept)
+UNIX,Linux,'unix' is an alias of the Linux row
+Vector database software,Vector databases,
+eMASS,,"dropped: the US Department of Defense's compliance system, not used in Australia"
+pandas,pandas,
