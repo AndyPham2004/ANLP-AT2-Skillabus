@@ -44,6 +44,10 @@ NOT_IN_ESCO = {"Generative AI", "Large language models"}
 # ESCO concepts that share a name with a data skill but mean something else. Checked by hand:
 # "SPARK" is a Java web micro-framework, not Apache Spark (ESCO has no Apache Spark concept).
 BLOCKED_ESCO = {"http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f"}
+# Names that are a skill when they are the whole mention, though extract() does not search ad text for
+# them: in ads a bare "AI" is as often a recruiter tool or a company name (#148). A mention from tier 2
+# or 3 has already been judged a skill.
+NAME_ONLY = {"AI": "Artificial intelligence", "A.I.": "Artificial intelligence"}
 
 
 def key(s: str) -> str:
@@ -78,6 +82,8 @@ def _dictionary() -> tuple[dict, dict]:
         rows[skill["canonical"]] = skill
         for a in (skill["canonical"], *skill["aliases"]):
             alias_to_canon.setdefault(key(a), skill["canonical"])
+    for name, canonical in NAME_ONLY.items():
+        alias_to_canon.setdefault(key(name), canonical)
     return alias_to_canon, rows
 
 

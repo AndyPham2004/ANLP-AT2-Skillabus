@@ -37,6 +37,14 @@ def test_spark_is_not_linked_to_the_esco_java_framework():
     assert r["vocab"] == "seed" and r["skill_label"] == "Spark"
 
 
+def test_a_mention_that_is_just_ai_is_the_ai_skill():
+    """extract() no longer searches ad text for a bare 'AI' (#148), but when the GPT or spaCy tier
+    returns 'AI' as a skill, the tier has already judged it one: it is Artificial intelligence."""
+    r = norm("AI", "A.I.")
+    assert r["AI"]["canonical"] == "Artificial intelligence" and r["AI"]["skill_id"].startswith("esco:")
+    assert r["A.I."]["canonical"] == "Artificial intelligence"
+
+
 def test_unknown_phrase_is_kept_as_emerging():
     r = norm("agentic AI")["agentic AI"]
     assert r["vocab"] == "emerging" and r["skill_id"] == "emerging:agentic-ai"
