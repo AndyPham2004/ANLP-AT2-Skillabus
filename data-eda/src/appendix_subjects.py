@@ -1,8 +1,8 @@
-"""Print report Appendix A from data/processed/subject_profiles.csv.
+"""Print report Appendix A from data/1_knowledge/uts/subject_profiles.csv.
 
 A.1: one row per UTS course (level, name, subjects, rows per layer).
 A.2: one row per MDSI subject (C04372), rows per layer.
-Course names are read from the "## Courses" section of data/processed/subject_profiles.md.
+Course names are read from the "## Courses" section of data/1_knowledge/uts/subject_profiles.md.
 
 Usage: python data-eda/src/appendix_subjects.py > appendix_a.md
 Owner: Akash (#79). Standard library only.
@@ -14,8 +14,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PROFILES = ROOT / "data" / "processed" / "subject_profiles.csv"
-NOTES = ROOT / "data" / "processed" / "subject_profiles.md"
+PROFILES = ROOT / "data" / "1_knowledge" / "uts" / "subject_profiles.csv"
+NOTES = ROOT / "data" / "1_knowledge" / "uts" / "subject_profiles.md"
 LAYERS = ["learning_objective", "assessment", "weekly_topic", "description"]
 HEAD = "| Obj. | Assess. | Topics | Desc. |"
 LEVEL = {"C04": "Master", "C06": "Grad. diploma", "C09": "Honours", "C10": "Bachelor", "C11": "Grad. certificate"}

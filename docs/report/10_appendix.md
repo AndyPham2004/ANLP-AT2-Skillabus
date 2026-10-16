@@ -1,14 +1,14 @@
 # Appendix
 
-> Draft by Akash (#79), revised 15 Oct after #81 merged. Appendix A is printed by
-> `python data-eda/src/appendix_subjects.py` from `data/processed/subject_profiles.csv`; row counts in Appendix B are
-> from the files on `main` on 15 Oct.
+> Draft by Akash (#79), revised 17 Oct for the data layout of 15 Oct (`src/skillabus/paths.py`). Appendix A is printed by
+> `python data-eda/src/appendix_subjects.py`; row counts in Appendix B are from the files on `main` on 17 Oct. The full
+> file list, with builders and rebuild commands, is `data/README.md`.
 
 ## Appendix A. UTS subjects in the subject profiles
 
-Rows per layer in `data/processed/subject_profiles.csv`: 6,853 rows for 360 subjects in 44 courses, one row per
+Rows per layer in `data/1_knowledge/uts/subject_profiles.csv`: 6,853 rows for 360 subjects in 44 courses, one row per
 learning objective, assessment task, weekly topic or description sentence (UTS Handbook 2026, scraped 13 Oct 2026;
-`data/processed/subject_profiles.md`). A dash means the Handbook has no text for that layer.
+`data/1_knowledge/uts/subject_profiles.md`). A dash means the Handbook has no text for that layer.
 
 **A.1 Courses.** A subject in several courses is counted in each, so columns do not add up to the total.
 
@@ -87,49 +87,64 @@ learning objective, assessment task, weekly topic or description sentence (UTS H
 
 ## Appendix B. Data dictionary
 
-All files are UTF-8 CSV. Raw sources (`data/raw/`, `data-eda/data/raw/`) are not committed: the Seek ads, the
-resume dataset and the ESCO download are shared on the team drive. Files starting with a `#` provenance line must be
-read with `skiprows=1`, not `comment="#"`, which truncates the `C#` row.
+All files are UTF-8 CSV in five folders under `data/`; code takes every path from `src/skillabus/paths.py`. Raw
+downloads (`data/raw/`, 655 MB) and files written while the app runs (`data/runtime/`: feedback votes, caches) are not
+committed. Files starting with a `#` provenance line must be read with `skiprows=1`, not `comment="#"`, which
+truncates the `C#` row.
 
-### B.1 Processed data (`data/processed/`)
+### B.1 `data/1_knowledge/`: what the app looks up
 
-| File | Rows | One row = | Columns | Built by | Read by |
-|---|---|---|---|---|---|
-| `subject_profiles.csv` | 6,853 | one piece of subject text | `subject_code`, `subject_name`, `course` (pipe-separated course codes), `layer` (learning_objective / assessment / weekly_topic / description), `text`, `source_url`, `collected_by` | `data-eda/src/build_subject_profiles.py` after `scrape_handbook.py` and `scrape_assessments.py` | `recommend.py`, `rag.py`, `app/baseline.py` |
-| `assessments_scraped.csv` | 1,015 | one assessment task | same columns as `subject_profiles.csv` | `data-eda/src/scrape_assessments.py` | `build_subject_profiles.py` |
-| `prerequisites.csv` | 2,571 | one item of a subject's requisite rule | `subject_code`, `kind`, `rule`, `item`, `type`, `requisite_code`, `requisite_text`, `evop_found`, `source_url` | `data-eda/src/scrape_requisites.py` (#81, #98) | `recommend()` (in review, #82) |
-| `offerings.csv` | 510 | one subject in one teaching period | `subject_code`, `teaching_period`, `mode` | `data-eda/src/scrape_handbook.py` | `recommend()` (in review, #82) |
-| `external_courses.csv` | 1,167 | one piece of text from a course outside UTS | profile columns plus `provider`, `cost` (free / free-to-audit), `date_checked`; 56 courses from 42 providers | `data-eda/src/external/build_external.py` (#81); links checked in #96 | two-tier `recommend()` (in review, #83) |
-| `uncovered_skills_2026-10-13.csv` | 73 | one skill no UTS subject names, or a covered skill in at least 10% of 2026 ads | `skill`, `category`, `pct_2019_22`, `pct_2026`, `covered_by_uts` (54 n, 19 y) | `build_external.py` | external-course search |
-| `skills_seed_v2.csv` | 148 | one dictionary skill | `canonical`, `category`, `strict` (1 = case-sensitive), `aliases` (pipe-separated). `#` line first | Van Thong's dictionary, 5 generic rows (poster) and 10 tool rows (#86) | `extract.py`, `normalise.py`, `evaluate.py`, `rag.py`, `app/baseline.py` |
-| `skill_to_esco.csv` | 132 | one dictionary skill linked to ESCO | `canonical`, `category`, `esco_uri`, `esco_preferred_label`, `esco_skill_type`, `matched_on` | `data-eda/src/map_to_esco.py`; Spark row dropped by `app/mock/build_mock.py` | `normalise.py`, `app/baseline.py` |
-| `skill_counts_v2.csv` | 148 | one skill's demand in 2019-22 | `skill`, `category`, `n_ads`, `pct_ads` (share of 3,204 Seek Data Scientist ads) | poster stage (`docs/handoffs/`) | `match.py`, `app/baseline.py` |
-| `skill_counts_2026.csv` | 148 | one skill's demand in three periods | `skill`, `category`, `pct_2019_22`, `pct_2024_01`; `n_2026`, `pct_2026` and 95% bounds for the 9 data-scientist ads; `n_2026_all`, `pct_2026_all` and bounds for all 22 ads; `total_*` denominators | `data-eda/src/recount_recent.py` (#87, #99) | `match.py` (only skills under 1% before 2023) |
-| `role_profiles.csv` | 441 | one skill in one of 7 data and IT roles | `role`, `skill`, `category`, `n_ads`, `pct_ads`, `pct_low`, `pct_high`, `total_ads`, `source` | `data-eda/src/build_role_profiles.py` (#86) | role mode (in review, #83) |
-| `emerging_candidates.csv` | 52 | one candidate phrase from one detection method | `sample`, `method` (n-gram / spaCy / GPT), `rank`, `phrase`, `df_new`, `pct_new`, `df_2019_22`, `pct_2019_22`, `employers_new`, `z` (weighted log-odds), `is_skill` (hand judgement) | `src/skillabus/emerging.py` (#84) | section 6 |
-| `emerging_candidates_2024-2026.csv` | 76 | as above, on the 2024-2026 sample | as above | `emerging.py` with the wider sample | section 6 |
-| `top_skills.csv` | 15 | one of the 15 most-demanded technical skills | `skill`, `pct_ads`. `#` line first | poster stage | `match.py` (role mode), `app/baseline.py` |
-| `gap.csv` | 8 | one skill in the poster example | `skill`, `pct_ads`, `covered` (1 = in the resume). `#` line first | poster stage | app demo, `tests/test_match.py` |
-| `feedback.csv` | grows | one thumbs up/down vote | `timestamp`, `subject_code`, `skill_label`, `vote`, `has_taken_subject` (y/n). Nothing from the CV; lost when Streamlit Cloud restarts | `app/Home.py` | validation |
-
-Notes files: `subject_profiles.md`, `external_courses.md` and `role_profiles.md` describe how each file was built.
-
-### B.2 Hand-labelled test sets (`data/labels/`)
-
-Each set starts from a `_TEMPLATE.csv` with the same columns; rules in `data/labels/README.md`.
-
-| File | Rows | One row = | Columns |
+| File | Rows | One row = | Key columns |
 |---|---|---|---|
-| `ad_skills.csv` | 534 | one skill asked for in one of 20 ads, by one annotator (217 Hoai Thuong, 317 Van Thong; #55, #85) | `ad_id`, `skill_label` (dictionary `canonical` when it exists), `in_dictionary`, `evidence_text`, `annotator` |
-| `cv_jd_pairs.csv` | 287 | one skill in one of 45 CV-ad pairs (16 ads, 10 resumes; #42) | `pair_id`, `ad_id`, `resume_id`, `skill_label`, `in_dictionary`, `gold_status` (have / partial / missing), `resume_evidence_text`, `annotator` |
-| `skill_subject_pairs.csv` | 33 | one skill-subject claim (#92) | `skill_label`, `subject_code`, `teaches` (y / partly / n), `layer`, `evidence_text`, `source_url`, `annotator` |
-| `chat_questions.csv` | 15 | one chat test question (#92) | `question_id`, `question`, `reference_answer` (1-3 sentences), `source`, `annotator` |
+| `skills/skills_vocabulary.csv` | 504 | one skill in the one vocabulary: 148 dictionary skills, added IT skills, ESCO core skills, certifications | `skill_id`, `label`, `category`, `source`, `esco_uri`, `esco_match`, `aliases_ads`, `strict`, `used_for` |
+| `skills/skills_seed_v2.csv` | 148 | one dictionary skill (`#` line first) | `canonical`, `category`, `strict`, `aliases` |
+| `skills/skill_to_esco.csv` | 132 | one dictionary skill linked to ESCO | `canonical`, `esco_uri`, `esco_preferred_label`, `matched_on` |
+| `skills/esco_link_review.csv`, `added_skills.csv`, `onet_tool_map.csv` | 148, 125, 79 | the hand files behind the vocabulary | ESCO link and note; candidate IT skills; O*NET tool → label |
+| `taxonomies/role_occupations.csv` | 34 | one of the 11 IT roles mapped to an ESCO, O*NET or ASC occupation | `role`, `role_family`, `source`, `occupation_code`, `match` (exact / close / broad), `why` |
+| `taxonomies/occupation_skills.csv` | 1,148 | one skill or tool an occupation requires | ESCO essential/optional, O*NET in-demand tools, ASC core competencies |
+| `taxonomies/esco_skills_clean.csv`, `esco_label_lookup.csv` | 13,960; 100,886 | one ESCO v1.2.1 concept; one (label, concept) pair | `concept_uri`, `preferred_label`, `alt_labels`, `skill_type` |
+| `uts/subject_profiles.csv` | 6,853 | one piece of subject text | `subject_code`, `subject_name`, `course` (pipe-separated), `layer`, `text`, `source_url`, `collected_by` |
+| `uts/assessments_scraped.csv` | 1,015 | one assessment task (before the merge into profiles) | profile columns |
+| `uts/prerequisites.csv` | 2,571 | one item of a subject's access rule | `subject_code`, `kind`, `rule`, `item`, `type`, `requisite_code` |
+| `uts/offerings.csv` | 510 | one subject in one teaching period | `subject_code`, `teaching_period`, `mode` |
+| `uts/taught_skills_student_reported.csv` | 305 | one skill a student says a subject taught (9 MDSI subjects) | `subject_code`, `skill_id`, `skill`, `collected_by`, `period` |
+| `learning_resources/external_courses.csv` | 1,167 | one piece of text from 56 free courses outside UTS | profile columns + `provider`, `cost`, `date_checked` |
+| `learning_resources/resources.csv` | 250 | one self-study resource | `provider`, `format`, `level`, `hours`, `cost`, `certificate`, `skills`, `roles`, `url`, `date_checked` |
+| `learning_resources/resource_modules.csv` | 2,030 | one description sentence or module title of a resource | for matching |
+| `learning_resources/certifications.csv` | 49 | one industry certification | `cert`, `vendor`, `roles`, `skills`, `cost_aud`, `au_ads_count`, `hot` |
+| `learning_resources/priority_skills.csv` | 165 | one of the 15 top skills of each role | role, skill |
 
-### B.3 Pipeline output (`docs/data_contract.md`)
+### B.2 `data/2_demand/`: what employers ask for
 
-The pipeline returns one JSON object per analysis (gaps with have / partial / missing status, evidence
-sentences, recommended subjects and the learning path). Its fields are defined in `docs/data_contract.md`
-sections 1-2 and are not repeated here.
+| File | Rows | One row = | Key columns |
+|---|---|---|---|
+| `role_skill_demand.csv` | 3,086 | **the one demand table**: one skill for one role from one source and period | `role`, `skill_id`, `skill`, `source`, `period`, `text_type`, `n_ads`, `total_ads`, `pct`, `pct_low`, `pct_high` |
+| `ads/jobspipe_2026_skills.csv` | 793 | one JobsPipe ad of Sep-Oct 2026, **without its text** | `role`, `title`, `company`, `date_posted`, `employer_type`, `url`, `skills` |
+| `ads/ats_2026_clean.csv` | 392 | one ad from 65 employers' job boards, Oct 2026, with a role | `company`, `title`, `role`, `posted`, `description`, `url` |
+| `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 | one Seek Data Scientist ad, glued words repaired | ad text |
+| `ads/jobs_au_recent_2024-2026_clean.csv` | 192 | one recent data-role ad (job boards 2026, Adzuna, LinkedIn Jan 2024) | ad text, period |
+| `adzuna_counts_2026-10.csv` | 165 | one live Adzuna search count, skill × role | `role`, `role_query`, `skill`, `skill_query`, `count`, `role_total`, `date` |
+| `role_outlook.csv` | 12 | one role's official outlook (Jobs and Skills Australia) | `anzsco_code`, `shortage_2025`, `vacancies_latest`, `vacancies_12m_ago` |
+| `skills_not_taught_by_uts.csv` | 73 | a skill no UTS subject names (54), or names but 2026 ads ask for a lot (19) | `skill`, `pct_2019_22`, `pct_2026`, `covered_by_uts` |
+| `emerging/emerging_candidates.csv`, `..._2024-2026.csv` | 55; 77 | one rising phrase from one detection method | `method`, `phrase`, `df_new`, `z`, `is_skill` |
+| `skill_counts_v2.csv`, `skill_counts_2026.csv`, `top_skills.csv`, `role_profiles.csv` | 148, 148, 15, 441 | earlier demand files, superseded by `role_skill_demand.csv`; only the fallback engine still reads two of them | |
+| `collection/` | | the job boards, candidate employers, Adzuna queries and JobsPipe totals used to collect the ads | |
+
+### B.3 `data/4_evaluation/` and the other folders
+
+| File | Rows | One row = |
+|---|---|---|
+| `4_evaluation/labels/ad_skills.csv` | 534 (+679 in #123) | one skill asked for in one labelled ad, by one annotator |
+| `4_evaluation/labels/cv_jd_pairs.csv` | 287 | one skill in one of 45 CV-ad pairs: `gold_status` have / partial / missing |
+| `4_evaluation/labels/skill_subject_pairs.csv` | 33 (+15 in #124) | one skill-subject claim: `teaches` y / partly / n, with the Handbook evidence |
+| `4_evaluation/labels/chat_questions.csv` | 15 | one chat test question with a reference answer |
+| `4_evaluation/inputs/` | 200; 2,481 | the 200-ad label sample; the de-identified resumes |
+| `4_evaluation/results/` | | scores for section 6 |
+| `3_tuning/` | | every threshold, where it is set and on what data |
+| `5_crosscheck/` | | other platforms and markets (LinkedIn US, Glassdoor AU), extractor agreement, role rank agreement |
+
+The pipeline's JSON output (gaps with have / partial / missing status, evidence sentences, recommended subjects and the
+learning path) is defined in `docs/data_contract.md` and not repeated here.
 
 ## Appendix C. Glossary
 
