@@ -64,8 +64,8 @@ and Public Sans). To put it online, see [docs/deploy.md](docs/deploy.md).
 ## Using the app
 
 Skillabus compares what employers ask for with what your resume shows, then points to the
-UTS subjects that teach the missing skills, quoting the Handbook text it relied on. The sidebar
-shows the three steps and opens the Handbook chat.
+UTS subjects that teach the missing skills, quoting the Handbook text it relied on. A bar at the
+top shows the three steps, what you chose so far, and opens the Handbook chat.
 
 **1. Who you are.** Three cards:
 
@@ -100,7 +100,7 @@ modes, Certifications.
   level and cost. Click a subject name for its sessions, prerequisites, the gaps it closes and the
   Handbook link. A line under the skill rows names the ads behind the bars.
 
-**4. Ask the Handbook.** The button in the sidebar opens a chat that answers from the UTS
+**4. Ask the Handbook.** The button at the top right opens a chat that answers from the UTS
 Handbook 2026 text and cites the passages it used ("Which subject teaches LLMs?"). Without an
 OpenAI key it shows the matching passages instead of a written answer. Your resume is never sent
 to the model.

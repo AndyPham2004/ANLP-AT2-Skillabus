@@ -77,7 +77,8 @@ def test_start_page_has_the_three_cards():
     assert "Find the skills a job wants" in text
     for cta in ("Pick a role →", "Add ad and resume →", "Pick role, add resume →"):
         assert cta in text
-    assert at.button(key="nav_inputs").disabled and at.button(key="nav_results").disabled
+    assert "Who you are" in text and "Your inputs" in text and "Results" in text      # the stepper in the top bar
+    assert at.button(key="chat_toggle")
 
 
 def test_role_picker_lists_eleven_roles_with_their_source():

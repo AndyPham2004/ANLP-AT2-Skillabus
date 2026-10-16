@@ -29,7 +29,7 @@ html, body, .stMarkdown, .stMarkdown p, .stMarkdown li, .stCaption, input, texta
 /* The design is drawn for 1280 x 820. Type and padding scale down with the viewport (clamp), so a
    laptop at 275% display scaling (1152 x 720 CSS px) still shows a whole screen at a time. */
 header[data-testid="stHeader"] { background: transparent !important; height: 2.4rem !important; }
-.block-container { max-width: 1180px; padding: 1.6rem 3rem 3rem; }
+.block-container { max-width: 1240px; padding: 1.1rem 3rem 3rem; }
 @media (max-width: 1200px) { .block-container { padding: 1.2rem 1.6rem 2.4rem; } }
 section[data-testid="stSidebar"] { border-right: 1px solid rgba(255,255,255,.07); }
 section[data-testid="stSidebar"] .block-container { padding: 1rem 1rem 1rem; }
@@ -43,6 +43,14 @@ h1, h2, h3, .k-h1, .k-h2, .k-serif { font-family: 'Literata', Georgia, serif; }
 .k-ctx b { color: #e8e6e1; font-weight: 500; }
 .k-legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: #9a9a94; margin-top: 12px; }
 .k-legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+/* the top bar (no sidebar): name, horizontal stepper, context, chat button */
+.k-hsteps { display: flex; align-items: center; gap: 10px; font-size: 13px; white-space: nowrap; overflow: hidden; }
+.k-hstep { display: inline-flex; align-items: center; gap: 6px; }
+.k-hdot { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid; display: inline-grid; place-items: center; font: 500 10px 'DM Mono', monospace; box-sizing: border-box; }
+.k-hline { display: inline-block; width: 22px; border-top: 1.5px dashed rgba(255,255,255,.16); }
+.k-hctx { font-size: 12px; color: #6b6c68; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.k-rule { border-top: 1px solid rgba(255,255,255,.08); margin: 4px 0 18px; }
+section[data-testid="stSidebar"], div[data-testid="stSidebarCollapsedControl"], button[data-testid="stExpandSidebarButton"] { display: none !important; }
 section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] { padding-left: 2px; }
 section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid="stBaseButton-secondary"] { background: rgba(255,255,255,.07); border-color: transparent; }
 .k-eyebrow { font-size: 13.5px; color: #9a9a94; margin: 0 0 6px; }

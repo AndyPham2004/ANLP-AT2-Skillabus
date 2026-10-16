@@ -70,7 +70,7 @@ for _n in SUBJECT_NAME.values():
     _name_count[_n] = _name_count.get(_n, 0) + 1
 SHARED_NAMES = {n for n, k in _name_count.items() if k > 1}    # "Machine Learning" exists under several codes
 
-st.set_page_config(page_title="Skillabus", page_icon="🎓", layout="wide")
+st.set_page_config(page_title="Skillabus", page_icon="🎓", layout="wide", initial_sidebar_state="collapsed")
 st.markdown(ui.CSS, unsafe_allow_html=True)
 
 
@@ -345,41 +345,27 @@ def step_note(n: int) -> str:
     return ""
 
 
-with st.sidebar:
-    st.markdown(f"<div class='k-mark'><span class='k-dot' style='background:{ui.HAVE};margin-right:8px;vertical-align:2px'>"
-                "</span>Skillabus <span class='k-mono k-small k-dim' style='margin-left:6px'>36118 · UTS</span></div>",
-                unsafe_allow_html=True)
+def top_bar() -> None:
+    """One strip above every page: the name, the three steps, what was chosen so far, the chat button."""
     current = STEP_OF[ss.step]
-    steps = [("Who you are", "start", True), ("Your inputs", "inputs", bool(ss.user_type)),
-             ("Results", "results", bool(ss.ran))]
-    for n, (label, step, enabled) in enumerate(steps, start=1):
+    parts = []
+    for n, label in enumerate(("Who you are", "Your inputs", "Results"), start=1):
         done, active = current > n, current == n
         colour = ui.HAVE if done else (ui.INK if active else ui.DIM)
-        dot = (f"<span class='k-step-dot' style='border-color:{colour};background:{ui.HAVE if done else 'transparent'};"
+        dot = (f"<span class='k-hdot' style='border-color:{colour};background:{ui.HAVE if done else 'transparent'};"
                f"color:{ui.DARK if done else colour}'>{'✓' if done else n}</span>")
-        line = "" if n == len(steps) else "<span class='k-step-line'></span>"
-        dot_col, lab_col = st.columns([1, 5], gap="small")
-        dot_col.markdown(f"<div class='k-step'>{dot}{line}</div>", unsafe_allow_html=True)
-        with lab_col:
-            st.button(label, key=f"nav_{step}", type="secondary" if active else "tertiary", width="stretch",
-                      disabled=not enabled, on_click=go, args=(step,))
-            note = step_note(n)
-            if note:
-                st.markdown(f"<div class='k-step-sub'>{ui.esc(note)}</div>", unsafe_allow_html=True)
-    if ss.user_type:
-        ctx = [f"<b>{ui.esc(ss.stage_keep)}</b>"]
-        if ss.course_keep:
-            ctx.append(ui.esc(COURSE_NAME.get(ss.course_keep, ss.course_keep)))
-        if ss.whatif:
-            ctx.append(ui.esc("Counting as taken: " + ", ".join(subject_name(c) for c in ss.whatif)))
-        st.markdown("<div class='k-ctx'>" + "<br>".join(ctx) + "</div>", unsafe_allow_html=True)
-    st.markdown("<div class='k-legend'>" + "".join(
-        f"<span><i style='background:{c}'></i>{w}</span>" for w, c in
-        (("have", ui.HAVE), ("partial", ui.PARTIAL), ("missing", ui.MISSING))) + "</div>", unsafe_allow_html=True)
-    st.markdown("<div style='height:8vh'></div>", unsafe_allow_html=True)
-    st.button("Ask the Handbook", key="chat_toggle", width="stretch", on_click=toggle, args=("chat_open",))
-    st.caption("e.g. Which subject teaches LLMs? Answers quote the UTS Handbook 2026; your resume is never sent "
-               "to the model.")
+        parts.append(f"<span class='k-hstep' style='color:{colour};font-weight:{500 if active else 400}'>{dot}{label}</span>")
+    stepper = "<span class='k-hline'></span>".join(parts)
+    ctx = " · ".join(x for x in (step_note(1), step_note(2)) if x)
+    if ss.whatif:
+        ctx = " · ".join(x for x in (ctx, "Counting as taken: " + ", ".join(subject_name(c) for c in ss.whatif)) if x)
+    name_col, steps_col, ctx_col, chat_col = st.columns([1.1, 3.3, 2.6, 1.3], vertical_alignment="center", gap="small")
+    name_col.markdown(f"<div class='k-mark' style='margin:0'><span class='k-dot' style='background:{ui.HAVE};"
+                      "margin-right:8px;vertical-align:2px'></span>Skillabus</div>", unsafe_allow_html=True)
+    steps_col.markdown(f"<div class='k-hsteps'>{stepper}</div>", unsafe_allow_html=True)
+    ctx_col.markdown(f"<div class='k-hctx' title='{ui.esc(ctx)}'>{ui.esc(ctx)}</div>", unsafe_allow_html=True)
+    chat_col.button("Ask the Handbook", key="chat_toggle", width="stretch", on_click=toggle, args=("chat_open",))
+    st.markdown("<div class='k-rule'></div>", unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------- the chat panel
@@ -389,8 +375,8 @@ def chat_panel() -> None:
         head, close = st.columns([6, 1], vertical_alignment="center")
         head.markdown(ui.h2("Ask the Handbook"), unsafe_allow_html=True)
         close.button("×", key="chat_close", type="tertiary", on_click=toggle, args=("chat_open",))
-        if not chat.has_llm():
-            st.caption("No OpenAI key set: showing the matching Handbook passages instead of a written answer.")
+        st.caption("Answers quote the UTS Handbook 2026; your resume is never sent to the model."
+                   + ("" if chat.has_llm() else " No OpenAI key set: the matching passages are shown instead of a written answer."))
         chat_thread()
 
 
@@ -1008,6 +994,7 @@ if ss.step in ("inputs", "jobs") and not ss.user_type:
     ss.step = "start"
 PAGES = {"start": page_start, "inputs": page_inputs, "jobs": page_jobs, "results": page_results,
          "evidence": page_evidence}
+top_bar()
 if ss.chat_open:
     main_col, chat_col = st.columns([1, 0.48], gap="large")
     with main_col:
