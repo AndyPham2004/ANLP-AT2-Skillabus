@@ -585,10 +585,15 @@ def skills_section(skills: list[dict], counted: bool, noun: str) -> None:
         name_col.button(s["skill_label"] + (" ✦" if s["emerging"] else ""), key=f"open_{i}", type="tertiary",
                         on_click=open_gap, args=(s["skill_label"],))
         if counted:
-            pct, hatched = s.get("demand_pct"), False
-            if (pct or 0) < 1 and s.get("demand_pct_2026"):   # never in the old ads: the 2026 share, hatched
-                pct, hatched = s["demand_pct_2026"], True
-            bar_col.markdown(ui.bar(pct, s["status"], hatched), unsafe_allow_html=True)
+            pct, old = s.get("demand_pct"), s.get("demand_pct_2019_22")
+            new_since_2022 = old is not None and old < 1 <= (pct or 0)     # the 2019-22 ads never named it
+            tip = ""
+            if pct is not None:
+                when = f" ({s['demand_period']})" if s.get("demand_period") else ""
+                tip = f"{pct:.0f}% of {s.get('total_ads') or 'the'} ads{when}"
+                if old is not None:
+                    tip += f"; {old:.0f}% of the 2019-22 Seek ads"
+            bar_col.markdown(ui.bar(pct, s["status"], new_since_2022, tip), unsafe_allow_html=True)
         else:
             bar_col.markdown(f"<span class='k-small k-mute'>{CORE_SOURCE.get(s.get('core_source'), '')}</span>",
                              unsafe_allow_html=True)
@@ -723,19 +728,25 @@ def details_section(res: dict, skills: list[dict], counted: bool, role: str | No
                f"These are the O*NET in-demand tools of {onet['occupation_title']} ({onet['occupation_code']}), "
                f"then the essential digital skills of the ESCO occupation '{esco['occupation_title']}', at most "
                f"{backend.MAX_CORE_SKILLS}. Have = your resume names the skill.")
-    elif role is None:
-        cap = "Bar = share of 3,204 Seek Australia Data Scientist ads (2019-22) naming the skill."
+    elif role is None:      # a pasted ad is weighed by the Data Scientist ads (match.py)
+        source = backend.role_source(backend.DEFAULT_ROLE, skills[0].get("demand_source"),
+                                     skills[0].get("demand_period"))
+        cap = f"Bar = share of Data Scientist ads naming the skill: {source}"
     else:
         source = backend.role_source(role, skills[0].get("demand_source"), skills[0].get("demand_period"))
         cap = f"Bar = share of the role's ads naming the skill: {source}"
-    if counted and any((s.get("demand_pct") or 0) < 1 and s.get("demand_pct_2026") for s in skills):
-        cap += " A hatched bar is the skill's share in the 2026 sample: the older ads never named it."
+    trend = backend.source_2019_22(role) if counted else None
+    if trend:
+        cap += f" Hover a bar for the older share too: {trend}"
+        if any(s.get("demand_pct_2019_22") is not None and s["demand_pct_2019_22"] < 1 <= (s.get("demand_pct") or 0)
+               for s in skills):
+            cap += " A hatched bar is a skill those older ads never named: new since 2022."
     if any(s["emerging"] for s in skills):
         cap += " ✦ = no ESCO concept yet, kept as an emerging skill."
     if role in (None, backend.DEFAULT_ROLE) and any(
             s["skill_label"] in ("Large language models", "Generative AI") for s in skills):
-        cap += (" LLMs and generative AI are 0% in the 2019-22 ads because they predate ChatGPT; "
-                "15.8% of 247 US Data Scientist ads in 2023-24 ask for LLMs.")
+        cap += (" LLMs and generative AI were 0% of the 3,204 Seek Data Scientist ads of 2019-22, "
+                "which predate ChatGPT.")
     if any(s.get("found_by") == "llm" for s in skills):
         cap += " Skills outside our dictionary were found by GPT-4o-mini; their bars are 0% because the dictionary never counted them."
     if res.get("soft_skills"):

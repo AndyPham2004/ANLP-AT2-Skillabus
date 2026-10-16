@@ -46,6 +46,7 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | `2_demand/role_outlook.csv` (+ `.md`) | Per role: 2025 Occupation Shortage List rating and Internet Vacancy Index vacancies (Aug 2026 vs Aug 2025), Jobs and Skills Australia, 12 rows (D13) | Claude for Quan | By hand from the two JSA files; sources and licence in the `.md` |
 | `2_demand/skills_not_taught_by_uts.csv` | 73 skills no UTS subject names, or names but 2026 ads ask for a lot | Quan | Recompute after D5 and D8 |
 | `2_demand/ads/` | 3,204 Seek ads (2019-22), 192 recent Australian data roles, and 392 job-board ads of Oct 2026 (posted within 60 days of the fetch) each with a role (`ats_2026_clean.csv`, 85 in one of the 11 roles), cleaned; `CLEANING_NOTES.txt` | Van Thong; Claude (ATS roles) | `clean_seek.py`, `build_recent_sample.py`, `classify_ats_roles.py` |
+| `2_demand/ads/jobspipe_2026_skills.csv` | 793 JobsPipe ads of Sep–Oct 2026, all 11 roles (63–79 each): id, role, link, employer type and the skills the text names; no text (JobsPipe's terms) | Claude for Quan | `fetch_jobspipe.py` (one-off key budget) |
 | `2_demand/collection/` | The 65 job boards fetched, 206 candidate employers, the probe of 13 Oct | Van Thong, Quan | `probe_ats.py`; lists by hand |
 | `2_demand/emerging/` | Emerging-skill candidates, 2026 and 2024+2026 | Phuong Nhi | `python -m skillabus.emerging [--with-2024]` |
 | `4_evaluation/labels/` | Test sets: ad skills, CV-JD pairs, skill-subject pairs, chat questions; templates | Hoai Thuong, Van Thong, Akash | By hand |
@@ -73,6 +74,7 @@ byte-identical files (`.gitattributes` keeps their line ends). The EDA notebook 
 | UTS Handbook 2026 | 360 subjects in 44 courses (19 MDSI) | 2026 | subject profiles, prerequisites, teaching sessions | [handbook](https://coursehandbook.uts.edu.au) |
 | Resume Dataset (Kaggle, snehaanbhawal) | 2,481 resumes; 125 with 2+ data skills | 2021 | resume parsing and CV–JD test pairs | [kaggle](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) |
 | Job-board APIs of 65 employers (Greenhouse, Lever, SmartRecruiters, Ashby, Workable) + Adzuna API | 38 Australian data roles with full text (22 in the sample, 9 of them data scientists) + 32 Adzuna roles cut at 500 characters; all professions: 392 ads from the 13 and 16 Oct fetches posted within 60 days, 85 with one of the 11 roles (`ats_2026_clean.csv`) | Sep–Oct 2026 | the 2026 sample | public APIs |
+| JobsPipe API (jobspipe.dev; aggregates Indeed, LinkedIn, Workday and 11 ATS platforms) | 793 Australian ads posted 23 Sep–16 Oct 2026, 85 fetched per role, full text read for skills, text not stored in git | Sep–Oct 2026 | the 2026 full-text block of every role (`jobspipe_2026`) | [jobspipe](https://jobspipe.dev); terms: no bulk redistribution, keep the link to the posting; free key, 1,000 credits once |
 | LinkedIn data-science postings (Kaggle, asaniczka) | 122 Australian data roles, full text | Jan 2024 | Australian middle point for the 2019–22 → 2026 trend | [kaggle](https://www.kaggle.com/datasets/asaniczka/data-science-job-postings-and-skills) |
 | Jobs and Skills Australia: 2025 Occupation Shortage List (15 Oct 2025) and Internet Vacancy Index (Aug 2026 data, 23 Sep 2026), CC BY 4.0, "© Commonwealth of Australia" | shortage rating per ANZSCO 2022 occupation; online vacancies per 4-digit unit group, 3-month average | 2025, Aug 2026 | role outlook: `2_demand/role_outlook.csv` | [osl](https://www.jobsandskills.gov.au/data/occupation-shortage), [ivi](https://www.jobsandskills.gov.au/data/internet-vacancy-index) |
 | data_jobs (Hugging Face, lukebarousse), Apache-2.0 | 12,955 Australian postings, tool lists only | 2023 | role profiles for 7 data and IT roles | [huggingface](https://huggingface.co/datasets/lukebarousse/data_jobs) |
@@ -87,6 +89,9 @@ Notes for anyone citing these:
 - **Label and evaluate on the cleaned files** (`2_demand/ads/`, `4_evaluation/inputs/`), not `raw/`.
   The raw Seek text has words welded together where HTML was stripped (`TableauSuperior`); the clean
   file repairs that, so the labeller and the extractor see the same words.
+- **JobsPipe (16 Oct):** the one 2026 full-text source with 30+ ads for every role. Its text stays in `data/raw/jobspipe/`
+  (gitignored); only each ad's link, metadata and the skills found are committed. Cite it as a commercial aggregator of
+  Indeed and LinkedIn postings used through its API; we did not scrape either site.
 - **The 2026 sample is small: 22 roles, not the ~150 planned** (posted within 60 days of a
   snapshot, at most 3 per employer and role group; 9 are data scientists). Indeed was dropped because its
   terms forbid scraping and it has no public search API. Adzuna's API cuts every description

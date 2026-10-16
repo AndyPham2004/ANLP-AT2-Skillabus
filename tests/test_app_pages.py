@@ -24,6 +24,8 @@ HOME = str(ROOT / "app" / "Home.py")
 def no_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **k: False)   # a local .env must not add a key
+    import streamlit as st
+    st.cache_data.clear()        # Home.py caches analyses per input; a test with another demand table must not reuse them
 
 
 def start(mode: str) -> AppTest:
@@ -76,9 +78,10 @@ def test_role_picker_lists_eleven_roles_with_their_source():
     pills = at.pills(key="role_box")
     assert len(pills.options) == 11 and pills.options[0] == "Data Scientist"
     assert pills.value == "Data Scientist"
-    assert "3,204 Seek Data Scientist ads 2019-22, full text" in page_text(at)
+    assert "JobsPipe Data Scientist ads, Sep-Oct 2026, full text." in page_text(at)
     pick_role(at, "Cybersecurity Analyst")
-    assert "No Australian ad counts yet" in page_text(at)
+    assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)   # every role since C2
+    assert "No Australian ad counts yet" not in page_text(at)
     assert at.segmented_control(key="stage_box").value == "Studying at UTS"
     assert at.selectbox(key="course_box").value == "C04372"                       # MDSI by default
     at.segmented_control(key="stage_box").set_value("Already working").run()
@@ -88,11 +91,11 @@ def test_role_picker_lists_eleven_roles_with_their_source():
 def test_role_mode_data_engineer():
     at = start("switch")
     pick_role(at, "Data Engineer")
-    assert "4,438 Australian Data Engineer postings 2023" in page_text(at)
+    assert "JobsPipe Data Engineer ads, Sep-Oct 2026, full text." in page_text(at)
     show_gaps(at)
     text = page_text(at)
     assert "Data Engineer" in text and "skills still to learn" in text
-    assert "Skills the role asks for" in text and "k-bar'><span" in text        # the percentage bars
+    assert "Skills the role asks for" in text and "<span style='width:" in text        # the percentage bars
     assert "Your path" in text
     assert "Certifications worth having" in text and "Databricks Certified Data Engineer Associate" in text
     assert at.download_button(key="download_plan")
@@ -105,14 +108,29 @@ def test_role_mode_data_engineer():
     assert "Skills the role asks for" in page_text(at)
 
 
-def test_role_mode_cybersecurity_shows_core_skills_without_bars():
+def test_role_mode_cybersecurity_has_bars_since_c2():
     at = start("switch")
     pick_role(at, "Cybersecurity Analyst")
     show_gaps(at)
     text = page_text(at)
+    assert "<span style='width:" in text and "core skills · no Australian ad counts yet" not in text
+    assert "Certifications worth having" in text and "CompTIA Security+" in text
+    at.button(key="toggle_details").click().run()
+    assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)
+    open_skill(at)
+    assert "Employers say" in page_text(at) and "Self-study" in page_text(at)
+
+
+def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sample):
+    """The fallback page: the sample demand table has no block for Cybersecurity Analyst."""
+    at = start("switch")
+    pick_role(at, "Cybersecurity Analyst")
+    assert "No Australian ad counts yet" in page_text(at)
+    show_gaps(at)
+    text = page_text(at)
     assert "core skills · no Australian ad counts yet" in text
-    assert "k-bar'><span" not in text                                          # no percentage bars
-    assert "O*NET in-demand tool" in text
+    assert "<span style='width:" not in text                                          # no percentage bars
+    assert "O*NET in-demand tool" in text or "ESCO essential skill" in text        # where each core skill comes from
     assert "Certifications worth having" in text and "CompTIA Security+" in text
     open_skill(at)
     text = page_text(at)

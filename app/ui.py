@@ -133,13 +133,16 @@ def status_html(status: str, text: str | None = None) -> str:
             f"{esc(text or status)}</span>")
 
 
-def bar(pct: float | None, status: str, emerging: bool = False) -> str:
-    """One demand bar, 0-100. Emerging skills (no ESCO concept) are hatched, as in the design."""
+def bar(pct: float | None, status: str, hatched: bool = False, title: str = "") -> str:
+    """One demand bar, 0-100. Hatched = a skill the older ads never named (new since 2022), as in the design.
+    `title` is the hover text (the numbers behind the bar)."""
     if pct is None:
         return "<div class='k-bar'></div>"
     c = STATUS.get(status, MUTE)
-    fill = f"repeating-linear-gradient(135deg,{c} 0 3px,transparent 3px 6px)" if emerging else c
-    return f"<div class='k-bar'><span style='width:{max(0.0, min(100.0, pct)):.1f}%;background:{fill}'></span></div>"
+    fill = f"repeating-linear-gradient(135deg,{c} 0 3px,transparent 3px 6px)" if hatched else c
+    tip = f" title='{esc(title)}'" if title else ""
+    return (f"<div class='k-bar'{tip}><span style='width:{max(0.0, min(100.0, pct)):.1f}%;background:{fill}'>"
+            "</span></div>")
 
 
 def quote(text: str, colour: str = "#3a3c3e") -> str:

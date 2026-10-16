@@ -76,18 +76,18 @@ shows the three steps and opens the Handbook chat.
 | Career switcher | How far am I from a new field? | a target role and your resume |
 
 **2. Your inputs.** Say where you are in your studies (about to enrol, studying MDSI, already
-working: it decides which subjects count as open to you). Pick one of 11 data and IT roles: seven
-come with Australian ad counts (the 15 skills most often asked for), four show the core skills of
-the occupation instead. Upload a resume as PDF or text, or tick *Use a sample resume* (a synthetic
-early-career MDSI student); it stays in memory for the session and is never stored. Press
-**Find my gaps**.
+working, and your course: it decides which subjects count as open to you). Pick one of 11 data and
+IT roles: each comes with the 15 skills most often asked for in its JobsPipe ads of 2026. Upload a
+resume as PDF or text, paste it, or use the sample (a synthetic early-career MDSI student); it stays
+in memory for the session and is never stored. Press **Find my gaps**.
 
 **3. Results.** One line says how many of the skills you still have to learn and names the
 biggest gaps.
 
-- **Skills the ad (or role) asks for**: one row per skill with a bar for how often employers ask
-  for it (hatched = seen only in the 2026 sample) and its status: have, partial (your resume names
-  a related skill, not this one) or missing. A ✦ marks an emerging skill with no ESCO concept yet.
+- **Skills the ad (or role) asks for**: one row per skill with a bar for how often the 2026 ads ask
+  for it (hover for the 2019-22 share; hatched = a skill the older ads never named) and its status:
+  have, partial (your resume names a related skill, not this one) or missing. A ✦ marks an emerging
+  skill with no ESCO concept yet.
   *Show where these appear in the ad* colours the skills on the ad text.
 - **Your path**: the fewest subjects that close the most gaps, each with its session, the gaps it
   closes and whether it needs a prerequisite first; dashed cards are outside courses for the gaps

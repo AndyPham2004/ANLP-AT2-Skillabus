@@ -6,16 +6,18 @@ from the repo root.
 
 | File | What | Made by | Rebuild |
 |---|---|---|---|
-| `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, 1,812 rows, every source counted with the one vocabulary. Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
-| `skill_counts_v2.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` reads `pct_ads` as `demand_pct` | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
-| `skill_counts_2026.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
-| `top_skills.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** The 15 most-asked technical skills, the Data Scientist role profile (`match.role_profile`) | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
-| `role_profiles.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Tool profiles of 7 data and IT roles (data_jobs 2023, Apache-2.0), 441 rows; notes in `role_profiles.md` | Van Thong | `python data-eda/src/build_role_profiles.py` |
+| `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, every source counted with the one vocabulary; **the app reads it** (plan C2, `match.py`). Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
+| `skill_counts_v2.csv` | **Superseded by `role_skill_demand.csv`; only the fallback engine `app/baseline.py` reads it.** Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` read `pct_ads` as `demand_pct` until C2 | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
+| `skill_counts_2026.csv` | **Superseded by `role_skill_demand.csv`; the app no longer reads it** (C2). Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
+| `top_skills.csv` | **Superseded by `role_skill_demand.csv`; only the fallback engine `app/baseline.py` reads it.** The 15 most-asked technical skills of Data Scientist; `match.role_profile` gives the same 15 from the table | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
+| `role_profiles.csv` | **Superseded by `role_skill_demand.csv`; the app no longer reads it** (C2). Tool profiles of 7 data and IT roles (data_jobs 2023, Apache-2.0), 441 rows; notes in `role_profiles.md` | Van Thong | `python data-eda/src/build_role_profiles.py` |
 | `role_outlook.csv` (+ `.md`) | **Official Australian signal per role** (plan D13): 2025 Occupation Shortage List rating and Internet Vacancy Index (Aug 2026 vs Aug 2025, unit-group level) from Jobs and Skills Australia, 12 rows; CC BY 4.0, attribution in `role_outlook.md` | Claude for Quan, 16 Oct | By hand from the two JSA files named in the rows |
 | `skills_not_taught_by_uts.csv` | 73 skills: 54 that no UTS subject names, plus 19 named but asked for in 10%+ of 2026 ads (was `uncovered_skills_2026-10-13.csv`) | Quan's session, 13 Oct | Recompute after the vocabulary (D5) and the IT subjects (D8) |
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
 | `ads/ats_2026_clean.csv` | **The 2026 job-board ads with a role** (plan D2): 392 Australian ads from the 65 boards (fetches of 13 and 16 Oct 2026, all professions) posted within 60 days of their fetch, one row per company and title, each given one of the 11 roles or `other` from its title; 85 have a role (Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1). Contacts masked. Section below | Claude for Quan, 16 Oct | `python data-eda/src/classify_ats_roles.py` (needs the raw fetches in `data/raw/`) |
+| `ads/jobspipe_2026_skills.csv` | **The JobsPipe 2026 ads, without their text**: 793 Australian ads posted 23 Sep to 16 Oct 2026, fetched 16 Oct from the JobsPipe API (Indeed 183, LinkedIn 576, ATS boards the rest), 85 per role by title query, kept when the title is that role; per ad: id, role, title, company, location, date, employer type (209 agencies), seniority, link, the vocabulary skills its text names (tier-1 matcher) and JobsPipe's own ESCO tags. Business Analyst 79, Data Analyst 78, QA/Test Engineer 78, Network/Systems Administrator 77, Software Engineer 73, Data Scientist 71, Data Engineer 70, Machine Learning Engineer 69, Cybersecurity Analyst 68, DevOps/SRE 67, Cloud Engineer 63. Section below | Claude for Quan, 16 Oct | `python data-eda/src/fetch_jobspipe.py` (one-off: the free key has 1,000 credits once; `--rehit` recomputes the skills from the raw file without calls) |
+| `collection/jobspipe_totals_2026-10-16.csv` | Per role: the JobsPipe title query, its total live Australian ads in the 60-day window on 16 Oct (170 Data Scientist to 1,450 Software Engineer), fetched and kept | Claude for Quan | same script |
 | `ads/CLEANING_NOTES.txt` | What each cleaned file is, who uses it, how it was cleaned (was `data-eda/data/clean/README.txt`) | Van Thong | Text |
 | `adzuna_counts_2026-10.csv` | Live Adzuna search counts per skill x role, 11 roles (plan D12): `role, role_query, skill, skill_query, count, role_total, date`. Section below | Van Thong, 16 Oct | `python data-eda/src/count_role_skills_adzuna.py` (needs an Adzuna key; 173 calls) |
 | `collection/adzuna_queries.csv` | The title query of each role and the phrase searched for each of its 15 priority skills, with a note wherever the phrase is a judgement | Van Thong, 16 Oct | `count_role_skills_adzuna.py --write-queries`, then by hand |
@@ -28,9 +30,9 @@ from the repo root.
 `skill_counts_2026.csv` columns: `pct_2019_22` (3,204 Seek listings, clean text, counted per listing as
 on the poster), `pct_2024_01` (122 Australian LinkedIn data roles), `n_2026` / `pct_2026` (the 9
 data-scientist ads of the 2026 sample) and `n_2026_all` / `pct_2026_all` (all 22 sample roles), each
-with a 95% Wilson interval. `match.py` reads `pct_2026` as `demand_pct_2026` (trend column) and
-`pct_2026_all_low` as the 2026 floor of the gap weight in `recommend._weight` (via
-`match.demand_2026_low`). **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
+with a 95% Wilson interval. Until C2 `match.py` read `pct_2026` as `demand_pct_2026` (trend column) and
+`pct_2026_all_low` as the 2026 floor of the gap weight in `recommend._weight`; since C2 the bars are the 2026
+JobsPipe shares themselves and the floor is gone. **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
 5, so one ad moves a data-scientist share by 11 points. Show 2026 as "n of 9", not as a bare percentage.
 
 ## Adzuna search counts (plan D12): `adzuna_counts_2026-10.csv`
@@ -46,9 +48,27 @@ over-counts: R, Excel, React, Spark); a role is one set of title words (DevOps/S
 Engineer is "test analyst"); and the ads are whatever is live on Adzuna that day, re-listings included.
 Three skills in ESCO's wording that no ad uses have no phrase and a blank count.
 
-Owner of the folder: Van Thong. Planned here (plan D1): `roles.csv`. Once the app
-reads `role_skill_demand.csv` (plan C2, after 17 Oct), `skill_counts_*`, `top_skills.csv` and `role_profiles.*`
-go to `archive/demand_files_v1/`.
+Owner of the folder: Van Thong. Planned here (plan D1): `roles.csv`. The app reads `role_skill_demand.csv`
+since plan C2; `skill_counts_*`, `top_skills.csv` and `role_profiles.*` go to `archive/demand_files_v1/`
+once the fallback engine and the poster check stop reading them.
+
+**How the app reads the table** (`src/skillabus/match.py`, C2). A *block* is one role, source and period
+with a share (`full_text`, `tool_list`, `search_count`); `taxonomy` rows and the `(mixed)` blocks are not a
+role's demand.
+
+- `demand_pct` = the role's block of the first source in `jobspipe_2026` > `adzuna_2026` > `ats_2026` >
+  `data_jobs_2023` > `seek_2019_22`: today JobsPipe 2026 for all 11 roles, Data Scientist included; a pasted
+  ad is weighed by the Data Scientist ads. Quan, 16 Oct: the 2019-22 Seek ads predate ChatGPT (LLMs 0%,
+  AI 22%, Hadoop 17%; in 2026 34%, 73%, 1%), so they are no longer the main number.
+- `demand_pct_2019_22` = the trend column: the Seek Data Scientist block (the table's count, same matcher as
+  the 2026 ads), for Data Scientist and a pasted ad only.
+- `demand_pct_2026` = the role's first 2026 block, the same order (equal to `demand_pct` today).
+- `recommend._weight` = `demand_pct + 1`; the 2026 floor for skills new since 2022 is gone, the 2026 shares
+  name them. The sample ad's path went from 36106 -> 36121 -> 32130 (87.9% of demand, 2019-22 weights) to
+  36121 -> 36106 -> 32130 (84.9%; LLMs now weigh 34% and no subject teaches them).
+- A role's 15 skills leave out soft skills and certifications. Every gap row carries `demand_source`,
+  `demand_period`, `total_ads` and `text_type`; the caption reads "70 JobsPipe Data Engineer ads, Sep-Oct
+  2026, full text."
 
 ## The demand table (plan D6): `role_skill_demand.csv`
 
@@ -77,6 +97,7 @@ Not in it yet: **`pct_required`** (plan D14, required vs preferred), which waits
 | `data_jobs_2023` | `2023` | tool_list | the 7 roles of `role_profiles.csv` | 263 (ML Engineer) to 4,438 (Data Engineer) | 576 | the role's Australian ads whose tool list names the tool |
 | `recent_2024_26` | `2024-01`, `2026` | full_text | `Data roles (mixed)` | 122, 22 | 149 + 74 | in-sample full-text ads of `ads/jobs_au_recent_2024-2026_clean.csv` naming the skill |
 | `ats_2026` | `2026-10` | full_text | `Software Engineer`; `Data roles (mixed)`; `IT roles (mixed)` | 33; 26; 26 | 244 | ads of `ads/ats_2026_clean.csv` with that role (or folded into a mixed block) naming the skill |
+| `jobspipe_2026` | `2026-10` | full_text | all 11 | 63 to 79 | 1006 | ads of `ads/jobspipe_2026_skills.csv` with that role whose text named the skill (found at fetch time) |
 | `adzuna_2026` | `2026-10` | search_count | all 11 | 62 (ML Engineer) to 1,171 (Software Engineer) | 153 | live Adzuna AU ads on 16 Oct whose title has the role's words and whose text has the skill's phrase; only each role's 15 priority skills searched (section on Adzuna counts) |
 | `esco_occupation` | `v1.2.1` | taxonomy | all 11 | | 456 | (no share) ESCO lists the skill as essential or optional for the role's occupation |
 | `onet` | `v31.0` | taxonomy | all 11 | | 207 | (no share) O\*NET marks the tool In Demand for the role's occupation |
@@ -105,6 +126,17 @@ How each source is counted:
   counted. Today: Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1. The period is `2026-10`, not `2026`, because the 22 in-sample 2026 ads of
   `recent_2024_26` are among these ads (same boards): the two sources overlap and must never be added together.
   Bias to state: 65 employers that use a modern ATS, mostly technology companies, mostly Sydney and Melbourne.
+- **`jobspipe_2026`: the JobsPipe ads by role, every role its own block.** 85 ads per role were fetched on 16 Oct
+  (`fetch_jobspipe.py`): country AU, posted in the last 60 days, active, title containing one of the role's phrases
+  (`collection/jobspipe_totals_2026-10-16.csv`), management words excluded; the title is then checked with the
+  job-board rules (`classify_ats_roles.role_of`) and one row kept per company and title: 793 ads, 63
+  to 79 per role. The text is not committed (JobsPipe's terms forbid redistributing the data in bulk and
+  the text belongs to the employers), so the skills each ad names were found at fetch time with the same tier-1
+  matcher and committed per ad; `fetch_jobspipe.py --rehit` recomputes them from the raw file after a vocabulary
+  change. JobsPipe aggregates Indeed and LinkedIn postings itself; we used its API within its quota and keep the
+  link to every posting, as its terms ask. 209 of the 793 ads are from recruitment agencies
+  (`employer_type`), which repeat skill lists across clients. Overlaps with `ats_2026` are possible (ATS boards are
+  among JobsPipe's sources) and the two are never added together.
 - **`data_jobs_2023`**: the Australian rows, de-duplication and title map of `build_role_profiles.py`
   (senior titles fold into their role), and its denominator: the role's ads naming at least one tool (9,234
   of 10,925 ads). Each tool name maps to a vocabulary label: the 148 dictionary rows exactly as
@@ -144,8 +176,9 @@ with source, period, n and text type.
 - *When and where.* 2019-22 Seek, 2023 Google Jobs, January 2024 LinkedIn, 2026 public job boards of tech
   employers.
 - *Taxonomy rows are not demand.* They say what a classification lists for the occupation (ESCO is
-  European, O\*NET American), with no count; the app shows them as "core skills" for the roles without
-  Australian ads (QA/Test Engineer, DevOps/SRE, Network/Systems Administrator, Cybersecurity Analyst).
+  European, O\*NET American), with no count; the app showed them as "core skills" for the four roles without
+  Australian ads until JobsPipe counted them (C2); `backend.core_skills` stays as the fallback for a role
+  with no counted block.
 
 Checks (`tests/test_role_skill_demand.py`; numbers of 15 Oct):
 
