@@ -640,7 +640,7 @@ for role, r in role_table.sort_values("family").iterrows():
 
 # %% [markdown]
 # **What changed for Data Scientist.** The same role, the same matcher and vocabulary, two
-# periods: the 3,204 Seek ads of 2019-22 and the 71 JobsPipe ads of 2026. The seven technical
+# periods: the 3,204 Seek ads of 2019-22 and the JobsPipe ads of 2026 (n in the legend). The seven technical
 # skills that rose most, the five that fell most, and the four that lead both periods.
 
 # %%
@@ -701,18 +701,18 @@ print(f"self-study resources: {len(store)} from {store.provider.nunique()} provi
 # | 1b | 697 listings are re-listings | 2,507 unique texts; per-listing and per-ad rankings agree (section 3) | keep n = 3,204 listings, and say so |
 # | 2 | The extractor agrees with an independent one | median kappa 0.637 over 14 tools on all 3,204 ads | dictionary tier is a defensible baseline |
 # | 3 | The ranking is not a Seek artefact | rank correlation 0.75 with Glassdoor Australia (same years), 0.82 with LinkedIn US; 0.61 with LinkedIn Australia 2024, an engineer-heavy mix | demand_pct can stand for "the Data Scientist market" |
-# | 4 | The 2019-22 corpus predates LLMs | LLM-era skills in 1 of 3,204 ads -> 2.5% (Jan 2024) -> 7 of 9 data-scientist ads and 9 of 22 data roles (2026); rises within non-AI titles too | show the trend; flag LLM skills as emerging |
-# | 5 | 2026 is small and tech-heavy | 22 ads in the sample (60-day, 3 per employer), 9 of them data scientists; one ad = 11 points | keep 2019-22 as the weight; show 2026 as "n of 9" |
-# | 6 | Other roles need another source | the Seek corpus is Data Scientist titles only; 2023 tool lists (10,925 AU postings) give 6 more roles | role profiles from role_profiles.csv, tools only; Data Scientist keeps Seek |
-# | 7 | The curriculum names most demand | 24 of the top 25 technical skills named by at least one of 360 subjects, 15 in MDSI; Scala in none; Spark, Hadoop only in 94693; one student's reports cover 28 of the 61 technical skills the Handbook never names (section 7) | named is not taught in depth; external courses cover the 62 skills no subject names; add students' reports as a second source of what is taught |
+# | 4 | The LLM era arrived after 2022 | Data Scientist: large language models 0% (Seek 2019-22) -> 36% of 89 JobsPipe ads (2026), generative AI 26%, AI agents 22%; Spark, Hadoop, Scala fall (section 10); 61% of ML Engineer ads name LLMs | show the 2019-22 share as the trend; flag LLM skills as emerging |
+# | 5 | 2026 demand is large enough per role | JobsPipe: 1,932 ads, 89-216 per role (section 10); the 22-ad job-board sample of section 6 is kept for its trend only | weigh gaps by JobsPipe 2026 (match.DEMAND_PRIORITY); show n with every share (about +/-10 points) |
+# | 6 | Every role now has full-text ads | JobsPipe 2026 for all 11 roles, Seek 2020-21 for 10, 2023 tool lists for 7 (section 10) | role demand from role_skill_demand.csv; tool lists only as a cross-check |
+# | 7 | The curriculum names most demand | 24 of the top 25 technical skills named by at least one of 360 subjects, 15 in MDSI; Scala in none; Spark, Hadoop only in 94693; two students' reports cover 28 of the 61 technical skills the Handbook never names (section 7) | named is not taught in depth; external courses cover the 62 skills no subject names; add students' reports as a second source of what is taught |
 # | 8 | Subject text is uneven | assessment layer for 326 of 360 subjects; 9 MDSI subjects have no topic list, 3 have description only | thin subjects rank low for lack of text, not content |
 # | 9 | Few resumes look like data profiles | 125 of 2,481 with 2+ data skills; none in a data category | draw CV-JD pairs from those 125 only |
 # | 10 | ESCO reaches little of the modern stack | 36% of our dictionary maps; 716 ambiguous labels incl. "sql"; 145 skills Australian ads ask for are missing from ESCO or only broad there (section 10) | normalise() needs the emerging tag and a tie-break for ambiguous labels; the vocabulary keeps ESCO as the base and adds the rest with a reason |
-# | 11 | Eleven roles, three kinds of evidence | Data Scientist has full-text ads (Seek); 6 roles have 2023 tool lists; 4 have occupation taxonomies only (section 10) | show source, period, n and text type with every share; no percentage bars for the four taxonomy-only roles |
+# | 11 | Eleven roles, four kinds of evidence | full text (JobsPipe 2026, Seek), search counts (Adzuna), tool lists (data_jobs 2023), taxonomies (ESCO, O*NET); rankings agree across them at rho 0.40-0.97 (section 10) | show source, period, n and text type with every share; never compare shares across kinds |
 #
 # **Limitations to state in the report:** the main corpus is 2019-22 (Feb 2019 to
-# Jan 2022), Data Scientist titles only, and 22% re-listings; six other roles rest on 2023 tool lists and four on
-# taxonomies only; the 2026 sample is 22 ads (9 data scientists from 5 employers);
+# Jan 2022), Data Scientist titles only, and 22% re-listings; 2026 demand rests on 89-216 JobsPipe ads per role
+# (about +/-10 points), and the 2019-22 trend exists for Data Scientist only;
 # resumes are US 2021 and de-identified rather than anonymous; subject profiles come
 # from the public handbook and are uneven; matching is by keyword; ESCO coverage of the modern
 # stack is low.

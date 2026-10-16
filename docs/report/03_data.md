@@ -12,7 +12,7 @@ file named next to it; Appendix A lists every source with its licence, Appendix 
 
 | Source | What we use | Period | Role in Skillabus |
 |---|---|---|---|
-| JobsPipe API (LinkedIn, Indeed and job boards) | 793 Australian ads, 63–79 per role; skills and links only | Sep–Oct 2026 | demand for every role |
+| JobsPipe API (LinkedIn, Indeed and job boards) | 1,932 Australian ads, 89–216 per role; skills and links only | Sep–Oct 2026 | demand for every role |
 | Adzuna API; 65 employers' public job boards | live search counts per skill and role; 392 ads, 85 with a role | Oct 2026 | two more 2026 views |
 | Seek Australia (Kaggle, CC0) | 3,204 Data Scientist ads; 2,362 IT ads in 10 roles | 2019–22; 2020–21 | the trend before 2022 |
 | ESCO, O\*NET, Australian Skills Classification | core skills of each role's occupation; base of the vocabulary | 2021–26 | roles and normalisation |
@@ -66,31 +66,31 @@ section 7).
 
 | Role (ads) | Top skills |
 |---|---|
-| Data Scientist (71) | Python 80%, SQL 63%, Machine learning 62% |
-| Data Analyst (78) | SQL 69%, Data quality 53%, Data visualisation 46% |
-| Data Engineer (70) | SQL 87%, ETL 81%, Python 71% |
-| Machine Learning Engineer (69) | Artificial intelligence 87%, Python 80%, Cloud platforms 68% |
-| Software Engineer (73) | Cloud platforms 53%, Teamwork 52%, JavaScript 42% |
-| QA/Test Engineer (78) | Test automation 64%, Agile 51%, Teamwork 45% |
-| Cloud Engineer (63) | Cloud platforms 100%, Terraform 79%, Azure 75% |
-| DevOps/SRE (67) | Cloud platforms 81%, CI/CD 72%, Terraform 70% |
-| Network/Systems Administrator (77) | Documentation 52%, Teamwork 44%, Cloud platforms 43% |
-| Cybersecurity Analyst (68) | Cyber security 81%, Incident response 59%, Cloud platforms 53% |
-| Business Analyst (79) | Stakeholder management 73%, Requirements gathering 58%, Documentation 57% |
+| Data Scientist (89) | Python 82%, SQL 68%, Machine learning 67% |
+| Data Analyst (205) | SQL 68%, Data quality 58%, Data visualisation 56% |
+| Data Engineer (188) | SQL 85%, ETL 81%, Python 72% |
+| Machine Learning Engineer (204) | Artificial intelligence 78%, Python 72%, Cloud platforms 62% |
+| Software Engineer (195) | Teamwork 52%, Cloud platforms 44%, JavaScript 43% |
+| QA/Test Engineer (212) | Test automation 62%, Agile 49%, CI/CD 44% |
+| Cloud Engineer (101) | Cloud platforms 99%, Azure 75%, Terraform 73% |
+| DevOps/SRE (187) | Cloud platforms 83%, CI/CD 72%, Terraform 68% |
+| Network/Systems Administrator (203) | Documentation 56%, Cloud platforms 40%, Teamwork 40% |
+| Cybersecurity Analyst (132) | Cyber security 80%, Incident response 64%, Cloud platforms 55% |
+| Business Analyst (216) | Stakeholder management 76%, Requirements gathering 62%, Documentation 58% |
 
 ![Data Scientist skills, 2019–22 against 2026](../figures/fig4_ds_2019_vs_2026.png)
 
-*Figure 3.1. Share of Data Scientist ads naming each skill: 3,204 Seek ads of 2019–22 against 71
+*Figure 3.1. Share of Data Scientist ads naming each skill: 3,204 Seek ads of 2019–22 against 89
 JobsPipe ads of 2026, same matcher and vocabulary. Labels give the 2026 share.*
 
 Figure 3.1 shows the shift that motivates Skillabus. The core holds: Python, SQL and statistics
 are asked for as often in 2026 as in 2019–22. Around it, the LLM era has arrived: large language
-models went from no ad to 34% of Data Scientist ads (95% Wilson interval 24–45%), generative AI to
-22% and AI agents to 20%, while Hadoop and Scala fell from 18% and 16% to one ad each. The shift
-is not limited to data scientists: 61% of Machine Learning Engineer ads name large language models,
-and 10% of Software Engineer ads do. With about 70 ads per role, one ad moves a share by 1.4
-points and the intervals are about ±11 points, so we report directions and large differences
-only.
+models went from no ad to 36% of Data Scientist ads (95% Wilson interval 27–46%), generative AI to
+26% and AI agents to 22%, while Spark fell from 26% to 9% and Hadoop and Scala from 18% and 16% to
+2% and 1%. The shift is not limited to data scientists: 61% of Machine Learning Engineer ads name
+large language models, and 12% of Software Engineer ads do. With 89 Data Scientist ads, one ad
+moves a share by 1.1 points and the intervals are about ±10 points, so we report directions and
+large differences only.
 
 ## 3.6 Can the counts be trusted?
 
@@ -101,7 +101,7 @@ median kappa of 0.637 over 14 tools; most disagreements are the author's flags f
 that never name the tool. Rankings hold across platforms and periods: rank correlation 0.75
 with Glassdoor Australia and 0.82 with LinkedIn US, and 0.40–0.97 between live Adzuna counts and
 the 2023 tool lists of seven roles (Table A.3). Shares from different kinds of source are not
-comparable, though: Python is in 80% of 2026 Data Scientist ads but 59% of 2023 tool lists, so
+comparable, though: Python is in 82% of 2026 Data Scientist ads but 59% of 2023 tool lists, so
 the app always shows a share with its source, period and number of ads. Limits of the data are
 in section 7.
 

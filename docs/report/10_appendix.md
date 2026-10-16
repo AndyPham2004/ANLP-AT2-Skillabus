@@ -12,7 +12,7 @@
 
 | Source | What we use | Period | Role in Skillabus | Licence or terms |
 |---|---|---|---|---|
-| JobsPipe API (aggregates LinkedIn, Indeed, Workday and 11 job-board platforms) | 793 Australian ads, 63–79 per role, 11 roles; skills found and link only | 23 Sep – 16 Oct 2026 | main demand for every role | API terms: ad text not redistributed, link kept |
+| JobsPipe API (aggregates LinkedIn, Indeed, Workday and 11 job-board platforms) | 1,932 Australian ads, 89–216 per role, 11 roles; skills found and link only | 1 Sep – 16 Oct 2026 | main demand for every role | API terms: ad text not redistributed, link kept; one free account per person (three members' own accounts) |
 | Adzuna API | live search counts: 11 role totals, 162 skill × role counts | 16 Oct 2026 | second 2026 view; rank check | API terms (counts only) |
 | Public job boards of 65 employers (Greenhouse, Lever, SmartRecruiters, Ashby, Workable) | 392 ads posted within 60 days, 85 with a role | Oct 2026 | third 2026 view | employers' public ads |
 | Seek Australia, Data Scientist (nomilk, 2022) | 3,204 listings, full text | Feb 2019 – Jan 2022 | Data Scientist trend | CC0 |
@@ -30,24 +30,24 @@
 | Official course, tutorial and certification pages | 56 outside courses, 250 self-study resources, 49 certifications (19 vendors) | Oct 2026 | outside courses, self-study, certifications | links and our own summaries |
 | Resume Dataset (snehaanbhawal, 2021) | 2,481 resumes, 24 categories | 2021 | test inputs, CV–JD pairs | CC0 |
 
-**Table A.2.** Ads per role and source in `data/2_demand/role_skill_demand.csv` (4,143 rows; notebook section 10). The app
+**Table A.2.** Ads per role and source in `data/2_demand/role_skill_demand.csv` (4,494 rows; notebook section 10). The app
 reads the first source that has the role, in the order JobsPipe 2026, Adzuna 2026, job boards 2026, data_jobs 2023,
 Seek 2019–22 (`match.DEMAND_PRIORITY`); today that is JobsPipe for all 11 roles. The 2026 job-board ads form three blocks
 of 30+ ads: Software Engineer 33, data roles (mixed) 26 and IT roles (mixed) 26.
 
 | Family | Role | JobsPipe 2026 | Adzuna 2026 | Seek 2020–21 | data_jobs 2023 | Seek 2019–22 |
 |---|---|---|---|---|---|---|
-| Data & AI | Data Scientist | 71 | 171 | 30 | 1,047 | 3,204 |
-| Data & AI | Data Analyst | 78 | 290 | 145 | 1,362 | – |
-| Data & AI | Data Engineer | 70 | 811 | 59 | 4,438 | – |
-| Data & AI | Machine Learning Engineer | 69 | 62 | – | 263 | – |
-| Software | Software Engineer | 73 | 1,171 | 944 | 1,198 | – |
-| Software | QA/Test Engineer | 78 | 105 | 174 | – | – |
-| Cloud & infrastructure | Cloud Engineer | 63 | 395 | 43 | 350 | – |
-| Cloud & infrastructure | DevOps/SRE | 67 | 330 | 130 | – | – |
-| Cloud & infrastructure | Network/Systems Administrator | 77 | 210 | 269 | – | – |
-| Security | Cybersecurity Analyst | 68 | 139 | 179 | – | – |
-| Business analysis | Business Analyst | 79 | 876 | 389 | 576 | – |
+| Data & AI | Data Scientist | 89 | 171 | 30 | 1,047 | 3,204 |
+| Data & AI | Data Analyst | 205 | 290 | 145 | 1,362 | – |
+| Data & AI | Data Engineer | 188 | 811 | 59 | 4,438 | – |
+| Data & AI | Machine Learning Engineer | 204 | 62 | – | 263 | – |
+| Software | Software Engineer | 195 | 1,171 | 944 | 1,198 | – |
+| Software | QA/Test Engineer | 212 | 105 | 174 | – | – |
+| Cloud & infrastructure | Cloud Engineer | 101 | 395 | 43 | 350 | – |
+| Cloud & infrastructure | DevOps/SRE | 187 | 330 | 130 | – | – |
+| Cloud & infrastructure | Network/Systems Administrator | 203 | 210 | 269 | – | – |
+| Security | Cybersecurity Analyst | 132 | 139 | 179 | – | – |
+| Business analysis | Business Analyst | 216 | 876 | 389 | 576 | – |
 
 **Table A.3.** Do skill rankings agree across sources? Spearman rank correlation over the skills both name
 (`data/5_crosscheck/`; notebook section 5).
@@ -188,8 +188,8 @@ truncates the `C#` row.
 
 | File | Rows | One row = | Key columns |
 |---|---|---|---|
-| `role_skill_demand.csv` | 4,143 | **the one demand table**: one skill for one role from one source and period | `role`, `skill_id`, `skill`, `source`, `period`, `text_type`, `n_ads`, `total_ads`, `pct`, `pct_low`, `pct_high` |
-| `ads/jobspipe_2026_skills.csv` | 793 | one JobsPipe ad of Sep-Oct 2026, **without its text** | `role`, `title`, `company`, `date_posted`, `employer_type`, `url`, `skills` |
+| `role_skill_demand.csv` | 4,494 | **the one demand table**: one skill for one role from one source and period | `role`, `skill_id`, `skill`, `source`, `period`, `text_type`, `n_ads`, `total_ads`, `pct`, `pct_low`, `pct_high` |
+| `ads/jobspipe_2026_skills.csv` | 1,932 | one JobsPipe ad of Sep-Oct 2026, **without its text** | `role`, `title`, `company`, `date_posted`, `employer_type`, `url`, `skills` |
 | `ads/seek_2020_21_skills.csv` | 2,366 | one Seek Australia IT ad of 2020–21, **without its text** | `role`, `title`, `company`, `url`, `skills` |
 | `ads/ats_2026_clean.csv` | 392 | one ad from 65 employers' job boards, Oct 2026, with a role | `company`, `title`, `role`, `posted`, `description`, `url` |
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 | one Seek Data Scientist ad, glued words repaired | ad text |
