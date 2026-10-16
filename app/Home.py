@@ -13,6 +13,7 @@ from __future__ import annotations
 import csv
 import io
 import os
+import re
 import threading
 
 import pandas as pd
@@ -820,7 +821,11 @@ def page_results() -> None:
 def resume_note(s: dict) -> str:
     label = s["skill_label"]
     if s["status"] == "have":
-        return s.get("resume_evidence") or f"Your resume mentions {lc(label)}."
+        ev = s.get("resume_evidence") or ""
+        taken = re.match(r"From (\d{5,6}) (.+?) \(taken\)$", ev)      # credit_taken(): "From 94692 Data Science Practice (taken)"
+        if taken:
+            return f"Covered by {taken.group(2)}, a subject you have taken."
+        return ev or f"Your resume mentions {lc(label)}."
     if s["status"] == "partial":
         return f"Your resume says: “{s.get('resume_evidence', '')}” — related, not quite the same skill."
     if ss.user_type == "elective":
@@ -905,8 +910,14 @@ def page_evidence() -> None:
         if s.get("found_by") == "llm":
             st.caption("Found by the GPT-4o-mini tier; our dictionary does not list it, so it has no demand bar.")
     with right:
-        uts_block(s["skill_label"], res)
-        self_study_block(s["skill_label"], role)
+        if s["status"] == "have":
+            st.markdown(ui.eyebrow("Nothing to learn here"), unsafe_allow_html=True)
+            st.markdown("<div class='k-serif k-soft' style='font-size:18px;line-height:1.5'>You already have this skill, "
+                        "so it is not part of your path. Pick a missing or partial skill to see where to learn it.</div>",
+                        unsafe_allow_html=True)
+        else:
+            uts_block(s["skill_label"], res)
+            self_study_block(s["skill_label"], role)
 
 
 # ---------------------------------------------------------------- the subject dialog
