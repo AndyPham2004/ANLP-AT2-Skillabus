@@ -1,0 +1,11 @@
+role,title_query,title_not,country,max_age_days,posted_at_lte,posted_at_gte,total_results,fetched,date,kept
+QA/Test Engineer,test analyst|test engineer|qa engineer|software tester|test automation,manager|director|head of|chief|vice president,AU,60,2026-09-23,2026-09-01,133,99,2026-10-17b,76
+Network/Systems Administrator,systems administrator|system administrator|network administrator|network engineer,manager|director|head of|chief|vice president,AU,60,2026-09-29,2026-09-01,273,99,2026-10-17b,72
+Cybersecurity Analyst,security analyst|cyber security analyst|cybersecurity analyst|soc analyst|security operations,manager|director|head of|chief|vice president,AU,60,2026-09-07,2026-09-01,18,18,2026-10-17b,15
+DevOps/SRE,devops|site reliability,manager|director|head of|chief|vice president,AU,60,2026-09-25,2026-09-01,173,99,2026-10-17b,64
+Cloud Engineer,cloud engineer,manager|director|head of|chief|vice president,AU,60,2026-09-01,2026-09-01,0,0,2026-10-17b,0
+Business Analyst,business analyst,manager|director|head of|chief|vice president,AU,60,2026-10-07,2026-09-01,643,99,2026-10-17b,77
+Data Engineer,data engineer,manager|director|head of|chief|vice president,AU,60,2026-10-05,2026-09-01,315,99,2026-10-17b,64
+Data Analyst,data analyst,manager|director|head of|chief|vice president,AU,60,2026-09-22,2026-09-01,90,90,2026-10-17b,74
+Machine Learning Engineer,machine learning engineer|ml engineer|ai engineer,manager|director|head of|chief|vice president,AU,60,2026-09-22,2026-09-01,127,99,2026-10-17b,75
+Software Engineer,software engineer|software developer,manager|director|head of|chief|vice president,AU,60,2026-10-08,2026-09-01,984,99,2026-10-17b,70

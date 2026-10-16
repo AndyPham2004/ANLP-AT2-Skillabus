@@ -56,8 +56,15 @@ def retrieve(question: str, k: int = 5) -> list[dict]:
         r = lay.iloc[i]
         out.append({"text": r.text, "score": float(sims[i]),
                     "source": f"{r.subject_code} {r.subject_name} ({LAYER_NAME.get(r.layer, r.layer)})",
-                    "url": r.source_url})
+                    "url": r.source_url, "subject_name": r.subject_name, "layer": r.layer})
     return out
+
+
+def source_name(p: dict) -> str:
+    """'Applied Natural Language Processing (topic)': what a student reads, without the subject code."""
+    if p.get("subject_name"):
+        return f"{p['subject_name']} ({LAYER_NAME.get(p.get('layer'), p.get('layer') or 'Handbook')})"
+    return p["source"]
 
 
 def has_llm() -> bool:
@@ -69,9 +76,9 @@ def answer(question: str, gap: dict | None) -> tuple[str, list[dict]]:
     passages = retrieve(question)
     if not passages:
         return ("I couldn't find anything about that in the UTS Handbook text I have. "
-                "Try naming a skill or a subject code."), []
+                "Try naming a skill or a subject."), []
     if not has_llm():
-        lines = [f"- **{p['source']}**: {p['text']}" for p in passages[:3]]
+        lines = [f"- **{source_name(p)}**: {p['text']}" for p in passages[:3]]
         return "Here's what the Handbook says:\n\n" + "\n".join(lines), passages
 
     from openai import OpenAI
@@ -80,15 +87,17 @@ def answer(question: str, gap: dict | None) -> tuple[str, list[dict]]:
     if gap:
         missing = [s["skill_label"] for s in gap["skills"] if s["status"] != "have"]
         gaps = f"The student's skill gaps for their target role: {', '.join(missing) or 'none'}.\n"
-    context = "\n".join(f"[{i + 1}] {p['source']}: {p['text']}" for i, p in enumerate(passages))
+    # Names, not codes, so the answer names subjects the way the rest of the app does.
+    context = "\n".join(f"[{i + 1}] {source_name(p)}: {p['text']}" for i, p in enumerate(passages))
     resp = OpenAI().chat.completions.create(
         model=MODEL,
         temperature=0.2,
         messages=[
             {"role": "system", "content": (
                 "You help UTS data science students choose subjects. Answer only from the numbered "
-                "Handbook passages. Cite them like [1]. If the passages do not answer the question, "
-                "say so. Two to four sentences. Suggestions, not advice.")},
+                "Handbook passages. Cite them like [1] at the end of a sentence; do not write the word "
+                "\"passage\". If the passages do not answer the question, say so. Two to four sentences. "
+                "Suggestions, not advice.")},
             {"role": "user", "content": f"{gaps}Passages:\n{context}\n\nQuestion: {question}"},
         ],
     )
