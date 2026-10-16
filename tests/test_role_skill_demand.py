@@ -10,9 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data-eda" / "src")
 
 import build_role_profiles as brp  # noqa: E402
 from build_role_skill_demand import (  # noqa: E402
-    ATS_PERIOD, COLUMNS, COUNTED, EXTRA_TOKEN_MAP, IT_MIXED_FAMILY, IT_MIXED_ROLE, MIN_ROLE_ADS, MIXED_FAMILY,
-    MIXED_ROLE, SOURCES, TEXT_TYPE, adzuna_rows, ats_rows, committed_inputs, data_jobs_rows, load_data_jobs,
-    recent_rows, seek_rows, taxonomy_rows, to_frame, to_label, tool_lookup,
+    ATS_PERIOD, COLUMNS, COUNTED, EXTRA_TOKEN_MAP, IT_MIXED_FAMILY, IT_MIXED_ROLE, JOBSPIPE_PERIOD, MIN_ROLE_ADS,
+    MIXED_FAMILY, MIXED_ROLE, SOURCES, TEXT_TYPE, adzuna_rows, ats_rows, committed_inputs, data_jobs_rows, jobspipe_rows,
+    load_data_jobs, recent_rows, seek_rows, taxonomy_rows, to_frame, to_label, tool_lookup,
 )
 from build_vocabulary import read_table, read_table_text, to_csv_text  # noqa: E402
 from recount_recent import wilson  # noqa: E402
@@ -57,6 +57,7 @@ def test_columns_and_allowed_values():
     assert set(TABLE.role) <= set(FAMILIES) | {MIXED_ROLE, IT_MIXED_ROLE}
     assert (TABLE.role_family == TABLE.role.map({**FAMILIES, MIXED_ROLE: MIXED_FAMILY, IT_MIXED_ROLE: IT_MIXED_FAMILY})).all()
     assert set(TABLE.period[TABLE.source == "ats_2026"]) == {ATS_PERIOD}
+    assert set(TABLE.period[TABLE.source == "jobspipe_2026"]) == {JOBSPIPE_PERIOD}
     assert not TABLE.duplicated(["role", "skill_id", "source", "period"]).any()
     assert set(TABLE.period[TABLE.source == "recent_2024_26"]) == {"2024-01", "2026"}
 
@@ -258,6 +259,22 @@ def test_committed_ats_file_has_roles_and_masked_text():
     assert (age.dropna() <= 60).all() and not ats.duplicated(["company", "title"]).any()      # the 60-day rule
 
 
+def test_jobspipe_blocks_cover_every_role_from_the_committed_skills_file():
+    jp = INPUTS["jobspipe"]
+    assert list(jp.columns) == ["ad_id", "role", "title", "company", "location", "date_posted", "employer_type", "seniority",
+                                "providers", "url", "n_chars", "skills", "esco_tags"]
+    assert set(jp.role) == set(FAMILIES) and (jp.role.value_counts() >= MIN_ROLE_ADS).all()   # every role its own block
+    assert not jp.duplicated("ad_id").any() and not jp.duplicated(["company", "title"]).any()
+    assert jp.url.str.startswith("http").all()                                                 # the link to the posting
+    blocks = COUNTS[COUNTS.source == "jobspipe_2026"].groupby("role").total_ads.first().astype(int).to_dict()
+    assert blocks == jp.role.value_counts().to_dict()
+    small = pd.DataFrame({"role": ["Data Scientist"] * 2 + ["Cloud Engineer"] * 3, "skills": ["Python|SQL"] * 2 + ["AWS"] * 3})
+    rows, _ = jobspipe_rows(VOCAB, small, FAMILIES)
+    assert pd.DataFrame(rows).groupby("role").total_ads.first().to_dict() == {MIXED_ROLE: 2, IT_MIXED_ROLE: 3}
+    with pytest.raises(ValueError):
+        jobspipe_rows(VOCAB, pd.DataFrame({"role": ["Data Scientist"], "skills": ["Not a skill"]}), FAMILIES)
+
+
 def test_committed_seek_recent_adzuna_and_taxonomy_rows_are_what_the_builder_writes():
     v, f = VOCAB, FAMILIES
     assert committed("seek_2019_22").equals(rebuilt(seek_rows(v, INPUTS["seek"], f["Data Scientist"])))
@@ -266,6 +283,7 @@ def test_committed_seek_recent_adzuna_and_taxonomy_rows_are_what_the_builder_wri
     assert committed(["esco_occupation", "onet"]).equals(rebuilt(tax))
     assert committed("adzuna_2026").equals(rebuilt(adzuna_rows(v, INPUTS["adzuna"], f)))
     assert committed("ats_2026").equals(rebuilt(ats_rows(v, INPUTS["ats"], f)[0]))
+    assert committed("jobspipe_2026").equals(rebuilt(jobspipe_rows(v, INPUTS["jobspipe"], f)[0]))
 
 
 def test_committed_data_jobs_rows_are_what_the_builder_writes():
