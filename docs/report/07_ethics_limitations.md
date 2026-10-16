@@ -6,7 +6,8 @@
 published Kaggle datasets and 2026 ads from APIs. JobsPipe aggregates LinkedIn and Indeed postings
 under its own licence, which forbids redistributing their text and allows one free account per
 person: we store only the skills found in each ad and its link, and used three members' own
-accounts. The UTS Handbook's `robots.txt` disallows crawling; we read its public pages one request
+accounts. How JobsPipe collects postings from platforms that forbid scraping is outside our
+control. The UTS Handbook's `robots.txt` disallows crawling; we read its public pages one request
 at a time, at least 1.2 seconds apart. Students reported their subjects' skills by name only; no
 Canvas material is stored.
 
@@ -33,7 +34,7 @@ students to confirm choices with their course coordinator.
 4. **Uneven subject text:** nine MDSI subjects have no topic list, two students reported, and
    "named" is not "taught in depth".
 5. **Course level:** the home course is used for admission rules, not subject level, so an MDSI
-   student's paths include 12 subjects listed only in bachelor courses (#156).
+   student's paths include 12 subjects listed only in bachelor courses.
 6. **No user test:** the planned test with five classmates did not happen, so ease of use is
    judged by the team only (section 8).
 7. **Demand is not outcome:** ads show what employers ask for, not who is hired.

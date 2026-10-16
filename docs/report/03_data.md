@@ -83,8 +83,8 @@ section 7).
 *Figure 3.1. Share of Data Scientist ads naming each skill: 3,204 Seek ads of 2019–22 against 89
 JobsPipe ads of 2026, same matcher and vocabulary. Labels give the 2026 share.*
 
-Figure 3.1 shows the shift that motivates Skillabus. The core holds: Python, SQL and statistics
-are asked for as often in 2026 as in 2019–22. Around it, the LLM era has arrived: large language
+Figure 3.1 shows the shift that motivates Skillabus. The core holds: Python stays above 80%, and SQL
+and statistics grow (to 68% and 62%, from 56%). Around it, the LLM era has arrived: large language
 models went from no ad to 36% of Data Scientist ads (95% Wilson interval 27–46%), generative AI to
 26% and AI agents to 22%, while Spark fell from 26% to 9% and Hadoop and Scala from 18% and 16% to
 2% and 1%. The shift is not limited to data scientists: 61% of Machine Learning Engineer ads name
@@ -95,8 +95,8 @@ large differences only.
 ## 3.6 Can the counts be trusted?
 
 Two annotators labelled the same 20 ads independently and agree with a Cohen's kappa of 0.856 on
-dictionary skills (0.686 including free-text labels), so the test labels in section 6 are
-reliable. On the Seek ads, our matcher agrees with the dataset author's own tool flags with a
+dictionary skills (0.686 including free-text labels), so the test labels in section 6 agree
+well. On the Seek ads, our matcher agrees with the dataset author's own tool flags with a
 median kappa of 0.637 over 14 tools; most disagreements are the author's flags firing on ads
 that never name the tool. Rankings hold across platforms and periods: rank correlation 0.75
 with Glassdoor Australia and 0.82 with LinkedIn US, and 0.40–0.97 between live Adzuna counts and
