@@ -162,6 +162,8 @@ Computed by `apply_hot_rule()` in `data-eda/src/count_cert_adzuna.py`, after the
 - Rule 1 is per role so that a Business Analyst certificate is compared with Business Analyst certificates, not with
   AWS. Re-running the counter on a later day moves the old count to `au_ads_count_prev` and gives the trend.
 
+**Counts of 16 Oct 2026** (Van Thong, `count_cert_adzuna.py`, 50 calls; 254,546 live Australian ads on Adzuna): **28 of 49 are hot**: 24 by rule 1 and 4 by the report signal alone (CompTIA Network+, CompTIA Security+, Google Cloud Professional Cloud Architect, AWS Certified Security - Specialty). Most asked: ITIL Foundation 1,338 ads, CISSP 511, CISM 359, CISA 257, CCNA 227, CompTIA A+ 201. Six certificates have 0 ads (DP-100, Associate Data Practitioner, CompTIA Cloud+, KCNA, Tableau Certified, PSPO I). Short codes can catch other words: "CISA" is also the US cyber agency, so its count may be a little high.
+
 ## How to count on Adzuna (Van Thong)
 
 1. Put the key in `.env` at the repo root (copy `.env.example`): `ADZUNA_APP_ID=...` and `ADZUNA_APP_KEY=...`.

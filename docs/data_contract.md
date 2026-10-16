@@ -13,20 +13,22 @@ and Phuong Nhi**.
   "skill_label": "deep learning",
   "vocab": "esco",
   "method": "dictionary",
-  "sentence": "In-depth knowledge of deep learning, Generative AI and other advanced AI technologies."
+  "sentence": "In-depth knowledge of deep learning, Generative AI and other advanced AI technologies.",
+  "requirement": "required"
 }
 ```
 
 | Field | Values |
 |---|---|
-| `skill_id` | `esco:<uri>`, `lightcast:<id>`, `emerging:<slug>` when neither vocabulary has it, or `seed:<slug>` for a dictionary skill (`skills_seed_v2.csv`) not yet linked to ESCO |
-| `vocab` | `esco`, `seed` (a dictionary skill ESCO words differently), `lightcast`, `emerging` |
-| `canonical` | The dictionary name (`skills_seed_v2.csv`) when the phrase is one of its aliases, else `null`; used for demand lookups. Set by `extract()` (tiers 1-2, including forms the alias list lacks, such as "REST APIs"); `normalise()` keeps it and fills it only when it is missing |
+| `skill_id` | For a vocabulary skill (`data/1_knowledge/skills/skills_vocabulary.csv`), its `skill_id` column: the ESCO id when `esco_match` is `exact`, else `skillabus:<slug>`. Outside the vocabulary: `esco:<uri>`, `lightcast:<id>`, or `emerging:<slug>` when neither vocabulary has it |
+| `vocab` | `esco`, `seed` (a vocabulary skill whose ESCO match is close or broad, so it keeps its own `skillabus:` id), `lightcast`, `emerging` (includes vocabulary skills ESCO lacks: `esco_match` = `none`) |
+| `canonical` | The vocabulary `label` (rows with `extract` in `used_for`) when the phrase is one of its `aliases_ads`, else `null`; used for demand lookups. Set by `extract()` (tiers 1-2, including forms the alias list lacks, such as "REST APIs"); `normalise()` keeps it and fills it only when it is missing |
 | `how` | Which normalisation step matched: `dictionary`, `esco_exact`, `esco_embed`, `lightcast`, `emerging` |
 | `similarity` | Cosine to the ESCO label for `esco_embed`, else `null` |
 | `kind` | LLM tier only: `hard` or `soft` |
 | `method` | `dictionary`, `ner`, `llm` |
 | `sentence` | The full sentence the skill came from; this is the evidence shown in the app |
+| `requirement` | `required`, `preferred`, or `""` when the ad does not say (D14). From a cue in the sentence ("must", "essential" / "desirable", "nice to have", "not required"), else from the heading the sentence sits under ("Essential criteria:", "Nice to have:"); a preferred cue wins over a required one |
 
 ## 2. The gap result: output of `match()` + `recommend()`, input of the app
 
@@ -123,7 +125,7 @@ and Phuong Nhi**.
 | `plan` | The same subjects over sessions, earliest first: each goes in the first session after its prerequisites (`after`) that teaches it, starting from the next session (`recommend(start=...)`). `unverified`: the access-conditions site has no record, so "no prerequisite" is not confirmed |
 | `dropped` | Subjects that teach a gap but the student cannot take: not taught in 2026, an antirequisite, admission into another course, or prerequisites they cannot meet in time. Never in `recommendations`. `reason` is short text for the app |
 | `outside` | Second tier (ideas doc 4.5): outside courses for the gaps the UTS path leaves open, chosen by the same greedy cover, at most three. `gaps_open_before` = gaps the UTS path left open; `gaps_closed` = how many of those the courses close; `demand_covered_pct` = UTS path **plus** these courses, over all gaps (the UTS-only figure stays in `learning_path.demand_covered_pct`). No UTS credit |
-| `outside_recommendations` | The chosen courses first, then the next best, at most six. Same fields as a recommendation plus `provider` and `cost` (`free`, `free-to-audit`, `paid`); no `needs` or `offered`. Empty when `external_courses.csv` is missing |
+| `outside_recommendations` | The chosen courses first, then the next best, at most six. Same fields as a recommendation plus `provider`, `cost` (`free`, `free-to-audit`, `paid`) and `cost_aud` (the A$ price from `resources.csv`, `null` when none); no `needs` or `offered`. Read from `external_courses.csv` and `resource_modules.csv` together; a course counts for a gap only when its `skills` in `resources.csv` list it. Empty when neither file exists |
 
 Who can enrol (`src/skillabus/requisites.py`, from `prerequisites.csv` and `offerings.csv`): an admission or
 credit-point item counts as met only when its text names the student's course (C04372); a subject-code item

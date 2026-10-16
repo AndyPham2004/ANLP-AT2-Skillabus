@@ -11,6 +11,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from skillabus import paths
 import skillabus.recommend as recommend_module
 import skillabus.requisites as requisites_module
 import skillabus.similarity as similarity_module
@@ -66,6 +67,8 @@ def test_result_follows_the_data_contract(method):
         assert all(e["layer"] in ("learning_objective", "assessment", "weekly_topic", "description")
                    and e["text"] for e in rec["evidence"])
     assert max(rec["score"] for rec in result["recommendations"]) == 1.0
+    codes = [rec["subject_code"] for rec in result["recommendations"]]
+    assert len(codes) == len(set(codes))                   # each subject once (#125)
     path = result["learning_path"]
     assert set(path) == {"subjects", "gaps_closed", "gaps_total", "demand_covered_pct", "plan", "dropped", "outside"}
     assert len(path["subjects"]) <= MAX_PATH and path["gaps_total"] == len(gaps)
@@ -223,6 +226,39 @@ def test_at_most_three_outside_courses_and_none_without_the_file():
     none = recommend(poster_gaps(), PROFILES, method="keyword", start=START, external_csv="")
     assert none["outside_recommendations"] == [] and none["learning_path"]["outside"]["courses"] == []
     assert none["learning_path"]["outside"]["demand_covered_pct"] == none["learning_path"]["demand_covered_pct"]
+
+
+def test_an_outside_course_counts_only_for_the_skills_it_is_tagged_with(monkeypatch):
+    """resources.csv lists what each course teaches; a passing mention in its text does not count."""
+    fixture_courses = {row["subject_code"] for row in recommend_module.load_profiles(
+        str(ROOT / "tests/fixtures/external_courses_sample.csv"))[0]}
+    tagged = {code: frozenset({"transformers"}) for code in fixture_courses}   # none lists LLMs
+    monkeypatch.setattr(recommend_module, "_course_skills", lambda: tagged)
+    result = recommend(poster_gaps(), PROFILES, method="keyword", start=START)
+    assert result["learning_path"]["outside"]["courses"] == []
+    assert result["learning_path"]["outside"]["still_open"] == ["Large language models"]
+
+
+def test_profiles_can_be_several_files_read_as_one(tmp_path):
+    header = "subject_code,subject_name,course,layer,text,source_url,collected_by\n"
+    one, two = tmp_path / "one.csv", tmp_path / "two.csv"
+    one.write_text(header + "EXT-A,A,external,description,Learn Python here.,u,x\n", encoding="utf-8")
+    two.write_text(header + "EXT-B,B,external,description,Learn SQL here.,u,x\n", encoding="utf-8")
+    rows, named, _ = recommend_module.load_profiles([str(one), str(two)])
+    assert [r["subject_code"] for r in rows] == ["EXT-A", "EXT-B"] and "SQL" in named[1]
+    assert recommend_module.load_profiles(str(one))[0] == rows[:1]
+
+
+def test_real_outside_courses_skip_passing_mentions():
+    """The real resource files: a Scala course asking for "Java or C#" is not a C# course, and
+    a T-SQL course naming "Azure SQL Database" is not an Azure course; a paid course shows its price."""
+    files = (paths.EXTERNAL_COURSES, paths.RESOURCE_MODULES)
+    gaps = ["C#", "C++", "React", "Azure"]
+    recs, _ = recommend_module.outside(gaps, {g: 10.0 for g in gaps}, external_csv=files, method="keyword")
+    tags = recommend_module._course_skills()
+    assert recs and all(label.lower() in tags[r["subject_code"]] for r in recs for label in r["covers"])
+    assert not {"EXT-COURSERA-SCALA-FP", "EXT-MSLEARN-TSQL"} & {r["subject_code"] for r in recs}
+    assert recommend_module._course_cost_aud()["EXT-COURSERA-ECONOMETRICS"] == 162.0
 
 
 def test_greedy_takes_the_largest_uncovered_demand_first():

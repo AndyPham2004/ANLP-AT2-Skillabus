@@ -133,7 +133,16 @@ TF-IDF (unigrams and bigrams, cosine ≥ 0.35) as the traditional baseline, `all
 (cosine ≥ 0.55) as the newer method. The embedding threshold was set by reading the closest non-naming rows on 429
 Handbook rows: at 0.55 the kept rows were mostly real paraphrases TF-IDF scored near zero ("Classification and
 prediction" for machine learning), while TF-IDF's extra matches shared misleading words ("Machine Translation" for machine
-learning). The deployed app runs TF-IDF (no PyTorch on the free host); section 6 reports both.
+learning). We rechecked the threshold on 15 Oct with 12 IT skills outside the test pairs (Java to Data security) over all
+6,853 rows (`data/3_tuning/t1_it_unnamed_rows.csv`: every non-naming row at cosine ≥ 0.50 and the closest ones down to
+0.40, 63 rows judged by hand). At 0.55, 6 of 6 rows are right; at 0.50, 24 of 25, with 18 more relevant rows. But 23 of
+those 25 rows are Data security rows from cybersecurity subjects: the other 11 skills give two (REST web services for API
+development, both right), and none reaches 0.55. Tool names such as Kubernetes or Terraform never get there, because the
+Handbook describes concepts ("Automating Your Infrastructure"), so IT tools are found almost only when a row names them.
+The IT rows alone would allow 0.50, but they rest on one skill, the threshold is one for all skills, and the data-skill
+check above found 0.50 too loose, so we kept 0.55. Below 0.50 the errors are clear: "CI/CD" lands on *Computational
+Intelligence* (an acronym clash, 0.48) and Java on object-oriented programming in general (0.50). The deployed app runs
+TF-IDF (no PyTorch on the free host); section 6 reports both.
 
 A row's score is its similarity (1.0 when it names the skill) times its layer weight (learning objective 1.0, assessment
 0.9, weekly topic 0.8, description 0.5). A subject's strength is its best row, +0.15 per further row (at most three),
@@ -153,9 +162,12 @@ student cannot enrol in). The path is then laid out over Autumn and Spring sessi
 per place breaks the (1 − 1/e) guarantee of plain greedy, which holds for unit costs only; with three places this is a
 small price for a path the student can actually take.
 
-**Outside courses.** The gaps the UTS path leaves open get a second greedy pass, over 56 free or free-to-audit courses from
-42 providers (`external_courses.csv`), at most three, never mixed with UTS subjects in one pass (a short course aimed at one
-skill would push subjects out). For the Robert Walters ad and the sample resume, the UTS path is 36106 → 36121 → 32130
+**Outside courses.** The gaps the UTS path leaves open get a second greedy pass, over 248 self-study resources from 145
+providers (`external_courses.csv` and `resource_modules.csv`; 237 free, 9 free-to-audit, 2 paid with the A$ price shown),
+at most three, never mixed with UTS subjects in one pass (a short course aimed at one skill would push subjects out). A
+course counts for a gap only when its hand-checked skill list (`resources.csv`) names the gap: matching the text alone
+picked courses that mention a skill in passing ("Sign up for an AWS account" in a Redshift course, a Scala course whose
+entry requirement is "Java or C#", "Search for Similar Vectors" for *attack vectors*). For the Robert Walters ad and the sample resume, the UTS path is 36106 → 36121 → 32130
 (5 of 6 gaps, 87.9% of the demand, with the 2026 counts of 15 Oct; 36106 → 32130 → 36121 and 88.3% with those of 13 Oct)
 and the Hugging Face LLM Course closes the last gap.
 

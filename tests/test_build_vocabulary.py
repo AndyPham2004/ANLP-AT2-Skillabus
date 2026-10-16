@@ -127,6 +127,17 @@ def test_added_rows_take_no_mention_from_a_dictionary_skill():
     assert all(a == (t & dictionary) for a, t in zip(alone, together))
 
 
+def test_pl_sql_is_the_only_alias_two_skills_share():
+    """PL/SQL is Oracle's SQL, so it counts for both on purpose (#93); any other shared alias is a mistake."""
+    owners = {}
+    for label, cell in zip(EXTRACT.label, EXTRACT.aliases_ads):
+        for alias in {a.strip().casefold() for a in cell.split("|") if a.strip()}:
+            owners.setdefault(alias, set()).add(label)
+    assert {a: o for a, o in owners.items() if len(o) > 1} == {"pl/sql": {"SQL", "Oracle"}}
+    found = {h["canonical"] for h in extract.extract("Senior PL/SQL developer")}
+    assert {"SQL", "Oracle"} <= found
+
+
 def test_a_new_alias_that_hides_or_repeats_another_is_refused():
     rows = pd.DataFrame({"label": ["Git", "GitHub Actions", "Copy"], "strict": ["0", "0", "0"],
                          "aliases_ads": ["git|github", "github actions", "github"]})

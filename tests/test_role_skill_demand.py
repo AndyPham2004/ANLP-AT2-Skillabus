@@ -10,9 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data-eda" / "src")
 
 import build_role_profiles as brp  # noqa: E402
 from build_role_skill_demand import (  # noqa: E402
-    COLUMNS, COUNTED, EXTRA_TOKEN_MAP, MIN_ROLE_ADS, MIXED_FAMILY, MIXED_ROLE, SOURCES, TEXT_TYPE,
-    committed_inputs, data_jobs_rows, load_data_jobs, recent_rows, seek_rows, taxonomy_rows, to_frame,
-    to_label, tool_lookup,
+    ATS_PERIOD, COLUMNS, COUNTED, EXTRA_TOKEN_MAP, IT_MIXED_FAMILY, IT_MIXED_ROLE, MIN_ROLE_ADS, MIXED_FAMILY,
+    MIXED_ROLE, SOURCES, TEXT_TYPE, adzuna_rows, ats_rows, committed_inputs, data_jobs_rows, load_data_jobs,
+    recent_rows, seek_rows, taxonomy_rows, to_frame, to_label, tool_lookup,
 )
 from build_vocabulary import read_table, read_table_text, to_csv_text  # noqa: E402
 from recount_recent import wilson  # noqa: E402
@@ -54,8 +54,9 @@ def test_columns_and_allowed_values():
     assert (COUNTS.importance == "").all()
     assert set(TABLE.importance[TABLE.source == "esco_occupation"]) == {"essential", "optional"}
     assert set(TABLE.importance[TABLE.source == "onet"]) == {"in_demand"}
-    assert set(TABLE.role) <= set(FAMILIES) | {MIXED_ROLE}
-    assert (TABLE.role_family == TABLE.role.map({**FAMILIES, MIXED_ROLE: MIXED_FAMILY})).all()
+    assert set(TABLE.role) <= set(FAMILIES) | {MIXED_ROLE, IT_MIXED_ROLE}
+    assert (TABLE.role_family == TABLE.role.map({**FAMILIES, MIXED_ROLE: MIXED_FAMILY, IT_MIXED_ROLE: IT_MIXED_FAMILY})).all()
+    assert set(TABLE.period[TABLE.source == "ats_2026"]) == {ATS_PERIOD}
     assert not TABLE.duplicated(["role", "skill_id", "source", "period"]).any()
     assert set(TABLE.period[TABLE.source == "recent_2024_26"]) == {"2024-01", "2026"}
 
@@ -90,6 +91,9 @@ def test_one_denominator_per_block_and_the_known_totals():
     c26 = pd.read_csv(paths.SKILL_COUNTS_2026).iloc[0]
     recent = COUNTS[COUNTS.source == "recent_2024_26"].groupby(["period", "role"]).total_ads.first()
     assert recent.to_dict() == {("2024-01", MIXED_ROLE): c26.total_2024_01, ("2026", MIXED_ROLE): c26.total_2026_all}
+    adz = COUNTS[COUNTS.source == "adzuna_2026"].groupby("role").total_ads.first()
+    live = INPUTS["adzuna"].groupby("role").role_total.first().astype(int)
+    assert adz.to_dict() == live.to_dict() and set(adz.index) == set(FAMILIES)   # every one of the 11 roles
 
 
 def test_every_role_has_taxonomy_rows_and_every_essential_skill():
@@ -180,6 +184,9 @@ def classify(new: float, old: float, clean: float, skill: str) -> str:
     return "unexplained"
 
 
+ALIASES_MOVED = {"Data security"}
+
+
 def test_seek_shares_agree_with_skill_counts_v2():
     """The 148 dictionary skills, Data Scientist, the 3,204 Seek ads.
 
@@ -196,8 +203,13 @@ def test_seek_shares_agree_with_skill_counts_v2():
     clean = pd.read_csv(paths.SKILL_COUNTS_2026).set_index("skill").pct_2019_22
     assert set(v2.index) == set(SEED.canonical)
     why = {s: classify(new.get(s, 0.0), v2[s], clean[s], s) for s in SEED.canonical}
+    # #120 (16 Oct): "cyber security" / "cybersecurity" moved from Data security to ESCO cyber security,
+    # so Data security can only be lower than the counts made with the old aliases.
+    for skill in ALIASES_MOVED:
+        if why[skill] == "unexplained" and new.get(skill, 0.0) < v2[skill]:
+            why[skill] = "aliases moved"
     assert [s for s, w in why.items() if w == "unexplained"] == []
-    assert sum(w == "same" for w in why.values()) >= 120
+    assert sum(w in ("same", "aliases moved") for w in why.values()) >= 120
 
 
 @pytest.mark.parametrize("period, column", [("2024-01", "pct_2024_01"), ("2026", "pct_2026_all")])
@@ -220,12 +232,40 @@ def rebuilt(rows) -> pd.DataFrame:
     return read_table_text(to_csv_text(to_frame(rows)))
 
 
-def test_committed_seek_recent_and_taxonomy_rows_are_what_the_builder_writes():
+def test_ats_blocks_follow_the_30_ad_rule_and_skip_other():
+    own = COUNTS[(COUNTS.source == "ats_2026") & ~COUNTS.role.isin([MIXED_ROLE, IT_MIXED_ROLE])]
+    assert (own.total_ads >= MIN_ROLE_ADS).all()
+    n = MIN_ROLE_ADS
+    ats = pd.DataFrame({
+        "role": ["Software Engineer"] * n + ["Data Scientist"] * 2 + ["Cybersecurity Analyst"] * 3 + ["other"] * 4,
+        "description": ["Java and Python."] * n + ["Python."] * 2 + ["Splunk."] * 3 + ["Python sales."] * 4})
+    rows, notes = ats_rows(VOCAB, ats, FAMILIES)
+    blocks = pd.DataFrame(rows).groupby("role").total_ads.first().to_dict()
+    assert blocks == {"Software Engineer": n, MIXED_ROLE: 2, IT_MIXED_ROLE: 3}      # "other" is not counted
+    assert {r["period"] for r in rows} == {ATS_PERIOD} and {r["text_type"] for r in rows} == {"full_text"}
+    with pytest.raises(ValueError):
+        ats_rows(VOCAB, pd.DataFrame({"role": ["Astronaut"], "description": ["Python."]}), FAMILIES)
+
+
+def test_committed_ats_file_has_roles_and_masked_text():
+    ats = INPUTS["ats"]
+    assert list(ats.columns) == ["ad_id", "source", "company", "title", "role", "location", "posted", "snapshot", "description", "url"]
+    assert set(ats.role) <= set(FAMILIES) | {"other"} and (ats.role != "other").sum() >= MIN_ROLE_ADS
+    assert not ats.duplicated(["company", "title", "description"]).any() and not ats.duplicated("ad_id").any()
+    assert not ats.description.str.contains(r"[\w.+-]+@[\w-]+\.[\w.-]+", regex=True).any()       # emails masked
+    assert (ats.description.str.len() >= 200).all()
+    age = (pd.to_datetime(ats.snapshot) - pd.to_datetime(ats.posted.replace("", pd.NA))).dt.days
+    assert (age.dropna() <= 60).all() and not ats.duplicated(["company", "title"]).any()      # the 60-day rule
+
+
+def test_committed_seek_recent_adzuna_and_taxonomy_rows_are_what_the_builder_writes():
     v, f = VOCAB, FAMILIES
     assert committed("seek_2019_22").equals(rebuilt(seek_rows(v, INPUTS["seek"], f["Data Scientist"])))
     assert committed("recent_2024_26").equals(rebuilt(recent_rows(v, INPUTS["recent"], f)[0]))
     tax, _ = taxonomy_rows(v, INPUTS["occupation_skills"], INPUTS["onet_map"], f)
     assert committed(["esco_occupation", "onet"]).equals(rebuilt(tax))
+    assert committed("adzuna_2026").equals(rebuilt(adzuna_rows(v, INPUTS["adzuna"], f)))
+    assert committed("ats_2026").equals(rebuilt(ats_rows(v, INPUTS["ats"], f)[0]))
 
 
 def test_committed_data_jobs_rows_are_what_the_builder_writes():
