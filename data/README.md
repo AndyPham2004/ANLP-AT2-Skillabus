@@ -43,6 +43,7 @@ The poster's numbers are frozen in `archive/poster_AT2A/data/` (see `archive/REA
 | `2_demand/skill_counts_2026.csv` | Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct. The same in 2019-22, Jan 2024 and 2026, with 95% intervals | Van Thong | `python data-eda/src/recount_recent.py` |
 | `2_demand/top_skills.csv` | Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct. The 15 most-asked technical skills (the Data Scientist role) | Quan | From `skill_counts_v2.csv` |
 | `2_demand/role_profiles.csv` (+ `.md`) | Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct. Tool profiles of 7 data and IT roles, 2023 | Van Thong | `python data-eda/src/build_role_profiles.py` |
+| `2_demand/role_outlook.csv` (+ `.md`) | Per role: 2025 Occupation Shortage List rating and Internet Vacancy Index vacancies (Aug 2026 vs Aug 2025), Jobs and Skills Australia, 12 rows (D13) | Claude for Quan | By hand from the two JSA files; sources and licence in the `.md` |
 | `2_demand/skills_not_taught_by_uts.csv` | 73 skills no UTS subject names, or names but 2026 ads ask for a lot | Quan | Recompute after D5 and D8 |
 | `2_demand/ads/` | 3,204 Seek ads (2019-22) and 192 recent Australian data roles, cleaned; `CLEANING_NOTES.txt` | Van Thong | `clean_seek.py`, `build_recent_sample.py` |
 | `2_demand/collection/` | The 65 job boards fetched, 206 candidate employers, the probe of 13 Oct | Van Thong, Quan | `probe_ats.py`; lists by hand |
@@ -73,6 +74,7 @@ byte-identical files (`.gitattributes` keeps their line ends). The EDA notebook 
 | Resume Dataset (Kaggle, snehaanbhawal) | 2,481 resumes; 125 with 2+ data skills | 2021 | resume parsing and CV–JD test pairs | [kaggle](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) |
 | Job-board APIs of 65 employers (Greenhouse, Lever, SmartRecruiters, Ashby, Workable) + Adzuna API | 38 Australian data roles with full text (22 in the sample, 9 of them data scientists) + 32 Adzuna roles cut at 500 characters | Sep–Oct 2026 | the 2026 sample | public APIs |
 | LinkedIn data-science postings (Kaggle, asaniczka) | 122 Australian data roles, full text | Jan 2024 | Australian middle point for the 2019–22 → 2026 trend | [kaggle](https://www.kaggle.com/datasets/asaniczka/data-science-job-postings-and-skills) |
+| Jobs and Skills Australia: 2025 Occupation Shortage List (15 Oct 2025) and Internet Vacancy Index (Aug 2026 data, 23 Sep 2026), CC BY 4.0, "© Commonwealth of Australia" | shortage rating per ANZSCO 2022 occupation; online vacancies per 4-digit unit group, 3-month average | 2025, Aug 2026 | role outlook: `2_demand/role_outlook.csv` | [osl](https://www.jobsandskills.gov.au/data/occupation-shortage), [ivi](https://www.jobsandskills.gov.au/data/internet-vacancy-index) |
 | data_jobs (Hugging Face, lukebarousse), Apache-2.0 | 12,955 Australian postings, tool lists only | 2023 | role profiles for 7 data and IT roles | [huggingface](https://huggingface.co/datasets/lukebarousse/data_jobs) |
 
 Notes for anyone citing these:

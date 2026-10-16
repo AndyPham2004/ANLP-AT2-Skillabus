@@ -11,6 +11,7 @@ from the repo root.
 | `skill_counts_2026.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
 | `top_skills.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** The 15 most-asked technical skills, the Data Scientist role profile (`match.role_profile`) | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
 | `role_profiles.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Tool profiles of 7 data and IT roles (data_jobs 2023, Apache-2.0), 441 rows; notes in `role_profiles.md` | Van Thong | `python data-eda/src/build_role_profiles.py` |
+| `role_outlook.csv` (+ `.md`) | **Official Australian signal per role** (plan D13): 2025 Occupation Shortage List rating and Internet Vacancy Index (Aug 2026 vs Aug 2025, unit-group level) from Jobs and Skills Australia, 12 rows; CC BY 4.0, attribution in `role_outlook.md` | Claude for Quan, 16 Oct | By hand from the two JSA files named in the rows |
 | `skills_not_taught_by_uts.csv` | 73 skills: 54 that no UTS subject names, plus 19 named but asked for in 10%+ of 2026 ads (was `uncovered_skills_2026-10-13.csv`) | Quan's session, 13 Oct | Recompute after the vocabulary (D5) and the IT subjects (D8) |
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
@@ -29,7 +30,7 @@ with a 95% Wilson interval. `match.py` reads `pct_2026` as `demand_pct_2026` (tr
 `match.demand_2026_low`). **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
 5, so one ad moves a data-scientist share by 11 points. Show 2026 as "n of 9", not as a bare percentage.
 
-Owner of the folder: Van Thong. Planned here (plan D1, D13): `roles.csv`, `role_outlook.csv`. Once the app
+Owner of the folder: Van Thong. Planned here (plan D1): `roles.csv`. Once the app
 reads `role_skill_demand.csv` (plan C2, after 17 Oct), `skill_counts_*`, `top_skills.csv` and `role_profiles.*`
 go to `archive/demand_files_v1/`.
 
