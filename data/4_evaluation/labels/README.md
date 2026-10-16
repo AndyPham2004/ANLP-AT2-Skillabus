@@ -6,6 +6,8 @@ One row per item. UTF-8. Commit through a pull request like any other change.
 | File | One row = | Columns to know |
 |---|---|---|
 | `ad_skills.csv` | one skill in one ad | `ad_id` from `jobs_au_seek_datascientist_2019-2022.csv`; `skill_label` = the `canonical` name in `data/1_knowledge/skills/skills_seed_v2.csv` when it exists, otherwise your own short name with `in_dictionary` = n; `evidence_text` = the words in the ad |
+| `ad_skills_2026.csv` | one skill in one 2026 ad (17 Oct) | `ad_id` from `inputs/ats_2026_label_sample.csv` (18 ATS ads, 10 roles; read them in `inputs/ats_2026_label_sample.md`); `skill_label` = a `label` in `inputs/vocabulary_detection_labels.csv` when it exists, otherwise your own short name with `in_dictionary` = n; otherwise the rules of `ad_skills.csv` below. Label from the ad text only, never from the app's output |
+| `role_paths_review.csv` | one subject in one role's learning path (17 Oct) | `verdict` = ok / odd; `why` when odd. The paths are in `inputs/role_paths_2026-10-17.md` |
 | `skill_subject_pairs.csv` | one skill-subject claim | `teaches` = y / partly / n; `layer` = learning_objective, assessment, weekly_topic, description |
 | `chat_questions.csv` | one question | `reference_answer` in 1-3 sentences; `source` = where the answer comes from |
 | `subject_content.csv` | one piece of subject text | `layer` as above; one row per learning objective, assessment or weekly topic. Not a test set: it feeds the subject profiles, so it and its template live in `data/1_knowledge/uts/` |
