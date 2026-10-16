@@ -22,6 +22,11 @@ borderColor = "#1f2226"
 
 [server]
 maxUploadSize = 5
+# Streamlit's source watcher probes every module in sys.modules after each rerun. Once the embedding
+# model has loaded, that walks transformers' hundreds of lazy submodules (seconds per rerun, and a
+# traceback per module that needs torchvision). Nobody edits code on a running demo: no watcher.
+# Restart the server after changing app code.
+fileWatcherType = "none"
 
 [browser]
 gatherUsageStats = false
