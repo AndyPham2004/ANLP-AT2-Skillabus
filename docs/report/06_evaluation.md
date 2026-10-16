@@ -83,15 +83,15 @@ forecasting as a topic) would remove four of the six.
 For each have or partial row, `rank_evidence()` ranks the resume's sentences, and the gold evidence is the labelled phrase.
 A sentence counts as correct when it contains the phrase.
 
-| Metric | Value (k = 5, n = 87) |
-|---|---|
-| P@5 | 0.200 |
-| Hit@5 | 0.943 |
-| MRR | 0.829 |
+| Ranker (k = 5, n = 87) | P@5 | Hit@5 | MRR |
+|---|---|---|---|
+| `rank_evidence()` (sentences that name the skill first) | 0.200 | 0.943 | 0.829 |
+| TF-IDF only | 0.200 | 0.943 | 0.826 |
+| Embeddings only | 0.189 | 0.885 | 0.753 |
 
 Each row has one gold phrase, so P@5 sits near its ceiling of 0.2 and says little; Hit@5 and MRR are the informative figures. Hit@5 says the right sentence is in the top five for 94.3% of rows, and MRR of
 0.829 says it is usually first. The result does not depend on the extraction tier. (With lowercased skill labels the ranker
-lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; `eval_run.py` now passes the canonical name.) The baselines (TF-IDF and embedding ranking) are **[TODO]**.
+lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; `eval_run.py` now passes the canonical name.) The TF-IDF baseline is almost as good as `rank_evidence()` (MRR 0.826 against 0.829), because the resume sentence that names the skill usually shares its words. Embeddings alone are clearly worse (Hit@5 0.885, MRR 0.753): they pull up sentences about related skills. With 87 rows the gap between `rank_evidence()` and TF-IDF is within noise; the gap to embeddings is larger (Hit@5 differs by 5 rows), but still a small sample.
 
 ## 6.5 Subject recommendation and chat
 

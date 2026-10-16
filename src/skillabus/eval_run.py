@@ -81,7 +81,7 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
                 g_status[k] = r["gold_status"]
                 p_status[k] = got.get(r["skill_label"], "not_extracted")
                 if setting == "end_to_end" and r["gold_status"] in ("have", "partial") and r["resume_evidence_text"]:
-                    cases.append((rank_evidence(canon.get(r["skill_label"], r["skill_label"]), res[rid]), {r["resume_evidence_text"]}))
+                    cases.append((canon.get(r["skill_label"], r["skill_label"]), res[rid], {r["resume_evidence_text"]}))
                 if g_status[k] != p_status[k]:
                     detail.append({"pair": pid, "skill": r["skill_label"], "gold": g_status[k], "pred": p_status[k]})
         st = ev.status_scores(g_status, {k: ("missing" if v == "not_extracted" else v) for k, v in p_status.items()})
@@ -90,7 +90,13 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
         out[f"matching_{setting}_errors"] = detail
         if setting == "end_to_end":
             out["ad_skill_not_extracted"] = sum(v == "not_extracted" for v in p_status.values())
-            out["ranking"] = ev.ranking_scores(cases, k=5)
+            out["ranking"] = ev.ranking_scores([(rank_evidence(lab, text), gold_ev) for lab, text, gold_ev in cases], k=5)
+            out["ranking_methods"] = {}   # the same rows ranked by TF-IDF and by embeddings alone (baselines for what rank_evidence() does)
+            for rm in ("tfidf", "embed"):
+                try:
+                    out["ranking_methods"][rm] = ev.ranking_scores([(rank_evidence(lab, text, rm), gold_ev) for lab, text, gold_ev in cases], k=5)
+                except (RuntimeError, ImportError, OSError, ValueError) as error:
+                    out["ranking_methods"][rm] = f"not run: {type(error).__name__}: {str(error).splitlines()[0][:100]}"
     return out
 
 
@@ -233,8 +239,14 @@ def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
     first = next((results[m] for m in TIERS if m in results), None)
     if first:
         rk = first["ranking"]
-        L += ["", "## Evidence ranking (have and partial rows)", "", "| Metric | Value |", "|---|---|",
-              f"| P@5 | {_f(rk['p_at_k'])} |", f"| Hit@5 | {_f(rk['hit_at_k'])} |", f"| MRR | {_f(rk['mrr'])} |", f"| n | {rk['n']} |"]
+        L += ["", "## Evidence ranking (have and partial rows)", "", "| Ranker | P@5 | Hit@5 | MRR | n |", "|---|---|---|---|---|",
+              f"| rank_evidence() (names the skill first) | {_f(rk['p_at_k'])} | {_f(rk['hit_at_k'])} | {_f(rk['mrr'])} | {rk['n']} |"]
+        for rm, label in (("tfidf", "TF-IDF only"), ("embed", "Embeddings only")):
+            r2 = first.get("ranking_methods", {}).get(rm)
+            if isinstance(r2, dict):
+                L.append(f"| {label} | {_f(r2['p_at_k'])} | {_f(r2['hit_at_k'])} | {_f(r2['mrr'])} | {r2['n']} |")
+            elif r2:
+                L.append(f"| {label} | not run | | | {r2} |")
     L += ["", "## Annotator agreement", ""]
     if isinstance(kappa, dict):
         k2 = kappa["all_labels"]
