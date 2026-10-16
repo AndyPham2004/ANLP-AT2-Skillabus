@@ -1,7 +1,7 @@
 # 6 Evaluation and error analysis
 
 > Draft, 15 Oct 2026. Every number comes from `PYTHONPATH=src python -m skillabus.evaluate --all` (needs spaCy and the embedding libraries; the GPT-4o-mini answers are read from the committed cache, so no API key is needed). The results are saved in `data/4_evaluation/results/` (`eval_tables.md` and one JSON per part).
-> **[TODO]** marks what is not run yet. Scripts: `src/skillabus/evaluate.py` (metrics), `src/skillabus/eval_run.py` (the run).
+> Scripts: `src/skillabus/evaluate.py` (metrics), `src/skillabus/eval_run.py` (the run).
 
 ## 6.1 What was run
 
