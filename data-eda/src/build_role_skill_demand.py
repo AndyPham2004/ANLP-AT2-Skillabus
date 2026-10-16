@@ -100,6 +100,11 @@ EXTRA_TOKEN_MAP = {
 # "C-suite"): Business Analyst ads name it (1.9%) about as often as Data Scientist ads (2.4%), and the
 # vocabulary itself never matches a bare C (its aliases are "C programming", "C/C++", ...).
 EXTRA_UNRELIABLE = {"c"}
+# Reviewed 16 Oct (#120), all three kept: bare "c" stays out (above); "spring" and "swift" stay counted,
+# since in tool lists they are the Java framework (Software Engineer 4.9%, Data Engineer 0.8%) and the
+# Apple language (Software Engineer 1.8%, ML Engineer 3.4%), and the SWIFT banking reading can explain at
+# most Business Analyst's 5 of 576 ads (0.9%, outside its top 15); Linux distributions count as Linux,
+# as ESCO and O*NET file Red Hat, Ubuntu and the other distributions under Linux.
 
 
 # ---------------------------------------------------------------- inputs
