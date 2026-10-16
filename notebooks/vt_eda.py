@@ -13,7 +13,7 @@
 # %% [markdown]
 # # Skillabus: exploratory data analysis
 #
-# 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 16 Oct 2026
+# 36118 Applied NLP, AT2 Part B · Van Thong (Role B, data) · updated 17 Oct 2026
 #
 # **Runs on committed files only** (everything under `data/`; every path comes from
 # `src/skillabus/paths.py`), so it works on a fresh clone. Raw downloads are not needed; each
@@ -31,7 +31,7 @@
 # 7. What does the UTS curriculum cover?
 # 8. Are the resumes usable?
 # 9. How far does ESCO reach?
-# 10. Where does each of the 11 IT roles get its demand from?
+# 10. Where does each of the 11 IT roles get its demand from, and what changed?
 # 11. What this means for the app
 
 # %%
@@ -141,6 +141,15 @@ inventory = pd.DataFrame([
      "core skills per role (D4)", "build_occupation_skills.py"),
     ("Certifications", len(pd.read_csv(paths.CERTIFICATIONS)), "Oct 2026", "certifications per role (D11)", "by hand"),
     ("Self-study resources", len(pd.read_csv(paths.RESOURCES)), "Oct 2026", "self-study column (D9)", "by hand"),
+    ("JobsPipe 2026 ads (skills, no text)", len(pd.read_csv(paths.JOBSPIPE_SKILLS)), "Sep-Oct 2026",
+     "main demand, 11 roles", "fetch_jobspipe.py"),
+    ("Seek 2020-21 IT ads (skills)", len(pd.read_csv(paths.SEEK_2020_21_SKILLS)), "2020-21",
+     "pre-2022 baseline, 10 roles", "build_seek_it_2020_21.py"),
+    ("2026 job-board ads with a role", len(pd.read_csv(paths.ATS_2026_ADS)), "Oct 2026",
+     "second 2026 view", "classify_ats_roles.py"),
+    ("Adzuna search counts", len(pd.read_csv(paths.ADZUNA_COUNTS)), "16 Oct 2026",
+     "live counts, 11 roles", "count_role_skills_adzuna.py"),
+    ("Role outlook (JSA)", len(pd.read_csv(paths.ROLE_OUTLOOK)), "2025-26", "shortage label per role", "by hand"),
     ("Student-reported taught skills", len(pd.read_csv(paths.UTS / "taught_skills_student_reported.csv")),
      "2025-26", "what subjects taught (D10)", "by hand, from Canvas"),
 ], columns=["data", "rows", "period", "used by", "built by"])
@@ -512,8 +521,8 @@ print(f"subjects naming the SPARKPlus peer-review tool: {sparkplus.subject_code.
 # %% [markdown]
 # The Handbook is not the whole curriculum. Students report what their subjects actually
 # taught (plan D10, `taught_skills_student_reported.csv`, skill names only, from Canvas). How
-# many of the skills the Handbook never names do those reports cover? So far the file holds
-# one student's nine MDSI subjects, so this is a lower bound on what UTS teaches.
+# many of the skills the Handbook never names do those reports cover? So far two students have
+# reported on nine MDSI subjects, so this is a lower bound on what UTS teaches.
 
 # %%
 taught = pd.read_csv(paths.UTS / "taught_skills_student_reported.csv", dtype=str, keep_default_na=False)
@@ -594,7 +603,7 @@ probe = ["sql", "python (computer programming)", "machine learning", "deep learn
 lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "ambiguous"]]
 
 # %% [markdown]
-# ## 10. Where does each of the 11 IT roles get its demand from?
+# ## 10. Where does each of the 11 IT roles get its demand from, and what changed?
 #
 # From 15 Oct the app covers 11 IT roles in five families (plan D4-D6), not only Data
 # Scientist. Every role's demand is in one table, `role_skill_demand.csv` (role x skill x source
@@ -603,43 +612,63 @@ lookup[lookup.label.isin(probe)][["label", "preferred_label", "label_type", "amb
 # type.
 
 # %%
+from skillabus.match import DEMAND_PRIORITY  # noqa: E402  (the app's order of sources for a role's demand)
+
 demand = pd.read_csv(paths.ROLE_SKILL_DEMAND)
 role_occ = pd.read_csv(paths.ROLE_OCCUPATIONS)
 family = role_occ.drop_duplicates("role").set_index("role").role_family
 ad_rows = demand[demand.role.isin(family.index) & (demand.text_type != "taxonomy")]
-# Full text beats a tool list when a role has both (Data Scientist: Seek 2019-22).
-best = (ad_rows.assign(_r=ad_rows.text_type.map({"full_text": 0, "tool_list": 1}))
-        .sort_values(["role", "_r"]).groupby("role").first())
-taxonomy = demand[demand.text_type == "taxonomy"].groupby(["role", "source"]).size().unstack(fill_value=0)
-matches = role_occ.pivot_table(index="role", columns="source", values="match", aggfunc="first")
-role_table = (pd.DataFrame({"family": family})
-              .join(best[["source", "period", "text_type", "total_ads"]])
-              .join(taxonomy.rename(columns={"esco_occupation": "esco_rows", "onet": "onet_rows"}))
-              .join(matches.add_prefix("match_")))
-role_table["total_ads"] = role_table.total_ads.astype("Int64")
-print(f"{len(role_table)} roles: {(role_table.text_type == 'full_text').sum()} with full-text Australian ads, "
-      f"{(role_table.text_type == 'tool_list').sum()} with tool lists only, "
-      f"{role_table.text_type.isna().sum()} with occupation taxonomies only")
+ads_per_source = ad_rows.groupby(["role", "source"]).total_ads.first().unstack()
+main_source = ads_per_source.apply(lambda r: next((s for s in DEMAND_PRIORITY if pd.notna(r.get(s))), None), axis=1)
+role_table = pd.DataFrame({"family": family, "main source": main_source}).join(
+    ads_per_source[[c for c in ["jobspipe_2026", "adzuna_2026", "ats_2026", "seek_2020_21", "data_jobs_2023", "seek_2019_22"]
+                    if c in ads_per_source]].astype("Int64"))
+jp = role_table.jobspipe_2026
+print(f"{len(role_table)} roles; main source (the app's DEMAND_PRIORITY): {main_source.value_counts().to_dict()}")
+print(f"JobsPipe 2026: {int(jp.sum())} ads, {int(jp.min())}-{int(jp.max())} per role; "
+      f"Seek 2020-21 IT ads: {int(role_table.seek_2020_21.sum())} for {role_table.seek_2020_21.notna().sum()} roles")
 print("occupation links (exact / close / broad):",
       {s: role_occ[role_occ.source == s].match.value_counts().to_dict() for s in ("esco", "onet", "asc")})
 role_table.sort_values("family")
 
 # %%
-# The top skills of each role from its best source. A taxonomy does not rank skills, so the
-# taxonomy-only roles show their row counts and the O*NET in-demand tools no other role lists.
-onet = demand[demand.source == "onet"]
-roles_per_tool = onet.groupby("skill").role.nunique()
+# The top skills of each role in its main source (JobsPipe 2026 for all 11 today).
 for role, r in role_table.sort_values("family").iterrows():
-    if pd.notna(r.source):
-        top = ad_rows[(ad_rows.role == role) & (ad_rows.source == r.source)].nlargest(5, "pct")
-        print(f"{role:30} {r.source} (n = {r.total_ads:,}): "
-              + ", ".join(f"{s} {p:.0f}%" for s, p in zip(top.skill, top.pct)))
-    else:
-        t = demand[(demand.role == role) & (demand.text_type == "taxonomy")]
-        own = sorted(s for s in t[t.source == "onet"].skill if roles_per_tool[s] == 1)
-        print(f"{role:30} taxonomy only: ESCO {(t.importance == 'essential').sum()} essential + "
-              f"{(t.importance == 'optional').sum()} optional, O*NET {(t.source == 'onet').sum()} in-demand; "
-              f"tools only this role lists: {own[:6]}")
+    top = ad_rows[(ad_rows.role == role) & (ad_rows.source == r["main source"])].nlargest(5, "pct")
+    print(f"{role:30} {r['main source']} (n = {int(top.total_ads.iloc[0])}): "
+          + ", ".join(f"{s} {p:.0f}%" for s, p in zip(top.skill, top.pct)))
+
+# %% [markdown]
+# **What changed for Data Scientist.** The same role, the same matcher and vocabulary, two
+# periods: the 3,204 Seek ads of 2019-22 and the 71 JobsPipe ads of 2026. The seven technical
+# skills that rose most, the five that fell most, and the four that lead both periods.
+
+# %%
+ds = demand[(demand.role == "Data Scientist") & demand.source.isin(["seek_2019_22", "jobspipe_2026"])]
+shift = ds.pivot_table(index="skill", columns="source", values="pct").fillna(0.0)
+shift["change"] = shift.jobspipe_2026 - shift.seek_2019_22
+cats = pd.read_csv(paths.SKILLS_VOCABULARY, dtype=str, keep_default_na=False).set_index("label").category
+technical = shift[~shift.index.map(cats).isin(["Professional", "ESCO core skill", "Certification"])]
+core = ["Python", "SQL", "Machine learning", "Statistics"]
+picked = set(technical.nlargest(7, "change").index) | set(technical.nsmallest(5, "change").index) | set(core)
+show = shift.loc[sorted(picked, key=lambda k: shift.change[k])]
+n_old = int(ds[ds.source == "seek_2019_22"].total_ads.iloc[0]); n_new = int(ds[ds.source == "jobspipe_2026"].total_ads.iloc[0])
+print(show.round(1).to_string())
+
+fig, ax = plt.subplots(figsize=(7.2, 0.34 * len(show) + 1.1))
+y = np.arange(len(show))
+ax.hlines(y, show.seek_2019_22, show.jobspipe_2026, color=GRID, lw=2, zorder=1)
+ax.scatter(show.seek_2019_22, y, s=46, color=MUTED, zorder=2, label=f"2019-22 Seek (n = {n_old:,})")
+ax.scatter(show.jobspipe_2026, y, s=46, color=TEAL, zorder=3, label=f"2026 JobsPipe (n = {n_new})")
+for yi, (old, new) in enumerate(zip(show.seek_2019_22, show.jobspipe_2026)):
+    ax.text(max(old, new) + 1.5, yi, f"{new:.0f}%", va="center", fontsize=8, color=INK)
+ax.set_yticks(y, show.index)
+ax.set_xlim(0, 100)
+ax.set_xlabel("share of Data Scientist ads naming the skill (%)")
+ax.grid(axis="x", color=GRID, lw=0.6)
+ax.legend(loc="lower right", frameon=False, fontsize=8)
+fig.savefig(FIG / "fig4_ds_2019_vs_2026.png")
+plt.show()
 
 # %% [markdown]
 # **The vocabulary (D5).** ESCO is the base; the team adds the skills ESCO lacks or names only
