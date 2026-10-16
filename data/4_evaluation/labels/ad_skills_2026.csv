@@ -1,1 +1,343 @@
 ad_id,skill_label,in_dictionary,evidence_text,annotator
+ats-sr-744000150221047,NetSuite,n,This is your opportunity to join the NetSuite team contributing to the ongoing roadmap of work in NetSuite as,tompham9016
+ats-sr-744000150221047,JavaScript,y,"Familiarity with JavaScript and SuiteScript APIs (you won’t be doing heavy scripting, but it’s helpful to",tompham9016
+ats-sr-744000150221047,SuiteScript APIs,n,"Familiarity with JavaScript and SuiteScript APIs (you won’t be doing heavy scripting, but it’s helpful to",tompham9016
+ats-sr-744000150221047,finance,n,"Design and configure NetSuite modules to enhance business processes across finance, operations, and reporting",tompham9016
+ats-sr-744000150221047,procurement,n,"A good understanding of core business processes such as Finance, Procurement, and Operations",tompham9016
+ats-sr-744000150221047,operations,n,"Design and configure NetSuite modules to enhance business processes across finance, operations, and reporting",tompham9016
+ats-sr-744000150221047,Communication,y,"Inclusive communication style, with the ability to work effectively with technical and non-technical",tompham9016
+ats-sr-744000150221047,Stakeholder management,y,NetSuite Functional Analyst partners with stakeholders to translate business needs into well-defined,tompham9016
+ats-sr-744000150221047,Oracle,y,Exposure to Oracle EPM (e.g,tompham9016
+ats-sr-744000150221047,Salesforce,y,"ARCS, FCCS, Planning), Salesforce, and/or Celigo & integrator.io is highly regarded",tompham9016
+ats-sr-744000150221047,Celigo,n,"ARCS, FCCS, Planning), Salesforce, and/or Celigo & integrator.io is highly regarded",tompham9016
+ats-sr-744000150221047,integrator.io,n,"ARCS, FCCS, Planning), Salesforce, and/or Celigo & integrator.io is highly regarded",tompham9016
+ats-sr-744000150221047,Project management,y,Experience using project management tools (e.g,tompham9016
+ats-sr-744000150221047,Jira,y,"JIRA, Confluence) and applying a structured, thoughtful approach to analysis, implementation, and process",tompham9016
+ats-sr-744000150221047,Confluence,y,"JIRA, Confluence) and applying a structured, thoughtful approach to analysis, implementation, and process",tompham9016
+ats-sr-744000150221047,Process mapping,y,"Design and configure NetSuite modules to enhance business processes across finance, operations, and reporting",tompham9016
+ats-sr-744000150221047,Business analysis,y,business needs into well-defined functional requirements and scalable NetSuite solutions,tompham9016
+ats-sr-6000000001483258,Business analysis,y,Leading business analysis activities from discovery through implementation across a diverse portfolio of,tompham9016
+ats-sr-6000000001483258,Stakeholder management,y,Excellent stakeholder management skills and the ability to work effectively across business and technical,tompham9016
+ats-sr-6000000001483258,challenge assumptions,n,"build trusted stakeholder relationships, challenge assumptions, manage competing priorities and help deliver",tompham9016
+ats-sr-6000000001483258,Documentation,y,"work by leading discovery, eliciting and documenting requirements, improving processes, and translating",tompham9016
+ats-sr-6000000001483258,improve process,n,"eliciting and documenting requirements, improving processes, and translating business needs into actionable",tompham9016
+ats-sr-6000000001483258,Leadership,y,Mentoring and supporting less experienced analysts where required,tompham9016
+ats-sr-6000000001483258,Communication,y,?,tompham9016
+ats-sr-6000000001483258,Process mapping,y,"and documenting requirements, improving processes, and translating business needs into actionable delivery",tompham9016
+ats-sr-6000000001483258,Requirements gathering,y,"analysis capability across discovery, requirements elicitation, workshop facilitation, process analysis",tompham9016
+ats-sr-6000000001483258,Business acumen,y,"At Judo, we’re redefining business banking for the modern era",tompham9016
+ats-sr-6000000001483258,User acceptance testing,y,"Developing user stories, acceptance criteria and supporting analysis artefacts to enable delivery",tompham9016
+ats-sr-6000000001483258,banking,n,"At Judo, we’re redefining business banking for the modern era",tompham9016
+ats-sr-6000000001483258,financial services,n,"business and technology change across financial services, banking transformation or related environments",tompham9016
+ats-sr-6000000001483258,Agile,y,"Experience working in Agile delivery environments with Product Owners, delivery teams and technical",tompham9016
+ats-sr-6000000001483258,User stories,y,"Developing user stories, acceptance criteria and supporting analysis artefacts to enable delivery",tompham9016
+ats-sr-6000000001483258,managing backlogs,n,"Experience developing user stories, managing backlogs, documenting requirements and maintaining traceability",tompham9016
+ats-sr-6000000001483258,Salesforce,y,"Exposure to Salesforce, Jira, Confluence and microservice-based architectures will be highly regarded",tompham9016
+ats-sr-6000000001483258,Jira,y,"Exposure to Salesforce, Jira, Confluence and microservice-based architectures will be highly regarded",tompham9016
+ats-sr-6000000001483258,Confluence,y,"Exposure to Salesforce, Jira, Confluence and microservice-based architectures will be highly regarded",tompham9016
+ats-sr-6000000001483258,Teamwork,y,"A collaborative, relationship-led approach aligned to Judo’s values of Trust, Teamwork, Accountability and",tompham9016
+ats-sr-744000153102592,Leadership,y,This is a leadership role for a seasoned engineer who thinks in systems,tompham9016
+ats-sr-744000153102592,Kubernetes,y,"You build what it stands on: the Kubernetes fleet across AWS and GCP, GPU-capable compute, networking",tompham9016
+ats-sr-744000153102592,AWS,y,"it stands on: the Kubernetes fleet across AWS and GCP, GPU-capable compute, networking, identity",tompham9016
+ats-sr-744000153102592,Google Cloud,y,"on: the Kubernetes fleet across AWS and GCP, GPU-capable compute, networking, identity, infrastructure as",tompham9016
+ats-sr-744000153102592,GPU-capable compute,n,"the Kubernetes fleet across AWS and GCP, GPU-capable compute, networking, identity, infrastructure as code",tompham9016
+ats-sr-744000153102592,CI/CD,y,"identity, infrastructure as code, CI/CD, and the observability and security foundations every AICV service",tompham9016
+ats-sr-744000153102592,Data security,y,"as code, CI/CD, and the observability and security foundations every AICV service depends on",tompham9016
+ats-sr-744000153102592,Application security,y,"Someone has to make that substrate reliable, secure, and affordable",tompham9016
+ats-sr-744000153102592,cyber security,y,"Cloud security and compliance, including SOC 2 and the NIST Cyber Security Framework",tompham9016
+ats-sr-744000153102592,cloud infrastructure,n,Own the technical direction for cloud infrastructure across AICV: Kubernetes fleet design on EKS and GKE,tompham9016
+ats-sr-744000153102592,EKS,n,"breaks most infrastructure: thousands of EKS nodes running batch inference, GPU fleets spanning two clouds",tompham9016
+ats-sr-744000153102592,GKE,n,"AICV: Kubernetes fleet design on EKS and GKE, compute, networking, identity, and storage",tompham9016
+ats-sr-744000153102592,Terraform,y,"GPU-capable compute, networking, identity, infrastructure as code, CI/CD, and the observability and security",tompham9016
+ats-sr-744000153102592,Cloud security,n,Cloud security,tompham9016
+ats-sr-744000153102592,Teamwork,y,You’re a collaborative leader,tompham9016
+ats-sr-744000153102592,Pulumi,y,with infrastructure as code (Terraform or Pulumi),tompham9016
+ats-sr-744000153102592,cloud networking,n,"Strong grounding in cloud networking, identity and access management, and secrets management, with the",tompham9016
+ats-sr-744000153102592,GPU infrastructure,n,"GPU infrastructure at fleet scale: NVIDIA drivers and device plugins, MIG or time-slicing, and multi-cloud",tompham9016
+ats-sr-744000153102592,Kubeflow,y,"workloads such as Argo Workflows, Ray, or Kubeflow, even without owning the ML layer yourself",tompham9016
+ats-sr-744000153102592,Argo Workflows,n,"infrastructure beneath ML workloads such as Argo Workflows, Ray, or Kubeflow, even without owning the ML",tompham9016
+ats-sr-744000153102592,Ray,n,"ML workloads such as Argo Workflows, Ray, or Kubeflow, even without owning the ML layer yourself",tompham9016
+ats-sr-744000153102592,Git,y,"depth in modern software practice: Git, CI/CD, monitoring, alerting, and automated testing",tompham9016
+ats-sr-744000153102592,Crossplane,n,abstractions such as custom operators or Crossplane,tompham9016
+ats-sr-744000153102592,Argo CD,y,"GitOps and progressive delivery at scale: ArgoCD or Flux, with canary and blue-green strategies",tompham9016
+ats-sr-744000153102592,Flux,n,"GitOps and progressive delivery at scale: ArgoCD or Flux, with canary and blue-green strategies",tompham9016
+ats-sr-744000153102592,FinOps,n,"FinOps across more than one cloud: tagging, rightsizing, commitment strategy, and GPU utilisation reporting",tompham9016
+ats-sr-744000153102592,SOC 2,y,"Cloud security and compliance, including SOC 2 and the NIST Cyber Security Framework",tompham9016
+ats-sr-744000153102592,NIST,y,"Cloud security and compliance, including SOC 2 and the NIST Cyber Security Framework",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,cyber security,y,"Why This Role Rocks We are seeking a Senior Cyber Security Analyst to help drive the governance, risk",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Problem solving,y,"We’re a team of problem solvers, pixel pushers, code slingers, and cloud fanatics",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Data governance,y,"Cyber Security Analyst to help drive the governance, risk management, and compliance strategies to protect",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,risk management,n,"Analyst to help drive the governance, risk management, and compliance strategies to protect our critical",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,ISO27001:2022,n,frameworks with a specific focus on ISO27001:2022 and SOC 2 Type 2 and actively assist with assessing new,tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,SOC 2 Type 2,n,with a specific focus on ISO27001:2022 and SOC 2 Type 2 and actively assist with assessing new certifications,tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Leadership,y,"Megaport is the global leader in Network as a Service (NaaS), and has transformed the way businesses connect",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Documentation,y,"Prepare reports and documentation to support cyber security and privacy incident investigations, regulatory",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,privacy incident investigations,n,"documentation to support cyber security and privacy incident investigations, regulatory compliance",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,customer security assurance,n,Assist with customer security assurance activities such as responding to customer security and privacy,tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,research,n,"Strong research, analytical, and organisational skills, with excellent attention to detail",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,English proficiency (B2 or higher),n,Intermediate to advanced English proficiency (B2 or higher) for handling international notifications and,tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Communication,y,and we will verify the legitimacy of any communication,tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Teamwork,y,"our employees enjoy an environment that is collaborative, supportive, and (actually) fun",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Jira,y,"Experience with compliance, monitoring, or workflow tools (e.g., Jira, Confluence, Vanta or OneTrust",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Confluence,y,"Experience with compliance, monitoring, or workflow tools (e.g., Jira, Confluence, Vanta or OneTrust",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,vanta,n,"Experience with compliance, monitoring, or workflow tools (e.g., Jira, Confluence, Vanta or OneTrust",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,One Trust,n,"Experience with compliance, monitoring, or workflow tools (e.g., Jira, Confluence, Vanta or OneTrust",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,HIPAA,n,"Familiarity with global regulations and standards such as HIPAA, NIS2, DORA, and APRA CPS 230/234",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,NIS2,n,"Familiarity with global regulations and standards such as HIPAA, NIS2, DORA, and APRA CPS 230/234",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,DORA,n,"Familiarity with global regulations and standards such as HIPAA, NIS2, DORA, and APRA CPS 230/234",tompham9016
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,APRA CPS 230/234,n,"Familiarity with global regulations and standards such as HIPAA, NIS2, DORA, and APRA CPS 230/234",tompham9016
+ats-gh-8815229002,Artificial intelligence,y,"Interest or experience in applying AI/ML or data-driven techniques to detection, triage, or response workflows",tompham9016
+ats-gh-8815229002,Leadership,y,potential while collaborating with industry leaders to solve complex problems,tompham9016
+ats-gh-8815229002,cyber security,y,"improve operational efficiency, reduce security and compliance risk, and accelerate digital transformation",tompham9016
+ats-gh-8815229002,investigate incidents,n,"You will lead high-impact incidents and investigations, drive continuous improvements in defense, detection",tompham9016
+ats-gh-8815229002,scale security operations,n,"and response capabilities, and help scale security operations through automation and intelligent workflows",tompham9016
+ats-gh-8815229002,automation,n,and help scale security operations through automation and intelligent workflows,tompham9016
+ats-gh-8815229002,DFIR,n,"in high-tempo environments, brings strong DFIR expertise, and is equally passionate about operational",tompham9016
+ats-gh-8815229002,Detection Engineering,n,Detection Engineering,tompham9016
+ats-gh-8815229002,Threat-Intelligence,n,Threat-Intelligence,tompham9016
+ats-gh-8815229002,Red Team,n,Red Team,tompham9016
+ats-gh-8815229002,Teamwork,y,"have automation and processes to facilitate collaboration when resolving incidents, handovers, and general",tompham9016
+ats-gh-8815229002,Communication,y,"Excellent written communication skills with a passion for clear, actionable documentation",tompham9016
+ats-gh-8815229002,Stakeholder management,y,Prepare clear executive communications that keep stakeholders informed during incidents,tompham9016
+ats-gh-8815229002,Digital Forensics,n,"across cloud environments, applying strong Digital Forensics and Incident Response (DFIR) methodologies",tompham9016
+ats-gh-8815229002,SIEM,y,"implement detection capabilities, including SIEM use cases, alerting strategies, and telemetry pipelines",tompham9016
+ats-gh-8815229002,telemetry pipelines,n,"SIEM use cases, alerting strategies, and telemetry pipelines",tompham9016
+ats-gh-8815229002,alerting strategies,n,"capabilities, including SIEM use cases, alerting strategies, and telemetry pipelines",tompham9016
+ats-gh-8815229002,root cause analysis,n,Conduct root cause analysis (RCA) and lead post-incident reviews to drive continuous improvement and risk,tompham9016
+ats-gh-8815229002,Documentation,y,"Develop and maintain runbooks, playbooks, and operational documentation",tompham9016
+ats-gh-8815229002,Cloud platforms,y,Experience with cloud platforms (AWS & GCP),tompham9016
+ats-gh-8815229002,Git,y,GitLab is the intelligent orchestration platform for DevSecOps,tompham9016
+ats-gh-8815229002,EDR,n,"Hands-on experience with SIEM, EDR, and/or detection engineering",tompham9016
+ats-gh-8815229002,AWS,y,Experience with cloud platforms (AWS & GCP),tompham9016
+ats-gh-8815229002,Google Cloud,y,Experience with cloud platforms (AWS & GCP),tompham9016
+ats-gh-8815229002,MITRE ATT&CK,y,"Familiarity with threat intelligence and adversary tactics (e.g., MITRE ATT&CK)",tompham9016
+ats-gh-8815229002,Python,y,"Experience building or working with automation (e.g., Python, scripting, SOAR platforms)",tompham9016
+ats-gh-8815229002,Shell scripting,y,"Experience building or working with automation (e.g., Python, scripting, SOAR platforms)",tompham9016
+ats-gh-8815229002,SOAR,n,"Experience building or working with automation (e.g., Python, scripting, SOAR platforms)",tompham9016
+ats-gh-8815229002,Machine learning,y,"Interest or experience in applying AI/ML or data-driven techniques to detection, triage, or response workflows",tompham9016
+ats-gh-8815229002,Problem solving,y,Strong analytical and problem-solving skills,tompham9016
+ats-gh-4739948005,Optimise data architecture,n,"Optimise data architecture – Enhance our central data model for Eucalyptus globally, collaborating with our",tompham9016
+ats-gh-4739948005,Teamwork,y,"central data model for Eucalyptus globally, collaborating with our analytics team in the UK and Philippines",tompham9016
+ats-gh-4739948005,Data visualisation,y,"decisions – Elevate our reporting and dashboard capabilities, establishing a single source of truth for",tompham9016
+ats-gh-4739948005,Problem solving,y,"Advanced analytical thinking & tool proficiency – Expert in SQL, Python, and Sheets, with a focus on",tompham9016
+ats-gh-4739948005,SQL,y,"thinking & tool proficiency – Expert in SQL, Python, and Sheets, with a focus on uncovering drivers of",tompham9016
+ats-gh-4739948005,Python,y,"& tool proficiency – Expert in SQL, Python, and Sheets, with a focus on uncovering drivers of business",tompham9016
+ats-gh-4739948005,Sheets,n,"proficiency – Expert in SQL, Python, and Sheets, with a focus on uncovering drivers of business performance",tompham9016
+ats-gh-4739948005,data science,n,"Applied data science for commercial outcomes – Skilled in using statistical techniques, experimentation, and",tompham9016
+ats-gh-4739948005,Statistics,y,"for commercial outcomes – Skilled in using statistical techniques, experimentation, and behavioural data to",tompham9016
+ats-gh-4739948005,Experimental design,y,"– Skilled in using statistical techniques, experimentation, and behavioural data to answer complex business",tompham9016
+ats-gh-4739948005,Business acumen,y,"the data – You have strong business and commercial acumen, and get to the ‘so what’ based on the analysis you",tompham9016
+ats-gh-4739948005,Attention to detail,n,"Attention to detail – You have a high bar for ‘correct’, and work through nuances in the data to surface when",tompham9016
+ats-gh-4739948005,Communication,y,"Exceptional communicator – You distil complex analyses into clear, actionable insights that cut through the",tompham9016
+ats-gh-4739948005,Artificial intelligence,y,"We use AI-assisted tools across our business to help our teams work more efficiently, including within our",tompham9016
+ats-gh-8260310,Experimental design,y,"Design, run and measure feature experiments",tompham9016
+ats-gh-8260310,e-commerce,n,Data analytics experience in an e-commerce or technology company,tompham9016
+ats-gh-8260310,Data warehousing,y,Experience working with enterprise data warehouses,tompham9016
+ats-gh-8260310,Communication,y,"Strong communication skills, and you build trusted relationships with stakeholders",tompham9016
+ats-gh-8260310,SQL,y,Advanced SQL (or equivalent),tompham9016
+ats-gh-8260310,Tableau,y,"Tableau, Power BI, Looker)",tompham9016
+ats-gh-8260310,Power BI,y,"Tableau, Power BI, Looker)",tompham9016
+ats-gh-8260310,Looker,y,"Tableau, Power BI, Looker)",tompham9016
+ats-gh-8260310,Data visualisation,y,?,tompham9016
+ats-gh-8260310,A/B testing,y,Google Analytics and A/B testing for SaaS products,tompham9016
+ats-gh-8260310,Google Analytics,y,Google Analytics and A/B testing for SaaS products,tompham9016
+ats-gh-8260310,Time series forecasting,y,Forecasting and statistical modelling,tompham9016
+ats-gh-8260310,Statistics,y,Forecasting and statistical modelling,tompham9016
+ats-gh-8260310,ETL,y,Understanding of ETL frameworks and tools,tompham9016
+ats-gh-8260310,dbt,y,dbt or data modelling experience,tompham9016
+ats-gh-8260310,Data modelling,y,dbt or data modelling experience,tompham9016
+ats-gh-8260310,Python,y,Intermediate Python,tompham9016
+ats-gh-8260310,Databricks,y,Databricks or Snowflake,tompham9016
+ats-gh-8260310,Snowflake,y,Databricks or Snowflake,tompham9016
+ats-gh-8260310,Salesforce,y,Salesforce,tompham9016
+ats-wk-41B978C5E0,Teamwork,y,"closely with Analyst, this role will collaborate closely with Product and Engineering teams to build scalable",tompham9016
+ats-wk-41B978C5E0,Data modelling,y,"1+ years experience in data modelling, analytics engineering, or BI development , ideally in fast-paced or",tompham9016
+ats-wk-41B978C5E0,dbt,y,"scalable data pipelines using tools like dbt, Airflow, and Python to transform raw data into clean, reliable",tompham9016
+ats-wk-41B978C5E0,Airflow,y,"data pipelines using tools like dbt, Airflow, and Python to transform raw data into clean, reliable datasets",tompham9016
+ats-wk-41B978C5E0,Python,y,"using tools like dbt, Airflow, and Python to transform raw data into clean, reliable datasets",tompham9016
+ats-wk-41B978C5E0,Power BI,y,"Familiarity with BI tools (e.g., Looker, Tableau, Omni) and designing intuitive, scalable dashboards",tompham9016
+ats-wk-41B978C5E0,analytics engineering,n,"1+ years experience in data modelling, analytics engineering, or BI development , ideally in fast-paced or",tompham9016
+ats-wk-41B978C5E0,SQL,y,"Strong proficiency in SQL and experience with dbt , Airflow , and modern data warehouses like Snowflake",tompham9016
+ats-wk-41B978C5E0,Snowflake,y,"Airflow , and modern data warehouses like Snowflake or BigQuery",tompham9016
+ats-wk-41B978C5E0,BigQuery,y,modern data warehouses like Snowflake or BigQuery,tompham9016
+ats-wk-41B978C5E0,Looker,y,"Familiarity with BI tools (e.g., Looker, Tableau, Omni) and designing intuitive, scalable dashboards",tompham9016
+ats-wk-41B978C5E0,Tableau,y,"Familiarity with BI tools (e.g., Looker, Tableau, Omni) and designing intuitive, scalable dashboards",tompham9016
+ats-wk-41B978C5E0,Omni,n,"Familiarity with BI tools (e.g., Looker, Tableau, Omni) and designing intuitive, scalable dashboards",tompham9016
+ats-wk-41B978C5E0,Artificial intelligence,y,Basic understanding and experience in using AI tools to optimise your day to day and improve processes,tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Artificial intelligence,y,"You'll join AI Products, a close-knit team of seven based in Melbourne, building intelligent services that",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Large language models,y,"ML model, and others the latest in LLMs, and part of the job is judging which is genuinely right for the",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Machine learning,y,they're tools you reach for when applying machine learning to real product problems,tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Teamwork,y,"Working closely with cross-functional peers and holding coding standards high, your work will help ideas move",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Stakeholder management,y,?,tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Experimental design,y,"products and services, moving between experimental design, prototyping, evaluation and more rigorous",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Python,y,"testable, maintainable, reusable code in Python, building robust data pipelines alongside engineering peers",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,ETL,y,"reusable code in Python, building robust data pipelines alongside engineering peers",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Natural language processing,y,Applying techniques such as NLP and computer vision to genuine product challenges at Xero's scale,tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Computer vision,y,Applying techniques such as NLP and computer vision to genuine product challenges at Xero's scale,tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,software engineering,n,"Scientific curiosity sits alongside solid software engineering fundamentals, so you can write code that's",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Data cleaning,y,"Data wrangling and pipeline work are familiar ground, and you know what good evaluation, measurement and",tompham9016
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Leadership,y,?,tompham9016
+ats-gh-4005586201,Python,y,"bring solid foundations in data science, Python, and SQL — and combine them with AI tools to build",tompham9016
+ats-gh-4005586201,SQL,y,"foundations in data science, Python, and SQL — and combine them with AI tools to build, transform, and scale",tompham9016
+ats-gh-4005586201,data science,n,Quantium is a world leader in data science and artificial intelligence,tompham9016
+ats-gh-4005586201,Artificial intelligence,y,Quantium is a world leader in data science and artificial intelligence,tompham9016
+ats-gh-4005586201,Teamwork,y,"You'll work within cross-functional teams alongside Product Leads, Delivery Managers, and engineers — taking",tompham9016
+ats-gh-4005586201,Stakeholder management,y,?,tompham9016
+ats-gh-4005586201,Claude,n,"outputs and develop reusable approaches, Claude skills, and specifications that scale across teams and",tompham9016
+ats-gh-4005586201,Optimisation,y,"solutions including models, algorithms, and optimisation approaches, with attention to quality and scalability",tompham9016
+ats-gh-4005586201,Experimental design,y,"advanced data science methods including experimental design, feature engineering, statistical modelling",tompham9016
+ats-gh-4005586201,Feature engineering,y,"methods including experimental design, feature engineering, statistical modelling across complex datasets",tompham9016
+ats-gh-4005586201,Statistics,y,"experimental design, feature engineering, statistical modelling across complex datasets using cloud platforms",tompham9016
+ats-gh-4005586201,Google Cloud,y,"datasets using cloud platforms such as GCP, Azure, and AWS",tompham9016
+ats-gh-4005586201,Azure,y,"datasets using cloud platforms such as GCP, Azure, and AWS",tompham9016
+ats-gh-4005586201,AWS,y,"cloud platforms such as GCP, Azure, and AWS",tompham9016
+ats-gh-4005586201,Machine learning,y,"4–7 years of experience in data science, AI/ML development, or technical consulting",tompham9016
+ats-gh-4005586201,technical consulting,n,"4–7 years of experience in data science, AI/ML development, or technical consulting",tompham9016
+ats-gh-4005586201,software engineering,n,"Familiarity with software engineering practices including version control, testing, documentation, and",tompham9016
+ats-gh-4005586201,CI/CD,y,and deployment workflows such as CI/CD pipelines and containerised environments,tompham9016
+ats-gh-4005586201,Git,y,"software engineering practices including version control, testing, documentation, and deployment workflows",tompham9016
+ats-gh-4005586201,User acceptance testing,y,"practices including version control, testing, documentation, and deployment workflows such as CI/CD pipelines",tompham9016
+ats-gh-4005586201,Documentation,y,"including version control, testing, documentation, and deployment workflows such as CI/CD pipelines and",tompham9016
+ats-gh-4005586201,Communication,y,Strong communicator — able to explain complex technical concepts clearly to non-technical audiences,tompham9016
+ats-gh-4005586201,agentic development,n,Interest in agentic development patterns and comfort working in a team where AI-native methods are the,tompham9016
+ats-gh-4005586201,Problem solving,y,Strong problem-solving approach with the ability to work independently and collaboratively across diverse,tompham9016
+ats-gh-4005586201,Large language models,y,"Experience using AI tools (Claude, ChatGPT, GitHub Copilot, or similar) in your work or studies or a",tompham9016
+ats-gh-4005586201,Copilot,y,"using AI tools (Claude, ChatGPT, GitHub Copilot, or similar) in your work or studies or a compelling",tompham9016
+ats-gh-4005586201,transformer architectures,n,"ML/AI fundamentals including how LLMs work, transformer architectures, and when to apply different approaches",tompham9016
+ats-gh-8238733,Linux,y,"Embedded on the Imaging team, you will design, build, and distribute Linux machine images",tompham9016
+ats-gh-8238733,Leadership,y,"code review, debugging, and operational leadership",tompham9016
+ats-gh-8238733,OS configuration layer,n,"evolutions, including modernizing the OS configuration layer, containerizing workloads, scaling machine image",tompham9016
+ats-gh-8238733,containerizing workloads,n,"modernizing the OS configuration layer, containerizing workloads, scaling machine image distribution across",tompham9016
+ats-gh-8238733,scaling machine image distribution,n,"layer, containerizing workloads, scaling machine image distribution across multi-cloud regions, and",tompham9016
+ats-gh-8238733,Incident response,y,Lead incident response for the systems the team owns,tompham9016
+ats-gh-8238733,Stakeholder management,y,?,tompham9016
+ats-gh-8238733,Teamwork,y,About the team,tompham9016
+ats-gh-8238733,software engineering,n,"10+ years of professional software engineering experience, with a demonstrated track record of designing and",tompham9016
+ats-gh-8238733,Project management,y,"Lead large, ambiguous infrastructure projects from initial design through production launch, broad adoption",tompham9016
+ats-gh-8238733,machine images,n,"Embedded on the Imaging team, you will design, build, and distribute Linux machine images",tompham9016
+ats-gh-8238733,virtual machines,n,"infrastructure, including machine images, virtual machines, autoscaling fleets, launch configuration, block",tompham9016
+ats-gh-8238733,autoscaling fleets,n,"including machine images, virtual machines, autoscaling fleets, launch configuration, block storage, IAM",tompham9016
+ats-gh-8238733,launch configuration,n,"virtual machines, autoscaling fleets, launch configuration, block storage, IAM, health evaluation, and",tompham9016
+ats-gh-8238733,block storage,n,"autoscaling fleets, launch configuration, block storage, IAM, health evaluation, and multi-region operation",tompham9016
+ats-gh-8238733,Identity and access management,y,"launch configuration, block storage, IAM, health evaluation, and multi-region operation in AWS, Azure, or an",tompham9016
+ats-gh-8238733,AWS,y,"evaluation, and multi-region operation in AWS, Azure, or an equivalent environment",tompham9016
+ats-gh-8238733,Azure,y,"and multi-region operation in AWS, Azure, or an equivalent environment",tompham9016
+ats-gh-8238733,containers,n,"Expertise with containers, Kubernetes, and migrating VM-based workloads to managed platforms",tompham9016
+ats-gh-8238733,Kubernetes,y,"Expertise with containers, Kubernetes, and migrating VM-based workloads to managed platforms",tompham9016
+ats-gh-8238733,OS security patching,n,"Knowledge of OS security patching, software supply-chain security, and artifact provenance",tompham9016
+ats-sr-6000000001379105,Leadership,y,product roadmap: Working with engineering leadership across Canva to ensure Production Engineering is,tompham9016
+ats-sr-6000000001379105,Teamwork,y,Join the team redefining how the world experiences design,tompham9016
+ats-sr-6000000001379105,Stakeholder management,y,?,tompham9016
+ats-sr-6000000001379105,Java,y,"systems depth: You've built real things in Java, Go, Rust, C++, or a comparable systems language at",tompham9016
+ats-sr-6000000001379105,Go,y,"depth: You've built real things in Java, Go, Rust, C++, or a comparable systems language at production scale",tompham9016
+ats-sr-6000000001379105,Rust,y,"You've built real things in Java, Go, Rust, C++, or a comparable systems language at production scale",tompham9016
+ats-sr-6000000001379105,C++,y,"You've built real things in Java, Go, Rust, C++, or a comparable systems language at production scale",tompham9016
+ats-sr-6000000001379105,Linux,y,"Linux internals: You can reason about process scheduling, memory, I/O, and the network stack when a system",tompham9016
+ats-sr-6000000001379105,Kubernetes,y,"Containerisation and orchestration: Kubernetes in production, at the scheduler level",tompham9016
+ats-sr-6000000001379105,AWS,y,"Cloud infrastructure: AWS in production, across the failure modes that matter at scale",tompham9016
+ats-sr-6000000001379105,Incident response,y,Incident response: You've been on-call and have opinions about what good looks like,tompham9016
+ats-sr-6000000001379105,Enterprise SaaS,n,Enterprise SaaS background: You've done this specific kind of work at an org that's done it well,tompham9016
+ats-sr-6000000001379105,Google Cloud,y,?,tompham9016
+ats-sr-6000000001379105,data store migration,n,experience: You've been involved in a data store migration or multi-region architecture where getting it,tompham9016
+ats-sr-6000000001379105,Communication,y,?,tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Problem solving,y,"building alongside customers, and solving problems where the path forward isn’t obvious",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Artificial intelligence,y,dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity,tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,software engineering,n,"You’ll combine hands-on software engineering, architecture, and technical leadership to make Codex part of",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Teamwork,y,"technical leaders and hands-on engineers, collaborate through uncertainty, and turn individual customer work",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Stakeholder management,y,?,tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Leadership,y,"engineering, architecture, and technical leadership to make Codex part of how customers get important work",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Documentation,y,"Document technical decisions and results for handoff and reuse, establishing clear customer, partner, or",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,infrastructure engineering,n,"deployment engineering, data or infrastructure engineering, technical consulting, or solutions architecture",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,technical consulting,n,"data or infrastructure engineering, technical consulting, or solutions architecture",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,solutions architecture,n,"engineering, technical consulting, or solutions architecture",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,deployment engineering,n,"experience in software development, deployment engineering, data or infrastructure engineering, technical",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,data engineering,n,"unfamiliar codebases, legacy systems, data pipelines, infrastructure, and enterprise integrations",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Cloud platforms,y,"such as software engineering, data systems, cloud infrastructure, or enterprise integrations, and enjoy",tompham9016
+ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac,Communication,y,"Communicate effectively with technical leaders and hands-on engineers, collaborate through uncertainty, and",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Artificial intelligence,y,dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity,tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Leadership,y,the primary technical counterpart to their leadership teams,tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Stakeholder management,y,"engineering teams, and other customer stakeholders",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Teamwork,y,Work collaboratively across disciplines and care deeply about helping organizations deploy advanced AI,tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,solutions architecture,n,"in customer-facing technical roles such as solutions architecture, solutions engineering, technical account",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,solutions engineering,n,"roles such as solutions architecture, solutions engineering, technical account leadership, AI deployment, or",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,technical account leadership,n,"architecture, solutions engineering, technical account leadership, AI deployment, or technical customer",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,AI deployment,n,"engineering, technical account leadership, AI deployment, or technical customer success",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,technical customer success,n,"account leadership, AI deployment, or technical customer success",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Communication,y,senior technical and business leaders while communicating equally well with hands-on engineers,tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Cloud platforms,y,"Bring strong software and cloud architecture foundations, including APIs, distributed systems, data",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,API development,y,"plan across ChatGPT Enterprise, the OpenAI API, Codex, and other agentic AI solutions",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,data integration,n,"including APIs, distributed systems, data integration, identity, security, and privacy",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Large language models,y,"will own the technical account plan across ChatGPT Enterprise, the OpenAI API, Codex, and other agentic AI",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,agentic applications,n,"modern AI systems, frontier LLM models, agentic applications, model evaluation, retrieval, or enterprise AI",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,model evaluation,n,"frontier LLM models, agentic applications, model evaluation, retrieval, or enterprise AI workflows",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,Python,y,"with APIs, SDKs, and languages such as Python or JavaScript",tompham9016
+ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4,JavaScript,y,"APIs, SDKs, and languages such as Python or JavaScript",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,storage networks,n,"work across leaf-spine fabrics, GPU and storage networks, and the automation that keeps them consistent at",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,GPU,n,"You'll work across leaf-spine fabrics, GPU and storage networks, and the automation that keeps them",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,automation,n,"fabrics, GPU and storage networks, and the automation that keeps them consistent at scale - partnering with",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Test automation,y,"fabrics, GPU and storage networks, and the automation that keeps them consistent at scale - partnering with",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,User acceptance testing,y,"What You'll Be Doing Evaluation, testing and certification of new network hardware, systems and software",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,BGP,n,"Design and operate IP fabrics using BGP, EVPN-VXLAN and ECMP",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,EVPN-VXLAN,n,"Design and operate IP fabrics using BGP, EVPN-VXLAN and ECMP",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,ECMP,n,"Design and operate IP fabrics using BGP, EVPN-VXLAN and ECMP",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,QoS,n,"Implement congestion management capabilities, including QoS, ECN and Priority Flow Control where required",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,ECN,n,"Implement congestion management capabilities, including QoS, ECN and Priority Flow Control where required",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Priority Flow Control,n,"Implement congestion management capabilities, including QoS, ECN and Priority Flow Control where required",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,network architecture,n,"Develop network architecture standards, low-level designs, implementation plans and operational documentation",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Stakeholder management,y,?,tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,network automation,n,Evolving network automation and monitoring systems (Capacity/Latency/Congestion/Availability),tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,IP routing,n,"Strong understanding of IP routing, QoS, MTU, resiliency and network failure scenarios",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,MTU,n,"Strong understanding of IP routing, QoS, MTU, resiliency and network failure scenarios",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,resiliency and network failure scenarios,n,"Strong understanding of IP routing, QoS, MTU, resiliency and network failure scenarios",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,leaf-spine architecture,n,"Practical Experience with BGP, EVPN-VXLAN and leaf-spine architecture",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,DC networks,n,Experience with large scale DC networks,tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,MPLS networks,n,Experience with large scale MPLS networks,tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Python,y,Desirable: Knowledge in programming languages such as Perl and Python,tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Perl,y,Desirable: Knowledge in programming languages such as Perl and Python,tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Agile,y,Desirable: Understanding and exposure to an Agile environment,tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,RoCEv2,n,"Bonus: Understanding of RoCEv2, RDMA, Priority Flow Control and ECN",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,RDMA,n,"Bonus: Understanding of RoCEv2, RDMA, Priority Flow Control and ECN",tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Linux,y,Bonus: Familiarity with Linux networking and infrastructure-as-code practices,tompham9016
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,SNMP,n,"Bonus: Operational experience working with network datasets, primarily SNMP & sFlow outputs",tompham9016
+ats-gh-8229754,AWS,y,"workplace infrastructure end to end, with AWS, networking and enterprise AI as supporting areas you help keep",tompham9016
+ats-gh-8229754,Artificial intelligence,y,"to end, with AWS, networking and enterprise AI as supporting areas you help keep secure, reliable and well",tompham9016
+ats-gh-8229754,Claude,n,"and evolve platforms such as Glean, Claude for Enterprise and Gemini including access controls, data-source",tompham9016
+ats-gh-8229754,Glean,n,"Administer and evolve platforms such as Glean, Claude for Enterprise and Gemini including access controls",tompham9016
+ats-gh-8229754,Gemini,n,"such as Glean, Claude for Enterprise and Gemini including access controls, data-source permissions",tompham9016
+ats-gh-8229754,Data security,y,"and Meraki services, improving reliability, security, observability and documented recovery procedures",tompham9016
+ats-gh-8229754,Okta administration,n,"Identity & access: Okta administration and identity lifecycle automation: Workflows, SSO, SCIM, access",tompham9016
+ats-gh-8229754,identity lifecycle,n,"Identity & access: Okta administration and identity lifecycle automation: Workflows, SSO, SCIM, access",tompham9016
+ats-gh-8229754,Workflows,n,"and identity lifecycle automation: Workflows, SSO, SCIM, access governance, and joiner/mover/leaver processes",tompham9016
+ats-gh-8229754,Jamf Pro,n,"Endpoint engineering: The Jamf Pro platform and Apple device lifecycle: zero-touch deployment, configuration",tompham9016
+ats-gh-8229754,macOS,y,Strong Jamf Pro and macOS fleet-management experience,tompham9016
+ats-gh-8229754,Python,y,"automation: Reliable automation using Python, PowerShell, Terraform/CloudFormation and workflow platforms to",tompham9016
+ats-gh-8229754,Shell scripting,y,"Reliable automation using Python, PowerShell, Terraform/CloudFormation and workflow platforms to cut manual",tompham9016
+ats-gh-8229754,IaC,n,"Experience automating operational processes with Python, PowerShell, APIs, workflows or IaC",tompham9016
+ats-gh-8229754,Stakeholder management,y,Strong stakeholder communication and documentation skills,tompham9016
+ats-gh-8229754,Terraform,y,"automation using Python, PowerShell, Terraform/CloudFormation and workflow platforms to cut manual operations",tompham9016
+ats-gh-8229754,CloudFormation,y,"using Python, PowerShell, Terraform/CloudFormation and workflow platforms to cut manual operations and",tompham9016
+ats-gh-8229754,Cisco Meraki,n,Cisco Meraki,tompham9016
+ats-gh-8229754,Cloud platforms,y,as one of the world’s top private cloud companies by Forbes and most innovative companies by Fast Company,tompham9016
+ats-gh-8229754,CloudWatch,n,"Observability tooling: CloudWatch, Datadog, Splunk or PagerDuty",tompham9016
+ats-gh-8229754,Datadog,y,"Observability tooling: CloudWatch, Datadog, Splunk or PagerDuty",tompham9016
+ats-gh-8229754,Splunk,y,"Observability tooling: CloudWatch, Datadog, Splunk or PagerDuty",tompham9016
+ats-gh-8229754,PagerDuty,n,"Observability tooling: CloudWatch, Datadog, Splunk or PagerDuty",tompham9016
+ats-gh-8229754,Jira,y,"Jira Service Management, Google Workspace, Slack or Atlassian administration",tompham9016
+ats-gh-8229754,Google Workspace,n,"Jira Service Management, Google Workspace, Slack or Atlassian administration",tompham9016
+ats-gh-8229754,Slack,n,"Jira Service Management, Google Workspace, Slack or Atlassian administration",tompham9016
+ats-gh-8229754,Atlassian administration,n,"Jira Service Management, Google Workspace, Slack or Atlassian administration",tompham9016
+ats-sr-6000000001468836,Chromium,n,"engineer to investigate and resolve complex Chromium issues — including upgrade breakages, rendering race",tompham9016
+ats-sr-6000000001468836,C++,y,You're comfortable with C++ when you need to dig into complex third-party codebases,tompham9016
+ats-sr-6000000001468836,Java,y,You're a solid Java backend engineer — that's what our product is built on,tompham9016
+ats-sr-6000000001468836,PDF specification,n,PDF specification knowledge or experience with PDF generation and post-processing,tompham9016
+ats-sr-6000000001468836,rendering pipelines,n,"A background in rendering pipelines, graphics programming, or print production systems",tompham9016
+ats-sr-6000000001468836,graphics programming,n,"A background in rendering pipelines, graphics programming, or print production systems",tompham9016
+ats-sr-6000000001468836,print production systems,n,"A background in rendering pipelines, graphics programming, or print production systems",tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,Salesforce,y,"Senior Engineer, Salesforce Platform",tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,CI/CD,y,CI/CD and release engineering: championing automation so every engineer building on the platform can ship,tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,Application security,y,"You'll help shape how the platform is secured, released and operated",tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,release engineering,n,CI/CD and release engineering: championing automation so every engineer building on the platform can ship,tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,Git,y,"across major release cycles, with GitHub, SFDX and test automation experience",tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,SFDX,n,"across major release cycles, with GitHub, SFDX and test automation experience",tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,Test automation,y,"major release cycles, with GitHub, SFDX and test automation experience",tompham9016
+ats-as-ba20d64f-ce7f-4748-936c-684763b2331e,Artificial intelligence,y,"leaders across Security, Data and AI, and with colleagues across Australia, New Zealand and our offshore",tompham9016
