@@ -827,52 +827,81 @@ def resume_note(s: dict) -> str:
             return f"Covered by {taken.group(2)}, a subject you have taken."
         return ev or f"Your resume mentions {lc(label)}."
     if s["status"] == "partial":
-        return f"Your resume says: “{s.get('resume_evidence', '')}” — related, not quite the same skill."
+        return f"Your resume says: \u201c{s.get('resume_evidence', '')}\u201d. Related, not quite the same skill."
     if ss.user_type == "elective":
         return f"No subject you ticked names {lc(label)}."
     return f"Nothing in your resume mentions {lc(label)}."
 
 
-def uts_block(label: str, res: dict) -> None:
-    st.markdown(ui.eyebrow("UTS subjects that teach it"), unsafe_allow_html=True)
-    hits = [(r, e) for r in res["recommendations"] for e in r["evidence"] if e["skill_label"] == label]
+def short(text: str, n: int = 160) -> str:
+    text = (text or "").strip()
+    return text if len(text) <= n else text[:n - 1].rstrip() + "\u2026"
+
+
+def fact(label: str, value: str, sub: str = "", serif: bool = False) -> str:
+    """One of the fact cards at the top of a skill page; `value` is already HTML-safe."""
+    style = "font-family:'Literata',Georgia,serif;font-size:16px" if serif else "font-size:15px"
+    html = (f"<div class='k-small k-dim'>{label}</div>"
+            f"<div class='k-soft' style='{style};line-height:1.45;margin-top:3px'>{value}</div>")
+    if sub:
+        html += f"<div class='k-small k-mute' style='margin-top:6px'>{ui.esc(sub)}</div>"
+    return ui.card(html)
+
+
+def demand_fact(s: dict, counted: bool, role: str | None) -> tuple[str, str, str, bool]:
+    """How often employers ask for the skill, as a fact card (label, value, sub, serif)."""
+    if not counted:
+        return ("Core skill", ui.esc(CORE_SOURCE.get(s.get("core_source"), "core skill of the role")),
+                "no Australian ad counts for this role yet", False)
+    if s.get("found_by") == "llm":
+        return ("Employers ask", "Found by GPT-4o-mini", "not in our dictionary, so it has no count", False)
+    pct, old = s.get("demand_pct"), s.get("demand_pct_2019_22")
+    who = role or backend.DEFAULT_ROLE
+    value = f"{pct:.0f}% of {s.get('total_ads') or 'the'} {ui.esc(who)} ads" if pct is not None else "no count"
+    sub = " · ".join(x for x in (s.get("demand_period") or "", f"{old:.0f}% in 2019-22" if old is not None else "") if x)
+    return ("Employers ask", value, sub, False)
+
+
+def uts_cards(label: str, res: dict) -> None:
+    """Learn at UTS: up to three subjects whose Handbook text names the skill, as a row of cards."""
+    hits = [(r, e) for r in res["recommendations"] for e in r["evidence"] if e["skill_label"] == label][:3]
+    tail = "" if hits else " <span class='k-dim'>· no subject you can take names it in its Handbook text</span>"
+    st.markdown(ui.eyebrow("Learn at UTS" + tail), unsafe_allow_html=True)
     votes = backend.vote_counts()
-    if not hits:
-        st.markdown("<div class='k-serif k-soft' style='font-size:18px;line-height:1.5'>No UTS subject you can take "
-                    "names this in its Handbook text.</div>", unsafe_allow_html=True)
-    for i, (r, e) in enumerate(hits[:3]):
-        with st.container(border=True):
-            name_col, layer_col = st.columns([3, 1.4], vertical_alignment="center")
-            if name_col.button(r["subject_name"], key=f"ev_{i}", type="tertiary"):
-                subject_dialog(r["subject_code"])
-            layer_col.markdown(f"<div style='text-align:right'>{ui.layer_pill(e['layer'])}</div>",
-                               unsafe_allow_html=True)
-            st.markdown(ui.quote(e["text"], ui.LAYER.get(e["layer"], ("", "#3a3c3e", ""))[1]), unsafe_allow_html=True)
-            note = enrol_note(r)
-            if note:
-                st.caption(note)
-            up, down = votes.get((r["subject_code"], label), [0, 0])
-            v1, v2, v3, v4 = st.columns([1.1, 1.1, 1.9, 1.9], vertical_alignment="center")
-            v1.button(f"👍 {up}", key=f"up_{i}", on_click=vote, args=(r["subject_code"], label, "up"))
-            v2.button(f"👎 {down}", key=f"down_{i}", on_click=vote, args=(r["subject_code"], label, "down"))
-            v3.markdown("<span class='k-small k-mute'>Does it really teach this?</span>", unsafe_allow_html=True)
-            with v4:
+    if hits:
+        for col, (i, (r, e)) in zip(st.columns(3, gap="medium"), enumerate(hits)):
+            with col, st.container(border=True):
+                if st.button(r["subject_name"], key=f"ev_{i}", type="tertiary", width="stretch"):
+                    subject_dialog(r["subject_code"])
+                st.markdown(ui.layer_pill(e["layer"])
+                            + f"<div class='k-serif k-soft' style='font-size:14.5px;line-height:1.45;margin:8px 0 6px'>"
+                            f"\u201c{ui.esc(short(e['text']))}\u201d</div>", unsafe_allow_html=True)
+                note = enrol_note(r)
+                if note:
+                    colour = ui.PARTIAL if r.get("needs") else ui.MUTE
+                    st.markdown(f"<div class='k-small' style='color:{colour}'>{ui.esc(note)}</div>",
+                                unsafe_allow_html=True)
+                up, down = votes.get((r["subject_code"], label), [0, 0])
+                v1, v2 = st.columns(2, gap="small")
+                v1.button(f"👍 {up}", key=f"up_{i}", width="stretch", on_click=vote, args=(r["subject_code"], label, "up"))
+                v2.button(f"👎 {down}", key=f"down_{i}", width="stretch", on_click=vote,
+                          args=(r["subject_code"], label, "down"))
                 whatif_box(r["subject_code"], f"wi_ev_{i}")
-    # Subjects that teach it but the student cannot take (recommend()'s learning_path.dropped), the two strongest.
+        st.caption("👍 / 👎: does the subject really teach this? Your vote helps us check the matcher.")
     for d in [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]][:2]:
-        reason = d["reason"] if len(d["reason"]) <= 120 else d["reason"][:117].rstrip() + "…"
+        reason = d["reason"] if len(d["reason"]) <= 120 else d["reason"][:117].rstrip() + "\u2026"
         st.caption(f"{d['subject_name']} also teaches it, but {reason}.")
 
 
 @st.fragment
-def self_study_block(label: str, role: str | None) -> None:
-    """A fragment: changing a filter redraws this block only."""
-    st.markdown(ui.eyebrow("Self-study <span class='k-dim'>· outside UTS, not for credit</span>"),
-                unsafe_allow_html=True)
+def self_study_cards(label: str, role: str | None) -> None:
+    """Self-study: the filters on one line, then up to three resources as cards. A fragment: a filter redraws this only."""
     ss.setdefault("level_filter", list(ss.level_keep))
     ss.setdefault("cost_filter", ss.cost_keep)
-    st.pills("Level", list(backend.LEVELS), key="level_filter", selection_mode="multi", label_visibility="collapsed")
-    st.segmented_control("Cost", list(backend.COST_CHOICES), key="cost_filter", label_visibility="collapsed")
+    head, f1, f2 = st.columns([1.1, 1.4, 1.7], vertical_alignment="center", gap="medium")
+    head.markdown(ui.eyebrow("Self-study <span class='k-dim'>· not for credit</span>"), unsafe_allow_html=True)
+    f1.pills("Level", list(backend.LEVELS), key="level_filter", selection_mode="multi", label_visibility="collapsed")
+    f2.segmented_control("Cost", list(backend.COST_CHOICES), key="cost_filter", label_visibility="collapsed")
     levels = list(ss.level_filter or [])
     cost = ss.cost_filter or ss.cost_keep
     ss.level_keep, ss.cost_keep = levels, cost
@@ -883,8 +912,9 @@ def self_study_block(label: str, role: str | None) -> None:
     elif not found:
         st.markdown("<span class='k-mute'>No self-study resource in our list for this skill yet.</span>",
                     unsafe_allow_html=True)
-    for r in found:
-        st.markdown(resource_html(r), unsafe_allow_html=True)
+    else:
+        for col, r in zip(st.columns(3, gap="medium"), found[:3]):
+            col.markdown(resource_html(r), unsafe_allow_html=True)
 
 
 def page_evidence() -> None:
@@ -897,27 +927,23 @@ def page_evidence() -> None:
     st.markdown("<div style='display:flex;align-items:baseline;gap:16px;flex-wrap:wrap'>"
                 + ui.h1(ui.esc(s["skill_label"]), "lg") + ui.status_html(s["status"], ui.STATUS_TEXT[s["status"]])
                 + "</div>", unsafe_allow_html=True)
-    left, right = st.columns([1, 1.3], gap="large")
-    with left:
-        says = ("The ad says" if ss.user_type == "job" else "Employers say" if counted else "Why it is a core skill")
-        st.markdown(ui.eyebrow(says) + ui.quote(s["ad_evidence"], ui.STATUS[s["status"]]), unsafe_allow_html=True)
-        st.markdown(ui.eyebrow("Your resume" if ss.user_type != "elective" else "Your subjects")
-                    + ui.note(resume_note(s)), unsafe_allow_html=True)
-        if s["emerging"]:
-            st.markdown(ui.chip("✦ outside ESCO", colour=ui.EMERGING)
-                        + "<span class='k-small k-mute'>no ESCO concept yet; kept and tracked as an emerging skill</span>",
-                        unsafe_allow_html=True)
-        if s.get("found_by") == "llm":
-            st.caption("Found by the GPT-4o-mini tier; our dictionary does not list it, so it has no demand bar.")
-    with right:
-        if s["status"] == "have":
-            st.markdown(ui.eyebrow("Nothing to learn here"), unsafe_allow_html=True)
-            st.markdown("<div class='k-serif k-soft' style='font-size:18px;line-height:1.5'>You already have this skill, "
-                        "so it is not part of your path. Pick a missing or partial skill to see where to learn it.</div>",
-                        unsafe_allow_html=True)
-        else:
-            uts_block(s["skill_label"], res)
-            self_study_block(s["skill_label"], role)
+
+    facts = [demand_fact(s, counted, role)]
+    if ss.user_type == "job":
+        facts.append(("The ad says", f"\u201c{ui.esc(short(s['ad_evidence'], 170))}\u201d", "", True))
+    facts.append(("Your resume" if ss.user_type != "elective" else "Your subjects", ui.esc(resume_note(s)), "", False))
+    if s["emerging"]:
+        facts.append(("✦ Emerging skill", "No ESCO concept yet", "kept and tracked as an emerging skill", False))
+    for col, f in zip(st.columns(len(facts), gap="medium"), facts):
+        col.markdown(fact(*f), unsafe_allow_html=True)
+
+    if s["status"] == "have":
+        st.markdown("<div class='k-serif k-soft' style='font-size:18px;line-height:1.5;margin-top:8px'>You already have "
+                    "this skill, so it is not part of your path. Pick a missing or partial skill to see where to learn it."
+                    "</div>", unsafe_allow_html=True)
+        return
+    uts_cards(s["skill_label"], res)
+    self_study_cards(s["skill_label"], role)
 
 
 # ---------------------------------------------------------------- the subject dialog

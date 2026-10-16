@@ -121,7 +121,7 @@ def test_role_mode_data_engineer():
     show_tab(at, "Skills")
     open_skill(at)
     text = page_text(at)
-    assert "Employers say" in text and "UTS subjects that teach it" in text and "Self-study" in text
+    assert "Employers ask" in text and "Learn at UTS" in text and "Self-study" in text
     at.button(key="back_results").click().run()
     assert "Skills the role asks for" in page_text(at)
 
@@ -138,7 +138,7 @@ def test_role_mode_cybersecurity_has_bars_since_c2():
     show_tab(at, "Skills")
     assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)
     open_skill(at)
-    assert "Employers say" in page_text(at) and "Self-study" in page_text(at)
+    assert "Employers ask" in page_text(at) and "Self-study" in page_text(at)
 
 
 def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sample):
@@ -157,7 +157,7 @@ def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sampl
     show_tab(at, "Skills")
     open_skill(at)
     text = page_text(at)
-    assert "Why it is a core skill" in text
+    assert "Core skill" in text
     assert "Self-study" in text and "No self-study resource in our list" not in text   # every core skill has one (D9)
 
 
