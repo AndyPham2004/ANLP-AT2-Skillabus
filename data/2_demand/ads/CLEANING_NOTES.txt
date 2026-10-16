@@ -186,6 +186,9 @@ esco_label_lookup.csv                           100,886 rows
  JobsPipe's terms forbid redistributing the data in bulk; the text is the employers').
  Cleaning (fetch_jobspipe.py): title checked with classify_ats_roles.role_of (884 of 935
  are the queried role), one row per ad_id and per company + title (793 ads).
+ 17 Oct: two more batches with team members' keys, older ads only (1 Sep onwards); AI-training
+ platforms, foreign titles, reposts (word 5-gram overlap >= 0.8) and one 23-agency tender dropped
+ across all three batches: 1,932 ads, 89-216 per role (data/2_demand/README.md).
  Committed per ad: id, role, title, company, location, date, employer type, seniority,
  providers, url (the terms ask to keep the link), n_chars, the vocabulary skills the text
  names (tier-1 matcher, as every other count) and JobsPipe's ESCO tags. No text.

@@ -222,10 +222,10 @@ def test_analyse_job_mode_still_works(monkeypatch):
     # Weighed by the 71 JobsPipe Data Scientist ads since C2. 17 Oct: a bare "AI" no longer names the skill,
     # so finance subjects titled "AI-..." stop outranking 43007 Advanced Artificial Intelligence, which then
     # covers AI, LLMs and generative AI; 31250 is its prerequisite and covers predictive modelling. Before:
-    # 36121, 36106, 32130 at 84.9%, LLMs not covered.
+    # 36121, 36106, 32130 at 84.9%, LLMs not covered. 17 Oct top-up: 89 Data Scientist ads (was 71), same path, 96.9%.
     path = result["learning_path"]
-    assert (path["subjects"], path["demand_covered_pct"]) == (["31250", "43007", "36106"], 95.5)
-    assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", 71)}
+    assert (path["subjects"], path["demand_covered_pct"]) == (["31250", "43007", "36106"], 96.9)
+    assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", 89)}
 
 
 def test_llm_terms_outside_the_vocabulary_are_listed_apart_not_counted(monkeypatch):
@@ -260,4 +260,4 @@ def test_llm_only_gaps_are_weighed_like_the_ad_s_other_skills(monkeypatch):
     assert row["demand_pct"] == _demand()[row["skill_label"]] > 0 and row["demand_pct_2019_22"] == 0.0
     assert row["demand_pct_2026"] == _demand_2026().get(row["skill_label"])
     assert (row["demand_source"], row["demand_period"], row["total_ads"], row["text_type"]) == (
-        "jobspipe_2026", "2026-10", 71, "full_text")
+        "jobspipe_2026", "2026-10", 89, "full_text")
