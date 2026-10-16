@@ -46,6 +46,9 @@ h1, h2, h3, .k-h1, .k-h2, .k-serif { font-family: 'Literata', Georgia, serif; }
 .st-key-role_elective button p { color: #4fd1b8 !important; }
 .st-key-role_job button p { color: #8fbcff !important; }
 .st-key-role_switch button p { color: #f2b74f !important; }
+.st-key-role_elective button:hover { border-color: #4fd1b8; }
+.st-key-role_job button:hover { border-color: #8fbcff; }
+.st-key-role_switch button:hover { border-color: #f2b74f; }
 div[data-testid="stVerticalBlockBorderWrapper"] { transition: border-color .15s; }
 div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(255,255,255,.3); }
 /* Streamlit centres a button's label through two inner flex wrappers; the sidebar steps read left to right. */

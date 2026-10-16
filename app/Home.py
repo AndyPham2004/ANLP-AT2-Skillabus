@@ -50,6 +50,7 @@ INPUT_TITLES = {"job": "The ad and your resume", "elective": "The role and your 
                 "switch": "The role and your resume"}
 STAGES = {"About to enrol": "C04372", "Studying MDSI": "C04372", "Already working": None}   # -> home course
 AD_MODES = ("Browse ads", "Paste an ad", "Try a sample")
+RESUME_MODES = ("Upload a file", "Paste text", "Use a sample")
 MIN_AD_WORDS = 20
 FAMILIES = backend.role_families()
 ROLE_LIST = [role for roles in FAMILIES.values() for role in roles]        # all 11 roles, family by family
@@ -361,7 +362,7 @@ def page_start() -> None:
                         f"<div class='k-card-title'>{label}</div>"
                         f"<div class='k-soft k-body' style='min-height:3em;margin:6px 0 10px'>{question}</div>",
                         unsafe_allow_html=True)
-            st.button(cta, key=f"role_{key}", type="tertiary", on_click=pick_type, args=(key,))
+            st.button(cta, key=f"role_{key}", width="stretch", on_click=pick_type, args=(key,))
 
 
 # ---------------------------------------------------------------- step 2: your inputs
@@ -379,7 +380,7 @@ def job_ad_block() -> None:
     if ss.ad_mode == "Browse ads" and ss.ad_pick:
         st.markdown(f"<div class='k-small k-mute'>Using <span style='color:{ui.INK}'>{ui.esc(ad_title())}"
                     "</span></div>", unsafe_allow_html=True)
-    st.text_area("The ad", key="ad_box", height=220, label_visibility="collapsed",
+    st.text_area("The ad", key="ad_box", height=190, label_visibility="collapsed",
                  placeholder="Paste the full job ad here…")
     ss.ad_keep = ss.ad_box or ""
 
@@ -414,29 +415,37 @@ def taken_block() -> None:
 
 
 def resume_block() -> str:
+    """Upload a file, paste the text, or use the sample. Returns the resume text ("" when there is none yet)."""
     st.markdown(ui.eyebrow("Your resume <span class='k-dim'>· stays in memory for this session, never stored</span>"),
                 unsafe_allow_html=True)
-    up_col, sample_col = st.columns(2, gap="medium")
-    with up_col:
-        upload = st.file_uploader("Upload a PDF or text file", type=["pdf", "txt", "md"], key="resume_upload")
+    ss.setdefault("resume_mode", ss.get("resume_mode_keep", "Use a sample"))
+    st.segmented_control("Where the resume comes from", RESUME_MODES, key="resume_mode", label_visibility="collapsed")
+    mode = ss.resume_mode or ss.get("resume_mode_keep", "Use a sample")
+    ss.resume_mode_keep = mode
+    if mode == "Upload a file":
+        upload = st.file_uploader("PDF or text file", type=["pdf", "txt", "md"], key="resume_upload",
+                                  label_visibility="collapsed")
         if upload:
             ss.resume_keep = (upload.name, read_resume(upload))
-    kept = ss.get("resume_keep")
-    with sample_col, st.container(border=True):
-        use_kept = False
-        if kept and not upload:
-            use_kept = st.checkbox(f"Use {kept[0]} (uploaded earlier)", value=True)
-        use_sample = st.checkbox("Use a sample resume", value=not (upload or use_kept),
-                                 disabled=bool(upload or use_kept))
-        st.caption("Early-career MDSI student, synthetic.")
-    if upload or use_kept:
-        ss.resume_label = kept[0]
-        return kept[1]
-    if use_sample:
-        ss.resume_label = "Sample resume"
-        return SAMPLE_RESUME
-    ss.resume_label = None
-    return ""
+        kept = ss.get("resume_keep")           # the uploader forgets its file off screen; the text is kept
+        if kept:
+            st.caption(f"Using {kept[0]}" + ("" if upload else " (uploaded earlier)"))
+            ss.resume_label = kept[0]
+            return kept[1]
+        ss.resume_label = None
+        return ""
+    if mode == "Paste text":
+        if "resume_box" not in ss:
+            ss.resume_box = ss.get("resume_text_keep", "")
+        st.text_area("Resume text", key="resume_box", height=200, label_visibility="collapsed",
+                     placeholder="Paste your resume here: skills, experience, projects, education…")
+        text = (ss.resume_box or "").strip()
+        ss.resume_text_keep = text
+        ss.resume_label = "Pasted resume" if text else None
+        return text
+    st.caption("A synthetic early-career MDSI student: SQL, Python, dashboards, no machine learning yet.")
+    ss.resume_label = "Sample resume"
+    return SAMPLE_RESUME
 
 
 def page_inputs() -> None:
@@ -448,13 +457,19 @@ def page_inputs() -> None:
     st.segmented_control("Stage", list(STAGES), key="stage_box", label_visibility="collapsed")
     ss.stage_keep = ss.stage_box or ss.stage_keep
 
-    if ut == "job":
-        job_ad_block()
+    resume = ""
+    if ut == "job":                     # ad and resume side by side: both in view on a short screen
+        ad_col, cv_col = st.columns([1.35, 1], gap="large")
+        with ad_col:
+            job_ad_block()
+        with cv_col:
+            resume = resume_block()
     else:
         role_block()
-    if ut == "elective":
-        taken_block()
-    resume = resume_block() if ut != "elective" else ""
+        if ut == "elective":
+            taken_block()
+        else:
+            resume = resume_block()
     ss.resume_text = resume
 
     if ut == "job":
