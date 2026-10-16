@@ -1,6 +1,6 @@
 # Hand-made test sets
 
-Copy the `_TEMPLATE.csv` file, drop `_TEMPLATE` from the name, keep the columns exactly.
+To start a new set, copy its empty template from `archive/templates_2026-10/`, drop `_TEMPLATE` from the name, keep the columns exactly.
 One row per item. UTF-8. Commit through a pull request like any other change.
 
 | File | One row = | Columns to know |

@@ -11,6 +11,8 @@ use is moved out with `git mv`. Everything was also in git history before it mov
 | `poster_AT2A/scripts/` | `chart_sources.py` (block 3 cards), `chart_top15.py` (block 5 chart), `source_counts.py` (block 3 counts). Their partner `extract_skills.py` is still imported by live scripts, so it stays in `data-eda/src/` | How the poster charts were made. Their default paths point at the old `data-eda/` layout; pass paths as arguments to rerun |
 | `poster_AT2A/handoffs/` | What Van Thong (B), Phuong Nhi (C) and Hoai Thuong (D) delivered for the poster, with figures | The source of every poster number (was `docs/handoffs/`) |
 | `mock_2026-10-03/` | The app's first mock: `subject_layers.csv` (70 subjects, Handbook only), two example gap results, `build_mock.py` | The app was designed against it; `tests/fixtures/subject_profiles_sample.csv` was cut from it. Replaced by `data/1_knowledge/uts/subject_profiles.csv` |
+| `eda_2026-09/` | `au_vs_us_comparison.csv`, `source_counts.csv`, `esco_absent.csv`, `esco_verbphrase.csv`: outputs of the September EDA notebook (was `data/5_crosscheck/`) | Evidence for the September numbers; no code reads them. ESCO coverage per skill is now `data/1_knowledge/skills/esco_link_review.csv` (D5) |
+| `templates_2026-10/` | Empty column templates: the four label sets (`ad_skills`, `cv_jd_pairs`, `skill_subject_pairs`, `chat_questions`) and `subject_content` | Copy one to start a new hand-made set; the filled sets are in `data/4_evaluation/labels/` |
 
 To come (plan section 2): `dictionary_v1/` (the 133-row dictionary and its ESCO links, once
 `skills_vocabulary.csv` replaces them) and `demand_files_v1/` (the skill-count files, once

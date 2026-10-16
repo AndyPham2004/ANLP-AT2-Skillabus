@@ -49,17 +49,23 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 log = logging.getLogger("fetch_adzuna")
 
 
-def fetch_page(session, country, page, what, where, app_id, app_key, per_page, insecure):
-    """Return (results, total_count) for one page of the Adzuna search endpoint."""
+def fetch_page(session, country, page, what, where, app_id, app_key, per_page, insecure, extra_params=None):
+    """Return (results, total_count) for one page of the Adzuna search endpoint.
+
+    `extra_params` adds other search parameters (count_cert_adzuna.py sends `what_phrase` this way,
+    with `what` empty)."""
     params = {
         "app_id": app_id,
         "app_key": app_key,
         "results_per_page": per_page,
-        "what": what,
         "content-type": "application/json",
     }
+    if what:
+        params["what"] = what
     if where:
         params["where"] = where
+    if extra_params:
+        params.update(extra_params)
 
     response = session.get(
         ENDPOINT.format(country=country, page=page),

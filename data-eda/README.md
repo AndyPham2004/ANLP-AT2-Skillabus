@@ -204,6 +204,15 @@ python src/scrape_handbook.py --course C04372 --list-only   # just the codes
 python src/fetch_adzuna.py --what "data scientist" "data analyst" --where Sydney --pages 5
 ```
 
+**Count certificate demand** (plan D11; `count` only, no ad text; keys from `.env`; details in
+`data/1_knowledge/learning_resources/certifications.md`):
+
+```bash
+python src/count_cert_adzuna.py --limit 3 --dry-run   # try first
+python src/count_cert_adzuna.py                       # 50 calls, 2.5 s apart; fills au_ads_count, hot
+python src/count_cert_mentions.py                     # local_ads_mentions from our own ads
+```
+
 **Block 3 numbers** — counts rows in everything you actually downloaded:
 
 ```bash
