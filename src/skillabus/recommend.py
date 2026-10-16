@@ -311,9 +311,10 @@ def recommend(gaps: list[dict], profiles_csv: str | None = None, method: str | N
     ranked = sorted(subjects.values(), key=lambda rec: (-rec["score"], rec["subject_code"]))
     shown = [subjects[code] for code in chosen]
     # Every gap that has a subject keeps its strongest one in the list, even past MAX_SUBJECTS.
+    # A subject already shown for other gaps is not listed again (#125).
     for label in sorted(labels, key=lambda k: -weight[k]):
         best = next((subjects[e["subject_code"]] for e in evidence[label] if e["subject_code"] in subjects), None)
-        if best and not any(label in rec["covers"] for rec in shown):
+        if best and best not in shown and not any(label in rec["covers"] for rec in shown):
             shown.append(best)
     shown += [rec for rec in ranked if rec not in shown][: max(0, MAX_SUBJECTS - len(shown))]
 

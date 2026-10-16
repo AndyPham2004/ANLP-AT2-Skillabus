@@ -66,6 +66,8 @@ def test_result_follows_the_data_contract(method):
         assert all(e["layer"] in ("learning_objective", "assessment", "weekly_topic", "description")
                    and e["text"] for e in rec["evidence"])
     assert max(rec["score"] for rec in result["recommendations"]) == 1.0
+    codes = [rec["subject_code"] for rec in result["recommendations"]]
+    assert len(codes) == len(set(codes))                   # each subject once (#125)
     path = result["learning_path"]
     assert set(path) == {"subjects", "gaps_closed", "gaps_total", "demand_covered_pct", "plan", "dropped", "outside"}
     assert len(path["subjects"]) <= MAX_PATH and path["gaps_total"] == len(gaps)
