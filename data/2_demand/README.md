@@ -6,7 +6,7 @@ from the repo root.
 
 | File | What | Made by | Rebuild |
 |---|---|---|---|
-| `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, 1,659 rows, every source counted with the one vocabulary. Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
+| `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, 1,812 rows, every source counted with the one vocabulary. Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
 | `skill_counts_v2.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` reads `pct_ads` as `demand_pct` | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
 | `skill_counts_2026.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
 | `top_skills.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** The 15 most-asked technical skills, the Data Scientist role profile (`match.role_profile`) | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
@@ -61,7 +61,7 @@ comparison and every unmapped tool name.
 | `role`, `role_family` | One of the 11 roles of `1_knowledge/taxonomies/role_occupations.csv` and its family, or `Data roles (mixed)` (`Data & AI`, below) |
 | `skill_id`, `skill` | The skill's id and label in `1_knowledge/skills/skills_vocabulary.csv`; every row's skill is in the vocabulary |
 | `source`, `period` | Where the row comes from, and when (for a taxonomy: its release) |
-| `text_type` | `full_text` (ad text), `tool_list` (a list of tool names, no text), `taxonomy` (no counts) |
+| `text_type` | `full_text` (ad text), `tool_list` (a list of tool names, no text), `search_count` (live Adzuna search counts), `taxonomy` (no counts) |
 | `n_ads`, `total_ads` | Ads naming the skill at least once; the ads of that role, source and period. Blank for `taxonomy` |
 | `pct`, `pct_low`, `pct_high` | `100 * n_ads / total_ads` (1 decimal) and its 95% Wilson interval (`recount_recent.wilson`). Blank for `taxonomy` |
 | `importance` | `essential` / `optional` (ESCO), `in_demand` (O\*NET); blank for counted rows |
@@ -74,6 +74,7 @@ Not in it yet: **`pct_required`** (plan D14, required vs preferred), which waits
 | `seek_2019_22` | `2019-22` | full_text | Data Scientist | 3,204 | 197 | Seek Data Scientist ads whose cleaned text names the skill |
 | `data_jobs_2023` | `2023` | tool_list | the 7 roles of `role_profiles.csv` | 263 (ML Engineer) to 4,438 (Data Engineer) | 576 | the role's Australian ads whose tool list names the tool |
 | `recent_2024_26` | `2024-01`, `2026` | full_text | `Data roles (mixed)` | 122, 22 | 149 + 74 | in-sample full-text ads of `ads/jobs_au_recent_2024-2026_clean.csv` naming the skill |
+| `adzuna_2026` | `2026-10` | search_count | all 11 | 62 (ML Engineer) to 1,171 (Software Engineer) | 153 | live Adzuna AU ads on 16 Oct whose title has the role's words and whose text has the skill's phrase; only each role's 15 priority skills searched (section on Adzuna counts) |
 | `esco_occupation` | `v1.2.1` | taxonomy | all 11 | | 456 | (no share) ESCO lists the skill as essential or optional for the role's occupation |
 | `onet` | `v31.0` | taxonomy | all 11 | | 207 | (no share) O\*NET marks the tool In Demand for the role's occupation |
 

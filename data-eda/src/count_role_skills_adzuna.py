@@ -41,8 +41,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from count_cert_adzuna import count_ads  # noqa: E402
 from skillabus import paths  # noqa: E402
 
-QUERIES = paths.DEMAND / "collection" / "adzuna_queries.csv"
-COUNTS = paths.DEMAND / "adzuna_counts_2026-10.csv"
+QUERIES = paths.ADZUNA_QUERIES
+COUNTS = paths.ADZUNA_COUNTS
 COLUMNS = ["role", "role_query", "skill", "skill_query", "count", "role_total", "date"]
 
 # Title words per role, chosen on live counts on 16 Oct (title_only keeps ads with all the words).
