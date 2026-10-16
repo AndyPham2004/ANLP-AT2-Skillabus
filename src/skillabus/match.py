@@ -253,7 +253,13 @@ def roles() -> list[dict]:
 
 
 def role_demand(role: str = DEFAULT_ROLE) -> dict[str, float]:
-    """skill -> share of the role's ads that ask for it."""
+    """skill -> share of the role's ads that ask for it.
+
+    Data Scientist: every dictionary skill's Seek share (skill_counts_v2.csv), not only the 15 of
+    top_skills.csv, so _related() can rank the resume's part skills (Excel over Microsoft Office) as
+    in ad mode; the 15 shares are the same in both files. Other roles: their file's rows."""
+    if role == DEFAULT_ROLE:
+        return _demand()
     return {row["skill"]: float(row["pct_ads"]) for row in _role_rows()[role]}
 
 

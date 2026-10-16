@@ -245,6 +245,7 @@ def test_role_rows_carry_the_role_s_source_and_period(role_file):
     assert all(s["demand_pct_2026"] is None for s in engineer)      # the 2026 sample has data roles only
     scientist = match_role(extract(RESUME))
     assert {(s["demand_source"], s["demand_period"]) for s in scientist} == {("Seek", "2019-22")}
+    assert any(s["demand_pct_2026"] is not None for s in scientist)    # Data Scientist keeps the 2026 trend
     ad = match(extract(AD), extract(RESUME))
     assert {s["demand_source"] for s in ad} == {"Seek"}
 
@@ -259,6 +260,16 @@ def test_partial_credit_and_soft_skills_follow_the_given_demand():
     ad = extract(AD)
     assert soft_skills(ad) == ["Teamwork", "Problem solving"]
     assert soft_skills(ad, {"Problem solving": 40.0, "Teamwork": 10.0}) == ["Problem solving", "Teamwork"]
+
+
+def test_data_scientist_role_ranks_part_skills_by_every_seek_share():
+    # Review #108: with only the 15 top_skills shares as demand, Excel (9.0% of Seek ads) and
+    # Microsoft Office (4.4%) both scored 0 and whichever came first on the resume was shown.
+    from skillabus.match import match_role, role_demand
+    assert role_demand()["Excel"] == 9.0 and len(role_demand()) > 15
+    resume = extract("I build reports in Microsoft Office and model budgets in Excel.")
+    viz = next(s for s in match_role(resume) if s["skill_label"] == "Data visualisation")
+    assert viz["status"] == "partial" and viz["related_skill"] == "Excel"
 
 
 def test_period_is_read_from_the_file():
