@@ -1,14 +1,34 @@
 [theme]
-# Poster palette: navy ink, UTS blue for skills you have, copper for gaps.
-base = "light"
-primaryColor = "#1f4e8c"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f3f5f8"
-textColor = "#0b1a2e"
-font = "sans serif"
+# Skillabus v2 design (docs/design/README.md): dark charcoal, light ink text; teal/amber/rose for
+# have/partial/missing are set in app/ui.py. The fonts are loaded by app/ui.py (Google Fonts).
+base = "dark"
+# One accent for everything interactive (the design's CTA blue): primary button, chosen pills, toggles,
+# focus rings. Status colours (teal / amber / rose) stay semantic and live in app/ui.py.
+primaryColor = "#8fbcff"
+backgroundColor = "#121416"
+secondaryBackgroundColor = "#1b1e22"
+textColor = "#e8e6e1"
+linkColor = "#8fbcff"
+borderColor = "#2a2d31"
+font = "Public Sans, system-ui, sans-serif"
+headingFont = "Literata, Georgia, serif"
+codeFont = "DM Mono, monospace"
+baseRadius = "6px"
+buttonRadius = "6px"
+baseFontSize = 15
+
+[theme.sidebar]
+backgroundColor = "#0e1012"
+secondaryBackgroundColor = "#1b1e22"
+borderColor = "#1f2226"
 
 [server]
 maxUploadSize = 5
+# Streamlit's source watcher probes every module in sys.modules after each rerun. Once the embedding
+# model has loaded, that walks transformers' hundreds of lazy submodules (seconds per rerun, and a
+# traceback per module that needs torchvision). Nobody edits code on a running demo: no watcher.
+# Restart the server after changing app code.
+fileWatcherType = "none"
 
 [browser]
 gatherUsageStats = false
