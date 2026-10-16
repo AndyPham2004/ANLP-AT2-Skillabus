@@ -173,3 +173,20 @@ esco_label_lookup.csv                           100,886 rows
  Cybersecurity Analyst, "DevOps ... Engineer" stays DevOps/SRE even as support).
  Counted in role_skill_demand.csv as source ats_2026, period 2026-10, by
  build_role_skill_demand.py (roles with 30+ ads on their own).
+
+--------------------------------------------------------------------------------
+ jobspipe_2026_skills.csv  --  JobsPipe ads of Sep-Oct 2026, skills only (D2 follow-up)   Claude for Quan, 16 Oct
+--------------------------------------------------------------------------------
+ Source: the JobsPipe API (jobspipe.dev), POST /v1/jobs/search, country AU, posted in the
+ last 60 days, status active, title containing one of the role's phrases, management
+ words excluded; 85 ads per role, 11 roles, 935 of the key's 1,000 one-off credits.
+ Raw: data/raw/jobspipe/jobspipe_ads_2026-10-16.csv and one JSON per role (gitignored:
+ JobsPipe's terms forbid redistributing the data in bulk; the text is the employers').
+ Cleaning (fetch_jobspipe.py): title checked with classify_ats_roles.role_of (884 of 935
+ are the queried role), one row per ad_id and per company + title (793 ads).
+ Committed per ad: id, role, title, company, location, date, employer type, seniority,
+ providers, url (the terms ask to keep the link), n_chars, the vocabulary skills the text
+ names (tier-1 matcher, as every other count) and JobsPipe's ESCO tags. No text.
+ Result: Business Analyst 79, Data Analyst 78, QA/Test Engineer 78, Network/Systems Administrator 77, Software Engineer 73, Data Scientist 71, Data Engineer 70, Machine Learning Engineer 69, Cybersecurity Analyst 68, DevOps/SRE 67, Cloud Engineer 63. Sources: LinkedIn 576, Indeed
+ 183, other boards the rest; 209 ads from agencies.
+ Counted in role_skill_demand.csv as source jobspipe_2026, period 2026-10.

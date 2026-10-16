@@ -15,6 +15,8 @@ from the repo root.
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
 | `ads/ats_2026_clean.csv` | **The 2026 job-board ads with a role** (plan D2): 392 Australian ads from the 65 boards (fetches of 13 and 16 Oct 2026, all professions) posted within 60 days of their fetch, one row per company and title, each given one of the 11 roles or `other` from its title; 85 have a role (Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1). Contacts masked. Section below | Claude for Quan, 16 Oct | `python data-eda/src/classify_ats_roles.py` (needs the raw fetches in `data/raw/`) |
+| `ads/jobspipe_2026_skills.csv` | **The JobsPipe 2026 ads, without their text**: 793 Australian ads posted 23 Sep to 16 Oct 2026, fetched 16 Oct from the JobsPipe API (Indeed 183, LinkedIn 576, ATS boards the rest), 85 per role by title query, kept when the title is that role; per ad: id, role, title, company, location, date, employer type (209 agencies), seniority, link, the vocabulary skills its text names (tier-1 matcher) and JobsPipe's own ESCO tags. Business Analyst 79, Data Analyst 78, QA/Test Engineer 78, Network/Systems Administrator 77, Software Engineer 73, Data Scientist 71, Data Engineer 70, Machine Learning Engineer 69, Cybersecurity Analyst 68, DevOps/SRE 67, Cloud Engineer 63. Section below | Claude for Quan, 16 Oct | `python data-eda/src/fetch_jobspipe.py` (one-off: the free key has 1,000 credits once; `--rehit` recomputes the skills from the raw file without calls) |
+| `collection/jobspipe_totals_2026-10-16.csv` | Per role: the JobsPipe title query, its total live Australian ads in the 60-day window on 16 Oct (170 Data Scientist to 1,450 Software Engineer), fetched and kept | Claude for Quan | same script |
 | `ads/CLEANING_NOTES.txt` | What each cleaned file is, who uses it, how it was cleaned (was `data-eda/data/clean/README.txt`) | Van Thong | Text |
 | `adzuna_counts_2026-10.csv` | Live Adzuna search counts per skill x role, 11 roles (plan D12): `role, role_query, skill, skill_query, count, role_total, date`. Section below | Van Thong, 16 Oct | `python data-eda/src/count_role_skills_adzuna.py` (needs an Adzuna key; 173 calls) |
 | `collection/adzuna_queries.csv` | The title query of each role and the phrase searched for each of its 15 priority skills, with a note wherever the phrase is a judgement | Van Thong, 16 Oct | `count_role_skills_adzuna.py --write-queries`, then by hand |
@@ -76,6 +78,7 @@ Not in it yet: **`pct_required`** (plan D14, required vs preferred), which waits
 | `data_jobs_2023` | `2023` | tool_list | the 7 roles of `role_profiles.csv` | 263 (ML Engineer) to 4,438 (Data Engineer) | 576 | the role's Australian ads whose tool list names the tool |
 | `recent_2024_26` | `2024-01`, `2026` | full_text | `Data roles (mixed)` | 122, 22 | 149 + 74 | in-sample full-text ads of `ads/jobs_au_recent_2024-2026_clean.csv` naming the skill |
 | `ats_2026` | `2026-10` | full_text | `Software Engineer`; `Data roles (mixed)`; `IT roles (mixed)` | 33; 26; 26 | 244 | ads of `ads/ats_2026_clean.csv` with that role (or folded into a mixed block) naming the skill |
+| `jobspipe_2026` | `2026-10` | full_text | all 11 | 63 to 79 | 1006 | ads of `ads/jobspipe_2026_skills.csv` with that role whose text named the skill (found at fetch time) |
 | `adzuna_2026` | `2026-10` | search_count | all 11 | 62 (ML Engineer) to 1,171 (Software Engineer) | 153 | live Adzuna AU ads on 16 Oct whose title has the role's words and whose text has the skill's phrase; only each role's 15 priority skills searched (section on Adzuna counts) |
 | `esco_occupation` | `v1.2.1` | taxonomy | all 11 | | 456 | (no share) ESCO lists the skill as essential or optional for the role's occupation |
 | `onet` | `v31.0` | taxonomy | all 11 | | 207 | (no share) O\*NET marks the tool In Demand for the role's occupation |
@@ -104,6 +107,17 @@ How each source is counted:
   counted. Today: Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1. The period is `2026-10`, not `2026`, because the 22 in-sample 2026 ads of
   `recent_2024_26` are among these ads (same boards): the two sources overlap and must never be added together.
   Bias to state: 65 employers that use a modern ATS, mostly technology companies, mostly Sydney and Melbourne.
+- **`jobspipe_2026`: the JobsPipe ads by role, every role its own block.** 85 ads per role were fetched on 16 Oct
+  (`fetch_jobspipe.py`): country AU, posted in the last 60 days, active, title containing one of the role's phrases
+  (`collection/jobspipe_totals_2026-10-16.csv`), management words excluded; the title is then checked with the
+  job-board rules (`classify_ats_roles.role_of`) and one row kept per company and title: 793 ads, 63
+  to 79 per role. The text is not committed (JobsPipe's terms forbid redistributing the data in bulk and
+  the text belongs to the employers), so the skills each ad names were found at fetch time with the same tier-1
+  matcher and committed per ad; `fetch_jobspipe.py --rehit` recomputes them from the raw file after a vocabulary
+  change. JobsPipe aggregates Indeed and LinkedIn postings itself; we used its API within its quota and keep the
+  link to every posting, as its terms ask. 209 of the 793 ads are from recruitment agencies
+  (`employer_type`), which repeat skill lists across clients. Overlaps with `ats_2026` are possible (ATS boards are
+  among JobsPipe's sources) and the two are never added together.
 - **`data_jobs_2023`**: the Australian rows, de-duplication and title map of `build_role_profiles.py`
   (senior titles fold into their role), and its denominator: the role's ads naming at least one tool (9,234
   of 10,925 ads). Each tool name maps to a vocabulary label: the 148 dictionary rows exactly as
