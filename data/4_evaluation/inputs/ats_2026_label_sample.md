@@ -1,0 +1,1294 @@
+# 2026 ads to label (17 Oct 2026)
+
+Label into `data/4_evaluation/labels/ad_skills_2026.csv`, rules in `data/4_evaluation/labels/README.md`.
+`skill_label` = a name from `inputs/vocabulary_detection_labels.csv` when it is there, else your own short
+name with `in_dictionary` = n. Ads marked **second annotator** are labelled by both annotators.
+
+## 1. ats-sr-744000150221047 · Business Analyst
+*NetSuite Functional Analyst*, carsales. https://api.smartrecruiters.com/v1/companies/carsales/postings/744000150221047
+
+Are you ready to be a big part of something big?
+CAR Group has been driving innovation and growth since the 1990s. Collectively, our world leading marketplaces bring together deep expertise powered by the best people, data, and technology across Oceania, Asia and The Americas.
+We deliver world leading technology and advertising solutions designed to make buying and selling a great experience and are the parent company of wholly owned digital marketplaces in Australia (carsales), South Korea (Encar), the United States (Trader Interactive) and Chile (chileautos), in addition to being a majority shareholder of webmotors in Brazil.
+With a vision to be the global leader in online vehicle marketplaces, we’re transforming how people buy and sell across the world. We discover new ideas and bring them to life. We continue to grow, and we continue to evolve and we’re committed to taking innovative steps to get there.
+When it comes to your career, we want to offer meaningful opportunities that empower you to make a lasting impact. But for that to happen, we strive to feel small, small enough to stay agile, learn across teams, and connect authentically with each other.
+This is your opportunity to join the NetSuite team contributing to the ongoing roadmap of work in NetSuite as part of the broader corporate systems function. The NetSuite Functional Analyst partners with stakeholders to translate business needs into well-defined functional requirements and scalable NetSuite solutions.
+We embrace a hybrid way of working mixing working from home with the energy and connection that comes from being together in the office. We champion flexibility and have many policies, procedures and leave options to support flexible work.  
+What’s on offer
+A place where you can move your career forward, where you’ll be continuously backed to make new ideas happen, and the chance to do work that makes real, significant impact in the world. 
+We’re proud to be recognised as one of Australia’s Best Workplaces™ by Great Place to Work®, a Family Friendly Workplace and a WORK180 endorsed employer for women.
+The support of a highly engaged, high-performing team including a leadership team that you’ll actually have face time with. 
+24 weeks paid parental leave for primary caregivers, four weeks paid secondary caregivers leave and paid family & fertility planning leave.
+What you’ll be doing
+
+You’ll contribute as a trusted NetSuite specialist supporting administration, solution development, and strategic enhancements in a highly reliable and secure application environment.
+As part of our expanding corporate systems team, you’ll help advance our NetSuite roadmap while bridging business needs with thoughtful technical solutions.
+Deliver NetSuite implementations by partnering with internal stakeholders to translate complex business requirements into scalable NetSuite solutions
+Design and configure NetSuite modules to enhance business processes across finance, operations, and reporting
+Support cross-functional projects by collaborating between business units, IT, and third-party vendors/development teams
+Guide and coordinate the rollout of enhancements to the production environment, involving collaboration across all IT areas
+Document processes and provide training to end-users and team members
+What we are looking for
+
+We’re looking for someone with in-depth understanding of NetSuite and a genuine interest in solving business challenges through practical, scalable solutions.
+You’ll thrive in this role if you have:
+Experience as a NetSuite Administrator, Functional Consultant, or Analyst
+Sound knowledge of NetSuite ERP features, especially around finance, accounting, reporting, and workflow configuration
+Experience working in a global, multi-subsidiary NetSuite environment (multi-currency/intercompany experience is a bonus)
+Familiarity with JavaScript and SuiteScript APIs (you won’t be doing heavy scripting, but it’s helpful to understand what’s possible)
+A good understanding of core business processes such as Finance, Procurement, and Operations
+Inclusive communication style, with the ability to work effectively with technical and non-technical stakeholders
+Exposure to Oracle EPM (e.g. ARCS, FCCS, Planning), Salesforce, and/or Celigo & integrator.io is highly regarded
+Experience using project management tools (e.g. JIRA, Confluence) and applying a structured, thoughtful approach to analysis, implementation, and process improvement
+A solutions-focused mindset, with the ability to manage priorities in a dynamic environment
+We know not everyone will meet every requirement, and that’s okay. If you’re excited about the role and believe you can make a difference, we’d love to hear from you.
+A few other things we want you to know...
+As an equal opportunity employer, CAR Group welcomes applications from individuals of all backgrounds, identities, abilities, and life experiences. We are committed to fostering a diverse and inclusive workplace where everyone feels valued and supported.
+If you have a disability or require adjustments to participate fully in the recruitment process, please let us know—we’re here to support you.
+We understand the importance of work-life balance and offer flexible working arrangements, including part-time options. If you’d like to explore this, just ask during the process.
+We’re also a proud Circle Back Initiative employer, which means we commit to responding to every applicant.
+Successful candidates joining the CAR Group team will need to complete a National Police Record check and must have full-time Australian working rights.
+So come and join us - because every role is a big role in our plans to go big.
+
+## 2. ats-sr-6000000001483258 · Business Analyst
+*Senior Business Analyst*, Judo Bank. https://api.smartrecruiters.com/v1/companies/judobank/postings/6000000001483258
+
+A bit about us
+At Judo, we’re redefining business banking for the modern era. Built on teamwork, trusted relationships and a challenger spirit, we exist to better serve Australian SMEs. What began in 2016 as a bold idea has grown into one of the fastest‑growing new banks globally, with more than 30 locations nationwide.
+We put our people and customers at the heart of everything we do. Our agility means we can say ‘yes’ when others say ‘no’, delivering personalised banking that helps businesses access the funding they need, when they need it. Relationships matter here – with our customers and with each other.
+Our culture – a multi‑award‑winning place to work
+We firmly believe that culture eats strategy for breakfast, lunch, and dinner and that the most important investment we can make is in our people. Our values of Trust, Teamwork, Accountability and Performance guide how we work every day.
+Judo was built from the ground up with a clear purpose: to be the most trusted SME business bank in Australia. Our customers and relationships are at the heart of how we work, not bureaucracy. We think differently, invite new ideas, and create an environment where people feel they belong and are empowered.
+We’re proud to be externally recognised too – including being named on the AFR BOSS Best Places to Work list for four consecutive years. We are certified as a Great Place To Work® Australia organisation, being recognised as one of Australia’s Best Workplaces™ 2025, celebrating our dedication to fostering an inclusive, empowering environment.
+Our vision is to build a world-class SME business bank and it’s our people that can make it happen.
+Now, about this opportunity… 
+As a Senior Business Analyst, you will play a key role in shaping and delivering strategic business and technology initiatives across Judo Bank. Working closely with business, technology and delivery teams, you will bring structure, clarity and momentum to complex work by leading discovery, eliciting and documenting requirements, improving processes, and translating business needs into actionable delivery outcomes.
+This role suits an experienced, pragmatic and delivery-focused analyst who can build trusted stakeholder relationships, challenge assumptions, manage competing priorities and help deliver meaningful value for customers, colleagues and the Bank.
+If that excites you, this just might be your dream job: 
+Leading business analysis activities from discovery through implementation across a diverse portfolio of business and technology change initiatives
+Partnering with business, product, technology, operations and risk stakeholders to understand objectives, customer needs and operational challenges
+Facilitating workshops, interviews and analysis activities to define business requirements and solution outcomes
+Eliciting, analysing, documenting and managing business, functional, process and data requirements
+Analysing current and future state processes to identify opportunities for optimisation, automation and improved customer outcomes
+Defining business rules, decisioning requirements and operational controls
+Developing user stories, acceptance criteria and supporting analysis artefacts to enable delivery
+Working with Product Owners, architects, engineers and delivery teams to assess solution options and support design decisions
+Assessing business impacts, dependencies, risks and implementation considerations
+Supporting testing, implementation, change readiness and adoption activities
+Maintaining traceability between objectives, requirements, solutions and delivered outcomes
+Contributing to the continuous improvement of business analysis practices, standards and capability across Judo
+Mentoring and supporting less experienced analysts where required
+You’ll likely bring: 
+Five or more years’ experience as a Senior Business Analyst or Lead Business Analyst in complex business and technology delivery environments
+A strong understanding of banking products, customer journeys, operational processes and regulatory obligations
+Demonstrated experience delivering business and technology change across financial services, banking transformation or related environments
+Experience working in Agile delivery environments with Product Owners, delivery teams and technical stakeholders
+Strong business analysis capability across discovery, requirements elicitation, workshop facilitation, process analysis, mapping and optimisation
+Experience developing user stories, managing backlogs, documenting requirements and maintaining traceability from business need through to delivery outcome
+Excellent stakeholder management skills and the ability to work effectively across business and technical audiences
+A pragmatic approach to navigating ambiguity and delivering outcomes in fast-paced environments
+Desirable experience delivering lending or deposit product development, digital banking initiatives, customer-facing solutions or operational banking process transformation
+Exposure to Salesforce, Jira, Confluence and microservice-based architectures will be highly regarded
+Curiosity, adaptability and a commitment to continuous improvement
+A collaborative, relationship-led approach aligned to Judo’s values of Trust, Teamwork, Accountability and Performance
+If you don’t meet every requirement, we still encourage you to apply – your experience, mindset and potential matter to us.
+Why you’ll love working at Judo:
+Two Weeks of Additional Leave Every Year
+Paid Volunteer Leave
+Our signature Judo induction experience
+Big Life Event Leave
+Holistic Health & Wellbeing Offerings designed to support your best life, including access to GPs, nutritionists, coaches and psychologists via our partner, CU Health
+Working from Home Setup Allowance
+Flare Benefits & Discounts - access to a wide range of everyday savings and perks
+Freedom to work flexibly with flexible work options including hybrid working
+Equal access to Company Paid Parental Leave – up to 20 weeks
+Education Assistance
+Judo is proud to be an inclusive workplace where everyone is valued and can feel that they belong. We welcome applications from people of all backgrounds, experiences and identities.
+
+Please no agencies! We maintain a preferred panel, and kindly request no unsolicited contact. We do not hold any responsibility for dispute over candidate ownership if you have not been engaged directly. 
+ 
+
+To learn more about how Judo manages your personal information during the recruitment process, please refer to our Privacy Statement. By providing your information, you consent to its collection, use, disclosure, and management as outlined therein.
+
+## 3. ats-sr-744000153102592 · Cloud Engineer
+*Principal Cloud Platform Engineer*, Nearmap. https://api.smartrecruiters.com/v1/companies/nearmap/postings/744000153102592
+
+Nearmap is unique. An Australian global technology company with incredible people; a market-leader with energy and spirit. Nearmap was named as one of the world’s 10 Most Innovative Companies of 2020 by Fast Company magazine – and we’re growing.
+Nearmap provides a virtual model of the real world – at a scale and detail that hasn’t been done before. Our ambition is to be the source of truth that shapes our liveable world. At Nearmap, we have an appetite for energetic and engaged people and we are currently seeking a Principal Cloud Platform Engineer to join our DevOps team. 
+What you’ll do 
+As Principal Cloud Platform Engineer, you’ll own the cloud foundation that Nearmap AI runs on. You’ll lead a team of up to three engineers, set the technical direction for the infrastructure layer beneath our machine learning platform, and stay hands-on in the systems you design. 
+This is a leadership role for a seasoned engineer who thinks in systems. Nearmap captures and processes aerial imagery at a scale that breaks most infrastructure: thousands of EKS nodes running batch inference, GPU fleets spanning two clouds, and production model endpoints behind customer products. Someone has to make that substrate reliable, secure, and affordable. That’s you. 
+Reporting to the Director, AI Systems Engineering, you work side by side with the Principal AI Platform Engineer. They build the machine learning platform: workflow orchestration, distributed training, serving, and LLMOps. You build what it stands on: the Kubernetes fleet across AWS and GCP, GPU-capable compute, networking, identity, infrastructure as code, CI/CD, and the observability and security foundations every AICV service depends on. 
+To be clear about the boundary: you own the infrastructure platform, not the machine learning tooling that runs on it, and not the customer-facing AI products. Your first customer is AICV, and it is the most demanding infrastructure customer we have. What proves out there sets the pattern for the wider Nearmap developer platform, so you’ll co-own standards, paved paths, and shared components with the Platform team in ETO. 
+Day to day, you’ll : 
+Own the technical direction for cloud infrastructure across AICV: Kubernetes fleet design on EKS and GKE, compute, networking, identity, and storage. 
+
+Design and operate GPU-capable compute — node pools, drivers, device plugins, autoscaling, and multi-tenant isolation — so the AI platform team schedules against it without thinking about the hardware. 
+
+Make the critical infrastructure design calls, and run technical evaluation and build-versus-buy with the Director and your AI platform counterpart. 
+
+Lead and mentor a team of up to three platform engineers, and own technical hiring for the team. 
+
+Write and own Terraform for the whole footprint, and build the self-service paths that let AICV teams provision what they need without raising a ticket. 
+
+Build the CI/CD and observability foundations that AICV services and the ML platform rely on: pipelines, metrics, logs, and traces. 
+
+Own reliability and cost for the infrastructure layer: service level objectives, cloud spend across AWS and GCP, capacity, and major incident response. You are on call for what you build. 
+
+Co-own the standards and paved paths of the wider Nearmap developer platform with the Platform team in ETO, so AICV patterns become company patterns. 
+
+Cloud security 
+Security is not a separate workstream here. It is a property of the platform you build, and you co-own it: you own the infrastructure controls, Security owns policy and standards, and the Platform team owns the company-wide pattern. 
+Least-privilege identity across AWS and GCP, secrets management, network segmentation, and private connectivity between clouds. 
+
+Supply chain and workload security for the fleet: container image scanning, admission policy, runtime controls, and CVE response. 
+
+Encryption, key management, and access control over the imagery and model artefacts AICV trains and infers on. 
+
+Controls enforced in code and in the pipeline, so the secure path is the default path. 
+
+ 
+
+About you 
+You’re a systems thinker. You see the whole stack, and you know which layer a problem actually belongs to. 
+
+You build platforms, not tickets. You’d rather ship something a team can self-serve on than be the person they have to ask. 
+
+You’re a collaborative leader. You elevate your team by sharing knowledge, setting high standards, and fostering an environment where the best ideas win. 
+
+You take ultimate ownership. You’re relentless about reliability, security, and cost for everything you and your team run. 
+
+You’re a builder first. You’ve earned the right to set direction because you’ve operated the systems you’re now designing. You still open the editor. 
+
+What you’ll bring 
+10+ years in software or infrastructure engineering, with at least 4 years focused on building and operating large-scale cloud platforms or distributed systems in production. 
+
+Proven experience leading technical projects and mentoring or managing a team of engineers. 
+
+Deep, production-level expertise designing, building, and operating Kubernetes at scale (EKS or GKE), including node pool and GPU compute management. 
+
+Hands-on experience building and managing cloud infrastructure on AWS and GCP with infrastructure as code (Terraform or Pulumi). 
+
+Strong grounding in cloud networking, identity and access management, and secrets management, with the judgment to design for least privilege. 
+
+Production-quality Python or Go for platform tooling, and practical depth in modern software practice: Git, CI/CD, monitoring, alerting, and automated testing. 
+
+Bachelor’s or Master’s degree in computer science, engineering, or a related technical field, or equivalent practical experience. 
+
+Highly desirable 
+GPU infrastructure at fleet scale: NVIDIA drivers and device plugins, MIG or time-slicing, and multi-cloud capacity strategy. 
+
+Multi-tenant Kubernetes: namespace isolation, resource quotas, admission policies, and abstractions such as custom operators or Crossplane. 
+
+Running infrastructure beneath ML workloads such as Argo Workflows, Ray, or Kubeflow, even without owning the ML layer yourself. 
+
+GitOps and progressive delivery at scale: ArgoCD or Flux, with canary and blue-green strategies. 
+
+FinOps across more than one cloud: tagging, rightsizing, commitment strategy, and GPU utilisation reporting. 
+
+Cloud security and compliance, including SOC 2 and the NIST Cyber Security Framework. 
+
+Petabyte-scale data pipelines, or geospatial and computer vision workloads. 
+
+Why you’ll love working at Nearmap 
+We move fast and work smart, often wearing multiple hats. We adapted to remote working with ease and are continually looking at ways to improve. We’re proud of our inclusive, supportive culture, and maintain a safe environment where everyone feels a sense of belonging and can be themselves. 
+In addition to your annual leave, Nearmap offers: 
+4 extra “YOU” days off each year. Take a break, no questions asked. 
+
+Company-sponsored volunteering days to give back. 
+
+Generous parental leave policies for growing families. 
+
+Work from Overseas Policy: explore the world in the approved list of cities while you work. 
+
+Discounted Private Health Insurance plans. 
+
+A Nearmap subscription (naturally). 
+
+Thanks, but we got this! Nearmap does not accept unsolicited resumes from recruitment agencies and search firms. Please do not email or send unsolicited resumes to any Nearmap employee, location or address. Nearmap is not responsible for any fees related to unsolicited resumes.
+
+Some of our benefits:
+Nearmap takes a holistic approach to our employees’ emotional, physical and financial wellness. Some of our current benefits include:
+Quarterly wellbeing day off - Four additional days off annually for your 'YOU' Days
+Wellbeing and technology allowance
+Annual flu vaccinations
+Hybrid flexibility for this role
+Nearmap subscription (of course!)
+Stocked kitchen with access to all the snacks you need
+In-office lunch every Tuesday and Thursday at our Sydney CBD office
+Showers available for anyone cycling to work or lunchtime gym-goers!
+Why you'll love working at Nearmap:
+We move fast and work smart; often wearing multiple hats. We’re proud of our inclusive, supportive culture, and maintain a safe environment where everyone feels a sense of belonging and can be themselves.
+Learn More About The Work We Do
+YouTube Page
+LinkedIn Page
+Thanks, but we got this! Nearmap does not accept unsolicited resumes from recruitment agencies and search firms. Please do not email or send unsolicited resumes to any Nearmap employee, location or address. Nearmap is not responsible for any fees related to unsolicited resumes.
+
+## 4. ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6 · Cybersecurity Analyst · **second annotator**
+*Senior Cyber Security Analyst*, Megaport. https://jobs.lever.co/megaport/8a01506d-c642-4e08-8b2e-3dacead446f6
+
+About Megaport
+We’re not your typical tech company – and we don’t want to be. Megaport is the global leader in Network as a Service (NaaS), and has transformed the way businesses connect to the cloud, data centers, and each other. We’re publicly listed on the Australian Stock Exchange and partnered with the biggest names in tech like Amazon, Microsoft, Google, Oracle, IBM, and more. Headquartered in Brisbane with a crew of over 600 people spread across Asia-Pacific, Europe, and the Americas, our employees enjoy an environment that is collaborative, supportive, and (actually) fun.
+ 
+Our Team Culture
+We’re a team of problem solvers, pixel pushers, code slingers, and cloud fanatics. Culture is more than a poster on the wall here – collaboration beats hierarchy, curiosity fuels our growth, and everyone’s voice matters. We take our work seriously, but not ourselves. We work across time zones to execute on our global vision, trust each other to get things done, and never compromise our values for commercial gain. Most importantly, we place our customers at the center of everything we do.
+ 
+We’re committed to increasing representation in the tech industry and welcome applicants from all backgrounds. Don’t meet every requirement? That’s okay. If you’re excited about this role, we encourage you to apply.
+
+🧬 Our Vibe
+Customer-first always
+Integrity > everything
+Small teams, huge outcomes
+We celebrate curiosity, collaboration, and a can-do attitude
+Success gets loud cheers—see our “Legend” & “Kudos” awards 🏆
+If you thrive in a fast, globally distributed environment (and appreciate a good meme), you’ll feel right at home.
+🚀 Why This Role Rocks We are seeking a Senior Cyber Security Analyst to help drive the governance, risk management, and compliance strategies to protect our critical information systems and assets. Based in our Brisbane headquarters, you will join a collaborative team of GRC specialists focused on securing Megaport’s global business.
+
+Reporting to the Head of Cyber Security Compliance, you will bridge the gap between technical security controls and global business objectives. You will support the maintenance and improvement of our existing security compliance frameworks with a specific focus on ISO27001:2022 and SOC 2 Type 2 and actively assist with assessing new certifications to support business growth. 🎯 What You’ll Be Doing Lead the security compliance certification activities such as ISO27001:2022 and SOC 2 Type 2.
+
+Mentor cyber security analysts in the team and provide support where required.
+
+Prepare reports and documentation to support cyber security and privacy incident investigations, regulatory compliance activities, and internal compliance processes.
+
+Assist with customer security assurance activities such as responding to customer security and privacy questionnaires. 🧠 What You Bring 3-5 years of experience in a Cyber Security GRC role. 
+
+Experience with leading ISO27001 and SOC 2 Type 2 certification programs, including supporting internal and external audit activities.
+
+Ability to interpret legal or regulatory documentation and coordinate responses with internal teams and legal counsel.
+
+Strong research, analytical, and organisational skills, with excellent attention to detail.
+
+Intermediate to advanced English proficiency (B2 or higher) for handling international notifications and communications.
+
+Comfortable working in a fast-paced, global environment, collaborating across teams and regions.
+
+Experience with compliance, monitoring, or workflow tools (e.g., Jira, Confluence, Vanta or OneTrust.
+
+Familiarity with global regulations and standards such as HIPAA, NIS2, DORA, and APRA CPS 230/234. 💥 Why You’ll Love It Here Flexible work (remote-friendly & balanced schedules)
+
+Birthday leave to celebrate yourself 🎉
+
+Health & wellness program
+
+Global team of experts who love what they do
+
+Recognition programs that actually mean something #LI-DNI
+
+If you have any questions, please reach out to Megaport's Talent Acquisition Team at [EMAIL]
+ 
+NOTE: All Megaport business correspondence is conducted via our business email accounts (@megaport.com). If you have any concerns, please reach out to Megaport's careers team [EMAIL] directly and we will verify the legitimacy of any communication. Megaport will not ask you to create an account via Microsoft teams, and does not associate with any email accounts under "@megaportau.com".
+ 
+All applications will be treated in confidence.
+Please see Part 2 of our Privacy Policy to see what information Megaport collects from job applicants, why, and how we store and use it. Note that you’re entitled to know what personal data of yours Megaport holds, to request updates, rectification, and in some circumstances restriction or deletion thereof if you object (you being entitled to withdraw your consent to our holding your information at any time). Please see Part 5 of our Privacy Policy for more details on this and how to contact Megaport's data protection officer if you have any further privacy-related questions. Candidates who meet the selection criteria will be invited to attend an interview. Strictly no Recruitment Agencies.
+
+## 5. ats-gh-8815229002 · Cybersecurity Analyst
+*Senior Security Engineer, Incident Response Team (Australia)*, GitLab. https://job-boards.greenhouse.io/gitlab/jobs/8815229002
+
+GitLab is the intelligent orchestration platform for DevSecOps. GitLab enables organizations to increase developer productivity, improve operational efficiency, reduce security and compliance risk, and accelerate digital transformation. More than 50 million registered users and more than 50% of the Fortune 100* trust GitLab to ship better, more secure software faster.
+
+The same principles built into our products are reflected in how our team works: we embrace AI as a core productivity multiplier, with all team members expected to incorporate AI into their daily workflows to drive efficiency, innovation, and impact. GitLab is where careers accelerate, innovation flourishes, and every voice is valued. Our high-performance culture is driven by our values and continuous knowledge exchange, enabling our team members to reach their full potential while collaborating with industry leaders to solve complex problems. Co-create the future with us as we build technology that transforms how the world develops software.
+
+* Fortune 500® is a registered trademark of Fortune Media IP Limited, used under license. Claim based on GitLab data. Fortune 100 refers to the top 20% ranked companies in the 2025 Fortune 500 list, published in June 2025. Fortune and Fortune Media IP Limited are not affiliated with, and do not endorse products or services of GitLab.
+
+An overview of this role
+
+As a Senior Security Engineer on GitLab's Security Incident Response Team (SIRT), you will be on the frontline of protecting both GitLab.com and GitLab the company from security threats.
+
+You will lead high-impact incidents and investigations, drive continuous improvements in defense, detection and response capabilities, and help scale security operations through automation and intelligent workflows.
+
+Operating within a 24/7 global environment (follow the sun model), you will own incidents end-to-end - from detection and triage through containment, eradication, and recovery - while partnering cross-functionally to strengthen GitLab’s overall security posture. A key aspect of this role is leveraging automation and AI-driven approaches to improve detection fidelity, accelerate investigations, and reduce response times. You will help shape how modern tooling and data are applied to stay ahead of evolving adversary tactics.
+
+This role is ideal for someone who thrives in high-tempo environments, brings strong DFIR expertise, and is equally passionate about operational excellence and building scalable detection and response systems and workflows.
+
+Find out more about the Security Operations team and responsibilities here:
+
+Incident Response
+
+Trust and Safety
+
+Red Team
+
+Threat-Intelligence
+
+Detection Engineering
+
+What you’ll do   
+
+Lead and coordinate end-to-end incident response for high-severity security events. SIRT operates a 24/7 follow the sun model across AMER, APAC and EMEA. This role covers the APAC window and participates in a rotating on-call schedule. 
+
+Prepare clear executive communications that keep stakeholders informed during incidents
+
+Investigate complex security incidents across cloud environments, applying strong Digital Forensics and Incident Response (DFIR) methodologies
+
+Partner with Detection Engineering to design and implement detection capabilities, including SIEM use cases, alerting strategies, and telemetry pipelines
+
+Build and enhance automation and AI-assisted workflows to improve triage, investigation speed, and response consistency
+
+Partner with Threat Intelligence to contextualize threats and improve detection coverage
+
+Conduct root cause analysis (RCA) and lead post-incident reviews to drive continuous improvement and risk reduction
+
+Develop and maintain runbooks, playbooks, and operational documentation
+
+Collaborate cross-functionally (Engineering, Infrastructure, Legal, Product, Communications, etc) during incidents and lead proactive initiatives (e.g. tabletops)
+
+Mentor other engineers and help elevate the team’s overall incident response maturity
+
+What you’ll bring 
+
+Strong experience in security incident response and investigations in cloud-first environments
+
+Experience using or administering Git/GitLab in a security or engineering context
+
+Hands-on experience with SIEM, EDR, and/or detection engineering
+
+Experience with cloud platforms (AWS & GCP)
+
+Familiarity with threat intelligence and adversary tactics (e.g., MITRE ATT&CK)
+
+Experience building or working with automation (e.g., Python, scripting, SOAR platforms)
+
+Interest or experience in applying AI/ML or data-driven techniques to detection, triage, or response workflows
+
+Strong analytical and problem-solving skills; ability to operate effectively during high-severity incidents
+
+Excellent written communication skills with a passion for clear, actionable documentation
+
+Growth mindset with a proactive approach to identifying and mitigating security risks
+
+About the team
+
+The Security Incident Response Team (SIRT) is a globally distributed team of engineers split across 3 core regions; AMER, APAC and EMEA, and is at the forefront of security events that impact both GitLab.com and GitLab cloud and corporate environments. We are both reactive and proactive, leading security investigations, incident response support and response resolution, through to cyber threat analysis and detection and response engineering. Even though we’re a global team, we work together in a cross-regional manner and have automation and processes to facilitate collaboration when resolving incidents, handovers, and general collaboration for project work as well.
+How GitLab Supports Full-Time Employees
+
+Benefits to support your health, finances, and well-being
+
+Flexible Paid Time Off 
+
+Team Member Resource Groups
+
+Equity Compensation & Employee Stock Purchase Plan
+
+Growth and Development Fund
+
+Parental Leave  
+
+Please note that we welcome interest from candidates with varying levels of experience; many successful candidates do not meet every single requirement. Additionally, studies have shown that people from underrepresented groups are less likely to apply to a job unless they meet every single qualification. If you're excited about this role, please apply and allow our recruiters to assess your application.
+
+Country Hiring Guidelines: GitLab hires new team members in countries around the world. All of our roles are remote, however some roles may carry specific location-based eligibility requirements. Our Talent Acquisition team can help answer any questions about location after starting the recruiting process.  
+
+Privacy Policy: Please review our Recruitment Privacy Policy. Your privacy is important to us.
+
+GitLab is proud to be an equal opportunity workplace and is an affirmative action employer. GitLab’s policies and practices relating to recruitment, employment, career development and advancement, promotion, and retirement are based solely on merit, regardless of race, color, religion, ancestry, sex (including pregnancy, lactation, sexual orientation, gender identity, or gender expression), national origin, age, citizenship, marital status, mental or physical disability, genetic information (including family medical history), discharge status from the military, protected veteran status (which includes disabled veterans, recently separated veterans, active duty wartime or campaign badge veterans, and Armed Forces service medal veterans), or any other basis protected by law. GitLab will not tolerate discrimination or harassment based on any of these characteristics. See also  GitLab’s EEO Policy  and  EEO is the Law . If you have a disability or special need that requires  accommodation , please let us know during the  recruiting process .
+
+## 6. ats-gh-4739948005 · Data Analyst
+*Data Analyst - AU*, Eucalyptus. https://job-boards.greenhouse.io/eucalyptus/jobs/4739948005
+
+We're the world's leading consumer healthcare platform, supporting millions of patients across the US, Australia, the UK, Germany, Japan, Spain and Canada.
+
+We're driven by the belief that good health should last a lifetime, and that to get there we need to deliver the personalised, high quality and empathetic care that the traditional system cannot support.
+
+You'll partner with our care teams of prescribers, nurses, health coaches, pharmacists and dietitians to support patients across preventative health, weight management and specific women's and men's health conditions.
+
+We joined Hims & Hers so that you can do all of the above on a bigger scale, with more ambition, a stronger global brand and the resources to deliver care to patients in dozens of countries.
+
+We're looking for people who appreciate and are excited by the enormity and uniqueness of this challenge, and want to work in the most ambitious, smart, fast moving and positive sum environment of their lives to transform how healthcare is delivered globally.
+
+We hope that's you.
+
+About the role (What you’ll be doing)
+
+Drive strategic insights – Take ownership of key analytical projects, translating complex data into actionable insights that directly inform business-critical decisions across multiple teams and functions.
+
+Optimise data architecture – Enhance our central data model for Eucalyptus globally, collaborating with our analytics team in the UK and Philippines to ensure scalability and consistency that drives decision-making at both local and global levels.
+
+Empower data-driven decisions – Elevate our reporting and dashboard capabilities, establishing a single source of truth for critical metrics and enabling teams with self-service tools to independently access and apply data.
+
+Monitor performance & influence growth – Track and analyse key initiatives, identify trends, and uncover growth opportunities that drive business-wide impact, from acquisition to retention and beyond.
+
+About you (Who you are)
+
+2-5 years of data analyst experience – You’ve created and owned end-to-end data products in consumer organisations.
+
+Advanced analytical thinking & tool proficiency – Expert in SQL, Python, and Sheets, with a focus on uncovering drivers of business performance and shaping data-informed strategy.
+
+Applied data science for commercial outcomes – Skilled in using statistical techniques, experimentation, and behavioural data to answer complex business questions and guide commercial decision-making.
+
+Ambiguity & a fast-paced environment excites you – Your curiosity drives you to ask ‘why?’ to get to the next level of understanding; and you can do this work at speed.
+
+You see more than the data – You have strong business and commercial acumen, and get to the ‘so what’ based on the analysis you do. You help shape the right analysis for the decision at hand.
+
+Attention to detail – You have a high bar for ‘correct’, and work through nuances in the data to surface when an insight can be relied on and when it can’t.
+
+Exceptional communicator – You distil complex analyses into clear, actionable insights that cut through the noise, enabling teams to quickly understand the ‘so what’ and take decisive action.
+
+So, why join Eucalyptus?
+
+We move at incredible speed - You’ll work with teammates who build in the open by sharing their work freely, this helps us learn and iterate quickly so we can deliver high quality outcomes faster than our competitors. You’ll spend a lot of time outside of your comfort zone learning and iterating frequently, we wouldn’t have it any other way.
+
+You’ll be supported to accelerate your career – Regular feedback, regular performance reviews, a professional development budget, and dedicated leave help ensure you have what you need to level up. We’re committed to helping every Eucalypt reach their full potential.
+
+Our teams are incredibly passionate  - Our talent bar is high and our work ethic is strong. You’ll get to stretch yourself everyday and work amongst people who care deeply about our patients. You’ll be given autonomy to tackle interesting problems and receive regular feedback from a supportive team
+
+We also offer a range of benefits, including :
+
+Your own stake in the business through our employee options scheme
+
+A yearly personal development budget and 3 extra days of leave to keep learning
+
+A fun office with regular socials – including after-school sport, clubs, cycle kick-offs, and seasonal parties
+
+Want to hear more about what it’s like to work at Eucalyptus? Hear from our team  here  or check us out on Instagram @eucalyptus.health
+
+ 
+
+Salary range: A$80,000 – A$85,000 + Super
+
+ 
+
+ 
+
+ 
+At Eucalyptus, we value individuals from all backgrounds, experiences, and perspectives, and we embrace the unique qualities each person brings. When you apply, please let us know of any reasonable adjustments you may need during the interview process. We use AI-assisted tools across our business to help our teams work more efficiently, including within our recruitment process. These tools support our team — all hiring decisions are made by real people, and every application is reviewed by a member of our recruitment team.
+
+## 7. ats-gh-8260310 · Data Analyst
+*Senior Data Analyst (12-month contract)*, hipages Group. https://job-boards.greenhouse.io/hipagesgroup/jobs/8260310
+
+Hi! We’re hipages, an ASX-listed tech company and Australia’s #1 digital platform connecting households with trusted home improvement businesses. We're on a mission to transform the home improvement industry to build better lives for everyone.
+
+With teams across Australia, New Zealand, the Philippines and Vietnam, we work as one team with a shared purpose. We’re proud to be a certified Great Place to Work and WORK180’s #1 Employer for Women . At hipages, you’ll find real impact, career growth and a workplace where everyone belongs.
+
+ 
+
+About the role:
+
+This is a 12-month parental leave contract. As a Senior Data Analyst, you’ll help the organisation make better decisions with data. You’ll work closely with the data team and your insights will feed directly into hipages’ commercial strategy.
+
+You’ll help shape the hipages marketplace as it evolves, using your experience to improve things for our customers. You’ll also join a supportive, highly skilled data team whose skills cover everything from engineering to machine learning, where people share what they know and celebrate each other’s wins.
+
+You’ll work with colleagues across the business on reporting, insights and analytics for a range of projects, from channel performance to segmentation.
+
+ 
+
+Why join our Data team?
+
+💻 Hybrid working with 2 days WFH, so you can fit work around the rest of your life
+
+🪴 An in-house Talent Development team focused on your personal and career growth
+
+💰 Competitive salary, benefits and perks
+
+🤝 A collaborative culture working with Product, Engineering, Marketing and Commercial teams
+
+🧑‍🏫 Hands-on learning, workshops and mentoring to keep growing your skills
+
+♀️ Women make up 50% of our Data team, so you’ll be joining a balanced team where your voice is heard
+
+ 
+
+How you’ll add value:
+
+Build a framework for sharing insights with the business and recommending product improvements
+
+Analyse data, trends and results, and explain their business impact to stakeholders
+
+Explore the acquisition funnel to find insights and opportunities that grow jobs and tradie numbers
+
+Give teams the data they need to shape use cases and requirements
+
+Help grow our user base by supporting segmentation strategies for a more personalised customer experience
+
+Design, run and measure feature experiments
+
+ 
+
+About you:
+
+Data analytics experience in an e-commerce or technology company
+
+Experience working with enterprise data warehouses
+
+A love of data, and the ability to make sense of complex information and tell a clear story with it
+
+You can turn findings into business recommendations that people act on
+
+Strong communication skills, and you build trusted relationships with stakeholders
+
+Advanced SQL (or equivalent)
+
+Strong working knowledge of BI tools (e.g. Tableau, Power BI, Looker)
+
+Nice to haves:
+
+Experience in a marketplace or digital-native organisation
+
+Google Analytics and A/B testing for SaaS products
+
+Forecasting and statistical modelling
+
+Understanding of ETL frameworks and tools
+
+dbt or data modelling experience
+
+Intermediate Python
+
+Databricks or Snowflake
+
+Salesforce
+
+A tertiary degree in Business Analytics, Statistics, Data Science, Economics, Actuarial Studies or a related field
+
+Don’t tick every box? Research shows women often hold back from applying unless they meet every requirement. If this role excites you and you meet most of the criteria, we’d love to hear from you. We’re happy to talk about flexible arrangements and any adjustments you need during the recruitment process.
+
+ 
+
+Life at hipages:
+
+We’re more than just a workplace. We’re a place where you can be yourself, do great work and grow your career. Recognised as a Great Place to Work, our inclusive, supportive culture helps people thrive.
+
+You’ll use the best tools and tech, with real impact on our products and customers. We invest in your development and lead with coaching, not micromanagement – it’s why 85% of our team say their leader is great. And there’s more:
+
+Diverse, collaborative teams that love solving problems  
+
+Agile squads, hackathons, off-sites and roadshows  
+
+Extra leave for birthdays, volunteering, and more  
+
+Healthy snacks, continental breakfast and fresh fruit  
+
+Sydney CBD office near Town Hall and Gadigal Stations  
+
+Tailored growth support, mentoring and stretch projects  
+
+A vibrant social scene - we work hard and have fun doing it  
+
+We prioritise Diversity:
+
+At hipages, innovation and collaboration thrive in diverse and inclusive teams. We don’t expect you to know everything - we care more about who you are as a person, a team member, and a leader. We’re proud to be endorsed by WORK180 for supporting women’s careers and we value diversity across culture, age, gender identity and sexual orientation. Research shows that men often apply when they meet just 60% of the criteria, while women and minority groups wait until they tick every box. If you think you’d be a great fit - even if you don’t meet every requirement - we’d love to hear from you.
+
+We’re also a Circle Back Initiative Employer, which means we commit to responding to every applicant.
+
+#LI-JL1 #LI-Hybrid
+
+## 8. ats-wk-41B978C5E0 · Data Engineer
+*Analytics Engineer*, Lyka. https://apply.workable.com/j/41B978C5E0
+
+Description
+Who are we?
+Lyka is an Australian founded pet wellness company that's shaking up an outdated industry and paving the way for happier, healthier pets. Despite medical advancements, animal lifespans are on the decline. Today, the average pet only reaches 37% of their full potential lifespan and statistics have shown us that many suffer from dental disease, cancer, and obesity. Simply put, the status quo is not enough.
+As humans, we've experienced firsthand the positive impact fresh wholefoods can have on our health and wellbeing, and we believe our furry friends deserve the same. We're on a mission to do just that, starting with nutritionally balanced, wholefood meals delivered direct to doors around Australia. As the world's most sustainable pet wellness company, we're putting pets and our planet first - one bowl at a time.
+Today, we are proud to share we've served 100 million meals to puppers and their parents across Australia, and this is just the beginning. Our vision is to create multiple nutritional products, adding disease prevention meals and supplements, and expand into new markets.
+Currently, we have a team of 250+ pet-obsessed people and we're continuing to grow (yes, looking at you!). These carefully selected people are dedicated to building the next generation of technology and products to help empower pet parents to take control over their pet's wellbeing.
+To date, we have raised over $60M in funding from venture capital investors and pet industry insiders, who believe in our mission and ability to drive change in a stagnant industry, providing nutrition that nourishes puppers from the inside out.
+Are you ready to shake things up and give pets the life they deserve? Come join our pack!      
+ 
+Our Mission:
+The time we share with our pets is being cut short. Despite medical advancements, they're getting sicker earlier. They're dying prematurely. The industry has it backwards - prioritising treating symptoms instead of addressing the root cause. That's where we come in.
+At Lyka, we take a preventative, holistic and personalised approach to pet care. We look at the full picture, factoring in the diet, lifestyle and environment of each individual animal.
+We don't stop at symptoms, instead we dig for the root cause. We create nutrition plans unique to each pet, because it's not just about living longer, but living well too.
+Our mission is to increase the lifespan of dogs and cats.
+
+The role:
+As a  Data Analytics Engineer  in Lyka’s Data team, you’ll be instrumental in enabling data driven decision-making across the business and uplifting our data capabilities. While you’ll partner closely with Analyst, this role will collaborate closely with Product and Engineering teams to build scalable data products, and empower teams with reliable, self-service access to data by building on the semantic layer.
+This is a hands-on, high-impact role where you’ll bridge the gap between data engineering and analytics — enabling fast, trustworthy insights through well-modelled data, intuitive tools, and robust pipelines.
+
+What you’ll do:
+Collaborate with Data Analysts, Product Managers, and Engineers to design and implement  analytics-ready data models  that enables data capabilities and decision-making.
+Build and maintain  robust, scalable data pipelines  using tools like dbt, Airflow, and Python to transform raw data into clean, reliable datasets.
+Develop and optimise  semantic layers and metrics definitions  to support consistent reporting across BI and Analytic tools.
+Ensure  data quality, reliability, and performance  across analytics workflows, proactively identifying and resolving issues.
+Requirements
+1+ years experience in  data modelling, analytics engineering, or BI development , ideally in fast-paced or high-growth environments.
+Strong proficiency in  SQL  and experience with  dbt ,  Airflow , and  modern data warehouses  like Snowflake or BigQuery.
+Familiarity with  BI tools  (e.g., Looker, Tableau, Omni) and designing intuitive, scalable dashboards.
+A solid understanding of  data lifecycle and analytics workflows , from ingestion to insight.
+Experience working cross-functionally with Analytics, Product, and Engineering teams to deliver impactful data solutions.
+Basic understanding and experience in using AI tools to optimise your day to day and improve processes
+Benefits
+Work in a fast-growing start-up, experiencing what goes behind the scenes to sustain hyper-growth for a start-up with a physical product!
+Growth and Development - Lyka is growing extremely quickly, which means you will have the opportunity to experience different challenges every day and progressively acquire more responsibilities as our facility and team expands. We provide an annual budget for you to continue your personal development.
+Work for a sustainability focused company - we care about the health of our pets and our planet. We’re proud to be Australia’s only carbon-negative and plastic-negative pet company and we’re always looking at ways for us improve sustainability practices.
+Be part of a diverse top talent team, coming from widely different backgrounds and geographies.
+Up to 18 weeks of paid parental leave top-up.
+Wellbeing assistance and tools to take care of your mental and physical wellbeing so you can do your best work.
+Pupper parent support to care for your furry friends - flexible arrangements for new pets, pet-friendly offices, discounts, and financial allowance for dog training & care to help them live their best life.
+
+We are committed to building inclusive and diverse teams
+Lyka is an equal opportunity employer devoted to providing a working environment that embraces and values diversity and inclusion. We celebrate diversity, are devoted to creating an inclusive environment for all staff and encourage people of all backgrounds to apply. If you have any support or access requirements, we encourage you to advise us at the time of application.
+
+## 9. ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a · Data Scientist · **second annotator**
+*Senior/Applied Scientist - AI Products*, Xero. https://jobs.ashbyhq.com/xero/7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a
+
+The role and its impact
+This role is open at Applied Scientist or Senior Applied Scientist level, and we'll assess your experience and demonstrated capability through the process to find the right fit.
+You'll turn tough, ambiguous problems into elegant, data-driven products and services, moving between experimental design, prototyping, evaluation and more rigorous implementation depending on what the problem calls for. Some days that means a simple heuristic, others a traditional ML model, and others the latest in LLMs, and part of the job is judging which is genuinely right for the problem in front of you.
+Working closely with cross-functional peers and holding coding standards high, your work will help ideas move smoothly from theory into real-world deployment. You'll also help lift scientific capability across Xero, contributing to a culture of intellectual rigour, healthy scepticism and mutual respect, Going Further by making evidence-based thinking part of how Xero builds.
+
+The team and how they connect
+You'll join AI Products, a close-knit team of seven based in Melbourne, building intelligent services that make a real difference for small businesses. The team balances business priorities with research demands to solve tangible customer problems, and works together to match each one to the right approach rather than reaching for complexity by default.
+The team is currently working on
+Solving real business problems through experiment-based science, from framing the question through to rigorous implementation
+
+Choosing the right approach for each problem, whether that's a heuristic, a traditional ML model, or an LLM-based solution
+
+Writing testable, maintainable, reusable code in Python, building robust data pipelines alongside engineering peers
+
+Applying techniques such as NLP and computer vision to genuine product challenges at Xero's scale
+
+Where and how you can work
+Xero offers a flexible hybrid working model designed to blend the collaboration of office life with the autonomy of remote work. You will have access to our modern office spaces, with expectations around office days and collaborative 'boost days' aligned to help your team connect and ship great code effectively.
+
+Here are some of the things we're looking for, for this role
+Scientific curiosity sits alongside solid software engineering fundamentals, so you can write code that's testable, maintainable and built to last.
+
+Probability, linear algebra and calculus aren't just theory to you, they're tools you reach for when applying machine learning to real product problems.
+
+You've genuinely applied techniques like NLP or computer vision to live product challenges, not just studied them.
+
+Data wrangling and pipeline work are familiar ground, and you know what good evaluation, measurement and experimentation look like in practice.
+
+Faced with a loosely defined business problem, you can shape it into a clear research direction, working closely with product, design and engineering partners along the way.
+
+You hold yourself to high standards of integrity and ownership, and you pair confidence in your work with a healthy dose of scepticism about it.
+
+Apply even if your experience isn't a perfect match! At Xero, we hire based on your skills, passion, and the unique perspective you can bring to enhance our culture and team.
+
+## 10. ats-gh-4005586201 · Data Scientist
+*Senior Data Scientist - Product Analytics*, Quantium. https://job-boards.anz.greenhouse.io/quantium/jobs/4005586201
+
+Who is Quantium?
+
+Quantium is a world leader in data science and artificial intelligence. Established in Australia in 2002, Quantium is a global team of more than 1,200 people across 14 locations with a unique blend of capabilities across product and consulting services to help businesses unlock value from data and analytics. Quantium partners with the world's largest corporations to forge a better, more intelligent world.
+
+Product Analytics has embraced AI-native ways of working across our analytical workflows, and we're now moving from adoption to transformation — systematically advancing our analytical assets through an agentic maturity framework we designed ourselves.
+
+The Role
+
+As a Senior Data Scientist, you are analytically strong and genuinely excited about AI-native ways of working. You'll bring solid foundations in data science, Python, and SQL — and combine them with AI tools to build, transform, and scale analytics solutions.
+
+We operate globally across Australia, India, the UK, and North America. You'll work within cross-functional teams alongside Product Leads, Delivery Managers, and engineers — taking on increased technical responsibility while developing coordination and mentoring capabilities.
+
+How will you make an impact? 
+
+Design and build analytics solutions using AI-native workflows from prompt-driven exploration through to agentic code generation — and progress analytical assets along our agentic maturity framework
+
+Critically evaluate AI-generated outputs and develop reusable approaches, Claude skills, and specifications that scale across teams and geographies
+
+Take responsibility for significant components of analytics solutions including models, algorithms, and optimisation approaches, with attention to quality and scalability
+
+Apply advanced data science methods including experimental design, feature engineering, statistical modelling across complex datasets using cloud platforms such as GCP, Azure, and AWS
+
+Create detailed specifications for analytics work that engineering teams can implement, and contribute to technical discussions on approach, effort, and timelines
+
+Support and coordinate technical work with analysts at different experience levels, sharing knowledge and building capability — particularly around AI-native practices
+
+Identify opportunities for workflow transformation and process improvement, and support client project delivery and ongoing engagement requirements
+
+The superpowers you’ll be bringing to the team: 
+
+4–7 years of experience in data science, AI/ML development, or technical consulting
+
+Strong Python and SQL programming skills for complex data challenges
+
+Solid understanding of data science methods: experimental design, feature engineering, statistical modelling, and model development — with practical commercial application
+
+Familiarity with software engineering practices including version control, testing, documentation, and deployment workflows such as CI/CD pipelines and containerised environments
+
+Hands-on experience with at least one major cloud platform (AWS, Azure, or GCP)
+
+Strong communicator — able to explain complex technical concepts clearly to non-technical audiences
+
+Interest in agentic development patterns and comfort working in a team where AI-native methods are the default, not the exception
+
+Strong problem-solving approach with the ability to work independently and collaboratively across diverse, distributed teams
+
+Experience using AI tools (Claude, ChatGPT, GitHub Copilot, or similar) in your work or studies or a compelling demonstration of rapid learning and genuine enthusiasm
+
+Strong understanding of ML/AI fundamentals including how LLMs work, transformer architectures, and when to apply different approaches
+
+Remember – you might not tick all the boxes, but don’t let that from stopping you applying. We’re more interested in how you work, your ability to solve problems and think big.
+
+What could your Quantium Experience look like?
+
+Working at Quantium will allow you to challenge your imagination. You will get to solve complex problems using rigor, precision and by asking great questions – but it also means you can think big, outside the box and push your problem-solving skills to the max.
+
+By joining the Quantium team, you’ll get to:
+
+Forge your path: So many of our team have moved around different teams or offices. You’ll be in the driver’s seat, and we empower you to make your career your own.
+
+Find your kind: Embrace diversity and connect with your tribe (think foodies, dog lovers, readers, or runners).
+
+Make an impact: Leave your mark. Your contributions resonate, regardless of your role or rank.
+
+But wait, there’s more!
+
+We’ve got some pretty sweet perks:
+
+Flexible work arrangements : Achieve work life balance at your own pace with hybrid and flexible work arrangements.
+
+Continuous learning : Our vision is empowering analytics talent to thrive. The Analytics Community fosters the development of individuals, thought leadership and technical excellence at Quantium through building strong connections, fostering collaboration, and co-creation of best practice.
+
+Remote working : Embrace the opportunity to work outside of your assigned home location for up to 30 days every year.
+
+Apply now and let's forge a better, more intelligent world together!
+Quantium’s recruitment process involves the collection and use of personal information, see our  Candidate Data Collection Notice for more information. T his provides information on how we collect, use & store your personal information, including potential disclosure to our majority shareholder, Woolworths Group Limited.
+
+## 11. ats-gh-8238733 · DevOps/SRE · **second annotator**
+*Staff Engineer, Compute Foundation*, Stripe. https://stripe.com/jobs/search?gh_jid=8238733
+
+Who we are
+
+About Stripe
+
+Stripe is a financial infrastructure platform for businesses. Millions of companies—from the world’s largest enterprises to the most ambitious startups—use Stripe to accept payments, grow their revenue, and accelerate new business opportunities. Our mission is to increase the GDP of the internet, and we have a staggering amount of work ahead. That means you have an unprecedented opportunity to put the global economy within everyone’s reach while doing the most important work of your career.
+
+About the team
+
+The Compute Foundation group builds and operates the core systems that enable every Stripe engineer to ship code, configuration, and infrastructure changes safely and at high velocity. Embedded on the Imaging team, you will design, build, and distribute Linux machine images; manage host bootstrapping and OS-configuration systems; oversee OS packages and security-patching infrastructure; and provide platforms that empower service teams to safely run workloads across cloud providers and regions.
+
+What you’ll do
+
+Own the foundation of Stripe’s compute fleet: Stripe’s services rely on host infrastructure that boots reliably, receives accurate configurations, and operates safely. Your decisions will directly shape the base operating system, package ecosystems, security posture, and bootstrap behavior of Stripe’s fleet.
+
+Lead active architectural transformations: The team is driving key platform evolutions, including modernizing the OS configuration layer, containerizing workloads, scaling machine image distribution across multi-cloud regions, and streamlining OS upgrades and critical security patching.
+
+Drive broad, end-to-end host lifecycle ownership: Work across the entire host lifecycle - from image construction, package distribution, kernel and OS configuration, early boot/systemd, storage, networking initialization, and workload readiness. You will tackle complex engineering challenges that balance reliability, security, compliance, developer experience, and performance.
+
+Your judgment prevents fleetwide incidents: Changes to machine images, packages, kernels, bootstrap systems, and host configuration can have broad consequences. You will design validation, canarying, rollout, health-evaluation, and rollback mechanisms that contain blast radius and make foundational infrastructure changes safer.
+
+Agency to shape technical strategy: As a Staff engineer, you will set technical direction for the team’s systems, author designs that span multiple teams, mentor engineers and be the person engineering managers and engineers rely on for the technical north-star.
+
+Responsibilities
+
+ Lead large, ambiguous infrastructure projects from initial design through production launch, broad adoption, and long-term operation. Define the architecture and success criteria, sequence the work, resolve technical ambiguity, coordinate cross-team dependencies, and shepherd projects to measurable impact.
+
+Set technical direction for the evolution of Stripe’s host infrastructure, including how machine images are built, validated, distributed, and operated. Guide thoughtful decisions about when to containerize workloads and when host-based approaches remain appropriate.
+
+Design systems and practices that make broad infrastructure changes safe and predictable. Establish strong validation, staged rollout, observability, and rollback capabilities. Build guardrails that prevent unhealthy changes from progressing and give operators clear, actionable information when failures occur.
+
+Lead incident response for the systems the team owns. Systematically reduce operational toil and make reliability, security, debuggability, and maintainability first-class properties of the platform. 
+
+Partner with technical leaders across infrastructure, security, compliance, and service teams to represent the Imaging team’s perspective and align on shared technical direction. Build strong relationships with partner teams and lead work that crosses organizational and system boundaries.
+
+Lead critical design reviews and establish standards for the safety, reliability, operability, and usability of Stripe’s host infrastructure. Mentor senior engineers through high-stakes architectural decisions. Raise the quality of designs and implementations through hands-on coding, code review, debugging, and operational leadership.
+
+Who you are
+
+We’re looking for someone who meets the minimum requirements to be considered for the role. If you meet these requirements, you are encouraged to apply. The preferred qualifications are a bonus, not a requirement.
+
+Minimum requirements
+
+10+ years of professional software engineering experience, with a demonstrated track record of designing and shipping production infrastructure systems of significant scale and complexity. 
+
+Proven ability to lead large, ambiguous infrastructure projects end-to-end - from technical design through delivery - including managing cross-team dependencies and coordinating migrations across many consuming teams. 
+
+Deep expertise in Linux systems, including boot and initialization, systems, processes, networking, filesystems, storage, packages, and production debugging.
+Strong foundations in cloud compute infrastructure, including machine images, virtual machines, autoscaling fleets, launch configuration, block storage, IAM, health evaluation, and multi-region operation in AWS, Azure, or an equivalent environment.
+
+Experience designing or operating fleet-scale image, host-management, configuration-management, or infrastructure-provisioning systems.
+
+Experience with safe infrastructure rollout practices, including automated validation, canarying, progressive rollout, health evaluation, rollback, and blast-radius containment.
+
+Strong background in service reliability and operational excellence: demonstrated ability to lead incident response, reduce toil, and build systems that are reliable, debuggable, and maintainable by a team. 
+
+Track record of broad technical impact across multiple large systems: fluency across a complex codebase, force- multiplier effect through code review and mentorship, and the ability to set technical direction for a team rather than just execute within it. 
+
+Preferred qualifications
+
+Experience building modern image-based, immutable, or declarative infrastructure platforms.
+
+Expertise with containers, Kubernetes, and migrating VM-based workloads to managed platforms
+
+Experience operating large-scale Linux fleets across AWS, Azure, or multiple regions.
+
+Familiarity with progressive delivery, automated validation, fleet health signals, and rollback systems.
+
+Experience modernizing legacy configuration-management or host-provisioning systems.
+
+Knowledge of OS security patching, software supply-chain security, and artifact provenance.
+
+Strong developer-platform instincts, with experience building safe abstractions and self-service workflows.
+
+## 12. ats-sr-6000000001379105 · DevOps/SRE
+*Principal Production Engineer*, Canva. https://api.smartrecruiters.com/v1/companies/canva/postings/6000000001379105
+
+Join the team redefining how the world experiences design.
+Hey, g'day, mabuhay, kia ora, 你好, hallo, vítejte!
+Thanks for stopping by. We know job hunting can be a little time consuming and you're probably keen to find out what's on offer, so we'll get straight to the point.
+What you'd be doing in this role
+
+The Production Engineering team sits at the intersection of software engineering and the hardest reliability problems in Canva's infrastructure. At 240M MAUs, the hardest problems aren't on any product roadmap. Production Engineering exists to find them first and fix them properly. Writing software. Changing how production behaves. When it works, every team ships with more confidence and Canva gets faster and more resilient for the people who use it every day.
+The strategic bet is a different model entirely. Canva's own take on what production reliability looks like, built for how we work. Senior software engineers embedded long-term in the areas that carry the most technical risk, working shoulder to shoulder with product teams, close enough to the roadmap to shape how features land in production before the problems compound. Not operationalising systems. Not running alerts. Writing software that changes how production behaves.
+The engineers who do this work well have gone deep in systems most people only operate. They can walk into a codebase they didn't write, understand what's actually happening at scale, win the technical respect of the team they're embedded with, and then bend the software to make it more reliable, more efficient, and more resilient.
+At Principal level, you're also the person who defines what this practice looks like at Canva. The calibration anchor for every hire, every engagement, and every standard the team sets.
+
+At the moment, this role is focused on:
+Defining the engagement model: How Production Engineering pairs with product and infrastructure teams, how engagements are scoped, and what handoff actually looks like. This model is new. You're shaping it.
+
+Leading the hardest engagements: Taking personal ownership of the most technically complex areas, sharding, multi-region architecture, JVM performance at scale, while the team builds depth in adjacent domains.
+
+Setting the technical bar: What it means to be a production engineer at Canva. The standard for technical credibility. The archetype that future hiring calibrates against.
+
+Pairing strategy across the team: Deciding how staff and mid-level engineers are paired and what they should be learning from each engagement. Growing production engineering capability across the org, not just within the team.
+
+Connecting to the product roadmap: Working with engineering leadership across Canva to ensure Production Engineering is upstream of problems, not downstream. Influencing how product teams think about production readiness before they ship.
+
+Building the measurement story: Incident severity and duration trending down. Feature launches going to production cleanly. You define what the metrics are and how they're tracked.
+
+Compounding at organisation scale: One well-placed Production Engineering engagement changes how engineers build for years. At Principal level, your leverage is the sum of all those engagements, plus the standard you set for how each one runs.
+
+What success looks like:  As a secondee, developing trusted relationship with your team. Guiding them towards, shipping at velocity, with more confidence and less toil.
+
+You’re probably a match
+We'd love to hear from you if you fit one or more of these. You don't need to meet all of them, but the more the better and if you join the team, we're invested in helping you grow.
+
+Experience
+Production at scale: You've owned reliability in large-scale distributed systems. When things went brake, you investigate how and shipped the solution that lasts forever.
+Technical leadership in embedded models: You've led or helped shape a function where engineers work across team boundaries rather than within a single one. You know what makes that model work and what makes it fail.
+
+Hands-on through seniority: You've stayed close to the code. At this level, you're the engineer others consult when the problem is genuinely hard.
+
+Cross-org influence: You've shaped how teams outside your own make technical decisions because your technical judgement is trusted.
+
+JVM or systems depth: You've built real things in Java, Go, Rust, C++, or a comparable systems language at production scale. Language matters less than depth.
+
+Distributed systems in practice: You've navigated sharding, replication, failure modes, and consistency tradeoffs in production.
+
+Technical knowledge
+Linux internals: You can reason about process scheduling, memory, I/O, and the network stack when a system misbehaves.
+Distributed systems: You've navigated sharding, replication, failure modes, and consistency tradeoffs in production. As well as consistent hashing, leader election, consensus, backpressure, circuit breakers
+
+Observability tooling: You've built the tracing, dashboards, and alerting that tells you what's wrong.
+
+Containerisation and orchestration: Kubernetes in production, at the scheduler level.
+
+Performance analysis: You've profiled JVM applications or systems-level processes and fixed what you found.
+
+Cloud infrastructure: AWS in production, across the failure modes that matter at scale.
+
+Incident response: You've been on-call and have opinions about what good looks like.
+
+Nice to have
+Enterprise SaaS background: You've done this specific kind of work at an org that's done it well. You know what "production engineering" means when it's not just a job title.
+
+JVM internals: You've tuned GC and profiled threads in production.
+
+Multi-region or sharding experience: You've been involved in a data store migration or multi-region architecture where getting it wrong was not an option.
+
+About the Group and Team
+Join the Production Engineering Group at Canva, where our mission is to make every system that powers Canva fast, reliable, and ready for the next scale. Infra owns the infrastructure layer that every other team builds on: compute, storage, networking, developer experience, and reliability.
+The Reliability Platform subgroup is where Canva thinks seriously about the technical risk that comes with operating at hundreds of millions of users. It's a group with broad scope, from the tooling that helps teams run incidents well, to the engineering work that stops incidents from happening in the first place.
+Production Engineering sits within Reliability Platform. A small team of senior software engineers embedded in Canva's highest-risk technical areas, working alongside the product and infrastructure teams who own those systems for a long-term engagements. When it works, other teams ship more confidently and the incidents that do happen resolve faster and hurt less.
+What’s in it for you?
+Achieving our crazy big goals motivates us to work hard — and we do — but you'll experience lots of moments of magic, connectivity and fun woven throughout life at Canva, too. We also offer a range of benefits to set you up for every success in and outside of work.
+
+Here's a taste of what's on offer:
+Equity packages — we want our success to be yours too
+Inclusive parental leave policy that supports all parents & carers
+
+An annual Vibe & Thrive allowance to support your wellbeing, social connection, office setup & more
+
+Flexible leave options that empower you to be a force for good, take time to recharge and supports you personally
+
+Other stuff to know?
+We see AI as a powerful amplifier of creativity and technology at Canva. We're evolving how we assess AI skills in our Technology hiring experience, you'll tackle interactive, real-time challenges that reflect the kind of work we do. In some interviews, you may also be asked to solve a problem using an AI tool to show how you approach challenges with tech by your side.
+We make hiring decisions based on your experience, skills and passion, as well as how you can enhance Canva and our culture.
+When you apply, please tell us the pronouns you use and any reasonable adjustments you may need during the interview process. We celebrate all types of skills and backgrounds at Canva, so even if you don't feel like your skills quite match what's listed above — we still want to hear from you!
+Please note that interviews are conducted virtually.
+
+## 13. ats-as-e1d8b590-8a91-42bb-ba2e-64b99c87e4ac · Machine Learning Engineer · **second annotator**
+*Applied AI Engineer, Codex*, OpenAI. https://jobs.ashbyhq.com/openai/e1d8b590-8a91-42bb-ba2e-64b99c87e4ac
+
+About the team
+The Applied AI Engineering team helps enterprises put Codex to work on their most important engineering workflows. We work alongside customer engineers to turn frontier AI capabilities into systems that improve how software is built, shipped, secured, and operated.
+Our work spans unfamiliar codebases, legacy systems, data pipelines, infrastructure, and enterprise integrations. We discover where AI can make a meaningful difference, build and prove solutions, and turn what we learn into reusable architectures, tools, and feedback that help shape Codex.
+About the Role
+We’re looking for an engineer who enjoys understanding complex systems, building alongside customers, and solving problems where the path forward isn’t obvious.
+You’ll work directly with technical leaders and engineers to identify valuable opportunities and take them from discovery through implementation and evaluation. You might build a Codex-assisted release review workflow, modernize a legacy data pipeline, accelerate a dependency migration, or connect an agent to the systems and context it needs to investigate production incidents.
+You’ll combine hands-on software engineering, architecture, and technical leadership to make Codex part of how customers get important work done. Success means delivering the agreed solution, demonstrating measurable improvement, and helping the customer sustain and expand its use. Working with our product, engineering, research, and account teams, you’ll turn deployment experience into evidence that informs improvements to Codex.
+
+The position is based in Sydney, Australia , with three office days each week. Relocation assistance is available to new employees.
+ 
+In this role, you will:
+Lead customer engineering engagements from workflow discovery and architecture through implementation, evaluation, and handoff, with clear customer owners, delivery milestones, and measurable success criteria.
+
+Assess customer repositories, data systems, infrastructure, security controls, and development practices to understand constraints, determine readiness, and identify where Codex can have the greatest impact.
+
+Build and validate workflows alongside customer engineers, developing integrations, tool gateways, evaluation harnesses, reference implementations, and automations, often using Codex in your own development process.
+
+Establish baselines, quality and security guardrails, and evaluation methods that demonstrate whether a workflow is reliable, useful, and ready to expand.
+
+Turn customer engagements into reusable tools, architectures, and deployment patterns, and translate recurring challenges into actionable feedback for product, engineering, and research teams.
+
+Document technical decisions and results for handoff and reuse, establishing clear customer, partner, or delivery-team ownership for production release, ongoing operation, and maintenance.
+
+Use evidence to recommend when to expand a workflow, redirect an engagement, or stop work when value or feasibility cannot be demonstrated.
+
+You’ll thrive in this role if you:
+Have 5+ years of relevant experience in software development, deployment engineering, data or infrastructure engineering, technical consulting, or solutions architecture.
+
+Can build, debug, and evaluate production-relevant software and quickly understand unfamiliar systems.
+
+Actively use AI coding tools, have adapted them to your own work, and have a clear perspective on how agents can automate complete workflows.
+
+Bring technical depth in one or more areas, such as software engineering, data systems, cloud infrastructure, or enterprise integrations, and enjoy learning across disciplines.
+
+Understand how software is tested, released, and operated, and can reason about the security, reliability, and access requirements of enterprise environments.
+
+Can turn an ambiguous customer problem into a practical technical plan with credible estimates, measurable acceptance criteria, and clear tradeoffs.
+
+Communicate effectively with technical leaders and hands-on engineers, collaborate through uncertainty, and turn individual customer work into solutions others can reuse.
+
+About OpenAI
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic.
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement .
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form . No response will be provided to inquiries unrelated to job posting compliance.
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link .
+OpenAI Global Applicant Privacy Policy
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.
+
+## 14. ats-as-b47aae11-78e1-4321-947a-94a2fa3e83b4 · Machine Learning Engineer
+*Applied AI Architect*, OpenAI. https://jobs.ashbyhq.com/openai/b47aae11-78e1-4321-947a-94a2fa3e83b4
+
+About the Team
+The AI Architect team partners with organizations to turn OpenAI's most capable models into meaningful, real-world impact. We work with customers across industries and digital-native businesses to identify where AI can create value, design secure and scalable solutions, and help those solutions move from early exploration into sustained production adoption. The team brings together technical strategy, customer partnership, and practical deployment expertise, working closely with Sales, Product, Engineering, Research, and specialist delivery teams.
+ 
+About the Role
+As an AI Architect, you will be the senior technical owner for a named portfolio of customers and the primary technical counterpart to their leadership teams. You will act as the “CTO of your book of business”, shaping each customer's AI strategy and guiding their journey from pre-sales discovery and solution evaluation through deployment, adoption, and measurable business impact.
+ 
+You will own the technical account plan across ChatGPT Enterprise, the OpenAI API, Codex, and other agentic AI solutions. In partnership with the Account Director, you will translate business priorities into a focused use-case portfolio, an actionable adoption roadmap, and a clear path to durable customer value and growth. The Account Director owns commercial strategy; you own the technical strategy, customer journey, and path to production value.
+ 
+You will remain accountable for the technical outcome while bringing in the right specialists across deployment, implementation, enablement, security, product, and partners to provide deeper expertise and execute work where needed. This role calls for strong industry fluency, sound architectural judgment, and the ability to move confidently between executive strategy and hands-on technical conversations.
+ 
+This role is based in Sydney, Australia. We use a hybrid work model of 3 days in the office per week and offer relocation assistance to new employees.
+ 
+In this role, you will:
+Serve as the primary technical advisor and long-term technical relationship owner for a named portfolio of existing customers and pre-sales prospects.
+
+Partner with Account Directors on account strategy while owning the technical account plan, technical milestones, adoption priorities, and expansion opportunities.
+
+Lead discovery with executives and technical teams to identify, qualify, and prioritize use cases tied to meaningful business outcomes.
+
+Develop clear Applied AI Architectures spanning models, applications, data, integration, security, privacy, governance, evaluation, and deployment.
+
+Guide customers through technical evaluations, demonstrations, workshops, prototypes, and proofs of value, securing confidence in both the solution and its path to production.
+
+Maintain a focused use-case portfolio with clear decision criteria, ownership, blockers, success measures, delivery needs, and adoption plans.
+
+Develop trusted relationships and technical champions across CTOs, CIOs, CISOs, AI leaders, engineering teams, and other customer stakeholders.
+
+Qualify and coordinate support from Deployment Engineering, implementation, training and enablement, product and domain specialists, partners, and other delivery teams.
+
+Remain accountable for technical progress and customer outcomes while ensuring delivery teams own implementation execution once engaged.
+
+Track adoption, usage, account health, production readiness, and measurable customer impact, intervening early when risks threaten value realization.
+
+Apply industry or digital-native expertise to recognize repeatable patterns, sharpen customer priorities, and identify relevant expansion opportunities.
+
+Share customer insights with Product, Engineering, and Research, translating field learnings into better products, architecture guidance, and reusable practices.
+
+ 
+You might thrive in this role if you:
+Have significant experience in customer-facing technical roles such as solutions architecture, solutions engineering, technical account leadership, AI deployment, or technical customer success.
+
+Have guided enterprise organizations from technical evaluation through production adoption and measurable business impact.
+
+Build credibility with senior technical and business leaders while communicating equally well with hands-on engineers.
+
+Bring strong software and cloud architecture foundations, including APIs, distributed systems, data integration, identity, security, and privacy.
+
+Understand modern AI systems, frontier LLM models, agentic applications, model evaluation, retrieval, or enterprise AI workflows.
+
+Can prototype, explain technical tradeoffs, and work confidently with APIs, SDKs, and languages such as Python or JavaScript.
+
+Exercise sound judgment about when to go deep personally, when to involve specialists, and how to define clear handoffs and ownership.
+
+Have experience developing technical account plans, prioritizing complex customer portfolios, and connecting adoption to measurable outcomes.
+
+Bring meaningful expertise in a relevant industry or strong fluency with the needs of digital-native businesses.
+
+Communicate clearly and can turn ambiguity into a practical technical narrative, executive decision, or action plan.
+
+Work collaboratively across disciplines and care deeply about helping organizations deploy advanced AI responsibly.
+
+About OpenAI
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic.
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement .
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form . No response will be provided to inquiries unrelated to job posting compliance.
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link .
+OpenAI Global Applicant Privacy Policy
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.
+
+## 15. ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea · Network/Systems Administrator · **second annotator**
+*Senior Compute Network Engineer*, Megaport. https://jobs.lever.co/megaport/4c09a935-9ad4-4e94-8377-ee960d258dea
+
+About Megaport
+We’re not your typical tech company – and we don’t want to be. Megaport is the global leader in Network as a Service (NaaS), and has transformed the way businesses connect to the cloud, data centers, and each other. We’re publicly listed on the Australian Stock Exchange and partnered with the biggest names in tech like Amazon, Microsoft, Google, Oracle, IBM, and more. Headquartered in Brisbane with a crew of over 600 people spread across Asia-Pacific, Europe, and the Americas, our employees enjoy an environment that is collaborative, supportive, and (actually) fun.
+ 
+Our Team Culture
+We’re a team of problem solvers, pixel pushers, code slingers, and cloud fanatics. Culture is more than a poster on the wall here – collaboration beats hierarchy, curiosity fuels our growth, and everyone’s voice matters. We take our work seriously, but not ourselves. We work across time zones to execute on our global vision, trust each other to get things done, and never compromise our values for commercial gain. Most importantly, we place our customers at the center of everything we do.
+ 
+We’re committed to increasing representation in the tech industry and welcome applicants from all backgrounds. Don’t meet every requirement? That’s okay. If you’re excited about this role, we encourage you to apply.
+
+The Role 
+Reporting to the Head of Compute Networking, this role is responsible for the design, build and ongoing evolution of the data centre network fabrics that underpin Latitude's bare metal and accelerated compute platform. You'll work across leaf-spine fabrics, GPU and storage networks, and the automation that keeps them consistent at scale - partnering with internal engineering teams, vendors and integration partners to deliver infrastructure that is fast, predictable and operable.
+This is the first Compute Networking role based in Australia. You'll be the local anchor point for the region and will work day to day with the existing team in Brazil, so comfort operating across time zones, and a degree of self-sufficiency, matters as much as the technical depth.
+What You'll Be Doing Evaluation, testing and certification of new network hardware, systems and software
+
+Design and deploy resilient leaf-spine network fabrics for GPU, AI and high-performance compute infrastructure.
+
+Design and operate IP fabrics using BGP, EVPN-VXLAN and ECMP.
+
+Support GPU frontend, backend, storage, management and out-of-band network connectivity.
+
+Configure and operate switches, routers, and data centre interconnects.
+
+Implement congestion management capabilities, including QoS, ECN and Priority Flow Control where required.
+
+Integrate GPU data centres with Megaport transport, internet transit, cloud and external connectivity services.
+
+Running proof of concept exercises with integration partners
+
+Development of next generation network and systems architectures
+
+Develop network architecture standards, low-level designs, implementation plans and operational documentation.
+
+Maintain technical relationships with vendor engineering teams
+
+Evolving network automation and monitoring systems (Capacity/Latency/Congestion/Availability)
+
+Providing technical support to internal and external customers
+
+Working with internal teams to assist with deployments and operations
+
+Provide technical summaries to enable executive leadership team to make sound business decisions
+
+Last level escalation point for network operations, operations engineering and network engineering teams. What We Are Looking For Passionate about technology and using technology to solve problems
+
+Strong work ethic and willingness to continuously upskill
+
+Strong background in networking and telecommunications
+
+Strong understanding of IP routing, QoS, MTU, resiliency and network failure scenarios.
+
+Practical Experience with BGP, EVPN-VXLAN and leaf-spine architecture.
+
+Experience with large scale DC networks
+
+Experience with large scale MPLS networks
+
+Experience writing scripts to automate tasks
+
+Understanding of high-speed Ethernet, optical transceivers, fibre cabling and data centre cross-connects.
+
+Ability to take initiative and work effectively in a rapidly changing environment
+
+Able to dig into a fault to uncover the root cause
+
+Desirable: Knowledge in programming languages such as Perl and Python
+
+Desirable: Understanding and exposure to an Agile environment
+
+Bonus: Understanding of RoCEv2, RDMA, Priority Flow Control and ECN.
+
+Bonus: Familiarity with Linux networking and infrastructure-as-code practices.
+
+Bonus: Operational experience working with network datasets, primarily SNMP & sFlow outputs
+
+Bonus: An interest in data and analysing trends What We Offer Creative, fun, and contemporary workspaces
+
+Motivated team of industry experts and new talent
+
+Flexible working environments
+
+Cutting-edge software to drive efficient communication and collaboration
+
+Training and development opportunities
+
+Celebrated success with ‘Legend’ and ‘Kudos’ Awards
+
+Health and wellness program and full social calendar
+
+Opportunity to make a difference #LI-DNI
+
+If you have any questions, please reach out to Megaport's Talent Acquisition Team at [EMAIL]
+ 
+NOTE: All Megaport business correspondence is conducted via our business email accounts (@megaport.com). If you have any concerns, please reach out to Megaport's careers team [EMAIL] directly and we will verify the legitimacy of any communication. Megaport will not ask you to create an account via Microsoft teams, and does not associate with any email accounts under "@megaportau.com".
+ 
+All applications will be treated in confidence.
+Please see Part 2 of our Privacy Policy to see what information Megaport collects from job applicants, why, and how we store and use it. Note that you’re entitled to know what personal data of yours Megaport holds, to request updates, rectification, and in some circumstances restriction or deletion thereof if you object (you being entitled to withdraw your consent to our holding your information at any time). Please see Part 5 of our Privacy Policy for more details on this and how to contact Megaport's data protection officer if you have any further privacy-related questions. Candidates who meet the selection criteria will be invited to attend an interview. Strictly no Recruitment Agencies.
+
+## 16. ats-gh-8229754 · Network/Systems Administrator
+*Senior Systems Engineer*, Culture Amp. https://job-boards.greenhouse.io/cultureamp/jobs/8229754
+
+We’re big believers in the power of IRL, so for most roles we ask Campers to work from their local Culture Amp office an average of 2 days a week to unlock connection, pace and culture together.
+
+Join us on our mission to make a better world of work. 
+
+Culture Amp is the world’s leading employee experience platform, revolutionizing how 25 million employees across more than 6,000 companies create a better world of work. Culture Amp empowers companies of all sizes and industries to transform employee engagement, drive performance management, and develop high-performing teams. Powered by people science and the most comprehensive employee dataset in the world, the most innovative companies including Canva, On, Asana, Dolby, McDonalds and Nasdaq depend on Culture Amp every day.
+
+Culture Amp is backed by leading venture capital funds and has offices in the US, UK, Germany and Australia. Culture Amp has been recognized as one of the world’s top private cloud companies by Forbes and most innovative companies by Fast Company.
+
+For more information visit cultureamp.com .
+
+How you can help make a better world of work
+
+You'll design, automate and operate the systems that let Campers work everywhere, every day. You'll own identity, endpoint management and workplace infrastructure end to end, with AWS, networking and enterprise AI as supporting areas you help keep secure, reliable and well governed. This is a hands-on engineering role, not a service-desk escalation seat: you'll build the automation that makes the environment self-sustaining, and mentor others as you go.
+
+What you'll own
+
+Identity & access: Okta administration and identity lifecycle automation: Workflows, SSO, SCIM, access governance, and joiner/mover/leaver processes.
+
+Endpoint engineering: The Jamf Pro platform and Apple device lifecycle: zero-touch deployment, configuration management, patching, compliance and fleet health.
+
+Workplace automation: Reliable automation using Python, PowerShell, Terraform/CloudFormation and workflow platforms to cut manual operations and improve consistency across the SaaS estate.
+
+What you'll do
+
+Cloud & network: Operate selected AWS and Meraki services, improving reliability, security, observability and documented recovery procedures.
+
+Enterprise AI platforms: Administer and evolve platforms such as Glean, Claude for Enterprise and Gemini including access controls, data-source permissions, integrations, usage governance, security reviews and internal adoption.
+
+Observability: Design monitoring, alerting and safe remediation workflows for critical services, using automation and AI-assisted operations where appropriate and properly governed.
+
+Escalation & support: Provide senior escalation support for complex infrastructure and workplace technology incidents, driving root-cause analysis, remediation and preventative improvements.
+
+What you bring
+
+Essential:
+
+Several years engineering or administering corporate infrastructure in a SaaS or technology-led company
+
+Strong Okta administration and identity lifecycle experience, including building and troubleshooting Workflows
+
+Strong Jamf Pro and macOS fleet-management experience
+
+Experience automating operational processes with Python, PowerShell, APIs, workflows or IaC
+
+Experience troubleshooting complex incidents and performing root-cause analysis
+
+Strong stakeholder communication and documentation skills
+
+Willing to work from the Richmond office at least two days a week
+
+Comfortable working with ambiguity and shifting priorities
+
+Dive in without being asked, but work-out-loud and share what you’ve learned along the way
+
+Valuable: 
+
+AWS experience: EC2, Route 53, Lambda,  Fargate
+
+Terraform or CloudFormation
+
+Cisco Meraki
+
+Enterprise AI platform administration and governance
+
+Observability tooling: CloudWatch, Datadog, Splunk or PagerDuty
+
+Jira Service Management, Google Workspace, Slack or Atlassian administration
+
+Perks & Benefits
+
+At Culture Amp, our people are at the heart of our success. We offer competitive pay and a total rewards package designed to support you at work and in life. This includes:
+
+Equity through our Employee Share Option Program, so you can share in our long-term success
+
+Learning programs and coaching to help you thrive and grow
+
+Quarterly refresh days, an extended end-of-year break and a monthly allowance to support your wellbeing and lifestyle
+
+Inclusive parental leave from day one
+
+A MacBook and budget to set up your home workspace, enabling flexibility
+
+Five annual social impact days to to give back to causes that matter to you
+
+Medical insurance coverage for you and your family (Available for US & UK only)
+
+Our rewards are designed to support different needs and life stages, recognising that what matters most can vary from person to person.
+
+Research shows that candidates from underrepresented backgrounds may hesitate to apply if they don’t meet every requirement, but your unique experience matters. If you’re interested in joining us, we strongly encourage you to apply and help us build a more diverse and impactful team. 
+
+Accommodations & Data Privacy
+
+If you require reasonable accommodations or adjustments due to a disability to complete the online application or to participate in the interview process, please contact [EMAIL] and identify the type of accommodation or assistance you are requesting. Do not include any medical or health information in this email. The Reasonable Accommodations team will respond to your email promptly.
+
+Culture Amp will retain your CV & personal information for a period of two years (four years for the US) from the date of your application process completion. Culture Amp may contact you in relation to future job opportunities during this time period. For further information please see our privacy policy  here or contact [EMAIL] .
+
+## 17. ats-sr-6000000001468836 · Software Engineer · **second annotator**
+*Senior Backend Engineer - Export*, Canva. https://api.smartrecruiters.com/v1/companies/canva/postings/6000000001468836
+
+Join the team redefining how the world experiences design.
+Hey, g'day, mabuhay, kia ora, 你好, hallo, vítejte!
+Thanks for stopping by. We know job hunting can be a little time consuming and you're probably keen to find out what's on offer, so we'll get straight to the point.
+
+What you’d be doing in this role
+As Canva scales, change continues to be part of our DNA. But we like to think that's all part of the fun. So this will give you the flavour of the type of things you'll be working on when you start, but this will likely evolve.
+At the moment, this role is focused on:
+Partnering with our staff engineer to investigate and resolve complex Chromium issues — including upgrade breakages, rendering race conditions, and incidents caused by upstream changes
+Owning the PDF accessibility post-processing pipeline and implementing features that add proper tagging and compliance (PDF/UA, WCAG) to exported PDFs for Enterprise customers
+Building monitoring and testing infrastructure that catches Chromium changes before they reach production
+Designing accessibility solutions resilient to Chromium's frequent output structure changes, so we're not constantly rebuilding
+Contributing to broader export infrastructure challenges including format optimisation and distributed systems reliability
+Documenting complex Chromium behaviour and architectural decisions to build team knowledge and reduce bus factor
+
+You're probably a match if
+You have deep experience with Chromium or another browser rendering engine
+You're comfortable with C++ when you need to dig into complex third-party codebases
+You're a solid Java backend engineer — that's what our product is built on
+You've debugged layered systems where the problem spans multiple codebases and languages
+PDF specification knowledge or experience with PDF generation and post-processing
+A background in rendering pipelines, graphics programming, or print production systems
+Experience maintaining systems where upstream dependencies change frequently
+
+About the team
+The Export team sits within the Editing Platform group and owns one of Canva's most critical workflows — transforming designs into downloadable files that users can share, print, and bring to life. Over 50 million people download their creations through us every week. We focus on three things: reliability users can count on, speed that keeps pace with their creativity, and flexibility across every format and use case.
+Beyond the main download flow, we power print production, enable AI model training, generate thumbnails, and make sure every new editor feature works seamlessly when someone hits that download button. As a Senior Backend Engineer here, your technical depth translates directly into user delight — and your work enables teams across Canva to move faster and ship with confidence.
+ 
+Other stuff to know
+We make hiring decisions based on your experience, skills and passion, as well as how you can enhance Canva and our culture. When you apply, please tell us the pronouns you use and any reasonable adjustments you may need during the interview process.
+We celebrate all types of skills and backgrounds at Canva so even if you don’t feel like your skills quite match what’s listed above - we still want to hear from you!
+Please note that interviews are conducted virtually.
+
+## 18. ats-as-ba20d64f-ce7f-4748-936c-684763b2331e · Software Engineer
+*Senior Engineer, Salesforce Platform*, Xero. https://jobs.ashbyhq.com/xero/ba20d64f-ce7f-4748-936c-684763b2331e
+
+Senior Engineer, Salesforce Platform
+
+The role and its impact
+Xero's Salesforce platform powers our go-to-market solutions and is increasingly the core infrastructure for our agents. As a senior engineer, you'll spend most of your time in hands-on work: writing and reviewing code, joining design reviews, responding to incidents and building proofs of concept. You'll help shape how the platform is secured, released and operated.
+Your impact is measured in results. Today the platform runs at 99.95% uptime, with 100% path-to-production compliance, zero Sev 1 or Sev 2 incidents and 150 to 200 deployments a month. You'll help maintain that standard as the platform scales significantly. This role lets you Go Bold by challenging how the platform is built, Go Fast by removing friction to production, Go Further by building things that last and Go Together by lifting capability across every team that depends on you.
+
+The team and how they connect
+The Platform team sits within Customer Platforms, the engineering group behind Xero's go-to-market and customer experience technology. You'll work closely with engineering leaders across Security, Data and AI, and with colleagues across Australia, New Zealand and our offshore partners.
+
+The team is currently working on
+Platform security: access control, Connected Apps governance and vulnerability remediation, setting the standards that make secure the default.
+
+CI/CD and release engineering: championing automation so every engineer building on the platform can ship safely and quickly.
+
+Observability and operational health: growing observability, managing org limits and preventing customer-facing issues before they start.
+
+Agent path-to-production: building a safe route from idea to production for agentic changes, including evaluation baselines, an agent registry and shared standards. This is a new area with no established playbook, so you'll help write it.
+
+Where and how you can work
+Based in Melbourne, we encourage one day a week in the office to stay connected with your peers. The pods you support are spread across Australia, New Zealand and offshore, so you'll be comfortable building trust and aligning people asynchronously and in writing.
+
+Here are some of the things we are looking for
+You bring hands-on Salesforce development depth at enterprise scale, from code and reviews through to production support, with a platform engineering mindset.
+
+Your background includes owning CI/CD pipelines and release engineering across major release cycles, with GitHub, SFDX and test automation experience.
+
+You've secured platforms that other teams depend on, and you've turned post-incident reviews into lasting change.
+
+You can make code and design decisions across multiple teams, and you write RFCs and design docs that build alignment through persuasion rather than authority.
+
+You help senior engineers grow through code review standards, and you use AI tooling fluently while evolving your own practice as the tools change.
+
+You turn business goals into technical plans with Product, and you're comfortable pushing back on unclear scope.

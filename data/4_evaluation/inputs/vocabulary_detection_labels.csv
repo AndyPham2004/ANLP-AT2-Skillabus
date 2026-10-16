@@ -1,0 +1,284 @@
+label,category,aliases_ads
+Business analysis,Business analysis,business analysis
+Process mapping,Business analysis,process mapping|process modelling|process modeling|bpmn|business process modelling
+User stories,Business analysis,user stories|user story
+ACS Certified Professional (CP),Certification,ACS Certified Professional|ACS CP|ACS Certified Technologist|ACS certification|ACS certified
+AWS Certified Cloud Practitioner,Certification,AWS Certified Cloud Practitioner|AWS Cloud Practitioner|CLF-C02
+AWS Certified Data Engineer - Associate,Certification,AWS Certified Data Engineer - Associate|AWS Certified Data Engineer|AWS Data Engineer Associate|DEA-C01
+AWS Certified DevOps Engineer - Professional,Certification,AWS Certified DevOps Engineer - Professional|AWS Certified DevOps Engineer|AWS DevOps Engineer Professional|AWS DevOps Professional|DOP-C02
+AWS Certified Developer - Associate,Certification,AWS Certified Developer - Associate|AWS Certified Developer|AWS Developer Associate|DVA-C02|DVA-C03
+AWS Certified Machine Learning Engineer - Associate,Certification,AWS Certified Machine Learning Engineer - Associate|AWS Certified Machine Learning|AWS Machine Learning Engineer Associate|MLA-C01|MLA-C02
+AWS Certified Security - Specialty,Certification,AWS Certified Security - Specialty|AWS Certified Security|AWS Security Specialty|SCS-C02|SCS-C03
+AWS Certified Solutions Architect - Associate,Certification,AWS Certified Solutions Architect - Associate|AWS Certified Solutions Architect|AWS Solutions Architect Associate|AWS Solutions Architect|AWS SA|SAA-C03
+CCNA Cybersecurity,Certification,CCNA Cybersecurity|CCNA Cyber Ops|CyberOps Associate|Cisco CyberOps|Cisco Certified Cybersecurity Associate|CBROPS
+CISA,Certification,CISA|Certified Information Systems Auditor
+CISM,Certification,CISM|Certified Information Security Manager
+CISSP,Certification,CISSP|Certified Information Systems Security Professional
+Certification of Capability in Business Analysis (CCBA),Certification,CCBA|Certification of Capability in Business Analysis
+Certified Business Analysis Professional (CBAP),Certification,CBAP|Certified Business Analysis Professional
+Certified Kubernetes Administrator (CKA),Certification,CKA|Certified Kubernetes Administrator
+Certified Kubernetes Application Developer (CKAD),Certification,CKAD|Certified Kubernetes Application Developer
+Certified ScrumMaster (CSM),Certification,Certified ScrumMaster|Certified Scrum Master|Scrum Alliance CSM
+Cisco Certified Network Associate (CCNA),Certification,CCNA|Cisco Certified Network Associate
+CompTIA A+,Certification,CompTIA A+
+CompTIA Cloud+,Certification,CompTIA Cloud+
+CompTIA CySA+,Certification,CompTIA CySA+|CySA+|CySA
+CompTIA Network+,Certification,CompTIA Network+|Network+
+CompTIA Security+,Certification,CompTIA Security+|Security+
+Databricks Certified Data Engineer Associate,Certification,Databricks Certified Data Engineer Associate|Databricks Certified Data Engineer|Databricks Data Engineer Associate
+Entry Certificate in Business Analysis (ECBA),Certification,ECBA|Entry Certificate in Business Analysis
+Google Cloud Associate Cloud Engineer,Certification,Google Associate Cloud Engineer|Google Cloud Associate Cloud Engineer|GCP Associate Cloud Engineer
+Google Cloud Associate Data Practitioner,Certification,Google Associate Data Practitioner|Google Cloud Associate Data Practitioner|Associate Data Practitioner
+Google Cloud Professional Cloud Architect,Certification,Google Professional Cloud Architect|Google Cloud Professional Cloud Architect|GCP Professional Cloud Architect|Professional Cloud Architect
+Google Cloud Professional Data Engineer,Certification,Google Professional Data Engineer|Google Cloud Professional Data Engineer|GCP Professional Data Engineer
+Google Cloud Professional Machine Learning Engineer,Certification,Google Professional Machine Learning Engineer|Google Cloud Professional Machine Learning Engineer|GCP Professional Machine Learning Engineer|Professional Machine Learning Engineer
+HashiCorp Certified: Terraform Associate,Certification,Terraform Associate|HashiCorp Certified: Terraform Associate|HashiCorp Terraform certification
+ISC2 Certified in Cybersecurity (CC),Certification,ISC2 CC|(ISC)2 CC|ISC2 Certified in Cybersecurity|Certified in Cybersecurity
+ISTQB Certified Tester Advanced Level Test Automation Engineering (CTAL-TAE),Certification,ISTQB Advanced|CTAL-TAE|ISTQB Test Automation Engineer|ISTQB Advanced Level Test Automation
+ISTQB Certified Tester Foundation Level (CTFL),Certification,ISTQB|ISTQB Foundation|ISTQB Certified Tester|CTFL
+ITIL Foundation (Version 5),Certification,ITIL|ITIL 4|ITIL v4|ITIL Foundation|ITIL 5|ITIL Version 5
+Kubernetes and Cloud Native Associate (KCNA),Certification,KCNA|Kubernetes and Cloud Native Associate
+Microsoft Certified: Azure AI Apps and Agents Developer Associate,Certification,Azure AI Apps and Agents Developer|Azure AI Engineer Associate|AI-103|AI-102
+Microsoft Certified: Azure AI Cloud Developer Associate,Certification,Azure AI Cloud Developer Associate|Azure Developer Associate|AI-200|AZ-204
+Microsoft Certified: Azure Administrator Associate,Certification,Azure Administrator Associate|Microsoft Certified: Azure Administrator|Azure Administrator certification|AZ-104
+Microsoft Certified: Azure Solutions Architect Expert,Certification,Azure Solutions Architect Expert|Azure Solutions Architect certification|AZ-305
+Microsoft Certified: DevOps Engineer Expert,Certification,Azure DevOps Engineer Expert|DevOps Engineer Expert|AZ-400
+Microsoft Certified: Machine Learning Operations Engineer Associate,Certification,Machine Learning Operations Engineer Associate|MLOps Engineer Associate|Azure Data Scientist Associate|AI-300|DP-100
+Microsoft Certified: Power BI Data Analyst Associate,Certification,Power BI Data Analyst Associate|Power BI Data Analyst certification|Power BI certification|Power BI certified|PL-300|DA-100
+Microsoft Certified: Security Operations Analyst Associate,Certification,Security Operations Analyst Associate|SC-200
+Professional Scrum Master I (PSM I),Certification,PSM I|PSM 1|PSM1|Professional Scrum Master
+Professional Scrum Product Owner I (PSPO I),Certification,PSPO I|PSPO 1|PSPO|Professional Scrum Product Owner
+Red Hat Certified System Administrator (RHCSA),Certification,RHCSA|Red Hat Certified System Administrator
+Salesforce Certified Tableau Data Analyst,Certification,Tableau Certified Data Analyst|Salesforce Certified Tableau Data Analyst|Tableau Certified|Tableau certification
+SnowPro Core Certification,Certification,SnowPro Core|SnowPro|COF-C02|COF-C03
+AWS,Cloud,aws|amazon web services
+Azure,Cloud,azure|microsoft azure
+Azure Data Factory,Cloud,data factory
+Azure ML,Cloud,azure machine learning|azure ml
+Azure Synapse,Cloud,synapse
+BigQuery,Cloud,bigquery|big query
+Cloud platforms,Cloud,cloud|cloud computing|cloud platform|cloud platforms|cloud-based
+CloudFormation,Cloud,cloudformation
+Google Cloud,Cloud,google cloud|gcp|google cloud platform
+OpenStack,Cloud,openstack
+Redshift,Cloud,redshift
+SageMaker,Cloud,sagemaker
+Serverless,Cloud,serverless
+Snowflake,Cloud,snowflake
+Vertex AI,Cloud,vertex ai
+Computer vision,Computer vision,computer vision|image recognition|image classification
+Object detection,Computer vision,object detection|image segmentation|yolo
+OpenCV,Computer vision,opencv
+Alteryx,Data wrangling,alteryx
+Dask,Data wrangling,dask
+Data cleaning,Data wrangling,data cleaning|data cleansing|data wrangling|data munging
+Databricks,Data wrangling,databricks
+Fivetran,Data wrangling,fivetran
+Hadoop,Data wrangling,hadoop|mapreduce
+Hive,Data wrangling,apache hive|hiveql
+Informatica,Data wrangling,informatica
+Kafka,Data wrangling,kafka|apache kafka
+NumPy,Data wrangling,numpy
+Polars,Data wrangling,polars
+Spark,Data wrangling,spark|pyspark|apache spark
+Talend,Data wrangling,talend
+pandas,Data wrangling,pandas
+tidyverse,Data wrangling,tidyverse|dplyr|ggplot2|ggplot
+Cassandra,Databases,cassandra
+DB2,Databases,db2
+Data modelling,Databases,data modelling|data modeling|dimensional modelling|star schema
+Data warehousing,Databases,data warehouse|data warehousing|data lake|lakehouse
+DynamoDB,Databases,dynamodb
+Elasticsearch,Databases,elasticsearch|elastic search|opensearch
+MongoDB,Databases,mongodb|mongo
+MySQL,Databases,mysql
+Neo4j,Databases,neo4j
+NoSQL,Databases,nosql
+Oracle,Databases,oracle database|oracle db|pl/sql
+PostgreSQL,Databases,postgresql|postgres
+Redis,Databases,redis
+SAP,Databases,SAP|SAP HANA|SAP ERP|S/4HANA
+SQL Server,Databases,sql server|mssql|ssis|ssrs
+Teradata,Databases,teradata
+Deep learning,Deep learning,deep learning|neural network|neural networks
+Keras,Deep learning,keras
+PyTorch,Deep learning,pytorch|torch
+TensorFlow,Deep learning,tensorflow
+API development,Engineering,api development|rest api|restful api|graphql
+Airflow,Engineering,airflow|apache airflow
+Ansible,Engineering,ansible
+Argo CD,Engineering,argocd|argo cd
+CI/CD,Engineering,ci/cd|continuous integration|continuous deployment
+Confluence,Engineering,confluence
+Datadog,Engineering,datadog
+Django,Engineering,django
+Docker,Engineering,docker|containerisation|containerization
+ETL,Engineering,etl|elt|data pipeline|data pipelines|data ingestion
+FastAPI,Engineering,fastapi
+Flask,Engineering,flask
+Git,Engineering,git|github|gitlab|bitbucket|version control
+Grafana,Engineering,grafana
+Jenkins,Engineering,jenkins
+Jira,Engineering,jira
+Jupyter,Engineering,jupyter|jupyterlab
+Kubeflow,Engineering,kubeflow
+Kubernetes,Engineering,kubernetes|k8s
+LLMOps,Engineering,llmops
+Linux,Engineering,linux|unix|ubuntu|rhel|red hat enterprise linux
+MLOps,Engineering,mlops|model deployment|model monitoring|model serving
+MLflow,Engineering,mlflow
+Microservices,Engineering,microservices|microservice|micro-services
+New Relic,Engineering,new relic|newrelic
+Observability,Engineering,observability
+Power Platform,Engineering,power apps|powerapps|power automate|power platform
+Prometheus,Engineering,prometheus
+Pulumi,Engineering,pulumi
+Puppet,Engineering,puppet
+Site reliability engineering,Engineering,site reliability engineering|site reliability
+Streamlit,Engineering,streamlit|gradio
+Terraform,Engineering,terraform|infrastructure as code
+Windows,Engineering,microsoft windows|windows server
+dbt,Engineering,dbt
+macOS,Engineering,macos|mac os
+Microsoft Dynamics,Enterprise software,microsoft dynamics|dynamics 365|dynamics crm
+Salesforce,Enterprise software,salesforce
+SharePoint,Enterprise software,sharepoint
+Data governance,Governance,data governance|data stewardship
+Data privacy,Governance,data privacy|gdpr|privacy act|de-identification|anonymisation
+Data quality,Governance,data quality|data integrity|data validation
+Data security,Governance,data security|information security
+Responsible AI,Governance,responsible ai|ethical ai|ai ethics|ai governance|model fairness|algorithmic bias
+Anomaly detection,Machine learning,anomaly detection|outlier detection|fraud detection
+Artificial intelligence,Machine learning,artificial intelligence|Artificial intelligence|Artificial Intelligence|ARTIFICIAL INTELLIGENCE|AI/ML|ML/AI|AI / ML|AI & ML|AI and ML|ML and AI|AI and machine learning|AI and Machine Learning|AI & machine learning|AI & Machine Learning|AI/machine learning|AI/Machine Learning|machine learning and AI|Machine Learning and AI|machine learning & AI|Machine Learning & AI|AI model|AI models|AI system|AI systems|AI solution|AI solutions|AI application|AI applications|AI technology|AI technologies|AI capabilities|AI engineering|AI development|AI techniques|AI algorithms|AI frameworks|AI research|AI Model|AI Models|AI System|AI Systems|AI Solution|AI Solutions|AI Application|AI Applications|AI Technology|AI Technologies|AI Capabilities|AI Engineering|AI Development|AI Techniques|AI Algorithms|AI Frameworks|AI Research
+CatBoost,Machine learning,catboost
+Clustering,Machine learning,clustering|k-means|kmeans|hierarchical clustering
+Feature engineering,Machine learning,feature engineering|feature selection
+Gradient boosting,Machine learning,gradient boosting|gradient boosted
+Hyperparameter tuning,Machine learning,hyperparameter tuning|hyperparameter optimisation|hyperparameter optimization|grid search
+LightGBM,Machine learning,lightgbm|light gbm
+Linear regression,Machine learning,linear regression
+Logistic regression,Machine learning,logistic regression
+Machine learning,Machine learning,machine learning|machine-learning
+Predictive modelling,Machine learning,predictive model|predictive models|predictive modelling|predictive modeling|predictive analytics
+Random forest,Machine learning,random forest|random forests
+Recommender systems,Machine learning,recommender system|recommendation engine|collaborative filtering
+Reinforcement learning,Machine learning,reinforcement learning|rlhf
+Support vector machines,Machine learning,support vector machine|support vector machines|svm
+Time series forecasting,Machine learning,time series|forecasting|arima|prophet
+XGBoost,Machine learning,xgboost
+scikit-learn,Machine learning,scikit-learn|sklearn|scikit learn
+AI agents,NLP,agentic|multi-agent|autonomous agents|agent frameworks
+BERT,NLP,bert|roberta|distilbert
+Copilot,NLP,copilot
+Generative AI,NLP,generative ai|gen ai|genai|generative artificial intelligence
+Hugging Face,NLP,hugging face|huggingface
+Knowledge graphs,NLP,knowledge graph|knowledge graphs
+LangChain,NLP,langchain|llamaindex
+Large language models,NLP,large language model|large language models|llm|llms|gpt-4|chatgpt
+NLTK,NLP,nltk
+Named entity recognition,NLP,named entity recognition|entity extraction
+Natural language processing,NLP,natural language processing|nlp|text mining|text analytics
+OpenAI API,NLP,openai
+Prompt engineering,NLP,prompt engineering|prompt design
+RAG,NLP,retrieval augmented generation|retrieval-augmented generation|rag pipeline
+Sentiment analysis,NLP,sentiment analysis|opinion mining
+Topic modelling,NLP,topic modelling|topic modeling|lda|latent dirichlet
+Transformers,NLP,transformer model|transformer models|transformers library
+Vector databases,NLP,vector database|vector store|faiss|pinecone|chroma|weaviate
+Word embeddings,NLP,word embedding|word embeddings|word2vec|glove|sentence transformers
+spaCy,NLP,spacy
+Cisco,Networking,cisco
+DNS,Networking,DNS
+Load balancing,Networking,load balancing|load balancer|load balancers
+TCP/IP,Networking,tcp/ip|tcp-ip
+VPN,Networking,VPN|VPNs
+Agile,Professional,agile|scrum|kanban|sprint
+Business acumen,Professional,business acumen|commercial acumen|business insight
+Change management,Professional,change management
+Communication,Professional,communication skills|written communication|verbal communication|excellent communication
+Data storytelling,Professional,data storytelling|storytelling with data|narrative
+Documentation,Professional,documentation|technical writing|document findings
+Leadership,Professional,leadership|team lead|mentoring|coaching
+Presentation skills,Professional,presentation skills|presenting to|public speaking
+Problem solving,Professional,problem solving|problem-solving|analytical thinking|critical thinking
+Project management,Professional,project management|project delivery
+Requirements gathering,Professional,requirements gathering|requirements elicitation|business requirements
+Stakeholder management,Professional,stakeholder management|stakeholder engagement|stakeholder
+Teamwork,Professional,teamwork|collaborative|cross-functional|collaboration
+Android,Programming,android
+C,Programming,C/C++|C programming|ANSI C|Embedded C|C language
+C#,Programming,c#|csharp|.net
+C++,Programming,c++|cpp
+Go,Programming,golang|go programming
+Java,Programming,java
+JavaScript,Programming,javascript|typescript|node.js|nodejs
+Julia,Programming,julia
+Kotlin,Programming,kotlin
+MATLAB,Programming,matlab
+Perl,Programming,perl
+Python,Programming,python
+R,Programming,R programming|R language|RStudio|R Studio|programming in R|R and Python|Python and R|R/Python|Python/R
+React,Programming,React|React.js|ReactJS|React Native
+Ruby,Programming,ruby|ruby on rails
+Rust,Programming,Rust
+SAS,Programming,SAS
+SQL,Programming,sql|t-sql|pl/sql|ansi sql
+Scala,Programming,scala
+Shell scripting,Programming,bash|shell script|shell scripting|powershell
+Spring,Programming,spring boot|springboot|spring framework|spring mvc
+Swift,Programming,Swift|SwiftUI
+VBA,Programming,vba|visual basic
+iOS,Programming,iOS
+Application security,Security,application security|appsec
+Encryption,Security,encryption|cryptography
+ISO 27001,Security,iso 27001|iso27001|iso/iec 27001
+Identity and access management,Security,identity and access management|iam|identity management
+Incident response,Security,incident response
+MITRE ATT&CK,Security,mitre att&ck|mitre attack|att&ck
+NIST,Security,NIST
+OWASP,Security,owasp
+Penetration testing,Security,penetration testing|pen testing|pentesting|penetration test
+SIEM,Security,siem
+SOC 2,Security,soc 2|soc2
+Splunk,Security,splunk
+Threat intelligence,Security,threat intelligence|threat hunting
+Vulnerability management,Security,vulnerability management|vulnerability assessment|vulnerability scanning
+cyber security,Security,cyber security|cybersecurity|cyber-security
+A/B testing,Statistics,a/b testing|ab testing|split testing|experimentation
+Bayesian methods,Statistics,bayesian|mcmc|markov chain monte carlo
+Causal inference,Statistics,causal inference|causal analysis|difference-in-differences
+Econometrics,Statistics,econometrics
+Experimental design,Statistics,experimental design|design of experiments|randomised controlled
+Hypothesis testing,Statistics,hypothesis testing|significance testing|p-value
+Optimisation,Statistics,optimisation|optimization|linear programming|operations research
+Probability,Statistics,probability|probabilistic
+Regression analysis,Statistics,regression analysis|regression modelling|regression modeling
+SPSS,Statistics,spss
+Stata,Statistics,stata
+Statistics,Statistics,statistics|statistical analysis|statistical modelling|statistical modeling
+Test automation,Testing,test automation|automated testing|automation testing|automated tests
+Unit testing,Testing,unit testing|unit tests|unit test
+User acceptance testing,Testing,user acceptance testing|uat
+Adobe Analytics,Visualisation,adobe analytics
+Cognos,Visualisation,cognos
+D3.js,Visualisation,d3.js|d3js
+Data visualisation,Visualisation,data visualisation|data visualization|dashboarding|dashboards
+Excel,Visualisation,excel|microsoft excel|pivot table|pivot tables
+Google Analytics,Visualisation,google analytics|ga4
+Looker,Visualisation,looker|looker studio
+MicroStrategy,Visualisation,microstrategy
+Microsoft Office,Visualisation,microsoft office|ms office|office 365|microsoft 365|microsoft word|ms word|powerpoint|visio
+Plotly,Visualisation,plotly|dash
+Power BI,Visualisation,power bi|powerbi
+Qlik,Visualisation,qlik|qlikview|qliksense
+R Shiny,Visualisation,rshiny|r shiny
+Tableau,Visualisation,tableau
+matplotlib,Visualisation,matplotlib
+seaborn,Visualisation,seaborn
+Angular,Web development,angular|angularjs|angular.js
+CSS,Web development,css|css3|scss
+HTML,Web development,html|html5
+Next.js,Web development,next.js|nextjs
+PHP,Web development,php
+Vue.js,Web development,vue|vue.js|vuejs|nuxt
+jQuery,Web development,jquery
