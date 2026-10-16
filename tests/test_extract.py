@@ -32,7 +32,8 @@ def test_mentions_follow_the_data_contract(method):
     mentions = extract(AD, method)
     assert mentions
     for m in mentions:
-        assert set(m) == {"text", "canonical", "method", "sentence"}
+        assert set(m) == {"text", "canonical", "method", "sentence", "requirement"}
+        assert m["requirement"] in ("required", "preferred", "")
         assert m["method"] == method
         assert m["text"] in m["sentence"]
 
@@ -131,3 +132,66 @@ def test_ner_proposes_skills_outside_the_dictionary():
 def test_ner_candidates_skip_numbers_places_and_vague_nouns():
     assert candidates("5+ years of experience in Sydney with large clusters and Python.") == set()
     assert candidates("Understanding of retrieval-augmented generation (RAG).") == set()
+
+
+# ------------------------------------------------- C2: the vocabulary; D14: required or preferred
+
+def test_extraction_reads_the_vocabulary_detection_rows():
+    """Since C2 the dictionary is skills_vocabulary.csv's detection rows; the old 148 are all in it."""
+    vocabulary = {s["canonical"]: s for s in load_dictionary()}
+    with open(paths.SKILLS_SEED, encoding="utf-8") as f:
+        old = {r["canonical"] for r in csv.DictReader(line for line in f if not line.startswith("#"))}
+    assert old <= set(vocabulary) and len(vocabulary) > len(old)
+    assert vocabulary["Tableau"]["skill_id"] == "skillabus:tableau" and vocabulary["Python"]["esco_match"] == "exact"
+    assert [m["canonical"] for m in extract("Experience with Kubernetes, Terraform and Grafana.")] == [
+        "Kubernetes", "Terraform", "Grafana"]                       # Grafana: an IT skill added in D5
+
+
+def test_requirement_comes_from_the_sentence_or_its_heading():
+    ad = """Essential criteria:
+- Python and SQL
+Nice to have:
+- dbt
+Benefits
+- Free Python books
+Must have strong Tableau skills. Experience with Power BI is desirable but not required."""
+    req = {(m["canonical"], m["sentence"]): m["requirement"] for m in extract(ad)}
+    assert req[("Python", "Python and SQL")] == req[("SQL", "Python and SQL")] == "required"
+    assert req[("dbt", "dbt")] == "preferred"
+    assert req[("Python", "Free Python books")] == ""                 # "Benefits" ends the section
+    assert req[("Tableau", "Must have strong Tableau skills.")] == "required"
+    assert req[("Power BI", "Experience with Power BI is desirable but not required.")] == "preferred"
+
+
+def test_requirement_cues_skip_business_requirements_and_question_lines():
+    # Review #109: "requirements" and "minimum" count only in a heading, "as required" never, and a
+    # line that names a skill or ends a sentence (. ? !) is not a heading.
+    ad = """Gather business requirements and build dashboards in Tableau.
+Minimum 3 years with Python.
+Other duties as required, including SQL reporting.
+Don't meet every requirement?
+We encourage you to apply anyway and tell us about your Python projects.
+Minimum requirements:
+- Java"""
+    req = {(m["canonical"], m["sentence"]): m["requirement"] for m in extract(ad)}
+    assert req[("Tableau", "Gather business requirements and build dashboards in Tableau.")] == ""
+    assert req[("Python", "Minimum 3 years with Python.")] == ""
+    assert req[("SQL", "Other duties as required, including SQL reporting.")] == ""
+    assert req[("Python", "We encourage you to apply anyway and tell us about your Python projects.")] == ""
+    assert req[("Java", "Java")] == "required"                       # "Minimum requirements:" is a heading
+
+
+def test_a_section_heading_still_ends_the_section_when_it_names_a_skill_or_asks():
+    ad = """Essential criteria:
+- Python
+Why join us?
+Great Snowflake projects.
+Must have:
+- SQL
+About MongoDB
+MongoDB is a database company."""
+    req = {(m["canonical"], m["sentence"]): m["requirement"] for m in extract(ad)}
+    assert req[("Python", "Python")] == "required" and req[("SQL", "SQL")] == "required"
+    assert req[("Snowflake", "Great Snowflake projects.")] == ""      # "Why join us?" ends the section
+    assert req[("MongoDB", "MongoDB is a database company.")] == ""   # so does "About MongoDB"
+
