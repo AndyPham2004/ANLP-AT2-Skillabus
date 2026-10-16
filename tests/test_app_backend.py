@@ -181,6 +181,18 @@ def test_recommendations_list_each_subject_once():
         assert len(codes) == len(set(codes)), (role, codes)
 
 
+def test_footer_count_and_the_fallback_follow_the_vocabulary():
+    # Follow-up to #109: the footer and the baseline fallback read the detection rows the extractor
+    # uses (skills_vocabulary.csv), not the 148-skill seed.
+    from skillabus.extract import load_dictionary
+    assert backend.dictionary_size() == len(load_dictionary()) > 148
+    found = backend.baseline.find_skills("Experience with Kubernetes, Terraform and Grafana dashboards.")
+    assert {"Kubernetes", "Terraform", "Grafana"} <= set(found)            # Grafana: an IT skill added in D5
+    skills = backend.baseline.analyse("", "Must know Tableau and Python.")["skills"]
+    ids = {s["skill_label"]: s["skill_id"] for s in skills}
+    assert ids["Tableau"] == "skillabus:tableau" and ids["Python"].startswith("esco:")
+
+
 def test_analyse_job_mode_still_works(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)     # no GPT tier: the app must run without a key
     ad = paths.SAMPLE_AD.read_text(encoding="utf-8")

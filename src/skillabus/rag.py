@@ -49,7 +49,6 @@ from . import paths
 
 PROFILES_CSV = paths.SUBJECT_PROFILES
 SEEK_CSV = paths.SEEK_ADS
-SEED_CSV = paths.SKILLS_SEED
 CACHE_DIR = paths.RAG_INDEX
 
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"     # same as normalise.py
@@ -69,14 +68,19 @@ SENTENCE = re.compile(r"(?<=[.!?])\s+|\n+|\s*•\s*")
 
 # ------------------------------------------------------------------------------- corpus
 def _skill_pattern() -> re.Pattern:
-    """Any alias in the skill dictionary (skills_seed_v2.csv), as one case-insensitive pattern."""
-    with open(SEED_CSV, encoding="utf-8") as f:
-        has_comment = f.readline().startswith("#")
-    seed = pd.read_csv(SEED_CSV, skiprows=1 if has_comment else 0, dtype=str)  # not comment="#": C#
-    aliases = {a.strip().lower() for cell in seed.aliases.dropna() for a in cell.split("|") if a.strip()}
-    aliases |= set(seed.canonical.str.lower())
-    body = "|".join(re.escape(a) for a in sorted(aliases, key=len, reverse=True))
-    return re.compile(rf"(?<![A-Za-z0-9+#_])(?:{body})(?![A-Za-z0-9+#_])", re.I)
+    """Any alias the extractor looks for (the vocabulary's detection rows, extract.load_dictionary()),
+    as one pattern: case-insensitive, except the strict rows (R, SAS), which match as written. As in
+    extract(), only aliases count: a canonical such as "Go" or "Oracle" is a display name."""
+    from .extract import load_dictionary
+    loose, strict = set(), set()
+    for s in load_dictionary():
+        (strict if s["strict"] else loose).update(s["aliases"])
+
+    def alt(words):
+        return "|".join(re.escape(w) for w in sorted(words, key=len, reverse=True))
+
+    parts = [p for p in (f"(?i:{alt(loose)})" if loose else "", alt(strict)) if p]
+    return re.compile(rf"(?<![A-Za-z0-9+#_])(?:{'|'.join(parts)})(?![A-Za-z0-9+#_])")
 
 
 def _subject_passages() -> pd.DataFrame:
@@ -97,7 +101,7 @@ def _subject_passages() -> pd.DataFrame:
 
 
 def _ad_passages() -> pd.DataFrame:
-    """Sentences from the unique Seek ads that name at least one dictionary skill."""
+    """Sentences from the unique Seek ads that name at least one skill the extractor knows."""
     ads = pd.read_csv(SEEK_CSV, dtype=str).fillna("").drop_duplicates("description")
     skill = _skill_pattern()
     rows = []
