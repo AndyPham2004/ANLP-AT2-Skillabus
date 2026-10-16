@@ -54,7 +54,7 @@ Cohen's kappa between hoaithuongnguyen-uts and tompham9016 on 20 ads:
 
 | Method | Hit@k | Subject recall@k |
 |---|---|---|
-| tfidf | 0.867 | 0.711 |
+| tfidf | 0.933 | 0.778 |
 | embed | 0.800 | 0.567 |
 
 ## Not run

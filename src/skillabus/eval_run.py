@@ -24,7 +24,6 @@ from .extract import extract
 from .match import match, rank_evidence
 from .normalise import normalise
 
-ROOT = paths.ROOT
 ADS = paths.SEEK_ADS
 RES = paths.RESUMES
 DICT = paths.SKILLS_SEED
@@ -51,7 +50,7 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
     dic = ev.load_dictionary(str(DICT))
     out: dict = {"method": method}
 
-    gold = ev.load_ad_skills(str(LAB / "ad_skills.csv"), gold_annotator)   # one annotator: a second one's rows must not enlarge the gold set
+    gold = ev.load_ad_skills(str(paths.AD_SKILLS), gold_annotator)   # one annotator: a second one's rows must not enlarge the gold set
     pred = {ad: {ev.norm(m.get("canonical") or m.get("skill_label") or m["text"]) for m in _extract(ads[ad], method)}
             for ad in gold}
     out["n_ads"] = len(gold)
@@ -59,7 +58,7 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
     out["extraction_dictionary_skills"] = ev.extraction_scores(ev.restrict_to(gold, dic), ev.restrict_to(pred, dic))
     out["extraction_errors"] = ev.extraction_errors(ev.restrict_to(gold, dic), ev.restrict_to(pred, dic))
 
-    rows = ev.load_cv_jd_pairs(str(LAB / "cv_jd_pairs.csv"))
+    rows = ev.load_cv_jd_pairs(str(paths.CV_JD_PAIRS))
     canon = {ev.norm(r["canonical"]): r["canonical"] for r in ev._rows(str(DICT)) if r.get("canonical")}
     by_pair: dict[str, list[dict]] = {}
     for r in rows:
@@ -95,18 +94,18 @@ def run_tier(method: str, gold_annotator: str | None = GOLD_ANNOTATOR) -> dict:
     return out
 
 
-def kappa_result() -> dict | str:
+def kappa_result(gold_annotator: str | None = GOLD_ANNOTATOR) -> dict | str:
     """Kappa between two annotators in data/4_evaluation/labels/ad_skills.csv, or the reason it cannot be computed.
 
     "dictionary" restricts both sides to dictionary skills (every unlabelled dictionary skill counts as an agreed
     absence); "all" also counts free-text labels, which only one annotator may have written, so it is lower.
     """
-    path = LAB / "ad_skills.csv"
+    path = paths.AD_SKILLS
     names = sorted({r.get("annotator", "").strip() for r in ev._rows(str(path)) if r.get("annotator", "").strip()})
     if len(names) < 2:
         return f"not run: ad_skills.csv has labels from {len(names)} annotator ({', '.join(names) or 'none'}); a second annotator's rows are needed (#63)"
-    if GOLD_ANNOTATOR in names:   # the gold annotator first, then the first other one, so a third file cannot change the pair
-        names = [GOLD_ANNOTATOR] + [n for n in names if n != GOLD_ANNOTATOR]
+    if gold_annotator in names:   # the gold annotator first, then the first other one, so a third file cannot change the pair
+        names = [gold_annotator] + [n for n in names if n != gold_annotator]
     a, b = ev.load_ad_skills(str(path), names[0]), ev.load_ad_skills(str(path), names[1])
     shared = sorted(set(a) & set(b))
     if not shared:
@@ -129,7 +128,7 @@ def subject_result(methods=SUBJECT_METHODS) -> dict:
     A method that cannot run here (no sentence-transformers) is listed under "skipped" with the reason.
     """
     from .recommend import subject_evidence
-    gold = ev.load_skill_subject_pairs(str(LAB / "skill_subject_pairs.csv"))
+    gold = ev.load_skill_subject_pairs(str(paths.SKILL_SUBJECT_PAIRS))
     canon = {ev.norm(r["canonical"]): r["canonical"] for r in ev._rows(str(DICT)) if r.get("canonical")}
     skills = sorted({skill for skill, _ in gold})
     out: dict = {"n_pairs": len(gold), "n_skills": len(skills), "methods": {}, "skipped": {}}
@@ -160,14 +159,17 @@ def chat_result(call_llm=None, methods=("tfidf", "embed"), k: int = 5) -> dict:
     call_llm(prompt) -> reply text. Used for both the answer and the judge, so a cached or fake client works.
     """
     from .rag import retrieve
-    questions = ev._rows(str(LAB / "chat_questions.csv"))
+    questions = ev._rows(str(paths.CHAT_QUESTIONS))
+    name_of = {r["subject_code"]: r["subject_name"].strip().casefold() for r in ev._rows(str(paths.SUBJECT_PROFILES))}
     out: dict = {"n_questions": len(questions), "retrieval": {}, "skipped": {}}
     for m in methods:
         try:
             hits, recalls, per_q = [], [], []
             for q in questions:
-                want = set(CODE.findall(q["source"]))
-                got = [p["subject_code"] for p in retrieve(q["question"], k=k, method=m) if p.get("subject_code")]
+                # compare subject names: one subject can have several codes (43031, 430031, 431031)
+                want = {name_of.get(c, c) for c in CODE.findall(q["source"])}
+                got = [(p.get("subject_name") or name_of.get(p["subject_code"], p["subject_code"])).strip().casefold()
+                       for p in retrieve(q["question"], k=k, method=m) if p.get("subject_code")]
                 hit = bool(want & set(got))
                 recall = len(want & set(got)) / len(want) if want else 0.0
                 hits.append(hit)
@@ -279,7 +281,7 @@ def run_all(methods=TIERS, out_dir: str | Path | None = None, gold_annotator: st
         (out / name).write_text(json.dumps(results[m], indent=1, default=str), encoding="utf-8")
         e = results[m]
         print(f"{m}: extraction F1 {e['extraction_all']['f1']:.3f}; matching accuracy {e['matching_end_to_end']['accuracy']:.3f}; Hit@5 {e['ranking']['hit_at_k']:.3f}")
-    kappa = kappa_result()
+    kappa = kappa_result(gold_annotator)
     other: dict = {}
     for key, name, fname, fn in (("subject", "Subject P@3", "skill_subject_pairs.csv", subject_result),
                                  ("chat", "Chat retrieval and judge", "chat_questions.csv", lambda: chat_result(openai_caller()))):

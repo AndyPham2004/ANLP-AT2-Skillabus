@@ -17,8 +17,7 @@ Section 4.7 lists four stages. The table says what the numbers below cover.
 | Chat | 15 questions with reference answers | Retrieval: TF-IDF and embeddings; LLM judge **[TODO]** | Retrieval done, judge needs an API key (see 6.5) |
 | Annotator agreement | 20 overlap ads, two annotators | Cohen's kappa | **0.856** on dictionary skills (almost perfect); 0.686 on all labels incl. free text (substantial) |
 
-The test sets are much smaller than planned (200 ads, 50 pairs). Five of the 50 selected pairs have no scored skills, because
-their ads name only soft skills, which `match()` leaves out. Every figure below is therefore a small-sample estimate.
+The test sets are much smaller than planned (200 ads, 50 pairs). Five of the 50 selected pairs (CVJD01, CVJD02, CVJD33, CVJD43 and CVJD49) have no scored skills in the labelled file, so 45 pairs remain. Every figure below is therefore a small-sample estimate.
 
 The test sets were labelled following the rules in `data/4_evaluation/labels/README.md`. The 20 overlap ads are also labelled separately by a second annotator (Van Thong) so that inter-annotator agreement can be measured with Cohen’s kappa.
 
@@ -63,7 +62,7 @@ them as "missing"; 45 of them really are missing, which is why accuracy stays hi
 **Read partial with care.** There are only six partial rows, so one row moves partial recall by 17 points. We report the
 counts and put the weight on accuracy and on the have and missing classes.
 
-**Confusion (matching only).** Of 287 rows, 194 missing and 68 have are right. The errors are:
+**Confusion (matching only).** Of 287 rows, 266 are right (194 missing, 68 have and 4 partial) and 21 are wrong. The errors are:
 
 | Gold → predicted | Rows | What happened |
 |---|---|---|
@@ -92,11 +91,11 @@ A sentence counts as correct when it contains the phrase.
 
 Each row has one gold phrase, so P@5 sits near its ceiling of 0.2 and says little; Hit@5 and MRR are the informative figures. Hit@5 says the right sentence is in the top five for 94.3% of rows, and MRR of
 0.829 says it is usually first. The result does not depend on the extraction tier. (With lowercased skill labels the ranker
-lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; the notebook now passes the canonical name.) The baselines (TF-IDF and embedding ranking) are **[TODO]**.
+lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; `eval_run.py` now passes the canonical name.) The baselines (TF-IDF and embedding ranking) are **[TODO]**.
 
 ## 6.5 Subject recommendation and chat
 
-**Subject P@3.** For each of the 13 labelled skills, the top three subjects returned by `subject_evidence()` are compared with the 33 labelled skill–subject pairs. Some subjects appear under more than one code in the Handbook (for example Data Visualisation and Visual Analytics), so a subject name counts once. A recommended subject with no label is left out of the count, so the table also gives how much of the top three was labelled.
+**Subject P@3.** For each of the 13 labelled skills, the top three subjects returned by `subject_evidence()` are compared with the 33 labelled skill–subject pairs. Some subjects appear under more than one code in the Handbook (for example Data Visualisation and Visual Analytics), so a subject name counts once, and a label on any code with the same name counts for the subject. A recommended subject with no label is left out of the count, so the table also gives how much of the top three was labelled.
 
 | Method | P@3 (y or partly) | P@3 (y only) | Labelled / recommended | Coverage |
 |---|---|---|---|---|
@@ -104,9 +103,9 @@ lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; the notebook now pa
 | TF-IDF | 0.950 | 0.900 | 20 / 37 | 0.541 |
 | Embeddings | 1.000 | 0.947 | 19 / 37 | 0.514 |
 
-**This is not yet a test of the three methods.** About half of the recommended subjects have a label, and the labelled pairs are almost all "y" (25 of 33; 7 "partly", 1 "n"), so a method can score 1.000 simply because the unlabelled recommendations are not counted. The differences between the rows above are one or two pairs. A fair P@3 needs the top three of each method labelled, without knowing which method returned which; this is still **[TODO]**.
+**This is not a comparison of the three methods.** For a skill that is in the dictionary, `subject_evidence()` gives similarity 1.0 to every row that names the skill, whatever the method, so the subjects that name the skill always come first and ties are sorted by subject code. Keyword and TF-IDF return identical lists for all 13 skills, and all three methods have the same top three for 12 of the 13 (only Data cleaning differs, at rank 3). The rows above therefore differ by one or two pairs, not because one method is better. A comparison of the methods needs similarity-only ranking or skills outside the dictionary. In addition, about half of the recommended subjects have a label, and the labelled pairs are almost all "y" (25 of 33; 7 "partly", 1 "n"), so P@3 is an optimistic estimate; the unlabelled recommendations are not counted.
 
-**Chat retrieval.** For the 15 questions, retrieval returns at least one of the subjects named in the reference answer within the top five for 86.7% of the questions with TF-IDF and 80.0% with embeddings (Hit@5), and finds 71.1% and 56.7% of all the subjects the reference answers cite (recall@5). TF-IDF is ahead of the embeddings on this set; with 15 questions that is a difference of one question. The LLM judge's relevance and faithfulness scores (answers from GPT-4o-mini, judged by GPT-4o-mini) are **[TODO]**: they need an API key.
+**Chat retrieval.** For the 15 questions, retrieval returns at least one of the subjects named in the reference answer within the top five for 93.3% of the questions with TF-IDF and 80.0% with embeddings (Hit@5), and finds 77.8% and 56.7% of all the subjects the reference answers cite (recall@5). Subjects are compared by name, because one subject can have several codes. TF-IDF is ahead of the embeddings on this set; with 15 questions that is a difference of two questions. The LLM judge's relevance and faithfulness scores (answers from GPT-4o-mini, judged by GPT-4o-mini) are **[TODO]**: they need an API key.
 
 ## 6.6 Limits of these numbers
 
@@ -114,4 +113,5 @@ lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; the notebook now pa
   than the noise unless the gap is large.
 - One ad row and one pair row carry the "unsure" mark; `load_ad_skills()` and `load_cv_jd_pairs()` drop the mark, so unsure labels count as gold, which slightly lowers recall.
 - Gold labels come from one annotator. Cohen's kappa on the 20 overlap ads is 0.856 for dictionary skills (observed agreement 0.980) and 0.686 when free-text labels are included (0.966), so another annotator largely agrees on dictionary skills and disagrees more on free-text skills outside the dictionary. Extraction scores use the first annotator's rows only.
+- Retrieval can fill the top five with one subject under several codes (TF-IDF returns Machine Learning as 31005, 320513 and 321513 for one question), which lowers recall for the other subjects; fixing that belongs in `rag.py`.
 - The matching and ranking tables are for the dictionary tier; the spaCy rows are identical to them, and only GPT-4o-mini changes the matching result (6.3).

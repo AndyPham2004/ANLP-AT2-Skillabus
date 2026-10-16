@@ -2,24 +2,22 @@
  "n_questions": 15,
  "retrieval": {
   "tfidf": {
-   "hit_at_k": 0.8666666666666667,
-   "subject_recall_at_k": 0.711111111111111,
+   "hit_at_k": 0.9333333333333333,
+   "subject_recall_at_k": 0.7777777777777778,
    "k": 5,
    "per_question": [
     {
      "question_id": "Q01",
-     "hit": false,
-     "recall": 0.0,
-     "missing": [
-      "43031"
-     ]
+     "hit": true,
+     "recall": 1.0,
+     "missing": []
     },
     {
      "question_id": "Q02",
      "hit": true,
      "recall": 0.6666666666666666,
      "missing": [
-      "49275"
+      "neural networks and fuzzy logic"
      ]
     },
     {
@@ -33,7 +31,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "42904"
+      "cloud computing and software as a service"
      ]
     },
     {
@@ -59,7 +57,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "22804"
+      "business analytics foundations"
      ]
     },
     {
@@ -67,7 +65,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "32606"
+      "database"
      ]
     },
     {
@@ -75,7 +73,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "32130"
+      "fundamentals of data analytics"
      ]
     },
     {
@@ -83,8 +81,8 @@
      "hit": false,
      "recall": 0.0,
      "missing": [
-      "36106",
-      "36120"
+      "advanced machine learning application",
+      "machine learning algorithms and applications"
      ]
     },
     {
@@ -129,8 +127,8 @@
      "hit": true,
      "recall": 0.3333333333333333,
      "missing": [
-      "49275",
-      "94691"
+      "deep learning",
+      "neural networks and fuzzy logic"
      ]
     },
     {
@@ -144,7 +142,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "42049"
+      "architecting on amazon web services"
      ]
     },
     {
@@ -158,7 +156,7 @@
      "hit": true,
      "recall": 0.6666666666666666,
      "missing": [
-      "94693"
+      "big data engineering"
      ]
     },
     {
@@ -166,7 +164,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "36106"
+      "machine learning algorithms and applications"
      ]
     },
     {
@@ -174,7 +172,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "22804"
+      "business analytics foundations"
      ]
     },
     {
@@ -182,7 +180,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "32606"
+      "database"
      ]
     },
     {
@@ -190,7 +188,7 @@
      "hit": true,
      "recall": 0.5,
      "missing": [
-      "32130"
+      "fundamentals of data analytics"
      ]
     },
     {
@@ -198,8 +196,8 @@
      "hit": false,
      "recall": 0.0,
      "missing": [
-      "36106",
-      "36120"
+      "advanced machine learning application",
+      "machine learning algorithms and applications"
      ]
     },
     {
@@ -213,7 +211,7 @@
      "hit": false,
      "recall": 0.0,
      "missing": [
-      "94693"
+      "big data engineering"
      ]
     },
     {
@@ -227,7 +225,7 @@
      "hit": false,
      "recall": 0.0,
      "missing": [
-      "32606"
+      "database"
      ]
     }
    ]
