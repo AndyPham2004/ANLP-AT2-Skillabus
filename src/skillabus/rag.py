@@ -25,7 +25,9 @@ Index. data/runtime/ is gitignored, so the embedding index is built on first use
 vectors cached in data/runtime/cache/rag/ (rebuilt automatically when the corpus changes).
 `python -m skillabus.rag build` builds it ahead of time.
 
-Three things on top of plain similarity search:
+Four things on top of plain similarity search:
+  * a skill named by an alias is written out in full in the question ("LLMs" -> "Large
+    language models"), because the embedding model does not know the acronyms;
   * a subject code in the question ("what does 36118 teach?") restricts results to that
     subject, because neither backend matches five-digit codes reliably;
   * each passage is indexed with its subject's name and layer, so "deep learning subject"
@@ -67,6 +69,7 @@ SENTENCE = re.compile(r"(?<=[.!?])\s+|\n+|\s*•\s*")
 
 
 # ------------------------------------------------------------------------------- corpus
+@lru_cache(maxsize=1)
 def _skill_pattern() -> re.Pattern:
     """Any alias the extractor looks for (the vocabulary's detection rows, extract.load_dictionary()),
     as one pattern: case-insensitive, except the strict rows (R, SAS), which match as written. As in
@@ -81,6 +84,27 @@ def _skill_pattern() -> re.Pattern:
 
     parts = [p for p in (f"(?i:{alt(loose)})" if loose else "", alt(strict)) if p]
     return re.compile(rf"(?<![A-Za-z0-9+#_])(?:{'|'.join(parts)})(?![A-Za-z0-9+#_])")
+
+
+@lru_cache(maxsize=1)
+def _skill_names() -> dict[str, str]:
+    """Lower-cased alias -> the skill's display name ("llms" -> "Large language models")."""
+    from .extract import load_dictionary
+    names: dict[str, str] = {}
+    for s in load_dictionary():
+        for a in s["aliases"]:
+            names.setdefault(a.lower(), s["canonical"])
+    return names
+
+
+def spell_out(question: str) -> str:
+    """The question with each skill it names by an alias written out in full ("LLMs" -> "Large
+    language models"). all-MiniLM reads "LLMs" as "LMS" and ranks a "Timed LMS exam" first; an alias
+    left next to the full name still pulls that exam into the top five, so it is replaced."""
+    def full(m: re.Match) -> str:
+        name = _skill_names().get(m.group(0).lower())
+        return name if name and name.lower() != m.group(0).lower() else m.group(0)
+    return _skill_pattern().sub(full, question)
 
 
 def _subject_passages() -> pd.DataFrame:
@@ -205,7 +229,7 @@ def retrieve(question: str, k: int = 5, method: str | None = None,
         return []
     method = method or default_method()
     corpus = passages(tuple(sources))
-    scores = _scores(question, method, tuple(sources))
+    scores = _scores(spell_out(question), method, tuple(sources))
 
     codes = set(SUBJECT_CODE.findall(question)) & set(corpus.subject_code)
     if codes:

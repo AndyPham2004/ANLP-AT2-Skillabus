@@ -487,9 +487,10 @@ def taken_block() -> None:
     ss.setdefault("taken_box", [c for c in ss.taken_keep if c in SUBJECT_NAME])
     st.markdown(ui.eyebrow(f"Subjects you've already taken <span style='color:{ui.HAVE}'>· {len(ss.taken_box)}"
                            "</span>"), unsafe_allow_html=True)
+    # No "Select N matches" row: it sat first, so Enter after typing a name ticked every match.
     st.multiselect("Subjects taken", options, key="taken_box", format_func=subject_label,
                    placeholder="Type a subject name (your course's subjects come first)",
-                   label_visibility="collapsed")
+                   label_visibility="collapsed", select_all=False, filter_mode="contains")
     ss.taken_keep = list(ss.taken_box)
 
 
@@ -915,7 +916,7 @@ def uts_cards(label: str, res: dict) -> None:
     for d in [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]][:2]:
         reason = re.sub(r"\b\d{5,6} (?=[A-Z])", "", d["reason"])          # names, not codes
         reason = reason if len(reason) <= 120 else reason[:117].rstrip() + "\u2026"
-        st.caption(f"{d['subject_name']} also teaches it, but {reason}.")
+        st.caption(f"{SUBJECT_LABEL.get(d['subject_code'], d['subject_name'])} also teaches it, but {reason}.")
 
 
 @st.fragment
@@ -1039,3 +1040,8 @@ if ss.chat_open:
         chat_panel()
 else:
     PAGES[ss.step]()
+view = (ss.step, ss.gap if ss.step == "evidence" else None)
+if ss.get("view_shown") != view:          # a new page starts at the top; a tab, tick or filter keeps the place
+    ss.view_shown = view
+    ss.view_n = ss.get("view_n", 0) + 1
+    st.html(ui.scroll_top(ss.view_n), unsafe_allow_javascript=True)
