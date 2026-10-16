@@ -1,6 +1,7 @@
 # 4 Methods
 
-> Draft by Phuong Nhi, 15 Oct 2026, rewritten around the technical frame (ideas doc, section 7). **[eval]** = number
+> Draft by Phuong Nhi, 16 Oct 2026: final pass after the vocabulary (#109), role demand (#108), T1 (#110) and the app's
+> 11 roles (#111); written around the technical frame (ideas doc, section 7). **[eval]** = number
 > from section 6. **[Quan]** / **[Van Thong]** = please check the sentence about your stage. Code: `src/skillabus/`.
 > Every threshold below was set on text that is not in a test set.
 
@@ -11,7 +12,7 @@ method adds and where it fails. Table 4.1 is the frame; the subsections give the
 
 | Stage | Traditional | Newer | Measured on | Typical failure of the newer method | Why we keep it |
 |---|---|---|---|---|---|
-| Extraction | Dictionary lookup (148 skills) | + spaCy rules, + GPT-4o-mini | 20 labelled ads, P/R/F1 | spaCy: candidates that are not skills ("Social Club") | Finds plurals and tools outside the dictionary |
+| Extraction | Vocabulary lookup (281 skills) | + spaCy rules, + GPT-4o-mini | 20 labelled ads, P/R/F1 | spaCy: candidates that are not skills ("Social Club") | Finds plurals and tools outside the dictionary |
 | Normalisation | ESCO exact label + aliases | + fuzzy string, + MiniLM embedding, "emerging" label | 211 non-dictionary phrases, hand-judged | "data extraction" → ESCO *information extraction* | Maps paraphrases; keeps skills ESCO lacks |
 | Emerging skills | Added to the dictionary by hand | n-grams → spaCy → GPT, weighted log-odds | Hand-judged top 20 per method | Boilerplate that rises with career-site ads | Finds new terms (*agentic workflows*) without a person noticing first |
 | Matching | Exact skill identity | + umbrella rule for "partial" | 45 CV–JD pairs, accuracy, macro F1 | — (rule-based) | Credits part of a broad skill |
@@ -24,12 +25,19 @@ method adds and where it fails. Table 4.1 is the frame; the subsections give the
 treats each bullet or line as a unit, rejoins hard-wrapped lines and splits prose after `.`, `!` and `?`. Every tier
 uses it, so a skill carries the same evidence sentence whichever tier found it.
 
-**Tier 1, dictionary (traditional).** We match the aliases of `skills_seed_v2.csv` (148 skills since 14 Oct: Van Thong's
-133, five generic rows, ten tools for the role profiles of section 4.6). Only aliases are matched, never the display
+**Tier 1, dictionary (traditional).** We match the ad aliases of the skill vocabulary (`skills_vocabulary.csv`, D5
+**[Quan]**): the 281 rows used for extraction, which are the 148 skills of the earlier dictionary plus 133 IT tools and
+certifications found in Australian ads (the other rows are ESCO and O*NET core skills of the roles). Only aliases are matched, never the display
 name, because the dictionary leaves out ambiguous bare forms ("R", "Go", "RAG"). Skills marked `strict` (R, SAS, SAP,
 React) are case-sensitive; the longest alias wins ("SQL Server" does not also give "SQL"); character lookarounds replace
 `\b`, which fails on "C++", "C#" and ".NET". On the Robert Walters ad, tier 1 reproduces the eight technical skills of
 the poster's gap chart.
+
+**Required or preferred.** Every mention is tagged `required`, `preferred` or blank (D14): from a cue in its sentence
+("must", "essential"; "desirable", "nice to have", "not required"), else from the heading it sits under ("Essential
+criteria:", "Nice to have:"). A preferred cue wins, so "desirable but not required" is preferred. "Requirements" and
+"minimum" count only in a heading, because inside a sentence they mostly mean business requirements or years of
+experience.
 
 **Tier 2, spaCy (`en_core_web_sm`).** The pretrained NER model has no skill label (it tagged Python and Tableau as places),
 and training one would need labelled ads beyond our test set. Tier 2 therefore keeps tier 1's hits and uses the tagger
@@ -41,8 +49,8 @@ outside the dictionary from noun chunks after a cue ("experience with", "such as
 verbatim in the text and its evidence sentence is cut from the text, so the model cannot invent skills or quotes.
 Contact details are masked before the call, and responses are cached, so the evaluation re-runs at no cost.
 
-On the 20 labelled ads, tier 2 adds recall for little precision on dictionary skills (F1 0.780 → 0.799 with the current
-dictionary, #56 table of 15 Oct). Its new candidates are the weak point: of 211 distinct non-dictionary phrases it
+On the 20 labelled ads, tier 2 adds recall for little precision on dictionary skills (F1 0.780 → 0.799 with the 148-skill
+dictionary, #56 table of 15 Oct; with the 281-skill vocabulary **[eval]**). Its new candidates are the weak point: of 211 distinct non-dictionary phrases it
 proposed on test and 2026 ads, 69 (33%) are not skills at all: employers ("Canva", "Bankwest"), perks ("Volunteer Days"),
 job titles ("Product Managers") and one recruiter's name. Section 4.2 measures normalisation on these same phrases.
 
@@ -51,8 +59,11 @@ job titles ("Product Managers") and one recruiter's name. Section 4.2 measures n
 Each mention passes five steps, first hit wins: the dictionary, an exact ESCO label (preferred or alternative, after
 dropping filler such as "skills" or "knowledge of"), the nearest ESCO label by MiniLM embedding (cosine ≥ 0.82), the
 Lightcast Open Skills API, and an explicit "emerging" class **[Quan]**. Generative AI and large language models skip the
-ESCO steps: ESCO v1.2.1 has no concept for them. Since c3d1ca4, dictionary skills keep their own id, so normalisation
-only decides what the non-dictionary phrases are.
+ESCO steps: ESCO v1.2.1 has no concept for them. A vocabulary skill keeps the id the vocabulary
+gives it: the ESCO id only when its link is exact (68 of the 281), otherwise its own `skillabus:` id with vocab `seed`,
+because a broad link would merge distinct tools (Tableau and Power BI under one ESCO concept). Normalisation therefore
+only decides what the phrases outside the vocabulary are. The error analysis below was run with the 148-skill
+dictionary, before the switch, so more of its phrases are vocabulary skills today.
 
 **Error analysis.** We ran three mappers side by side on the 211 phrases (`notebooks/pn_normalisation_errors.py`) and
 judged every answer by hand (`data/4_evaluation/results/normalisation_errors.csv`, judgements in `exact_ok`,
@@ -120,10 +131,13 @@ We also tested counting close substitutes (Tableau and Power BI) as partial by t
 Across the 652 same-category pairs, true substitutes scored lower than unrelated pairs (Tableau–Power BI 0.30, AWS–Azure
 0.44, Airflow–MLflow 0.54), so no threshold separates them and the rule was dropped.
 
-**Demand.** A gap is weighted by its share of the 3,204 Seek Data Scientist ads (2019–22) + 1. Skills under 1% before
-2023 (large language models) use the lower end of the 95% Wilson interval of their 2026 share instead, over all 22 data
+**Demand.** A gap is weighted by its share of the ads behind the target, + 1: for a pasted ad and for Data Scientist, the
+3,204 Seek Data Scientist ads (2019–22); for another role, that role's own ads (section 4.6). Every gap row carries the
+source and period of its share (`demand_source`, `demand_period`), which the app prints under the chart. For an ad or
+Data Scientist, skills under 1% before 2023 (large language models) use the lower end of the 95% Wilson interval of their 2026 share instead, over all 22 data
 roles of the 2026 sample from 12 employers (9 of them data scientists; `pct_2026_all_low`), since a share of 9 moves 11
-points per ad. Skills already asked for keep their 2019–22 share, because the 2026 sample over-represents AI work.
+points per ad. Skills already asked for keep their 2019–22 share, because the 2026 sample over-represents AI work. The 2026 sample
+holds data roles only, so other roles get no 2026 share and no such fallback.
 
 ## 4.5 Subject evidence: keyword → TF-IDF → embeddings
 
@@ -172,8 +186,13 @@ entry requirement is "Java or C#", "Search for Similar Vectors" for *attack vect
 and the Hugging Face LLM Course closes the last gap.
 
 **Roles.** For the Elective chooser and Career switcher modes, a role is matched like an ad: its 15 most-asked technical
-skills, with the role's own shares as demand. Six roles come from 10,925 Australian 2023 postings (tool lists only)
-**[Van Thong]**; Data Scientist keeps the Seek full-text profile, which also has concepts such as machine learning.
+skills, with the role's own shares as demand. Of the 11 IT roles, Data Scientist keeps the Seek full-text profile, which
+also has concepts such as machine learning, and six come from Australian 2023 postings that list tools only
+(`role_profiles.csv`, 263 to 4,438 ads per role) **[Van Thong]**. The other four (QA/Test Engineer, DevOps/SRE,
+Network/Systems Administrator, Cybersecurity Analyst) have no Australian ad counts yet. They are shown as up to 15 core
+skills, O*NET in-demand tools first, then ESCO essential digital skills, without percentages, so every gap weighs the same
+**[Quan]**. The single demand table `role_skill_demand.csv` (D6) brings these sources and the 2026 counts together for
+section 3; the app moves to it after submission.
 
 ## 4.7 Chat [Van Thong / Quan: please check]
 
@@ -185,7 +204,7 @@ score are dropped, and GPT-4o-mini answers from them with citations.
 
 | Stage | Metric | Test set | Result (section 6) |
 |---|---|---|---|
-| Extraction | Precision, recall, F1 | 20 labelled Seek ads, 217 labels | F1 0.780 (dictionary), 0.799 (spaCy), #56 15 Oct; LLM **[eval]** |
+| Extraction | Precision, recall, F1 | 20 labelled Seek ads, 217 labels | F1 0.780 (dictionary), 0.799 (spaCy), 148-skill dictionary, #56 15 Oct; vocabulary and LLM **[eval]** |
 | Normalisation | Precision per mapper, error types | 211 non-dictionary phrases | Table 4.2 |
 | Emerging skills | Precision@20 per method, by hand | 2026 ads vs 2019–22 | **[eval]** |
 | Matching | Status accuracy, macro F1 | 45 CV–JD pairs, 287 rows | 0.927, 0.768 (#56, 15 Oct) |
