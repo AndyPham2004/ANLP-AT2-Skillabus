@@ -6,7 +6,7 @@ from the repo root.
 
 | File | What | Made by | Rebuild |
 |---|---|---|---|
-| `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, 1,659 rows, every source counted with the one vocabulary. Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
+| `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, 1,812 rows, every source counted with the one vocabulary. Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
 | `skill_counts_v2.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` reads `pct_ads` as `demand_pct` | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
 | `skill_counts_2026.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
 | `top_skills.csv` | **Superseded by `role_skill_demand.csv` for the report; the app still reads it until after 17 Oct.** The 15 most-asked technical skills, the Data Scientist role profile (`match.role_profile`) | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
@@ -15,6 +15,8 @@ from the repo root.
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 Seek Data Scientist ads, glued words split | Van Thong | `python data-eda/src/clean_seek.py` |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 Australian data roles: job boards 2026, Adzuna 2026 (500 characters), LinkedIn Jan 2024 | Van Thong | `python data-eda/src/build_recent_sample.py` |
 | `ads/CLEANING_NOTES.txt` | What each cleaned file is, who uses it, how it was cleaned (was `data-eda/data/clean/README.txt`) | Van Thong | Text |
+| `adzuna_counts_2026-10.csv` | Live Adzuna search counts per skill x role, 11 roles (plan D12): `role, role_query, skill, skill_query, count, role_total, date`. Section below | Van Thong, 16 Oct | `python data-eda/src/count_role_skills_adzuna.py` (needs an Adzuna key; 173 calls) |
+| `collection/adzuna_queries.csv` | The title query of each role and the phrase searched for each of its 15 priority skills, with a note wherever the phrase is a judgement | Van Thong, 16 Oct | `count_role_skills_adzuna.py --write-queries`, then by hand |
 | `collection/ats_companies.csv` | The 65 job boards `fetch_ats.py` reads | Van Thong, Quan | Edited by hand |
 | `collection/ats_candidates.csv` | 206 candidate employers with a slug guess per platform | Quan, 13 Oct | Edited by hand |
 | `collection/ats_probe_2026-10-13.csv` | Which boards answered, with how many Australian data roles | Quan, 13 Oct | `python data-eda/src/probe_ats.py` (writes `ats_probe_<date>.csv`) |
@@ -28,6 +30,19 @@ with a 95% Wilson interval. `match.py` reads `pct_2026` as `demand_pct_2026` (tr
 `pct_2026_all_low` as the 2026 floor of the gap weight in `recommend._weight` (via
 `match.demand_2026_low`). **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
 5, so one ad moves a data-scientist share by 11 points. Show 2026 as "n of 9", not as a bare percentage.
+
+## Adzuna search counts (plan D12): `adzuna_counts_2026-10.csv`
+
+A **search count** is the number of live ads on Adzuna Australia on `date` whose title has all the words of
+`role_query` (Adzuna's `title_only`) and whose text has `skill_query` as an exact phrase (`what_phrase`);
+`role_total` is the same without the phrase, so the share is `count / role_total`. Only the numbers are
+kept, never ad text. Checked on 16 Oct before the run: `what_phrase` searches the **whole ad**, not only the
+title and the 500-character snippet the API returns (of 50 ads returned for "stakeholder management", 11
+show the phrase in title or snippet). So a share here is comparable to the full-text counts, with three
+differences: it is one phrase per skill, not every alias (`adzuna_queries.csv` notes where that under- or
+over-counts: R, Excel, React, Spark); a role is one set of title words (DevOps/SRE is "devops", QA/Test
+Engineer is "test analyst"); and the ads are whatever is live on Adzuna that day, re-listings included.
+Three skills in ESCO's wording that no ad uses have no phrase and a blank count.
 
 Owner of the folder: Van Thong. Planned here (plan D1, D13): `roles.csv`, `role_outlook.csv`. Once the app
 reads `role_skill_demand.csv` (plan C2, after 17 Oct), `skill_counts_*`, `top_skills.csv` and `role_profiles.*`
@@ -46,7 +61,7 @@ comparison and every unmapped tool name.
 | `role`, `role_family` | One of the 11 roles of `1_knowledge/taxonomies/role_occupations.csv` and its family, or `Data roles (mixed)` (`Data & AI`, below) |
 | `skill_id`, `skill` | The skill's id and label in `1_knowledge/skills/skills_vocabulary.csv`; every row's skill is in the vocabulary |
 | `source`, `period` | Where the row comes from, and when (for a taxonomy: its release) |
-| `text_type` | `full_text` (ad text), `tool_list` (a list of tool names, no text), `taxonomy` (no counts) |
+| `text_type` | `full_text` (ad text), `tool_list` (a list of tool names, no text), `search_count` (live Adzuna search counts), `taxonomy` (no counts) |
 | `n_ads`, `total_ads` | Ads naming the skill at least once; the ads of that role, source and period. Blank for `taxonomy` |
 | `pct`, `pct_low`, `pct_high` | `100 * n_ads / total_ads` (1 decimal) and its 95% Wilson interval (`recount_recent.wilson`). Blank for `taxonomy` |
 | `importance` | `essential` / `optional` (ESCO), `in_demand` (O\*NET); blank for counted rows |
@@ -59,6 +74,7 @@ Not in it yet: **`pct_required`** (plan D14, required vs preferred), which waits
 | `seek_2019_22` | `2019-22` | full_text | Data Scientist | 3,204 | 197 | Seek Data Scientist ads whose cleaned text names the skill |
 | `data_jobs_2023` | `2023` | tool_list | the 7 roles of `role_profiles.csv` | 263 (ML Engineer) to 4,438 (Data Engineer) | 576 | the role's Australian ads whose tool list names the tool |
 | `recent_2024_26` | `2024-01`, `2026` | full_text | `Data roles (mixed)` | 122, 22 | 149 + 74 | in-sample full-text ads of `ads/jobs_au_recent_2024-2026_clean.csv` naming the skill |
+| `adzuna_2026` | `2026-10` | search_count | all 11 | 62 (ML Engineer) to 1,171 (Software Engineer) | 153 | live Adzuna AU ads on 16 Oct whose title has the role's words and whose text has the skill's phrase; only each role's 15 priority skills searched (section on Adzuna counts) |
 | `esco_occupation` | `v1.2.1` | taxonomy | all 11 | | 456 | (no share) ESCO lists the skill as essential or optional for the role's occupation |
 | `onet` | `v31.0` | taxonomy | all 11 | | 207 | (no share) O\*NET marks the tool In Demand for the role's occupation |
 
