@@ -34,7 +34,17 @@ header[data-testid="stHeader"] { background: transparent !important; height: 2.4
 section[data-testid="stSidebar"] { border-right: 1px solid rgba(255,255,255,.07); }
 section[data-testid="stSidebar"] .block-container { padding: 1rem 1rem 1rem; }
 h1, h2, h3, .k-h1, .k-h2, .k-serif { font-family: 'Literata', Georgia, serif; }
-.k-mark { font-family: 'Literata', Georgia, serif; font-size: 22px; font-weight: 500; margin: 0 0 10px; }
+.k-mark { font-family: 'Literata', Georgia, serif; font-size: 22px; font-weight: 500; margin: 0 0 14px; }
+.k-step { display: flex; flex-direction: column; align-items: center; padding-top: 7px; }
+.k-step-dot { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid; display: grid; place-items: center; font: 500 11px 'DM Mono', monospace; box-sizing: border-box; }
+.k-step-line { display: block; height: 30px; border-left: 1.5px dashed rgba(255,255,255,.16); margin-top: 4px; }
+.k-step-sub { font-size: 11.5px; color: #6b6c68; line-height: 1.35; margin: -4px 0 8px 2px; }
+.k-ctx { border-left: 2px solid rgba(255,255,255,.12); padding: 3px 10px; font-size: 12px; color: #9a9a94; line-height: 1.6; margin-top: 4px; }
+.k-ctx b { color: #e8e6e1; font-weight: 500; }
+.k-legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: #9a9a94; margin-top: 12px; }
+.k-legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] { padding-left: 2px; }
+section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid="stBaseButton-secondary"] { background: rgba(255,255,255,.07); border-color: transparent; }
 .k-eyebrow { font-size: 13.5px; color: #9a9a94; margin: 0 0 6px; }
 .k-h1 { font-family: 'Literata', Georgia, serif; font-weight: 400; letter-spacing: -.015em; line-height: 1.15; text-wrap: pretty; color: #e8e6e1; }
 .k-h1.xl { font-size: clamp(26px, 3.3vw, 46px); max-width: 920px; }
@@ -55,7 +65,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(255,2
 section[data-testid="stSidebar"] button[data-testid^="stBaseButton"],
 section[data-testid="stSidebar"] button[data-testid^="stBaseButton"] div,
 section[data-testid="stSidebar"] button[data-testid^="stBaseButton"] span { justify-content: flex-start; text-align: left; }
-section[data-testid="stSidebar"] button[data-testid^="stBaseButton"] { padding-left: 14px; }
+section[data-testid="stSidebar"] button[data-testid^="stBaseButton"] { padding-left: 10px; }
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] div[data-testid="stMarkdownContainer"],
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] p { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; line-height: 1.35; }
 .k-mute { color: #9a9a94; } .k-dim { color: #6b6c68; } .k-soft { color: #c9c8c2; }

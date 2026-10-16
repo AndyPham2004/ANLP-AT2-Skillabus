@@ -44,8 +44,8 @@ SAMPLE_RESUME = paths.SAMPLE_RESUME.read_text(encoding="utf-8")
 SAMPLE_AD_TITLE = "Data Scientist · Robert Walters · Sydney CBD"
 USER_TYPES = {   # key -> card label, the question it answers, the call to action (the design's start page)
     "elective": ("UTS student", "Which elective moves me closest to the job I want?", "Pick a role →"),
-    "job": ("Job seeker", "What does my resume lack for this ad?", "Add an ad and a resume →"),
-    "switch": ("Career switcher", "How far am I from a new field?", "Pick a role, add a resume →"),
+    "job": ("Job seeker", "What does my resume lack for this ad?", "Add ad and resume →"),
+    "switch": ("Career switcher", "How far am I from a new field?", "Pick role, add resume →"),
 }
 CARD_ACCENT = {"elective": ui.HAVE, "job": ui.LINK, "switch": ui.PARTIAL}   # one colour per card and its CTA
 INPUT_TITLES = {"job": "The ad and your resume", "elective": "The role and your subjects",
@@ -326,32 +326,59 @@ def ask(question: str) -> None:
 
 # ---------------------------------------------------------------- sidebar: steps and the chat button
 
+def step_note(n: int) -> str:
+    """The small line under a step of the sidebar: what was chosen there."""
+    ut = ss.user_type
+    if n == 1:
+        return USER_TYPES[ut][0] if ut else ""
+    if n == 2:
+        if not ut:
+            return ""
+        parts = [(ad_title() if ss.ad_keep.strip() else "an ad") if ut == "job" else ss.role_keep]
+        if ut != "elective" and ss.resume_label:
+            parts.append(ss.resume_label.lower() if ss.resume_label.endswith(" resume") else ss.resume_label)
+        return " · ".join(parts)
+    if ss.ran and ss.result and ss.result.get("skills"):
+        gaps = sum(x["status"] != "have" for x in ss.result["skills"])
+        return f"{gaps} of {len(ss.result['skills'])} skills to learn"
+    return ""
+
+
 with st.sidebar:
-    st.markdown("<div class='k-mark'>Skillabus</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='k-mark'><span class='k-dot' style='background:{ui.HAVE};margin-right:8px;vertical-align:2px'>"
+                "</span>Skillabus <span class='k-mono k-small k-dim' style='margin-left:6px'>36118 · UTS</span></div>",
+                unsafe_allow_html=True)
     current = STEP_OF[ss.step]
-    for n, (label, step, enabled) in enumerate([("Who you are", "start", True),
-                                                ("Your inputs", "inputs", bool(ss.user_type)),
-                                                ("Results", "results", bool(ss.ran))], start=1):
-        mark = "✓" if current > n else str(n)
-        st.button(f"{mark}  {label}", key=f"nav_{step}", type="secondary" if current == n else "tertiary",
-                  width="stretch", disabled=not enabled, on_click=go, args=(step,))
-    if ss.ran and current == 3 and ss.user_type:
-        lines = [ui.esc(f"{USER_TYPES[ss.user_type][0]} · {ss.stage_keep}")]
+    steps = [("Who you are", "start", True), ("Your inputs", "inputs", bool(ss.user_type)),
+             ("Results", "results", bool(ss.ran))]
+    for n, (label, step, enabled) in enumerate(steps, start=1):
+        done, active = current > n, current == n
+        colour = ui.HAVE if done else (ui.INK if active else ui.DIM)
+        dot = (f"<span class='k-step-dot' style='border-color:{colour};background:{ui.HAVE if done else 'transparent'};"
+               f"color:{ui.DARK if done else colour}'>{'✓' if done else n}</span>")
+        line = "" if n == len(steps) else "<span class='k-step-line'></span>"
+        dot_col, lab_col = st.columns([1, 5], gap="small")
+        dot_col.markdown(f"<div class='k-step'>{dot}{line}</div>", unsafe_allow_html=True)
+        with lab_col:
+            st.button(label, key=f"nav_{step}", type="secondary" if active else "tertiary", width="stretch",
+                      disabled=not enabled, on_click=go, args=(step,))
+            note = step_note(n)
+            if note:
+                st.markdown(f"<div class='k-step-sub'>{ui.esc(note)}</div>", unsafe_allow_html=True)
+    if ss.user_type:
+        ctx = [f"<b>{ui.esc(ss.stage_keep)}</b>"]
         if ss.course_keep:
-            lines.append(ui.esc(COURSE_NAME.get(ss.course_keep, ss.course_keep)))
-        if ss.user_type == "job":
-            lines.append(f"<span style='color:{ui.INK}'>{ui.esc(ad_title())}</span>")
-        elif ss.result and ss.result.get("role"):
-            lines.append(f"<span style='color:{ui.INK}'>{ui.esc(ss.result['role'])}</span>")
-        if ss.resume_label:
-            lines.append(ui.esc(ss.resume_label))
+            ctx.append(ui.esc(COURSE_NAME.get(ss.course_keep, ss.course_keep)))
         if ss.whatif:
-            lines.append(ui.esc("Counting as taken: " + ", ".join(subject_name(c) for c in ss.whatif)))
-        st.markdown("<div class='k-small k-mute' style='padding:8px 0 0 6px;line-height:1.7'>"
-                    + "<br>".join(lines) + "</div>", unsafe_allow_html=True)
-    st.markdown("<div style='height:18vh'></div>", unsafe_allow_html=True)
+            ctx.append(ui.esc("Counting as taken: " + ", ".join(subject_name(c) for c in ss.whatif)))
+        st.markdown("<div class='k-ctx'>" + "<br>".join(ctx) + "</div>", unsafe_allow_html=True)
+    st.markdown("<div class='k-legend'>" + "".join(
+        f"<span><i style='background:{c}'></i>{w}</span>" for w, c in
+        (("have", ui.HAVE), ("partial", ui.PARTIAL), ("missing", ui.MISSING))) + "</div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:8vh'></div>", unsafe_allow_html=True)
     st.button("Ask the Handbook", key="chat_toggle", width="stretch", on_click=toggle, args=("chat_open",))
-    st.caption("Answers quote the UTS Handbook 2026. Your resume is never sent to the model.")
+    st.caption("e.g. Which subject teaches LLMs? Answers quote the UTS Handbook 2026; your resume is never sent "
+               "to the model.")
 
 
 # ---------------------------------------------------------------- the chat panel

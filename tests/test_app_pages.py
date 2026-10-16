@@ -75,7 +75,7 @@ def test_start_page_has_the_three_cards():
     at.run()
     text = page_text(at)
     assert "Find the skills a job wants" in text
-    for cta in ("Pick a role →", "Add an ad and a resume →", "Pick a role, add a resume →"):
+    for cta in ("Pick a role →", "Add ad and resume →", "Pick role, add resume →"):
         assert cta in text
     assert at.button(key="nav_inputs").disabled and at.button(key="nav_results").disabled
 
