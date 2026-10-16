@@ -858,7 +858,9 @@ def demand_fact(s: dict, counted: bool, role: str | None) -> tuple[str, str, str
     pct, old = s.get("demand_pct"), s.get("demand_pct_2019_22")
     who = role or backend.DEFAULT_ROLE
     value = f"{pct:.0f}% of {s.get('total_ads') or 'the'} {ui.esc(who)} ads" if pct is not None else "no count"
-    sub = " · ".join(x for x in (s.get("demand_period") or "", f"{old:.0f}% in 2019-22" if old is not None else "") if x)
+    from skillabus.match import SOURCE_NAMES        # "jobspipe_2026" -> ("JobsPipe", "Sep-Oct 2026")
+    when = SOURCE_NAMES.get(s.get("demand_source"), ("", s.get("demand_period") or ""))[1]
+    sub = " · ".join(x for x in (when, f"{old:.0f}% in 2019-22" if old is not None else "") if x)
     return ("Employers ask", value, sub, False)
 
 
@@ -889,7 +891,8 @@ def uts_cards(label: str, res: dict) -> None:
                 whatif_box(r["subject_code"], f"wi_ev_{i}")
         st.caption("👍 / 👎: does the subject really teach this? Your vote helps us check the matcher.")
     for d in [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]][:2]:
-        reason = d["reason"] if len(d["reason"]) <= 120 else d["reason"][:117].rstrip() + "\u2026"
+        reason = re.sub(r"\b\d{5,6} (?=[A-Z])", "", d["reason"])          # names, not codes
+        reason = reason if len(reason) <= 120 else reason[:117].rstrip() + "\u2026"
         st.caption(f"{d['subject_name']} also teaches it, but {reason}.")
 
 
