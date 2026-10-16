@@ -108,7 +108,9 @@ def test_role_mode_data_engineer():
     show_gaps(at)
     text = page_text(at)
     assert "Data Engineer" in text and "skills still to learn" in text
-    assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Certifications"]
+    assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Outside UTS", "Certifications"]
+    show_tab(at, "Outside UTS")
+    assert "Outside UTS" in page_text(at)
     assert "Bars: share of " in text and "JobsPipe Data Engineer ads, Sep-Oct 2026, full text." in text
     assert "Skills the role asks for" in text and "<span style='width:" in text        # the percentage bars
     show_tab(at, "Your path")

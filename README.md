@@ -82,8 +82,8 @@ resume as PDF or text, paste it, or use the sample (a synthetic early-career MDS
 in memory for the session and is never stored. Press **Find my gaps**.
 
 **3. Results.** One line says how many of the skills you still have to learn and names the
-biggest gaps. Below it, one section at a time: Skills, Your path and, in the role modes,
-Certifications.
+biggest gaps. Below it, one section at a time: Skills, Your path, Outside UTS and, in the role
+modes, Certifications.
 
 - **Skills the ad (or role) asks for**: one row per skill with a bar for how often the 2026 ads ask
   for it (hover for the 2019-22 share; hatched = a skill the older ads never named) and its status:
@@ -91,9 +91,9 @@ Certifications.
   skill with no ESCO concept yet.
   *Show where these appear in the ad* colours the skills on the ad text.
 - **Your path**: the fewest subjects that close the most gaps, each with its session, the gaps it
-  closes and whether it needs a prerequisite first; dashed cards are outside courses for the gaps
-  no UTS subject covers. Tick *Already taken* on a subject (or *What if I had taken …*) and the
-  gaps and the path are recomputed.
+  closes and whether it needs a prerequisite first. Tick *Already taken* on a subject (or *What if I
+  had taken …*) and the gaps and the path are recomputed.
+- **Outside UTS**: free or low-cost courses for the gaps the UTS path leaves open; not for credit.
 - **Click a skill** to see what the ad said, what your resume said, the UTS subjects that teach it
   with the exact Handbook sentence (labelled learning objective, assessment, weekly topic or
   description), 👍 / 👎 to say whether the match is right, and self-study resources filtered by

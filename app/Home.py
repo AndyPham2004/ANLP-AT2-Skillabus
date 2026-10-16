@@ -669,23 +669,16 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
              if lp["gaps_total"] else "")
     st.markdown(ui.h2("Your path", aside), unsafe_allow_html=True)
     plan = {p["subject_code"]: p for p in lp.get("plan", []) if isinstance(p, dict)}
-    outside_names = {r["subject_code"]: r for r in res.get("outside_recommendations", [])}
     subjects = [code for code in lp["subjects"] if code in recs]
-    outside = [code for code in (lp.get("outside") or {}).get("courses", []) if code in outside_names]
-    if not subjects and not outside:
+    if not subjects:
         msg = ("You already have every skill on the list." if not lp["gaps_total"]
-               else "No subject in the Handbook text covers these gaps.")
+               else "No subject in the Handbook text covers these gaps; see the Outside UTS tab.")
         st.markdown(f"<div class='k-serif k-mute' style='font-size:18px;line-height:1.5'>{msg}</div>",
                     unsafe_allow_html=True)
-    for i in range(0, len(subjects), 3):                    # UTS subjects: three cards to a row, in path order
+    for i in range(0, len(subjects), 3):                    # three cards to a row, in path order
         for col, code in zip(st.columns(3, gap="medium"), subjects[i:i + 3]):
             with col:
                 path_card(code, recs[code], by, plan)
-    if outside:                                             # the second tier: full-width rows under the subjects
-        st.markdown(ui.eyebrow("Outside UTS <span class='k-dim'>· for the gaps no subject you can take covers · "
-                               "not for credit</span>"), unsafe_allow_html=True)
-        for code in outside:
-            outside_card(outside_names[code], by)
     open_gaps = [k for k in by if by[k]["status"] != "have"
                  and not any(k in recs[c]["covers"] for c in lp["subjects"] if c in recs)]
     no_subject = [k for k in open_gaps if not any(k in r["covers"] for r in res["recommendations"])]
@@ -706,6 +699,30 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
         first = lp["subjects"][0]
         st.button(f"What if I had taken {subject_name(first)}?", key="whatif_first", type="tertiary",
                   on_click=set_whatif, args=(first, True))
+
+
+def outside_section(res: dict, by: dict) -> None:
+    """The second tier of the path: outside courses for the gaps no UTS subject the student can take covers."""
+    block = res["learning_path"].get("outside") or {}
+    names = {r["subject_code"]: r for r in res.get("outside_recommendations", [])}
+    chosen = [c for c in block.get("courses", []) if c in names]
+    left_open = block.get("gaps_open_before", 0)
+    aside = (f"<span style='color:{ui.HAVE}'>closes {block.get('gaps_closed', 0)} of the {left_open} gaps the UTS path "
+             "leaves open</span>" if chosen else "")
+    st.markdown(ui.h2("Outside UTS", aside), unsafe_allow_html=True)
+    if not chosen:
+        msg = ("The UTS path covers every gap: nothing to add from outside." if not left_open
+               else "No course in our list covers the gaps the UTS path leaves open.")
+        st.markdown(f"<div class='k-serif k-mute' style='font-size:18px;line-height:1.5'>{msg}</div>",
+                    unsafe_allow_html=True)
+        return
+    for code in chosen:
+        outside_card(names[code], by)
+    others = [r for c, r in names.items() if c not in chosen]
+    if others:
+        st.caption("Also teach these gaps: " + "; ".join(
+            f"{r['subject_name']} ({r.get('provider', '')})" for r in others[:3]) + ".")
+    st.caption("Free or free-to-audit where marked; none of these count for UTS credit.")
 
 
 def certs_section(role: str) -> None:
@@ -755,7 +772,7 @@ def page_results() -> None:
     st.markdown(ui.counts(n_have, n_part, len(gaps) - n_part), unsafe_allow_html=True)
 
     # One section at a time, full width (Quan's pick): the tabs below the verdict.
-    tabs = ["Skills", "Your path"] + (["Certifications"] if role else [])
+    tabs = ["Skills", "Your path", "Outside UTS"] + (["Certifications"] if role else [])
     if ss.get("results_tab") not in tabs:
         ss.results_tab = ss.get("results_tab_keep") if ss.get("results_tab_keep") in tabs else "Skills"
     st.segmented_control("Section", tabs, key="results_tab", label_visibility="collapsed")
@@ -765,6 +782,8 @@ def page_results() -> None:
         skills_section(skills, counted, "ad" if ss.user_type == "job" else "role", role)
     elif tab == "Your path":
         path_section(res, by, counted)
+    elif tab == "Outside UTS":
+        outside_section(res, by)
     else:
         certs_section(role)
 
