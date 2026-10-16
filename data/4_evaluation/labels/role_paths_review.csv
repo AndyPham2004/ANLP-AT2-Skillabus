@@ -1,6 +1,6 @@
 role,subject_code,subject_name,covers,verdict,why,reviewer
 Data Scientist,94692,Data Science Practice,Python; SQL,ok,,tompham9016
-Data Scientist,31250,Introduction to Data Analytics,,odd,covers basic data analysis techniques,tompham9016
+Data Scientist,31250,Introduction to Data Analytics,,odd,"Bachelor subject, not open to MDSI students; only a prerequisite of 43007, whose rule also accepts postgraduate 32130, 42172 or 42850",tompham9016
 Data Scientist,43007,Advanced Artificial Intelligence,Artificial intelligence; Large language models; Generative AI; AI agents,ok,,tompham9016
 Business Analyst,36104,Data Visualisation and Narratives,User stories; Microsoft Office; Power BI,ok,,tompham9016
 Business Analyst,94692,Data Science Practice,SQL,ok,,tompham9016
@@ -11,7 +11,7 @@ QA/Test Engineer,94692,Data Science Practice,SQL; Python,ok,,tompham9016
 Data Analyst,41193,IS Data Visualisation Studio,Data quality; Data visualisation; Data modelling,ok,,tompham9016
 Data Analyst,94692,Data Science Practice,SQL; Python,ok,,tompham9016
 Data Analyst,36104,Data Visualisation and Narratives,Data visualisation; Power BI; Tableau,ok,,tompham9016
-Machine Learning Engineer,31250,Introduction to Data Analytics,,ok,,tompham9016
+Machine Learning Engineer,31250,Introduction to Data Analytics,,odd,"Bachelor subject, not open to MDSI students; only a prerequisite of 43007, whose rule also accepts postgraduate 32130, 42172 or 42850",tompham9016
 Machine Learning Engineer,43007,Advanced Artificial Intelligence,Artificial intelligence; Large language models; AI agents; Generative AI,ok,,tompham9016
 Machine Learning Engineer,43031,Python Programming for Data Processing,Python,ok,,tompham9016
 Network/Systems Administrator,94692,Data Science Practice,Linux; Python; Shell scripting,ok,,tompham9016
@@ -24,10 +24,10 @@ Data Engineer,36100,Data Science for Innovation,Data quality,ok,,tompham9016
 Data Engineer,94693,Big Data Engineering,ETL; Data warehousing; Data modelling; Databricks; Spark,ok,,tompham9016
 Data Engineer,94692,Data Science Practice,SQL; Python,ok,,tompham9016
 DevOps/SRE,94692,Data Science Practice,Python; Shell scripting; Docker; Linux,ok,,tompham9016
-DevOps/SRE,41039,Programming 1,,odd,covers basic programming,tompham9016
-DevOps/SRE,41889,Application Development in the iOS Environment,Git,ok,,tompham9016
+DevOps/SRE,41039,Programming 1,,odd,"Bachelor/Honours subject, not open to MDSI students; only a prerequisite of 41889 (iOS development), itself an odd pick for this role",tompham9016
+DevOps/SRE,41889,Application Development in the iOS Environment,Git,odd,"iOS app development, taken only to cover Git; a Bachelor subject, not open to MDSI students",tompham9016
 Cybersecurity Analyst,41909,Cybersecurity Capstone Studio,cyber security,ok,,tompham9016
-Cybersecurity Analyst,31266,Introduction to Information Systems,,odd,covers basic information systems,tompham9016
+Cybersecurity Analyst,31266,Introduction to Information Systems,,odd,"Bachelor subject, not open to MDSI students; only a prerequisite of 41182, itself a Bachelor subject",tompham9016
 Cybersecurity Analyst,41182,System Security,Vulnerability management; Data security; Identity and access management,ok,,tompham9016
 Cloud Engineer,94692,Data Science Practice,Shell scripting; Python; Linux,ok,,tompham9016
-Cloud Engineer,37242,Introduction to Optimisation,Optimisation,ok,,tompham9016
+Cloud Engineer,37242,Introduction to Optimisation,Optimisation,odd,Mathematical optimisation; cloud ads mean cost and performance optimisation; a Bachelor subject,tompham9016
