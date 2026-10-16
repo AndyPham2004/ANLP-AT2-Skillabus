@@ -58,6 +58,16 @@ def test_csharp_row_survives_reading_the_seed():
     assert r["canonical"] == "C#"
 
 
+def test_vocabulary_skills_esco_lacks_are_seed_not_emerging():
+    """Review #109: Kafka, MLflow and the certifications are known skills ESCO lacks; "emerging" is
+    for phrases outside the vocabulary, plus generative AI and LLMs."""
+    r = norm("Kafka", "MLflow", "AWS Certified Solutions Architect - Associate", "GenAI", "agentic AI")
+    assert r["Kafka"]["vocab"] == "seed" and r["Kafka"]["skill_id"] == "skillabus:kafka"
+    assert r["MLflow"]["vocab"] == "seed" and r["MLflow"]["skill_id"] == "skillabus:mlflow"
+    assert r["AWS Certified Solutions Architect - Associate"]["vocab"] == "seed"
+    assert r["GenAI"]["vocab"] == "emerging" and r["agentic AI"]["vocab"] == "emerging"
+
+
 def test_vocabulary_ids_keep_close_tools_apart():
     """C2: a broad ESCO link ("data visualisation software") does not merge Tableau and Power BI."""
     r = norm("tableau", "power bi")

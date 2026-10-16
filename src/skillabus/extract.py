@@ -405,14 +405,19 @@ def _extract_ner(text: str) -> list[dict]:
 _PREFERRED = re.compile(
     r"\b(?:preferred|preferable|desirable|desired|nice[- ]to[- ]have|bonus|advantage(?:ous)?|a plus|"
     r"ideally|highly regarded|well regarded|beneficial|not (?:required|essential|mandatory))\b", re.I)
-_REQUIRED = re.compile(r"\b(?:must|required|requirements?|essential|mandatory|minimum)\b", re.I)
+# In a sentence, "requirements" is mostly business requirements ("gather requirements", the skill
+# Requirements gathering) and "minimum" mostly years or salary, so both count only in a heading
+# ("Minimum requirements:"); "as required" ("other duties as required") is no cue (review #109).
+_REQUIRED = re.compile(r"\b(?:must|required|essential|mandatory)\b", re.I)
+_REQUIRED_HEADING = re.compile(r"\b(?:must|required|requirements?|essential|mandatory|minimum)\b", re.I)
+_AS_REQUIRED = re.compile(r"\bas required\b", re.I)
 _HEADING_WORDS = 8
 
 
-def _cue(text: str) -> str:
+def _cue(text: str, heading: bool = False) -> str:
     if _PREFERRED.search(text):          # first, so "desirable but not required" is preferred
         return "preferred"
-    if _REQUIRED.search(text):
+    if (_REQUIRED_HEADING if heading else _REQUIRED).search(_AS_REQUIRED.sub(" ", text)):
         return "required"
     return ""
 
@@ -422,29 +427,36 @@ _SECTION = re.compile(
     r"responsibilities|key responsibilities|the role|your role|what you(?:'ll| will) do|how to apply)\b", re.I)
 
 
-def _heading(sentence: str) -> str | None:
+def _heading(sentence: str, names_skill: bool = False) -> str | None:
     """The cue of a line that opens a section ("Essential criteria:", "Nice to have", "Benefits"),
     "" for a section without one, None when the line is not a heading. A bullet such as
-    "Python and SQL" is short too, so a heading must end with ":" or name a cue or a section."""
+    "Python and SQL" is short too, so a heading must end with ":" or name a cue or a section. A line
+    that names a skill or ends a sentence (. ? !) is content, not a cue heading: "Don't meet every
+    requirement?" must not make the paragraph under it required (review #109). A section heading
+    ("About MongoDB", "Why join us?") still ends the section."""
     words = sentence.rstrip(":").split()
     if not words or len(words) > _HEADING_WORDS:
         return None
+    section = len(words) <= 6 and _SECTION.search(sentence) is not None
+    if not section and (names_skill or sentence.rstrip()[-1] in ".?!"):
+        return None
     if sentence.endswith(":"):
-        return _cue(sentence)
-    if len(words) <= 6 and _cue(sentence):
-        return _cue(sentence)
-    if len(words) <= 6 and _SECTION.search(sentence):
+        return _cue(sentence, heading=True)
+    if len(words) <= 6 and _cue(sentence, heading=True):
+        return _cue(sentence, heading=True)
+    if section:
         return ""
     return None
 
 
-def requirement_by_sentence(text: str) -> dict[str, str]:
+def requirement_by_sentence(text: str, skill_sentences: frozenset[str] | set[str] = frozenset()) -> dict[str, str]:
     """sentence -> "required" / "preferred" / "". The sentence's own cue wins; otherwise the
     nearest heading above it ("Essential", "Desirable"); a heading without a cue ends the section.
+    `skill_sentences`: the sentences that name a skill; they are never headings.
     Cue lists set by judgement on the job-ad conventions, not tuned on the labelled ads."""
     out, section = {}, ""
     for sentence in split_sentences(text):
-        heading = _heading(sentence)
+        heading = _heading(sentence, sentence in skill_sentences)
         if heading is not None:
             section = out[sentence] = heading
             continue
@@ -453,7 +465,7 @@ def requirement_by_sentence(text: str) -> dict[str, str]:
 
 
 def _tag_requirement(text: str, mentions: list[dict]) -> list[dict]:
-    by_sentence = requirement_by_sentence(text)
+    by_sentence = requirement_by_sentence(text, {m["sentence"] for m in mentions})
     for m in mentions:
         m["requirement"] = by_sentence.get(m["sentence"], _cue(m["sentence"]))
     return mentions

@@ -2,10 +2,11 @@
 
 For each mention, in order (first hit wins):
 1. dictionary   the vocabulary's detection rows (skills_vocabulary.csv, since C2) -> label and the id the
-                vocabulary decided: ESCO's when the link is exact, else skillabus:<slug> (no ESCO steps)
-2. esco_exact   the phrase (or its canonical name) equals an ESCO preferred or alternative label
+                vocabulary decided: ESCO's when the link is exact, else skillabus:<slug> with vocab
+                "seed" (also for skills ESCO lacks: Kafka, the certifications); generative AI and LLMs
+                get vocab "emerging". Steps 2-5 are for phrases outside the vocabulary (NER, LLM tiers)
+2. esco_exact   the phrase equals an ESCO preferred or alternative label
 3. esco_embed   nearest ESCO preferred label by sentence embedding, if cosine >= ESCO_MIN_SIM
-   (a dictionary skill still unmatched here keeps vocab "seed", id seed:<slug>)
 4. lightcast    Lightcast Open Skills search (needs LIGHTCAST_CLIENT_ID / _SECRET)
 5. emerging     none of the above: kept, flagged, never dropped
 
@@ -87,9 +88,11 @@ def _from_vocabulary(skill: dict) -> dict:
         return {"skill_id": skill["skill_id"], "skill_label": skill.get("esco_label") or skill["canonical"],
                 "vocab": "esco", "how": "dictionary"}
     sid = skill.get("skill_id") or f"seed:{slug(skill['canonical'])}"
-    if skill["canonical"] in NOT_IN_ESCO or skill.get("esco_match") == "none":
-        return {"skill_id": sid, "skill_label": skill["canonical"], "vocab": "emerging", "how": "dictionary"}
-    return {"skill_id": sid, "skill_label": skill["canonical"], "vocab": "seed", "how": "dictionary"}
+    # A vocabulary skill ESCO lacks (Kafka, MLflow, the certifications) is still a known skill: vocab
+    # "seed" with its own id. "emerging" is for phrases outside the vocabulary, plus generative AI
+    # and LLMs, which the report defines as emerging (review #109).
+    vocab = "emerging" if skill["canonical"] in NOT_IN_ESCO else "seed"
+    return {"skill_id": sid, "skill_label": skill["canonical"], "vocab": vocab, "how": "dictionary"}
 
 
 # ---------------------------------------------------------------- 2-3. ESCO

@@ -20,7 +20,7 @@ and Phuong Nhi**.
 
 | Field | Values |
 |---|---|
-| `skill_id` | For a vocabulary skill (`data/1_knowledge/skills_vocabulary.csv`), its `skill_id` column: the ESCO id when `esco_match` is `exact`, else `skillabus:<slug>`. Outside the vocabulary: `esco:<uri>`, `lightcast:<id>`, or `emerging:<slug>` when neither vocabulary has it |
+| `skill_id` | For a vocabulary skill (`data/1_knowledge/skills/skills_vocabulary.csv`), its `skill_id` column: the ESCO id when `esco_match` is `exact`, else `skillabus:<slug>`. Outside the vocabulary: `esco:<uri>`, `lightcast:<id>`, or `emerging:<slug>` when neither vocabulary has it |
 | `vocab` | `esco`, `seed` (a vocabulary skill whose ESCO match is close or broad, so it keeps its own `skillabus:` id), `lightcast`, `emerging` (includes vocabulary skills ESCO lacks: `esco_match` = `none`) |
 | `canonical` | The vocabulary `label` (rows with `extract` in `used_for`) when the phrase is one of its `aliases_ads`, else `null`; used for demand lookups. Set by `extract()` (tiers 1-2, including forms the alias list lacks, such as "REST APIs"); `normalise()` keeps it and fills it only when it is missing |
 | `how` | Which normalisation step matched: `dictionary`, `esco_exact`, `esco_embed`, `lightcast`, `emerging` |
