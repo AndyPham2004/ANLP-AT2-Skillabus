@@ -2,21 +2,21 @@
  "method": "dictionary",
  "n_ads": 20,
  "extraction_all": {
-  "precision": 0.8651685393258427,
-  "recall": 0.7096774193548387,
-  "f1": 0.779746835443038,
-  "tp": 154,
-  "fp": 24,
-  "fn": 63,
+  "precision": 0.8406593406593407,
+  "recall": 0.7050691244239631,
+  "f1": 0.7669172932330827,
+  "tp": 153,
+  "fp": 29,
+  "fn": 64,
   "n_ads": 20
  },
  "extraction_dictionary_skills": {
-  "precision": 0.8651685393258427,
-  "recall": 0.7096774193548387,
-  "f1": 0.779746835443038,
-  "tp": 154,
+  "precision": 0.864406779661017,
+  "recall": 0.7050691244239631,
+  "f1": 0.7766497461928934,
+  "tp": 153,
   "fp": 24,
-  "fn": 63,
+  "fn": 64,
   "n_ads": 20
  },
  "extraction_errors": [
@@ -449,6 +449,11 @@
    "ad_id": "40386941",
    "skill": "react",
    "error": "false_positive"
+  },
+  {
+   "ad_id": "38644875",
+   "skill": "artificial intelligence",
+   "error": "false_negative"
   },
   {
    "ad_id": "38644875",

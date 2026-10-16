@@ -2,21 +2,21 @@
  "method": "ner",
  "n_ads": 20,
  "extraction_all": {
-  "precision": 0.6571428571428571,
-  "recall": 0.7419354838709677,
-  "f1": 0.6969696969696969,
-  "tp": 161,
-  "fp": 84,
-  "fn": 56,
+  "precision": 0.6477732793522267,
+  "recall": 0.7373271889400922,
+  "f1": 0.6896551724137931,
+  "tp": 160,
+  "fp": 87,
+  "fn": 57,
   "n_ads": 20
  },
  "extraction_dictionary_skills": {
-  "precision": 0.8655913978494624,
-  "recall": 0.7419354838709677,
-  "f1": 0.7990074441687346,
-  "tp": 161,
+  "precision": 0.8648648648648649,
+  "recall": 0.7373271889400922,
+  "f1": 0.7960199004975126,
+  "tp": 160,
   "fp": 25,
-  "fn": 56,
+  "fn": 57,
   "n_ads": 20
  },
  "extraction_errors": [
@@ -424,6 +424,11 @@
    "ad_id": "40386941",
    "skill": "react",
    "error": "false_positive"
+  },
+  {
+   "ad_id": "38644875",
+   "skill": "artificial intelligence",
+   "error": "false_negative"
   }
  ],
  "n_pairs": 45,

@@ -1,6 +1,6 @@
 # 6 Evaluation and error analysis
 
-> Draft, 15 Oct 2026. Every number comes from `PYTHONPATH=src python -m skillabus.evaluate --all` (needs spaCy and the embedding libraries; the GPT-4o-mini answers are read from the committed cache, so no API key is needed). The results are saved in `data/4_evaluation/results/` (`eval_tables.md` and one JSON per part).
+> Re-run 17 Oct 2026 on `main`, after the extractors moved to the skill vocabulary (#109, #142) and a bare "AI" stopped counting as the skill (#148, #149). Every number comes from `PYTHONPATH=src python -m skillabus.evaluate --all` (needs spaCy and the embedding libraries; the GPT-4o-mini extraction answers are read from the committed cache, so only the chat judge needs an API key). The results are saved in `data/4_evaluation/results/` (`eval_tables.md` and one JSON per part).
 > Scripts: `src/skillabus/evaluate.py` (metrics), `src/skillabus/eval_run.py` (the run).
 
 ## 6.1 What was run
@@ -14,7 +14,7 @@ Section 4.7 lists four stages. The table says what the numbers below cover.
 | Extraction | same | GPT-4o-mini (tier 3) | Done, from the 30 committed answers (20 ads and 10 resumes) |
 | Matching | 45 CV–JD pairs, 287 skill rows (81 have, 6 partial, 200 missing) | `match()` and `rank_evidence()`, all three tiers | Done |
 | Subjects P@3 | 33 skill–subject pairs, 13 skills | Keyword, TF-IDF, embeddings | Run, but only about half of the top three is labelled (see 6.5) |
-| Chat | 15 questions with reference answers | Retrieval: TF-IDF and embeddings; LLM judge on the TF-IDF answers | Done: judge relevance 4.33 / 5, faithfulness 4.33 / 5 (see 6.5) |
+| Chat | 15 questions with reference answers | Retrieval: TF-IDF and embeddings; LLM judge on the TF-IDF answers | Done: judge relevance 4.13 / 5, faithfulness 4.33 / 5 (see 6.5) |
 | Annotator agreement | 20 overlap ads, two annotators | Cohen's kappa | **0.856** on dictionary skills (almost perfect); 0.686 on all labels incl. free text (substantial) |
 
 The test sets are much smaller than planned (200 ads, 50 pairs). Five of the 50 selected pairs (CVJD01, CVJD02, CVJD33, CVJD43 and CVJD49) have no scored skills in the labelled file, so 45 pairs remain. Every figure below is therefore a small-sample estimate.
@@ -23,25 +23,29 @@ The test sets were labelled following the rules in `data/4_evaluation/labels/REA
 
 ## 6.2 Extraction
 
-On the 20 ads, the dictionary tier finds 154 of the 217 labelled skills and adds 24 that were not labelled. The extraction is scored after `normalise()`, as the app runs it; for tiers 1 and 2 this changes nothing, but GPT-4o-mini returns raw phrases that only `normalise()` maps to dictionary names.
+On the 20 ads, the dictionary tier finds 153 of the 217 labelled skills and adds 29 that were not labelled. The extraction is scored after `normalise()`, as the app runs it; for tiers 1 and 2 this changes nothing, but GPT-4o-mini returns raw phrases that only `normalise()` maps to dictionary names.
 
 | Tier | Precision | Recall | F1 | TP / FP / FN |
 |---|---|---|---|---|
-| Dictionary | 0.865 | 0.710 | 0.780 | 154 / 24 / 63 |
-| spaCy, all skills | 0.657 | 0.742 | 0.697 | 161 / 84 / 56 |
-| spaCy, dictionary skills only | 0.866 | 0.742 | 0.799 | 161 / 25 / 56 |
+| Dictionary, all skills | 0.841 | 0.705 | 0.767 | 153 / 29 / 64 |
+| Dictionary, dictionary skills only | 0.864 | 0.705 | 0.777 | 153 / 24 / 64 |
+| spaCy, all skills | 0.648 | 0.737 | 0.690 | 160 / 87 / 57 |
+| spaCy, dictionary skills only | 0.865 | 0.737 | 0.796 | 160 / 25 / 57 |
 | GPT-4o-mini, all skills | 0.502 | 0.700 | 0.585 | 152 / 151 / 65 |
 | GPT-4o-mini, dictionary skills only | 0.910 | 0.700 | 0.792 | 152 / 15 / 65 |
 
-All labelled skills come from the dictionary, so for the dictionary tier scoring on dictionary skills alone gives the same
-figures. For spaCy the dictionary-only row is the fair one: it finds 7 more labelled skills (plural forms) for one more false
-positive. The 59 extra false positives in its all-skills row are off-dictionary candidates ("customer segmentation", tool
-names); the labels hold only dictionary skills, so every candidate counts as wrong, right or not. GPT-4o-mini shows the same pattern: 136 of its 151 false positives are skills outside the dictionary, which is what the tier is for, and on dictionary skills it has the best precision of the three tiers (0.910) with recall of 0.700, about the same as the dictionary tier's 0.710 and below spaCy's 0.742. Its F1 on dictionary skills (0.792) is close to spaCy's (0.799).
+All labelled skills come from the 148-row dictionary (`skills_seed_v2.csv`), but tiers 1 and 2 now read the 283 detection
+rows of the skill vocabulary (`skills_vocabulary.csv`, section 4.1), so they can name skills the labels could not contain. For the dictionary tier this adds five
+false positives (Teradata, Salesforce, tidyverse, test automation, process mapping; see below). A bare "AI" no longer counts
+(#148): in one ad the labelled skill list "R programming - Python - AI - Machine learning" now gives no AI, so every tier
+loses one hit. Together, dictionary F1 moves from 0.780 (#56) to 0.767 on all skills and to 0.777 on dictionary skills. For spaCy the dictionary-only row is the fair one: it finds 7
+more labelled skills (plural forms) for one more false positive. The 62 extra false positives in its all-skills row are off-dictionary candidates ("customer segmentation", tool
+names); the labels hold only dictionary skills, so every candidate counts as wrong, right or not. GPT-4o-mini shows the same pattern: 136 of its 151 false positives are skills outside the dictionary, which is what the tier is for, and on dictionary skills it has the best precision of the three tiers (0.910) with recall of 0.700, about the same as the dictionary tier's 0.705 and below spaCy's 0.737. Its F1 on dictionary skills (0.792) is close to spaCy's (0.796). (GPT-4o-mini's figures are those of #56: it returns "AI" as a skill and `normalise()` maps the whole mention to Artificial intelligence, #149.)
 
-**Where it fails.** Of the 63 misses, 25 are soft skills (communication, teamwork, stakeholder management), 13 are
-programming skills and 11 are machine-learning skills. Eleven of the 13 programming misses are the bare letter "R". This is
+**Where it fails.** Of the 64 misses, 25 are soft skills (communication, teamwork, stakeholder management), 13 are
+programming skills and 12 are machine-learning skills (one is the bare "AI" above). Eleven of the 13 programming misses are the bare letter "R". This is
 by design, as section 4.1 explains: the dictionary matches only aliases such as "R programming", never the ambiguous bare
-"R". The 24 false positives split into two kinds. Ten are real errors: the dictionary reads a skill word that the ad does not ask for, such as a degree list ("Statistics, Data Science, Mathematics", six ads), a partner list (Snowflake), a company description (artificial intelligence) "Dash" read as Plotly, and Alteryx in the same partner list as Snowflake. Fourteen are judgement calls or label gaps where the extractor found a phrase the labeller did not list: "text mining" as NLP (2), "data pipelines" as ETL (2), leadership (2), one each of agile, problem solving, cloud and optimisation, and four tools the ads do ask for (Kafka, React, Linux and Microsoft Office) that entered the dictionary after the labelling. Precision of 0.865 is therefore 0.944 if the fourteen count as correct. The next two tiers are meant to recover the soft skills
+"R". The 29 false positives split into two kinds. Twelve are real errors: the dictionary reads a skill word that the ad does not ask for, such as a degree list ("Statistics, Data Science, Mathematics", six ads), a partner list (Snowflake, Alteryx and Salesforce in one ad), a company description (artificial intelligence; "the analytics and process modelling functions" read as process mapping) and "Dash" read as Plotly. Seventeen are judgement calls or label gaps where the extractor found a phrase the labeller did not list: "text mining" as NLP (2), "data pipelines" as ETL (2), leadership (2), one each of agile, problem solving, cloud and optimisation, four tools the ads do ask for (Kafka, React, Linux and Microsoft Office) that entered the dictionary after the labelling, and three vocabulary skills the ads name (Teradata, ggplot2 as tidyverse, test automation). Precision of 0.841 is therefore 0.934 if the seventeen count as correct. The next two tiers are meant to recover the soft skills
 and the bare "R".
 
 ## 6.3 Matching
@@ -105,7 +109,7 @@ lost its dictionary lookup and scored 0.189 / 0.885 / 0.756; `eval_run.py` now p
 
 **This is not a comparison of the three methods.** For a skill that is in the dictionary, `subject_evidence()` gives similarity 1.0 to every row that names the skill, whatever the method, so the subjects that name the skill always come first and ties are sorted by subject code. Keyword and TF-IDF return identical lists for all 13 skills, and all three methods have the same top three for 12 of the 13 (only Data cleaning differs, at rank 3). The rows above therefore differ by one or two pairs, not because one method is better. A comparison of the methods needs similarity-only ranking or skills outside the dictionary. In addition, about half of the recommended subjects have a label, and the labelled pairs are almost all "y" (25 of 33; 7 "partly", 1 "n"), so P@3 is an optimistic estimate; the unlabelled recommendations are not counted.
 
-**Chat retrieval.** For the 15 questions, retrieval returns at least one of the subjects named in the reference answer within the top five for 93.3% of the questions with TF-IDF and 80.0% with embeddings (Hit@5), and finds 77.8% and 56.7% of all the subjects the reference answers cite (recall@5). Subjects are compared by name, because one subject can have several codes. TF-IDF is ahead of the embeddings on this set; with 15 questions that is a difference of two questions. **LLM judge.** GPT-4o-mini wrote an answer to each question from the five TF-IDF passages, and GPT-4o-mini then scored it against the reference answer from 1 to 5. All 15 replies could be read. Mean relevance is 4.33 and mean faithfulness is 4.33; 14 of the 15 answers (93%) have faithfulness 4 or 5. The weakest is Q05 (relevance 3, faithfulness 2): the judge says the answer gave a wrong subject number and left out techniques the reference lists. The same model writes and judges the answers, which tends to flatter it, and the answers are not stored in the repository (a re-run with a key may differ slightly), so the scores are indicative only.
+**Chat retrieval.** For the 15 questions, retrieval returns at least one of the subjects named in the reference answer within the top five for 93.3% of the questions with TF-IDF and 80.0% with embeddings (Hit@5), and finds 77.8% and 56.7% of all the subjects the reference answers cite (recall@5). Subjects are compared by name, because one subject can have several codes. TF-IDF is ahead of the embeddings on this set; with 15 questions that is a difference of two questions. **LLM judge.** GPT-4o-mini wrote an answer to each question from the five TF-IDF passages, and GPT-4o-mini then scored it against the reference answer from 1 to 5. All 15 replies could be read. Mean relevance is 4.13 and mean faithfulness is 4.33; 14 of the 15 answers (93%) have faithfulness 4 or 5. The weakest is Q05 (relevance 3, faithfulness 3): the judge says the answer gave a wrong subject code and left out techniques the reference lists; Q01 also has a wrong code (431031 for 43031). The same model writes and judges the answers, which tends to flatter it. The answers are written afresh on every run (they are saved in `eval_chat.json` but not cached), so the scores move between runs with the same retrieval: three runs gave relevance 4.13 to 4.40 and faithfulness 4.33 to 4.47 (16 and 17 Oct), and Q05 was the weakest each time. A difference below about 0.3 is therefore not a result; the scores are indicative only.
 
 ## 6.6 Limits of these numbers
 

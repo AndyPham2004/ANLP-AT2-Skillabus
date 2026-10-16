@@ -234,7 +234,7 @@
  "skipped": {},
  "judge": {
   "method": "tfidf",
-  "relevance_mean": 4.333333333333333,
+  "relevance_mean": 4.133333333333334,
   "faithfulness_mean": 4.333333333333333,
   "share_faithfulness_4plus": 0.9333333333333333,
   "n": 15,
@@ -244,7 +244,7 @@
     "question_id": "Q01",
     "question": "Which UTS subject teaches Python programming for data processing, and what does it cover?",
     "reference": "Python Programming for Data Processing (43031) covers Python fundamentals, data structures, reading and pre-processing data from multiple sources, data manipulation and an introduction to visualisation, using common Python libraries and Jupyter notebooks.",
-    "answer": "The UTS subject that teaches Python programming for data processing is 431031 Python Programming for Data Processing. It covers an introduction to programming in Python [2], data structures in Python [3], and an introduction to data visualization [5].",
+    "answer": "The UTS subject that teaches Python programming for data processing is 431031 Python Programming for Data Processing. It covers an introduction to programming in Python, data structures in Python, and an introduction to data visualization [1][2][3][5].",
     "passages": [
      "Introduction to programming in Python",
      "Introduction to programming in Python",
@@ -252,7 +252,7 @@
      "Data structures in Python",
      "Introduction to data visualisation"
     ],
-    "reason": "The answer addresses the question well but incorrectly states the subject code as 431031 instead of 43031, and while it covers key topics, it lacks mention of data manipulation and reading/pre-processing data.",
+    "reason": "The answer addresses the question well but incorrectly states the subject code as 431031 instead of 43031, and while it covers key topics, it lacks mention of reading and pre-processing data and data manipulation.",
     "relevance": 4,
     "faithfulness": 4
    },
@@ -260,7 +260,7 @@
     "question_id": "Q02",
     "question": "Which subjects would help me learn deep learning, and how do they differ?",
     "reference": "Deep Learning (94691) covers neural network fundamentals, deep learning frameworks and conveying results in a business context; Deep Learning and Convolutional Neural Network (42028) focuses on training CNNs for image classification and object detection; Neural Networks and Fuzzy Logic (49275) has an engineering focus and covers neural networks alongside fuzzy logic.",
-    "answer": "You can consider the subject 94691 Deep Learning, which focuses on designing and enhancing diverse deep learning frameworks and conveying deep learning processes effectively in a business context [1][5]. Alternatively, 42028 Deep Learning and Convolutional Neural Network covers the basics of deep learning and neural networks, providing foundational knowledge [3]. The main difference lies in 94691's emphasis on practical application and project work, while 42028 focuses on foundational concepts.",
+    "answer": "You can consider the subject 94691 Deep Learning, which focuses on designing and enhancing diverse deep learning frameworks and conveying deep learning processes effectively in a business context [1][5]. Alternatively, 42028 Deep Learning and Convolutional Neural Network covers the basics of deep learning and neural networks [3]. The main difference lies in 94691's emphasis on practical application and business relevance, while 42028 provides foundational knowledge in deep learning concepts.",
     "passages": [
      "Design and enhance diverse deep learning frameworks.",
      "Assessment task 3: Deep Learning final project (Report, 30%, Group, group assessed)",
@@ -276,7 +276,7 @@
     "question_id": "Q03",
     "question": "What does Applied Natural Language Processing (36118) teach?",
     "reference": "It teaches core NLP concepts and computational linguistics, text mining and text analysis techniques in Python, machine learning on text, large language models and deep learning for NLP, and ethical practice, ending with building practical NLP applications.",
-    "answer": "Applied Natural Language Processing (36118) covers several key areas, including the foundations of Natural Language Processing (NLP) [1], ethical best practices in NLP [2], and an introduction to unstructured data and natural language text [3]. Additionally, it explores real-world applications of NLP [4] and machine learning techniques using text [5]. This comprehensive approach equips students with both theoretical knowledge and practical skills in the field of NLP.",
+    "answer": "Applied Natural Language Processing (36118) covers several key topics, including the foundations of Natural Language Processing (NLP) [1], ethical best practices in NLP [2], an introduction to unstructured data and natural language text [3], real-world applications of NLP [4], and machine learning using text [5]. This comprehensive approach equips students with both theoretical knowledge and practical skills in the field of NLP.",
     "passages": [
      "Foundations of Natural Language Processing (NLP)",
      "Ethical best practices in NLP",
@@ -284,7 +284,7 @@
      "Real-world applications of NLP",
      "Machine Learning using text"
     ],
-    "reason": "The answer addresses the key areas of the course well, but it lacks mention of deep learning and practical applications, which are emphasized in the reference answer.",
+    "reason": "The answer addresses the question well by covering key topics in NLP, though it lacks some specific details mentioned in the reference answer.",
     "relevance": 4,
     "faithfulness": 5
    },
@@ -292,7 +292,7 @@
     "question_id": "Q04",
     "question": "Where can I learn about cloud platforms such as AWS in the MDSI?",
     "reference": "Architecting on Amazon Web Services (42049) teaches designing and deploying applications on AWS and prepares you for the AWS Certified Solutions Architect (Associate) exam; Cloud Computing and Software as a Service (42904) covers cloud architecture (IaaS, PaaS, SaaS) and building a cloud prototype on a platform.",
-    "answer": "You can learn about cloud platforms such as AWS in the subject \"42035 Cloud Security,\" where you'll design secure, trustworthy cloud-based solutions on real-life platforms like AWS or Azure [1]. Additionally, \"42049 Architecting on Amazon Web Services\" focuses specifically on AWS services, providing further insights into cloud architecture [5].",
+    "answer": "You can learn about cloud platforms such as AWS in the subject \"42035 Cloud Security,\" where you'll design secure, trustworthy cloud-based solutions on real-life platforms like AWS or Azure [1]. Additionally, \"42049 Architecting on Amazon Web Services\" focuses specifically on AWS services, providing a deeper understanding of cloud architecture [5].",
     "passages": [
      "Through the subject, you'll learn and apply these principles, designing secure, trustworthy cloud-based solutions on real-life platforms like AWS or Azure.",
      "Design a cloud infrastructure solution for a small business, allowing for dynamic scaling of applications, delivery on Service-Level Agreements (SLAs) in the most efficient way possible and comparing the core architectures and technologies used within current Cloud Platforms. (C.1)",
@@ -300,7 +300,7 @@
      "Quiz 1 (Quiz/test, 20%, Individual). To allow students to demonstrate their knowledge of cloud computing infrastructure, e.g., cloud solutions, cloud core architectures, cloud platforms, cloud computing technologies, technical limitations, and so on. This open-book quiz consists of multiple-choice, single-answer questions and short-answer questions. Students complete the quiz during the lecture class in the week indicated.",
      "Cloud and AWS Service Review 2"
     ],
-    "reason": "The answer addresses the question well by mentioning relevant subjects, but it includes one subject ('42035 Cloud Security') that is not explicitly supported by the retrieved passages.",
+    "reason": "The answer addresses the question well by mentioning relevant subjects, but it includes one subject (42035 Cloud Security) that is not explicitly supported by the retrieved passages.",
     "relevance": 4,
     "faithfulness": 4
    },
@@ -316,15 +316,15 @@
      "Apply a range of static data visualisation techniques. (D.1)",
      "Apply a range of static data visualisation techniques. (D.1)"
     ],
-    "reason": "The answer partially addresses the question but introduces an incorrect subject number and lacks specific techniques mentioned in the reference answer.",
+    "reason": "The answer partially addresses the question but introduces an incorrect subject number and lacks clarity on specific techniques taught.",
     "relevance": 3,
-    "faithfulness": 2
+    "faithfulness": 3
    },
    {
     "question_id": "Q06",
     "question": "Which subject should I take to learn SQL and databases?",
     "reference": "Database (32606) teaches SQL (queries, aggregate functions, joins, subqueries, data modification, views) together with relational design and normalisation; Data Science Practice (94692) and Big Data Engineering (94693) also use SQL but within wider programming and data-engineering content.",
-    "answer": "You should consider taking either 94693 Big Data Engineering, which covers SQL and NoSQL databases [1], or 32606 Database, which focuses on using SQL for data retrieval and database implementation [4]. Additionally, 31271 Database Fundamentals also teaches SQL for effective data retrieval and modification [5]. These subjects will enhance your skills in working with databases.",
+    "answer": "You should consider taking either 94693 Big Data Engineering, which covers SQL and NoSQL databases [1], or 32606 Database, where you'll learn to use SQL for data retrieval and gain skills in database implementation [4]. Additionally, 31271 Database Fundamentals also focuses on SQL for effective data retrieval and modification [5]. Each of these subjects will enhance your understanding of databases and SQL.",
     "passages": [
      "SQL & NoSQL Databases",
      "Data representation using JSON and SQL/NoSQL databases",
@@ -340,7 +340,7 @@
     "question_id": "Q07",
     "question": "What is the difference between Machine Learning Algorithms and Applications (36106) and Advanced Machine Learning Application (36120)?",
     "reference": "36106 introduces key machine learning algorithms, their assumptions and strengths and weaknesses, and how to interpret and communicate results. 36120 goes further into advanced algorithms and MLOps: optimising, deploying and managing the lifecycle of models in production.",
-    "answer": "The subject 36106 Machine Learning Algorithms and Applications focuses on introducing students to key machine learning algorithms and their application in real-world settings [4]. In contrast, 36120 Advanced Machine Learning Application delves into more advanced machine learning algorithms and concepts, including training, optimizing models, and deploying machine learning solutions [1][2][3][5]. This indicates that 36120 is designed for students who already have a foundational understanding and are looking to deepen their expertise in advanced topics.",
+    "answer": "The subject 36106 Machine Learning Algorithms and Applications focuses on introducing students to key machine learning algorithms and their practical applications in real-world settings [4]. In contrast, 36120 Advanced Machine Learning Application delves deeper into advanced machine learning algorithms and MLOps concepts, as well as topics like optimizing and deploying machine learning solutions [2][3][5]. Thus, 36120 is more specialized and advanced compared to the foundational approach of 36106.",
     "passages": [
      "Training Advanced Machine Learning Algorithms",
      "This subject delves into advanced machine learning algorithms and machine learning operations (MLOps) concepts.",
@@ -372,7 +372,7 @@
     "question_id": "Q09",
     "question": "I know Python but not SQL. Which subject closes that gap?",
     "reference": "Database (32606) teaches SQL from simple queries to joins and subqueries; Data Science Practice (94692) also includes learning to query data sources with SQL alongside Python, Git and Unix.",
-    "answer": "To close the gap in your SQL knowledge, you should consider enrolling in 94692 Data Science Practice, which includes participation in data-related projects using SQL alongside Python and R [1]. This subject will help you gain practical experience with SQL in a data science context.",
+    "answer": "To close the gap in your SQL knowledge, you should consider enrolling in 94692 Data Science Practice, which involves participating in data-related projects using popular programming languages including SQL, alongside Python and R [1]. This subject will help you gain practical experience with SQL in a data science context.",
     "passages": [
      "Participate in the development of data related projects using popular programming languages including Python, SQL and R.",
      "Participate in the development of data engineering projects using popular tools (Snowflake, Databricks, PostgreSQL, Spark, Airflow, Kafka etc..) and languages including Python and SQL.",
@@ -380,9 +380,9 @@
      "Data structures in Python",
      "Data structures in Python"
     ],
-    "reason": "The assistant answer directly addresses the question by recommending a specific course that teaches SQL alongside Python, which aligns with the reference answer and is fully supported by the retrieved passages.",
-    "relevance": 5,
-    "faithfulness": 5
+    "reason": "The assistant answer addresses the question well by recommending a relevant course, but it does not mention the other course (32606) that also teaches SQL.",
+    "relevance": 4,
+    "faithfulness": 4
    },
    {
     "question_id": "Q10",
@@ -396,7 +396,7 @@
      "Data Warehouse",
      "1. Database Fundamentals:"
     ],
-    "reason": "The answer addresses the question by mentioning ETL & ELT and relevant subjects, but it lacks specific details about the Big Data Engineering course compared to the reference answer.",
+    "reason": "The answer addresses the question about ETL and big data tools but lacks specific mention of the Big Data Engineering course and its comprehensive coverage compared to the reference answer.",
     "relevance": 4,
     "faithfulness": 4
    },
@@ -404,7 +404,7 @@
     "question_id": "Q11",
     "question": "What personal projects could I do to practise machine learning for a data scientist job?",
     "reference": "Train and compare several machine learning models on a public dataset, then interpret the results and explain strengths and weaknesses, as in Machine Learning Algorithms and Applications (36106); optionally deploy the best model, which is the focus of 36120.",
-    "answer": "To practice machine learning for a data scientist job, you could focus on personal projects that align with the core concepts and frameworks presented in subjects like 321513 Machine Learning. This subject emphasizes fundamental ML models and techniques, which you could apply to real-world datasets to build predictive models or classification systems [2][3]. Additionally, engaging in self-directed learning as suggested in 36103 Statistical Thinking for Data Science could help you refine your skills and approach to problem-solving in data science [4].",
+    "answer": "To practice machine learning for a data scientist job, you could focus on personal projects that align with the core concepts and frameworks presented in subjects like 321513 Machine Learning. This subject emphasizes fundamental ML models and techniques, which could inspire projects such as building predictive models using real-world datasets or developing a machine learning application that solves a specific problem. Additionally, engaging in self-directed learning as suggested in 36103 Statistical Thinking for Data Science could help you refine your skills and apply statistical methods to your projects effectively [1][5][4].",
     "passages": [
      "Theory of learning from data",
      "Theory Fundamental ML Models and Techniquesof learning from data",
@@ -412,7 +412,7 @@
      "The subject begins with workshops and lectures, transitioning to self-directed learning, fostering your growth as a data scientist.",
      "You will be presented with core concepts in machine learning as well as exposed to a generic framework for machine learning projects."
     ],
-    "reason": "The answer addresses the question well by suggesting personal projects related to machine learning concepts, but it could be more specific about comparing models and interpreting results as mentioned in the reference answer.",
+    "reason": "The answer addresses the question well by suggesting relevant projects and concepts, but it could be more specific about the types of datasets or models to use.",
     "relevance": 4,
     "faithfulness": 4
    },
@@ -420,7 +420,7 @@
     "question_id": "Q12",
     "question": "I need a project for my portfolio that shows data visualisation. What should I build?",
     "reference": "Build a dashboard or visual story from a public dataset, using static and interactive charts suited to a specific audience, applying the techniques taught in Data Visualisation and Visual Analytics (32146).",
-    "answer": "You should consider taking the subject 32146 Data Visualisation and Visual Analytics, where you will learn to apply interactive data visualisation techniques, which can enhance your project by making it more engaging and dynamic [1]. Additionally, the IS Data Visualisation Studio (41193) focuses on stakeholder need analysis and design thinking, which can help you tailor your project to meet specific audience requirements [4]. Combining these skills will allow you to create a comprehensive and impactful data visualisation project for your portfolio.",
+    "answer": "You should consider taking the subject 32146 Data Visualisation and Visual Analytics, where you will learn to apply interactive data visualisation techniques, which can enhance your project by making it more engaging and dynamic [1]. Additionally, the IS Data Visualisation Studio (41193) focuses on stakeholder need analysis and design thinking, which can help you tailor your project to meet specific audience requirements [4]. Combining these skills will allow you to create a comprehensive and impactful portfolio piece.",
     "passages": [
      "Apply interactive data visualisation techniques. (D.1)",
      "Apply interactive data visualisation techniques. (D.1)",
@@ -436,7 +436,7 @@
     "question_id": "Q13",
     "question": "What project would show data engineering skills to an employer?",
     "reference": "Build a small data pipeline that extracts public data, transforms it and loads it into a database or warehouse, scheduled with a tool such as Airflow, as practised in Big Data Engineering (94693).",
-    "answer": "A project that focuses on data modeling or data warehousing would effectively showcase data engineering skills to an employer. Specifically, engaging with the topics covered in the Big Data Engineering subject, such as data modeling [1] or data warehouse [2], would demonstrate a solid understanding of essential data engineering concepts. Additionally, the AI/Analytics Capstone Project B could also highlight your ability to apply these skills in a practical setting [5].",
+    "answer": "A project that focuses on data modeling or data warehousing would effectively showcase data engineering skills to an employer. Specifically, engaging in a project that involves the fundamentals of databases or utilizing Hadoop for big data processing would demonstrate a strong foundation in data engineering principles [1][2][3][4].",
     "passages": [
      "Data Modelling",
      "Data Warehouse",
@@ -444,7 +444,7 @@
      "Hadoop",
      "In this subject, you'll engage with a project around data analytics or artificial intelligence."
     ],
-    "reason": "The answer addresses the question by suggesting relevant projects but lacks the specific mention of building a data pipeline, which is central to the reference answer.",
+    "reason": "The answer addresses the question by suggesting relevant projects but lacks the specific mention of a data pipeline and scheduling tool like Airflow, which is highlighted in the reference answer.",
     "relevance": 4,
     "faithfulness": 4
    },
@@ -452,7 +452,7 @@
     "question_id": "Q14",
     "question": "Suggest a project that uses natural language processing on public text.",
     "reference": "Do a text mining project on a public text collection, such as classifying or extracting topics from reviews, using Python NLP packages and reporting its limitations, as in Applied Natural Language Processing (36118).",
-    "answer": "You could consider a project that focuses on text summarization, utilizing techniques from both the \"Natural Language Processing Algorithms\" subjects [4] and [5]. This project could involve analyzing public text sources, such as news articles or research papers, and developing algorithms to generate concise summaries, which would help in understanding large volumes of unstructured data [2]. Additionally, incorporating text processing and normalization techniques from [3] would enhance the quality of your summaries.",
+    "answer": "You could consider a project focused on text summarization, utilizing techniques from both Applied Natural Language Processing and Natural Language Processing Algorithms. This could involve processing unstructured data and natural language text to create concise summaries of public documents or articles, leveraging foundational NLP concepts and text normalization methods [1][2][3][4][5].",
     "passages": [
      "Foundations of Natural Language Processing (NLP)",
      "Introduction to unstructured data and natural language text",
@@ -460,15 +460,15 @@
      "Text Summarisation",
      "Text Summarisation"
     ],
-    "reason": "The assistant's answer directly addresses the question by suggesting a project on text summarization using public text sources and is fully supported by the retrieved passages.",
-    "relevance": 5,
+    "reason": "The answer addresses the question by suggesting a text summarization project, which is relevant to natural language processing on public text, and all claims are supported by the retrieved passages.",
+    "relevance": 4,
     "faithfulness": 5
    },
    {
     "question_id": "Q15",
     "question": "Give me a small SQL project to practise before the database subject.",
     "reference": "Design a small relational database for a simple scenario, load a public dataset, and write queries with joins and aggregates, following the topics of Database (32606).",
-    "answer": "You could create a small SQL project that involves designing a simple database for a library system. This project could include tables for books, authors, and borrowers, allowing you to practice writing SQL queries to insert, update, and retrieve data. Additionally, you could explore using SQL*Plus or SQL Developer for executing your queries, which would be beneficial as you prepare for the Database Programming subject [4].",
+    "answer": "You could create a small project that involves designing a simple database for a library system. This project could include tables for books, authors, and borrowers, allowing you to practice writing SQL queries to manage and retrieve data. Focus on creating simple queries to insert, update, and select data, which aligns with the introductory SQL topics covered in [1], [2], and [3].",
     "passages": [
      "Introduction to SQL: simple queries",
      "Introduction to SQL: simple queries",
@@ -476,8 +476,8 @@
      "Introduction to Database Programming, revision of SQL and an introduction to SQL*Plus, iSQL*Plus and the development tool SQL Developer",
      "In small teams, students apply these contemporary data management practices to their advanced database project work."
     ],
-    "reason": "The answer effectively addresses the question by suggesting a relevant SQL project, but it introduces SQL*Plus and SQL Developer without direct support from the retrieved passages.",
-    "relevance": 5,
+    "reason": "The assistant's answer addresses the question by suggesting a relevant project, but it lacks the specific mention of loading a public dataset and writing queries with joins and aggregates as indicated in the reference answer.",
+    "relevance": 4,
     "faithfulness": 4
    }
   ]
