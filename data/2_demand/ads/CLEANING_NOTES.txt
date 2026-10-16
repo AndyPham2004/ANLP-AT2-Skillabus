@@ -151,3 +151,25 @@ esco_label_lookup.csv                           100,886 rows
    python src/clean_esco.py
    python src/make_label_sample.py      (needs the clean Seek file first)
    python src/build_recent_sample.py
+
+--------------------------------------------------------------------------------
+ ats_2026_clean.csv  --  job-board ads of Oct 2026 with a role (D2, #116)   Claude for Quan, 16 Oct
+--------------------------------------------------------------------------------
+ Source: data/raw/ats_ads_2026-10-13.csv (601) and ats_ads_2026-10-16.csv (584), the
+ Australian postings of the 65 public job boards in collection/ats_companies.csv
+ (fetch_ats.py --australia-only), all professions.
+ Cleaning (classify_ats_roles.py): ads posted more than 60 days before their fetch
+ dropped (job boards keep evergreen ads open for years; the oldest were from 2016),
+ the same rule as build_recent_sample.py; one row per ad_id, then one per company +
+ title with the latest fetch kept (a re-listing in a second city counts once); ads
+ under 200 characters dropped; emails and phone numbers masked as in
+ build_recent_sample.py; whitespace tidied. Result: 392 ads.
+ Role from the title, first matching rule wins (rules in the script): Software Engineer 33, Data Scientist 11, Machine Learning Engineer 11, Cybersecurity Analyst 9, DevOps/SRE 7, Network/Systems Administrator 6, Business Analyst 3, Data Analyst 3, Cloud Engineer 1, Data Engineer 1;
+ other 307.
+ Hand check (before the 60-day rule, 30 random ads: 20 with a role, 10 other) read
+ against the ad text: 28 agree, 2 debatable (a Salesforce lead whose text is platform
+ security; a datacenter engineer read as Network/Systems Administrator). Van Thong
+ read all role titles in review (#136): two rules added from it (threat detection ->
+ Cybersecurity Analyst, "DevOps ... Engineer" stays DevOps/SRE even as support).
+ Counted in role_skill_demand.csv as source ats_2026, period 2026-10, by
+ build_role_skill_demand.py (roles with 30+ ads on their own).

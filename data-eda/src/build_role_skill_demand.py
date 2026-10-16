@@ -74,16 +74,18 @@ log = logging.getLogger("build_role_skill_demand")
 OUT = paths.ROLE_SKILL_DEMAND
 COLUMNS = ["role", "role_family", "skill_id", "skill", "source", "period", "text_type",
            "n_ads", "total_ads", "pct", "pct_low", "pct_high", "importance"]
-SOURCES = ("seek_2019_22", "data_jobs_2023", "recent_2024_26", "adzuna_2026", "esco_occupation", "onet")
+SOURCES = ("seek_2019_22", "data_jobs_2023", "recent_2024_26", "ats_2026", "adzuna_2026", "esco_occupation", "onet")
 TEXT_TYPE = {"seek_2019_22": "full_text", "data_jobs_2023": "tool_list", "recent_2024_26": "full_text",
-             "adzuna_2026": "search_count", "esco_occupation": "taxonomy", "onet": "taxonomy"}
-COUNTED = ("seek_2019_22", "data_jobs_2023", "recent_2024_26", "adzuna_2026")
+             "ats_2026": "full_text", "adzuna_2026": "search_count", "esco_occupation": "taxonomy", "onet": "taxonomy"}
+COUNTED = ("seek_2019_22", "data_jobs_2023", "recent_2024_26", "ats_2026", "adzuna_2026")
 ADZUNA_PERIOD = "2026-10"
 IMPORTANCE = ("essential", "optional", "in_demand")
 SEEK_ROLE, SEEK_PERIOD = "Data Scientist", "2019-22"
 DATA_JOBS_PERIOD = "2023"
 TAXONOMY_PERIOD = {"esco_occupation": "v1.2.1", "onet": "v31.0"}
 MIXED_ROLE, MIXED_FAMILY = "Data roles (mixed)", "Data & AI"
+IT_MIXED_ROLE, IT_MIXED_FAMILY = "IT roles (mixed)", "IT (mixed)"   # ats_2026: the small roles outside Data & AI
+ATS_PERIOD, ATS_OTHER = "2026-10", "other"       # the October fetches; not "2026", so no accidental join with recent_2024_26
 MIN_ROLE_ADS = 30  # plan D15: a role's trend is shown only when each period has at least this many of its ads
 
 # Vocabulary rows a tool name may map to: the skills and tools, not the ESCO core skills ("apply for
@@ -262,6 +264,36 @@ def recent_rows(vocab: pd.DataFrame, recent: pd.DataFrame, families: dict[str, s
     return rows, notes
 
 
+def ats_rows(vocab: pd.DataFrame, ats: pd.DataFrame, families: dict[str, str]) -> tuple[list[dict], list[str]]:
+    """The 2026 job-board ads by role (classify_ats_roles.py, plan D2): a role with MIN_ROLE_ADS ads gets its own
+    block (plan D15); a smaller role folds into MIXED_ROLE when its family is Data & AI, else into IT_MIXED_ROLE;
+    ads with role "other" (sales, marketing, management, ...) are not counted."""
+    ads = ats[ats.role != ATS_OTHER].reset_index(drop=True)
+    unknown = sorted(set(ads.role) - set(families))
+    if unknown:
+        raise ValueError(f"ats_2026 roles not in {paths.ROLE_OCCUPATIONS.name}: {unknown}")
+    hits = skill_hits(detection_rows(vocab), ads.description.fillna(""))
+    by_label = dict(zip(vocab.label, vocab.skill_id))
+    rows, notes = [], []
+    mixed: dict[str, list[int]] = {MIXED_ROLE: [], IT_MIXED_ROLE: []}
+    for role, sub in ads.groupby("role", sort=True):
+        if len(sub) >= MIN_ROLE_ADS:
+            rows += share_rows(count_hits([hits[i] for i in sub.index]), len(sub), role=role, family=families[role],
+                               source="ats_2026", period=ATS_PERIOD, by_label=by_label)
+            notes.append(f"{role}: {len(sub)} ads, its own block")
+        else:
+            target = MIXED_ROLE if families[role] == MIXED_FAMILY else IT_MIXED_ROLE
+            mixed[target] += list(sub.index)
+            notes.append(f"{role}: {len(sub)} ads, below {MIN_ROLE_ADS} -> {target}")
+    for target, idx in mixed.items():
+        if idx:
+            family = MIXED_FAMILY if target == MIXED_ROLE else IT_MIXED_FAMILY
+            rows += share_rows(count_hits([hits[i] for i in idx]), len(idx), role=target, family=family,
+                               source="ats_2026", period=ATS_PERIOD, by_label=by_label)
+            notes.append(f"{target}: {len(idx)} ads")
+    return rows, notes
+
+
 # ---------------------------------------------------------------- taxonomy rows
 def taxonomy_rows(vocab: pd.DataFrame, occupation_skills: pd.DataFrame, onet_map: pd.DataFrame,
                   families: dict[str, str]) -> tuple[list[dict], dict[str, Counter]]:
@@ -330,7 +362,8 @@ def committed_inputs() -> dict:
             "seek": pd.read_csv(paths.SEEK_ADS, dtype=str, keep_default_na=False),
             "recent": pd.read_csv(paths.RECENT_ADS, dtype=str, keep_default_na=False),
             "occupation_skills": read_table(paths.OCCUPATION_SKILLS), "onet_map": read_table(paths.ONET_TOOL_MAP),
-            "adzuna": read_table(paths.ADZUNA_COUNTS)}
+            "adzuna": read_table(paths.ADZUNA_COUNTS),
+            "ats": pd.read_csv(paths.ATS_2026_ADS, dtype=str, keep_default_na=False)}
 
 
 def build(raw: Path = paths.RAW) -> tuple[pd.DataFrame, dict]:
@@ -341,7 +374,8 @@ def build(raw: Path = paths.RAW) -> tuple[pd.DataFrame, dict]:
     rec_rows, recent_notes = recent_rows(vocab, i["recent"], families)
     tax_rows, left_out = taxonomy_rows(vocab, i["occupation_skills"], i["onet_map"], families)
     adz_rows = adzuna_rows(vocab, i["adzuna"], families)
-    table = to_frame(rows + dj_rows + rec_rows + adz_rows + tax_rows)
+    a_rows, ats_notes = ats_rows(vocab, i["ats"], families)
+    table = to_frame(rows + dj_rows + rec_rows + a_rows + adz_rows + tax_rows)
     clash = table[table.duplicated(["role", "skill_id", "source", "period"], keep=False)]
     if not clash.empty:
         raise ValueError(f"rows repeat a role, skill, source and period:\n{clash.head()}")
@@ -349,7 +383,7 @@ def build(raw: Path = paths.RAW) -> tuple[pd.DataFrame, dict]:
     if no_taxonomy:
         raise ValueError(f"roles without taxonomy rows: {no_taxonomy}")
     report = {"unmapped": unmapped, "data_jobs_totals": dj_totals, "recent_notes": recent_notes,
-              "left_out": left_out}
+              "ats_notes": ats_notes, "left_out": left_out}
     return table, report
 
 
@@ -400,6 +434,7 @@ def main() -> None:
     log.info("%d rows: %s", len(table), ", ".join(f"{s} ({t}) {n}" for (s, t), n in counts.items()))
     log.info("Per role, source and period (top %d):\n%s", 5, summary(table))
     log.info("recent_2024_26 blocks:\n  %s", "\n  ".join(report["recent_notes"]))
+    log.info("ats_2026 blocks:\n  %s", "\n  ".join(report["ats_notes"]))
     log.info("data_jobs_2023 against role_profiles.csv:\n%s", compare_role_profiles(table))
     unmapped = report["unmapped"]
     log.info("data_jobs tool names not in the vocabulary: %d distinct, %d mentions:\n  %s", len(unmapped),
