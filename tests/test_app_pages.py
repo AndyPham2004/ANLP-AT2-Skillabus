@@ -108,15 +108,14 @@ def test_role_mode_data_engineer():
     show_gaps(at)
     text = page_text(at)
     assert "Data Engineer" in text and "skills still to learn" in text
-    assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Certifications", "How this works"]
+    assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Certifications"]
+    assert "Bars: share of " in text and "JobsPipe Data Engineer ads, Sep-Oct 2026, full text." in text
     assert "Skills the role asks for" in text and "<span style='width:" in text        # the percentage bars
     show_tab(at, "Your path")
     assert "Your path" in page_text(at) and "closes" in page_text(at)
     show_tab(at, "Certifications")
     text = page_text(at)
     assert "Certifications worth having" in text and "Databricks Certified Data Engineer Associate" in text
-    show_tab(at, "How this works")
-    assert "Engine: pipeline" in page_text(at)
     show_tab(at, "Skills")
     open_skill(at)
     text = page_text(at)
@@ -134,9 +133,8 @@ def test_role_mode_cybersecurity_has_bars_since_c2():
     show_tab(at, "Certifications")
     text = page_text(at)
     assert "Certifications worth having" in text and "CompTIA Security+" in text
-    show_tab(at, "How this works")
-    assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)
     show_tab(at, "Skills")
+    assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)
     open_skill(at)
     assert "Employers say" in page_text(at) and "Self-study" in page_text(at)
 
