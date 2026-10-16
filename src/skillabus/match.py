@@ -20,9 +20,9 @@ P@5 / MRR evaluation on the CV-JD pairs), and score_matrix() to rank ads for a r
 
 Demand comes from one table, data/2_demand/role_skill_demand.csv (plan C2): each role takes the block
 of the first source in DEMAND_PRIORITY that counted its ads, so `demand_pct` is the share of that
-block's ads naming the skill and `demand_pct_2026` the share in the role's 2026 block. Data Scientist
-(and a pasted ad) keeps the 3,204 Seek ads 2019-22 for `demand_pct`, with the poster's own counts for
-its 148 skills (_blocks), so the poster gap chart and the sample ad's path stay as they were.
+block's ads naming the skill: the 2026 JobsPipe ads for every role, and for a pasted ad the Data
+Scientist ones. The 3,204 Seek ads of 2019-22 are only the trend column (`demand_pct_2019_22`, Data
+Scientist and pasted ads): Quan, 16 Oct, "sợ cũ quá" (they predate ChatGPT).
 """
 
 from __future__ import annotations
@@ -38,21 +38,14 @@ from .similarity import embed_documents, similarity, tfidf_similarity
 
 ROOT = paths.ROOT
 DEMAND_CSV = paths.ROLE_SKILL_DEMAND   # role x skill x source x period (plan D6; data/2_demand/README.md)
-# The poster counted the Seek ads on their raw text; the table recounts them on the cleaned text, 0.2 to
-# 1.7 points higher for 26 skills (Python 82.8 -> 84.5). Its 148 shares replace the table's in _blocks().
-POSTER_COUNTS_CSV = paths.SKILL_COUNTS
-DEFAULT_ROLE = "Data Scientist"
-N_ADS = 3204
-DEFAULT_SOURCE, DEFAULT_PERIOD = "seek_2019_22", "2019-22"   # the full-text Data Scientist ads behind _demand()
-# A role's demand_pct: the first of these sources with a block for the role ...
+DEFAULT_ROLE = "Data Scientist"        # whose ads weigh a pasted ad's skills
+# A role's demand_pct: the first of these sources with a block for the role (JobsPipe for all 11 today)
 DEMAND_PRIORITY = ("jobspipe_2026", "adzuna_2026", "ats_2026", "data_jobs_2023", "seek_2019_22")
-# ... except Data Scientist, which keeps the Seek ads (the poster numbers, the Robert Walters sample).
-PINNED = {DEFAULT_ROLE: DEFAULT_SOURCE}
-# demand_pct_2026: the first 2026 source, in the same order (JobsPipe, for every role today)
-TREND_PRIORITY = tuple(s for s in DEMAND_PRIORITY if s.endswith("_2026"))
-# recommend._weight's 2026 floor for a skill new since 2022: the 22 in-sample data roles of 2026, as
-# skill_counts_2026.csv's pct_2026_all_low was, so the weights did not move with C2.
-FLOOR_BLOCK = ("Data roles (mixed)", "recent_2024_26", "2026")
+# demand_pct_2026: the first 2026 source, in the same order (the demand block itself today)
+SOURCES_2026 = tuple(s for s in DEMAND_PRIORITY if s.endswith("_2026"))
+# demand_pct_2019_22, the trend column: the Seek Data Scientist ads, counted by the table with the same
+# matcher as the 2026 ads (the poster's own counts, skill_counts_v2.csv, are 0.2-1.7 points lower for 26 skills)
+SOURCE_2019_22 = "seek_2019_22"
 COUNTED = ("full_text", "tool_list", "search_count")   # text types with a share; taxonomy rows have none
 MIXED = "(mixed)"                                      # "Data roles (mixed)": ads of several roles, not a role
 # For captions: source -> (its name in a sentence, when its ads were posted or counted)
@@ -104,8 +97,7 @@ def _category() -> dict[str, str]:
 def _blocks() -> dict[tuple[str, str, str], dict]:
     """(role, source, period) -> one counted block of role_skill_demand.csv: role, source, period,
     text_type, total_ads, shares {skill: pct} and lows {skill: pct_low}. Taxonomy rows have no share
-    and are left out. The Data Scientist Seek block takes the poster's shares for its 148 skills
-    (POSTER_COUNTS_CSV) and keeps the table's for the rest (Teradata, C#, ...)."""
+    and are left out."""
     blocks: dict[tuple[str, str, str], dict] = {}
     for row in _rows(DEMAND_CSV):
         if row["text_type"] not in COUNTED or not row["pct"]:
@@ -116,9 +108,6 @@ def _blocks() -> dict[tuple[str, str, str], dict]:
         block["shares"][row["skill"]] = float(row["pct"])
         if row["pct_low"]:
             block["lows"][row["skill"]] = float(row["pct_low"])
-    seek = blocks.get((DEFAULT_ROLE, DEFAULT_SOURCE, DEFAULT_PERIOD))
-    if seek and POSTER_COUNTS_CSV.exists():
-        seek["shares"].update({row["skill"]: float(row["pct_ads"]) for row in _rows(POSTER_COUNTS_CSV)})
     return blocks
 
 
@@ -132,25 +121,26 @@ def _pick(role: str, sources: tuple[str, ...]) -> dict | None:
 
 
 def demand_block(role: str = DEFAULT_ROLE, source: str | None = None, period: str | None = None) -> dict | None:
-    """The block behind a role's `demand_pct`: Data Scientist's Seek ads, any other role's first source in
-    DEMAND_PRIORITY. With `source` (and `period`), that block instead. None when there is none: the
-    app then shows the role's core skills."""
+    """The block behind a role's `demand_pct`: its first source in DEMAND_PRIORITY. With `source` (and
+    `period`), that block instead. None when there is none: the app then shows the role's core skills."""
     if source:
         return _pick(role, (source,)) if period is None else _blocks().get((role, source, period))
-    pinned = (PINNED[role],) if role in PINNED else ()
-    return _pick(role, pinned + DEMAND_PRIORITY)
+    return _pick(role, DEMAND_PRIORITY)
 
 
-def trend_block(role: str = DEFAULT_ROLE) -> dict | None:
-    """The block behind `demand_pct_2026`: the role's first 2026 source. For every role but Data
-    Scientist it is the demand block itself, so the two shares are equal."""
-    return _pick(role, TREND_PRIORITY)
+def block_2026(role: str = DEFAULT_ROLE) -> dict | None:
+    """The block behind `demand_pct_2026`: the role's first 2026 source (today its demand block)."""
+    return _pick(role, SOURCES_2026)
+
+
+def block_2019_22(role: str = DEFAULT_ROLE) -> dict | None:
+    """The block behind the trend column `demand_pct_2019_22`: the Seek ads, Data Scientist only."""
+    return _pick(role, (SOURCE_2019_22,))
 
 
 def block_meta(block: dict | None = None) -> dict:
-    """The fields every gap row carries for its caption; default the Data Scientist Seek block."""
-    block = block or demand_block() or {"source": DEFAULT_SOURCE, "period": DEFAULT_PERIOD,
-                                        "total_ads": N_ADS, "text_type": "full_text"}
+    """The fields every gap row carries for its caption; default the Data Scientist demand block."""
+    block = block or demand_block() or dict.fromkeys(("source", "period", "total_ads", "text_type"))
     return {"demand_source": block["source"], "demand_period": block["period"],
             "total_ads": block["total_ads"], "text_type": block["text_type"]}
 
@@ -162,35 +152,29 @@ def demand_caption(block: dict) -> str:
     return f"{block['total_ads']:,} {name} {block['role']} ads, {when}, {kind}"
 
 
-def _demand() -> dict[str, float]:
-    """Share of the 3,204 Seek Data Scientist ads 2019-22 naming each skill (the poster's 148 shares)."""
-    block = _blocks().get((DEFAULT_ROLE, DEFAULT_SOURCE, DEFAULT_PERIOD))
-    return block["shares"] if block else {}
-
-
-def _trend(role: str) -> dict[str, float]:
-    """skill -> share of the role's 2026 ads (trend_block). A full-text block looked for every dictionary
-    skill, so one that no ad names is 0.0 there, not unknown."""
-    block = trend_block(role)
+def _shares(block: dict | None) -> dict[str, float]:
+    """skill -> share of a block's ads. A full-text block looked for every dictionary skill, so one
+    that no ad names is 0.0 there, not unknown."""
     if block is None:
         return {}
     zeros = dict.fromkeys(_category(), 0.0) if block["text_type"] == "full_text" else {}
     return zeros | block["shares"]
 
 
+def _demand() -> dict[str, float]:
+    """The shares a pasted ad's skills are weighed by: the Data Scientist ads of its demand block
+    (71 JobsPipe ads, Sep-Oct 2026)."""
+    return _shares(demand_block())
+
+
 def _demand_2026() -> dict[str, float]:
-    """The 2026 share for an ad and for Data Scientist: the Data Scientist ads of the 2026 block (71 JobsPipe ads)."""
-    return _trend(DEFAULT_ROLE)
+    """The 2026 share for a pasted ad: the Data Scientist 2026 ads (today the same as _demand())."""
+    return _shares(block_2026())
 
 
-def demand_2026_low() -> dict[str, float]:
-    """Lower end of the 95% Wilson interval of the 2026 share over all 22 in-sample data roles
-    (FLOOR_BLOCK, the numbers of skill_counts_2026.csv's `pct_2026_all_low`), not the 9 data
-    scientists: one ad moves a share of 9 by 11 points. Even over 22 a share carries about +-20
-    points; recommend() weights gaps by this conservative value. Kept on these 22 ads by C2 so the
-    weights stay put: JobsPipe's 71 Data Scientist ads would raise Generative AI's floor from 4.7 to 14.4."""
-    block = _blocks().get(FLOOR_BLOCK)
-    return dict(block["lows"]) if block else {}
+def _demand_2019_22() -> dict[str, float]:
+    """The trend column for a pasted ad: the 3,204 Seek Data Scientist ads of 2019-22."""
+    return _shares(block_2019_22())
 
 
 @lru_cache(maxsize=1)
@@ -243,18 +227,22 @@ def _related(skill: str, resume: dict[str, list[dict]], demand: dict[str, float]
 
 def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool = False,
           demand: dict[str, float] | None = None, demand_2026: dict[str, float] | None = None,
-          block: dict | None = None) -> list[dict]:
+          block: dict | None = None, demand_2019_22: dict[str, float] | None = None) -> list[dict]:
     """Return the `skills` list of the gap result (data contract section 2), most in-demand first.
 
-    demand          skill -> share of ads, for `demand_pct`; default: the 3,204 Seek Data Scientist ads.
-                    match_role() passes the role's own shares.
+    demand          skill -> share of ads, for `demand_pct`; default: the Data Scientist ads of
+                    demand_block() (2026 JobsPipe). match_role() passes the role's own shares.
     demand_2026     skill -> 2026 share, for `demand_pct_2026`; default: the Data Scientist 2026 ads
                     when `demand` is the default too, else none.
     block           the demand block `demand` comes from (demand_block()); its source, period, number of
-                    ads and text type are copied to every row for the app's caption. Default: Seek.
+                    ads and text type are copied to every row for the app's caption. Default: Data Scientist.
+    demand_2019_22  skill -> share of the 2019-22 Seek ads, the trend column `demand_pct_2019_22`; default:
+                    those Data Scientist ads when `demand` is the default too, else none.
     """
     if demand_2026 is None:
         demand_2026 = _demand_2026() if demand is None else {}
+    if demand_2019_22 is None:
+        demand_2019_22 = _demand_2019_22() if demand is None else {}
     demand = _demand() if demand is None else demand
     meta = block_meta(block)
     resume = _group(resume_skills)
@@ -283,6 +271,7 @@ def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool =
             "status": "have" if same else "partial" if related else "missing",
             "demand_pct": round(demand.get(canonical, 0.0), 1),
             "demand_pct_2026": demand_2026.get(canonical),
+            "demand_pct_2019_22": demand_2019_22.get(canonical),
             **meta,
             "emerging": emerging,
             "ad_evidence": _evidence(mentions),
@@ -298,7 +287,7 @@ def match(ad_skills: list[dict], resume_skills: list[dict], include_soft: bool =
 
 def soft_skills(ad_skills: list[dict], demand: dict[str, float] | None = None) -> list[str]:
     """Professional skills the ad names (communication, teamwork): shown, but not part of the gap list,
-    most in-demand first by `demand` (default: the Seek Data Scientist ads; a role passes its own)."""
+    most in-demand first by `demand` (default: the Data Scientist ads; a role passes its own)."""
     demand = _demand() if demand is None else demand
     names = {m.get("canonical") or m["text"] for m in ad_skills if _is_soft(m)}
     return sorted(names, key=lambda k: (-demand.get(k, 0.0), k))
@@ -328,7 +317,7 @@ def roles() -> list[dict]:
 def role_demand(role: str = DEFAULT_ROLE) -> dict[str, float]:
     """skill -> share of the role's ads that ask for it: every skill of its demand block, not only the
     profile's 15, so _related() can rank the resume's part skills (Excel over Microsoft Office) as in
-    ad mode. Data Scientist: the Seek shares of _demand()."""
+    ad mode."""
     return _block(role)["shares"]
 
 
@@ -356,10 +345,11 @@ def role_profile(role: str = DEFAULT_ROLE, top_n: int = 15) -> list[dict]:
 
 def match_role(resume_skills: list[dict], role: str = DEFAULT_ROLE, top_n: int = 15) -> list[dict]:
     """match() against a role instead of an ad: `demand_pct` is the share of the role's ads (demand_block),
-    `demand_pct_2026` the share of its 2026 ads (trend_block), equal to `demand_pct` for every role
-    whose demand block is already from 2026 (all but Data Scientist)."""
+    `demand_pct_2026` the share of its 2026 ads (block_2026, today the same block), and for Data
+    Scientist `demand_pct_2019_22` the share of the Seek ads of 2019-22 (the trend column)."""
     return match(role_profile(role, top_n), resume_skills, demand=role_demand(role),
-                 demand_2026=_trend(role), block=_block(role))
+                 demand_2026=_shares(block_2026(role)), block=_block(role),
+                 demand_2019_22=_shares(block_2019_22(role)))
 
 
 # ------------------------------------------------------ ranking resume evidence for a skill

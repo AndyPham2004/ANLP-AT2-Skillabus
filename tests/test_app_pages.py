@@ -58,7 +58,7 @@ def test_role_picker_lists_eleven_roles_by_family():
     assert at.radio(key="family_box").options == ["Data & AI", "Software", "Cloud & infrastructure", "Security",
                                                   "Business analysis"]
     assert at.selectbox(key="role_box").value == "Data Scientist"
-    assert "3,204 Seek Data Scientist ads, 2019-22, full text." in page_text(at)
+    assert "JobsPipe Data Scientist ads, Sep-Oct 2026, full text." in page_text(at)
     at.radio(key="family_box").set_value("Security").run()
     assert at.selectbox(key="role_box").value == "Cybersecurity Analyst"       # the new family's first role
     assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)

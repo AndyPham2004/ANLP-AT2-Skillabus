@@ -26,15 +26,12 @@ PROFILES = str(ROOT / "tests/fixtures/subject_profiles_sample.csv")
 AD = (ROOT / "tests/fixtures/ad_rw_2026-09-23.txt").read_text(encoding="utf-8")
 RESUME = (ROOT / "tests/fixtures/resume_synthetic.txt").read_text(encoding="utf-8")
 START = ("Autumn", 2027)
-# The 2026 lower bounds as of 13 Oct (22 ads). Pinned: the real file grows as Van Thong adds ads.
-DEMAND_2026_LOW = {"Large language models": 19.7, "Generative AI": 10.1, "Artificial intelligence": 72.2}
 
 
 @pytest.fixture(autouse=True)
 def sample_data(monkeypatch):
     monkeypatch.setattr(requisites_module, "PREREQUISITES_CSV", ROOT / "tests/fixtures/prerequisites_sample.csv")
     monkeypatch.setattr(requisites_module, "OFFERINGS_CSV", ROOT / "tests/fixtures/offerings_sample.csv")
-    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: DEMAND_2026_LOW)
     monkeypatch.setattr(recommend_module, "EXTERNAL_CSV", ROOT / "tests/fixtures/external_courses_sample.csv")
 
 
@@ -144,13 +141,14 @@ def test_similar_rows_count_with_embeddings(monkeypatch, tmp_path):
 # ----------------------------------------------------------------------- learning path
 
 def test_learning_path_for_the_poster_ad():
-    """The Robert Walters ad: machine learning (72% of ads) first; 43023 teaches AI and LLMs but
+    """The Robert Walters ad: 36121 first, for artificial intelligence (73% of the 2026 Data Scientist ads;
+    machine learning led when the 2019-22 shares weighed the gaps); 43023 teaches AI and LLMs but
     needs 42172 or 41040, which an MDSI student cannot take, so it is dropped with the reason."""
     result = recommend(poster_gaps(), PROFILES, method="keyword", start=START)
     path = result["learning_path"]
-    assert path["subjects"] == ["36106", "32130", "36121"]
+    assert path["subjects"] == ["36121", "36106", "32130"]
     assert path["gaps_closed"] == 5 and path["gaps_total"] == 6
-    assert 85 < path["demand_covered_pct"] < 100             # large language models stay open
+    assert 80 < path["demand_covered_pct"] < 100             # large language models (34%) stay open
     dropped = {d["subject_code"]: d for d in path["dropped"]}
     assert "42172" in dropped["43023"]["reason"] and "Large language models" in dropped["43023"]["covers"]
     assert "43023" not in [r["subject_code"] for r in result["recommendations"]]
@@ -286,21 +284,11 @@ def test_a_zero_demand_skill_still_gets_a_subject():
     assert result["learning_path"]["subjects"] and result["learning_path"]["demand_covered_pct"] == 100.0
 
 
-def test_weight_uses_the_low_end_of_the_2026_interval(monkeypatch):
-    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Large language models": 18.0, "Hadoop": 1.0})
-    assert _weight(gap("Large language models", 0.0, 36.4)) == 19.0     # 2026 lower bound, not 36.4
-    assert _weight(gap("Hadoop", 17.4, 4.5)) == 18.4                    # 2019-22 is higher
-    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Artificial intelligence": 72.2})
-    assert _weight(gap("Artificial intelligence", 22.5, 90.9)) == 23.5  # asked for before 2023: 2019-22 stays
-    assert _weight(gap("Python", 82.8)) == 83.8                         # no 2026 row
-
-
-def test_weight_of_a_role_outside_the_2026_sample_has_no_2026_fallback(monkeypatch):
-    """A gap with no 2026 share (before C2 a role outside the 2026 data-role sample; now a skill only GPT
-    found) keeps its own share as the only weight, even for a skill new since 2022."""
-    monkeypatch.setattr(recommend_module, "demand_2026_low", lambda: {"Large language models": 18.0})
-    assert _weight(gap("Large language models", 0.0, 36.4)) == 19.0    # Data Scientist or an ad
-    assert _weight(gap("Large language models", 0.0, None)) == 1.0     # no 2026 share
+def test_weight_is_the_2026_share_plus_one():
+    # Since C2 demand_pct is the 2026 share itself, so a skill new since 2022 needs no floor.
+    assert _weight(gap("Large language models", 33.8, 33.8)) == 34.8
+    assert _weight(gap("Hadoop", 0.0, 0.0)) == 1.0                      # 0% still counts for something
+    assert _weight(gap("agentic AI", None)) == 1.0                      # a skill only GPT found
 
 
 # ------------------------------------------------- real embedding model, when installed

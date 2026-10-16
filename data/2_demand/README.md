@@ -7,7 +7,7 @@ from the repo root.
 | File | What | Made by | Rebuild |
 |---|---|---|---|
 | `role_skill_demand.csv` | **The one demand table** (plan D6): role x skill x source x period, every source counted with the one vocabulary; **the app reads it** (plan C2, `match.py`). Section below | Claude for Quan, 15 Oct | `python data-eda/src/build_role_skill_demand.py` (needs the raw data_jobs file; `--check` says if it is stale) |
-| `skill_counts_v2.csv` | **Superseded by `role_skill_demand.csv`; the app reads it only for the poster's 148 Seek shares** (they replace the table's recount in the Data Scientist Seek block, so the poster gap chart and the sample ad's path reproduce), and the fallback engine `app/baseline.py`. Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` reads `pct_ads` as `demand_pct` for Data Scientist and a pasted ad | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
+| `skill_counts_v2.csv` | **Superseded by `role_skill_demand.csv`; only the fallback engine `app/baseline.py` reads it.** Every dictionary skill (148) over the 3,204 Seek Data Scientist ads 2019-22, counted on the raw text as on the poster; `match.py` read `pct_ads` as `demand_pct` until C2 | Quan 25 Sep (poster), Van Thong 14 Oct (10 new rows) | `python data-eda/src/extract_skills.py --input data/raw/jobs_au_seek_datascientist_2019-2022.csv --text-col description --id-col ad_id --seed data/1_knowledge/skills/skills_seed_v2.csv`; keep the columns `skill, category, n_ads, pct_ads` of `data/runtime/extract_skills/skill_counts.csv` |
 | `skill_counts_2026.csv` | **Superseded by `role_skill_demand.csv`; the app no longer reads it** (C2). Every dictionary skill in 2019-22, Jan 2024 and 2026 with 95% Wilson intervals (see below) | Van Thong | `python data-eda/src/recount_recent.py` |
 | `top_skills.csv` | **Superseded by `role_skill_demand.csv`; only the fallback engine `app/baseline.py` reads it.** The 15 most-asked technical skills of Data Scientist; `match.role_profile` gives the same 15 from the table | Quan, 25 Sep | From `skill_counts_v2.csv`, technical categories only |
 | `role_profiles.csv` | **Superseded by `role_skill_demand.csv`; the app no longer reads it** (C2). Tool profiles of 7 data and IT roles (data_jobs 2023, Apache-2.0), 441 rows; notes in `role_profiles.md` | Van Thong | `python data-eda/src/build_role_profiles.py` |
@@ -31,8 +31,8 @@ from the repo root.
 on the poster), `pct_2024_01` (122 Australian LinkedIn data roles), `n_2026` / `pct_2026` (the 9
 data-scientist ads of the 2026 sample) and `n_2026_all` / `pct_2026_all` (all 22 sample roles), each
 with a 95% Wilson interval. Until C2 `match.py` read `pct_2026` as `demand_pct_2026` (trend column) and
-`pct_2026_all_low` as the 2026 floor of the gap weight in `recommend._weight`; since C2 the trend column is
-the role's JobsPipe share and the floor is the table's `recent_2024_26` block of 2026, the same numbers. **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
+`pct_2026_all_low` as the 2026 floor of the gap weight in `recommend._weight`; since C2 the bars are the 2026
+JobsPipe shares themselves and the floor is gone. **Read with care:** 22 ads from 12 employers, 9 of them data scientists from
 5, so one ad moves a data-scientist share by 11 points. Show 2026 as "n of 9", not as a bare percentage.
 
 ## Adzuna search counts (plan D12): `adzuna_counts_2026-10.csv`
@@ -57,14 +57,15 @@ with a share (`full_text`, `tool_list`, `search_count`); `taxonomy` rows and the
 role's demand.
 
 - `demand_pct` = the role's block of the first source in `jobspipe_2026` > `adzuna_2026` > `ats_2026` >
-  `data_jobs_2023` > `seek_2019_22` (today JobsPipe for every role) ...
-- ... except Data Scientist and a pasted ad: `seek_2019_22`, with the poster's 148 shares from
-  `skill_counts_v2.csv` in place of the table's recount (Python 82.8, not 84.5), so the poster gap chart and
-  the sample ad's path (36106 -> 36121 -> 32130, 87.9% of demand) reproduce.
-- `demand_pct_2026` = the role's first 2026 block, the same order (JobsPipe; equal to `demand_pct` for every
-  role but Data Scientist).
-- The 2026 floor of `recommend._weight` (skills new since 2022) = the `recent_2024_26` block of 2026, 22 data
-  roles, as before C2.
+  `data_jobs_2023` > `seek_2019_22`: today JobsPipe 2026 for all 11 roles, Data Scientist included; a pasted
+  ad is weighed by the Data Scientist ads. Quan, 16 Oct: the 2019-22 Seek ads predate ChatGPT (LLMs 0%,
+  AI 22%, Hadoop 17%; in 2026 34%, 73%, 1%), so they are no longer the main number.
+- `demand_pct_2019_22` = the trend column: the Seek Data Scientist block (the table's count, same matcher as
+  the 2026 ads), for Data Scientist and a pasted ad only.
+- `demand_pct_2026` = the role's first 2026 block, the same order (equal to `demand_pct` today).
+- `recommend._weight` = `demand_pct + 1`; the 2026 floor for skills new since 2022 is gone, the 2026 shares
+  name them. The sample ad's path went from 36106 -> 36121 -> 32130 (87.9% of demand, 2019-22 weights) to
+  36121 -> 36106 -> 32130 (84.9%; LLMs now weigh 34% and no subject teaches them).
 - A role's 15 skills leave out soft skills and certifications. Every gap row carries `demand_source`,
   `demand_period`, `total_ads` and `text_type`; the caption reads "70 JobsPipe Data Engineer ads, Sep-Oct
   2026, full text."

@@ -49,24 +49,23 @@ def test_role_source_takes_n_from_the_demand_table():
     totals = {r["role"]: int(r["total_ads"]) for r in rows(paths.ROLE_SKILL_DEMAND) if r["source"] == "jobspipe_2026"}
     for role in all_roles():
         text = backend.role_source(role)
-        if role == "Data Scientist":
-            assert text == "3,204 Seek Data Scientist ads, 2019-22, full text."
-        else:
-            assert text == f"{totals[role]:,} JobsPipe {role} ads, Sep-Oct 2026, full text."
-        assert backend.trend_source(role) == f"{totals[role]:,} JobsPipe {role} ads, Sep-Oct 2026, full text."
-    assert backend.trend_source(None) == backend.trend_source("Data Scientist")    # an ad: the Data Scientist ads
+        assert text == f"{totals[role]:,} JobsPipe {role} ads, Sep-Oct 2026, full text."
+        assert backend.source_2019_22(role) == (                     # the trend column: Data Scientist only
+            "3,204 Seek Data Scientist ads, 2019-22, full text." if role == "Data Scientist" else None)
+    assert backend.source_2019_22(None) == backend.source_2019_22("Data Scientist")   # an ad: the Data Scientist ads
     # Home.py passes a gap row's demand_source and demand_period
-    assert backend.role_source("Data Scientist", "jobspipe_2026", "2026-10") == backend.trend_source("Data Scientist")
+    assert backend.role_source("Data Scientist", "seek_2019_22", "2019-22") == backend.source_2019_22("Data Scientist")
 
 
 def test_a_role_without_a_counted_block_falls_back_to_core_skills(demand_sample):
     # The sample table gives QA/Test Engineer taxonomy rows only.
     assert not backend.has_ad_counts("QA/Test Engineer") and backend.has_ad_counts("Data Engineer")
     assert backend.role_source("QA/Test Engineer").startswith("No Australian ad counts yet: core skills of the ESCO occupation")
-    assert backend.trend_source("QA/Test Engineer") is None
+    assert backend.source_2019_22("QA/Test Engineer") is None
     skills = backend.role_gaps("QA/Test Engineer", [])
     assert skills == backend.core_skills("QA/Test Engineer", [])
-    assert all(s["demand_pct"] is None and s["total_ads"] is None and s["text_type"] is None for s in skills)
+    assert all(s["demand_pct"] is None and s["demand_pct_2019_22"] is None and s["total_ads"] is None
+               and s["text_type"] is None for s in skills)
 
 
 # ---------------------------------------------------------------- C5: core skills
@@ -220,23 +219,25 @@ def test_analyse_job_mode_still_works(monkeypatch):
     assert engine.startswith("pipeline")
     assert result["role"] is None and result["skills"]
     assert "outside_recommendations" in result
-    # C2 must not move the sample ad's path: Seek shares as on the poster, the same 2026 floor
+    # Weighed by the 71 JobsPipe Data Scientist ads since C2: the same three subjects as with the 2019-22
+    # Seek shares (36106, 36121, 32130 at 87.9%), now 84.9% because LLMs weigh 34%, not 0% + a floor
     path = result["learning_path"]
-    assert (path["subjects"], path["demand_covered_pct"]) == (["36106", "36121", "32130"], 87.9)
-    assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("seek_2019_22", 3204)}
+    assert (path["subjects"], path["demand_covered_pct"]) == (["36121", "36106", "32130"], 84.9)
+    assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", 71)}
 
 
-def test_llm_only_gaps_keep_the_2026_trend(monkeypatch):
-    """A skill only the GPT tier finds in an ad is weighted like the dictionary's rows: Seek share, 2026 trend."""
+def test_llm_only_gaps_are_weighed_like_the_ad_s_other_skills(monkeypatch):
+    """A skill only the GPT tier finds in an ad is weighed like the dictionary's rows: the 2026 Data Scientist
+    share, with the 2019-22 trend."""
     from skillabus import llm_extract
-    from skillabus.match import _demand_2026
+    from skillabus.match import _demand, _demand_2026
 
     found = [{"text": "LLMs", "kind": "hard", "method": "llm", "sentence": "Experience with LLMs."}]
     monkeypatch.setattr(llm_extract, "extract_llm", lambda text, **kw: found if "LLMs" in text else [])
     empty = {"skills": [], "recommendations": [], "learning_path": {}, "outside_recommendations": []}
     out = backend.augment_with_llm(empty, "I write Python.", "Experience with LLMs.", [], rank=lambda gaps: {})
     row = next(s for s in out["skills"] if s["found_by"] == "llm")
+    assert row["demand_pct"] == _demand()[row["skill_label"]] > 0 and row["demand_pct_2019_22"] == 0.0
     assert row["demand_pct_2026"] == _demand_2026().get(row["skill_label"])
-    assert row["demand_pct_2026"] is not None
     assert (row["demand_source"], row["demand_period"], row["total_ads"], row["text_type"]) == (
-        "seek_2019_22", "2019-22", 3204, "full_text")
+        "jobspipe_2026", "2026-10", 71, "full_text")

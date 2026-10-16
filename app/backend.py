@@ -103,11 +103,11 @@ def role_source(role: str, source: str | None = None, period: str | None = None)
     return demand_caption(block) + "."
 
 
-def trend_source(role: str | None = None) -> str | None:
-    """Where `demand_pct_2026` comes from (the 2026 share a bar shows when the older ads never named the
-    skill): the role's 2026 ads; for a pasted ad (role None), the Data Scientist ones. None: no 2026 ads."""
-    from skillabus.match import demand_caption, trend_block
-    block = trend_block(role or DEFAULT_ROLE)
+def source_2019_22(role: str | None = None) -> str | None:
+    """Where the trend column `demand_pct_2019_22` comes from: "3,204 Seek Data Scientist ads, 2019-22,
+    full text." for Data Scientist and a pasted ad (role None); None for a role with no 2019-22 ads."""
+    from skillabus.match import block_2019_22, demand_caption
+    block = block_2019_22(role or DEFAULT_ROLE)
     return demand_caption(block) + "." if block else None
 
 
@@ -159,7 +159,7 @@ def core_skills(role: str, resume_skills: list[dict], top_n: int = MAX_CORE_SKIL
         out.append({
             "skill_id": c["skill_id"], "skill_label": c["label"],
             "status": "have" if sentence else "missing",
-            "demand_pct": None, "demand_pct_2026": None,      # no Australian ad counts for this role
+            "demand_pct": None, "demand_pct_2026": None, "demand_pct_2019_22": None,   # no ad counts for this role
             "demand_source": None, "demand_period": None, "total_ads": None, "text_type": None,
             "emerging": False, "ad_evidence": c["why"], "resume_evidence": sentence,
             "core_source": c["source"],
@@ -227,11 +227,11 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
     rank(gaps) -> {"recommendations", "learning_path", "outside_recommendations"}; the baseline ranker when not given.
     """
     from skillabus.llm_extract import extract_llm
-    from skillabus.match import _demand_2026, block_meta
+    from skillabus.match import _demand, _demand_2019_22, _demand_2026, block_meta
     from skillabus.normalise import normalise
 
-    trend = _demand_2026()   # ad mode is weighted by the Seek shares, so the 2026 trend applies as in match()
-    meta = block_meta()      # the Seek block those shares come from
+    # weighed like match() weighs a pasted ad: the Data Scientist ads of its demand block
+    demand, demand_2026, demand_2019_22, meta = _demand(), _demand_2026(), _demand_2019_22(), block_meta()
     ad = normalise(extract_llm(ad_text))
     cv = normalise(extract_llm(resume_text)) if resume_text else []
     cv_ids = {m["skill_id"]: m for m in cv} | {m["canonical"]: m for m in cv if m["canonical"]}
@@ -250,8 +250,9 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
         extra.append({
             "skill_id": m["skill_id"], "skill_label": label,
             "status": "have" if have else "missing",
-            "demand_pct": round(res.demand.get(m["canonical"], 0.0), 1) if m["canonical"] else 0.0,
-            "demand_pct_2026": trend.get(m["canonical"]) if m["canonical"] else None,
+            "demand_pct": round(demand.get(m["canonical"], 0.0), 1) if m["canonical"] else 0.0,
+            "demand_pct_2026": demand_2026.get(m["canonical"]) if m["canonical"] else None,
+            "demand_pct_2019_22": demand_2019_22.get(m["canonical"]) if m["canonical"] else None,
             **meta,
             "emerging": m["vocab"] in ("emerging", "lightcast"),
             "ad_evidence": m["sentence"],
