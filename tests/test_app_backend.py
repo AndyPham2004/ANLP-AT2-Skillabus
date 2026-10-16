@@ -171,6 +171,16 @@ def test_analyse_role_mode_runs_the_pipeline_with_the_second_tier():
     assert by["Python"]["status"] == "have" and by["Splunk"]["status"] == "missing"
 
 
+def test_recommendations_list_each_subject_once():
+    # #125: the strongest subject for a gap was appended again when it was already shown (in the path)
+    # without covering that gap: 43008 twice for DevOps/SRE with TF-IDF, 48730 twice for
+    # Cybersecurity Analyst with embeddings (the method depends on what earlier tests loaded).
+    for role in ("DevOps/SRE", "Cybersecurity Analyst"):
+        result, _ = backend.analyse(RESUME, None, [], role=role)
+        codes = [r["subject_code"] for r in result["recommendations"]]
+        assert len(codes) == len(set(codes)), (role, codes)
+
+
 def test_analyse_job_mode_still_works(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)     # no GPT tier: the app must run without a key
     ad = paths.SAMPLE_AD.read_text(encoding="utf-8")
