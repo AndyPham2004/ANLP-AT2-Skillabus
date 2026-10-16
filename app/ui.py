@@ -26,17 +26,28 @@ CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
 html, body, .stMarkdown, .stMarkdown p, .stMarkdown li, .stCaption, input, textarea, button, label,
 [data-testid="stWidgetLabel"] p { font-family: 'Public Sans', system-ui, sans-serif; }
-.block-container { max-width: 1180px; padding: 2.6rem 3.4rem 4rem; }
+/* The design is drawn for 1280 x 820. Type and padding scale down with the viewport (clamp), so a
+   laptop at 275% display scaling (1152 x 720 CSS px) still shows a whole screen at a time. */
+header[data-testid="stHeader"] { background: transparent !important; height: 2.4rem !important; }
+.block-container { max-width: 1180px; padding: 1.6rem 3rem 3rem; }
+@media (max-width: 1200px) { .block-container { padding: 1.2rem 1.6rem 2.4rem; } }
 section[data-testid="stSidebar"] { border-right: 1px solid rgba(255,255,255,.07); }
-section[data-testid="stSidebar"] .block-container { padding: 1.4rem 1.1rem 1.4rem; }
+section[data-testid="stSidebar"] .block-container { padding: 1rem 1rem 1rem; }
 h1, h2, h3, .k-h1, .k-h2, .k-serif { font-family: 'Literata', Georgia, serif; }
-.k-mark { font-family: 'Literata', Georgia, serif; font-size: 24px; font-weight: 500; margin: 0 0 14px; }
-.k-eyebrow { font-size: 14px; color: #9a9a94; margin: 0 0 6px; }
+.k-mark { font-family: 'Literata', Georgia, serif; font-size: 22px; font-weight: 500; margin: 0 0 10px; }
+.k-eyebrow { font-size: 13.5px; color: #9a9a94; margin: 0 0 6px; }
 .k-h1 { font-family: 'Literata', Georgia, serif; font-weight: 400; letter-spacing: -.015em; line-height: 1.15; text-wrap: pretty; color: #e8e6e1; }
-.k-h1.xl { font-size: 46px; max-width: 920px; }
-.k-h1.lg { font-size: 38px; line-height: 1.2; }
-.k-h1.md { font-size: 34px; letter-spacing: -.01em; }
-.k-h2 { font-family: 'Literata', Georgia, serif; font-weight: 500; font-size: 21px; color: #e8e6e1; }
+.k-h1.xl { font-size: clamp(26px, 3.3vw, 46px); max-width: 920px; }
+.k-h1.lg { font-size: clamp(23px, 2.9vw, 38px); line-height: 1.2; }
+.k-h1.md { font-size: clamp(21px, 2.5vw, 34px); letter-spacing: -.01em; }
+.k-h2 { font-family: 'Literata', Georgia, serif; font-weight: 500; font-size: clamp(17px, 1.6vw, 21px); color: #e8e6e1; }
+.k-card-title { font-family: 'Literata', Georgia, serif; font-size: clamp(18px, 1.8vw, 24px); font-weight: 500; }
+.k-accent { width: 34px; height: 3px; border-radius: 2px; margin: 2px 0 12px; }
+.st-key-role_elective button p { color: #4fd1b8 !important; }
+.st-key-role_job button p { color: #8fbcff !important; }
+.st-key-role_switch button p { color: #f2b74f !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] { transition: border-color .15s; }
+div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(255,255,255,.3); }
 /* Streamlit centres a button's label through two inner flex wrappers; the sidebar steps read left to right. */
 section[data-testid="stSidebar"] button[data-testid^="stBaseButton"],
 section[data-testid="stSidebar"] button[data-testid^="stBaseButton"] div,

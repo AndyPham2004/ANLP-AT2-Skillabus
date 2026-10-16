@@ -13,6 +13,7 @@ from __future__ import annotations
 import csv
 import io
 import os
+import threading
 from datetime import datetime
 from pathlib import Path
 
@@ -44,6 +45,7 @@ USER_TYPES = {   # key -> card label, the question it answers, the call to actio
     "job": ("Job seeker", "What does my resume lack for this ad?", "Add an ad and a resume →"),
     "switch": ("Career switcher", "How far am I from a new field?", "Pick a role, add a resume →"),
 }
+CARD_ACCENT = {"elective": ui.HAVE, "job": ui.LINK, "switch": ui.PARTIAL}   # one colour per card and its CTA
 INPUT_TITLES = {"job": "The ad and your resume", "elective": "The role and your subjects",
                 "switch": "The role and your resume"}
 STAGES = {"About to enrol": "C04372", "Studying MDSI": "C04372", "Already working": None}   # -> home course
@@ -178,12 +180,42 @@ def start_over() -> None:
               show_ad=False, show_details=False)
 
 
+@st.cache_resource(show_spinner=False)
+def warm_up() -> threading.Lock:
+    """Load the pipeline (embedding model, subject index: about a minute) once per server, in the
+    background from the moment the app starts, so the first "Find my gaps" does not pay for it.
+    Analyses take the same lock, so one started early simply waits for the load to finish."""
+    lock = threading.Lock()
+
+    def load() -> None:
+        with lock:
+            try:
+                backend.analyse(SAMPLE_RESUME, SAMPLE_AD, [], use_llm=False)
+            except Exception:
+                pass
+    threading.Thread(target=load, name="skillabus-warm-up", daemon=True).start()
+    return lock
+
+
+WARM = warm_up()
+
+
+@st.cache_data(show_spinner=False, max_entries=64, ttl=3600)
+def cached_analyse(resume_text: str, ad_text: str | None, taken: tuple[str, ...], role: str,
+                   home_course: str | None, use_llm: bool) -> tuple[dict, str]:
+    """backend.analyse() once per distinct input, so going back and forth or undoing a what-if is instant.
+    Kept in the server's memory for an hour at most; nothing is written to disk."""
+    with WARM:
+        return backend.analyse(resume_text, ad_text, list(taken), role=role, home_course=home_course,
+                               use_llm=use_llm)
+
+
 def run_analysis() -> None:
     """Run the pipeline on what the Inputs page kept; subjects ticked as taken (what-if) count as taken."""
-    taken = sorted(set(ss.taken_keep) | set(ss.whatif))
+    taken = tuple(sorted(set(ss.taken_keep) | set(ss.whatif)))
     ad = ss.ad_keep if ss.user_type == "job" else None
-    result, engine = backend.analyse(ss.resume_text, ad, taken, role=ss.role_keep,
-                                     home_course=STAGES.get(ss.stage_keep), use_llm=ss.gpt_keep)
+    result, engine = cached_analyse(ss.resume_text, ad, taken, ss.role_keep, STAGES.get(ss.stage_keep),
+                                    bool(ss.gpt_keep))
     ss.update(result=result, engine=engine, ran=True)
 
 
@@ -294,6 +326,17 @@ def chat_panel() -> None:
         close.button("×", key="chat_close", type="tertiary", on_click=toggle, args=("chat_open",))
         if not chat.has_llm():
             st.caption("No OpenAI key set: showing the matching Handbook passages instead of a written answer.")
+        chat_thread()
+
+
+@st.fragment
+def chat_thread() -> None:
+    """Messages, suggestions and the input. A fragment: a question redraws the chat, not the whole page."""
+    thread = st.container()                      # filled after the input is read, so a new answer shows at once
+    question = st.chat_input("Ask a question", key="chat_in")
+    if question:
+        ask(question)
+    with thread:
         if not ss.messages:
             st.markdown("<div class='k-mute k-body'>Ask anything about UTS subjects or skills. "
                         "Answers quote the Handbook.</div>", unsafe_allow_html=True)
@@ -303,22 +346,20 @@ def chat_panel() -> None:
         if not ss.messages:
             for i, text in enumerate(CHAT_SUGGESTIONS):
                 st.button(text, key=f"chat_sug_{i}", width="stretch", on_click=ask, args=(text,))
-        question = st.chat_input("Ask a question", key="chat_in")
-        if question:
-            ask(question)
-            st.rerun()
 
 
 # ---------------------------------------------------------------- step 1: who you are
 
 def page_start() -> None:
-    st.markdown(ui.h1("Find the skills a job wants that you don't have yet — and the UTS subject that "
-                      "teaches each one.", "xl"), unsafe_allow_html=True)
+    st.markdown(ui.h1(f"Find the skills a job wants that <span style='color:{ui.MISSING}'>you don't have yet</span>"
+                      f" — and the <span style='color:{ui.HAVE}'>UTS subject</span> that teaches each one.", "xl"),
+                unsafe_allow_html=True)
     st.markdown("<div class='k-eyebrow' style='margin-top:36px'>I am a…</div>", unsafe_allow_html=True)
     for col, (key, (label, question, cta)) in zip(st.columns(3, gap="medium"), USER_TYPES.items()):
         with col, st.container(border=True):
-            st.markdown(f"<div class='k-serif' style='font-size:24px;font-weight:500'>{label}</div>"
-                        f"<div class='k-soft k-body' style='min-height:3em;margin:8px 0 12px'>{question}</div>",
+            st.markdown(f"<div class='k-accent' style='background:{CARD_ACCENT[key]}'></div>"
+                        f"<div class='k-card-title'>{label}</div>"
+                        f"<div class='k-soft k-body' style='min-height:3em;margin:6px 0 10px'>{question}</div>",
                         unsafe_allow_html=True)
             st.button(cta, key=f"role_{key}", type="tertiary", on_click=pick_type, args=(key,))
 
@@ -429,7 +470,9 @@ def page_inputs() -> None:
 
     run_col, hint_col = st.columns([1, 3], vertical_alignment="center")
     if run_col.button("Find my gaps", type="primary", key="show_gaps", disabled=not ready, width="stretch"):
-        with st.spinner("One moment: reading your inputs and matching 360 UTS subjects…"):
+        waiting = ("Loading the language model for the first time, up to a minute…" if WARM.locked()
+                   else "One moment: reading your inputs and matching 360 UTS subjects…")
+        with st.spinner(waiting):
             run_analysis()
         go("results", show_ad=False, show_details=False)
         st.rerun()
@@ -737,7 +780,9 @@ def uts_block(label: str, res: dict) -> None:
         st.caption(f"{d['subject_code']} {d['subject_name']} also teaches it, but {reason}.")
 
 
+@st.fragment
 def self_study_block(label: str, role: str | None) -> None:
+    """A fragment: changing a filter redraws this block only."""
     st.markdown(ui.eyebrow("Self-study <span class='k-dim'>· outside UTS, not for credit</span>"),
                 unsafe_allow_html=True)
     ss.setdefault("level_filter", list(ss.level_keep))

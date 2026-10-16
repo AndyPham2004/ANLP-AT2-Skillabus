@@ -13,6 +13,7 @@ headingFont = "Literata, Georgia, serif"
 codeFont = "DM Mono, monospace"
 baseRadius = "6px"
 buttonRadius = "6px"
+baseFontSize = 15
 
 [theme.sidebar]
 backgroundColor = "#0e1012"
