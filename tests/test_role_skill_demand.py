@@ -11,8 +11,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data-eda" / "src")
 import build_role_profiles as brp  # noqa: E402
 from build_role_skill_demand import (  # noqa: E402
     ATS_PERIOD, COLUMNS, COUNTED, EXTRA_TOKEN_MAP, IT_MIXED_FAMILY, IT_MIXED_ROLE, JOBSPIPE_PERIOD, MIN_ROLE_ADS,
-    MIXED_FAMILY, MIXED_ROLE, SOURCES, TEXT_TYPE, adzuna_rows, ats_rows, committed_inputs, data_jobs_rows, jobspipe_rows,
-    load_data_jobs, recent_rows, seek_rows, taxonomy_rows, to_frame, to_label, tool_lookup,
+    MIXED_FAMILY, MIXED_ROLE, SEEK_2020_21_PERIOD, SOURCES, TEXT_TYPE, adzuna_rows, ats_rows, committed_inputs,
+    data_jobs_rows, jobspipe_rows, load_data_jobs, recent_rows, seek_2020_21_rows, seek_rows, taxonomy_rows, to_frame,
+    to_label, tool_lookup,
 )
 from build_vocabulary import read_table, read_table_text, to_csv_text  # noqa: E402
 from recount_recent import wilson  # noqa: E402
@@ -58,6 +59,7 @@ def test_columns_and_allowed_values():
     assert (TABLE.role_family == TABLE.role.map({**FAMILIES, MIXED_ROLE: MIXED_FAMILY, IT_MIXED_ROLE: IT_MIXED_FAMILY})).all()
     assert set(TABLE.period[TABLE.source == "ats_2026"]) == {ATS_PERIOD}
     assert set(TABLE.period[TABLE.source == "jobspipe_2026"]) == {JOBSPIPE_PERIOD}
+    assert set(TABLE.period[TABLE.source == "seek_2020_21"]) == {SEEK_2020_21_PERIOD}
     assert not TABLE.duplicated(["role", "skill_id", "source", "period"]).any()
     assert set(TABLE.period[TABLE.source == "recent_2024_26"]) == {"2024-01", "2026"}
 
@@ -275,6 +277,17 @@ def test_jobspipe_blocks_cover_every_role_from_the_committed_skills_file():
         jobspipe_rows(VOCAB, pd.DataFrame({"role": ["Data Scientist"], "skills": ["Not a skill"]}), FAMILIES)
 
 
+def test_seek_2020_21_blocks_come_from_the_committed_skills_file():
+    s21 = INPUTS["seek_2020_21"]
+    assert list(s21.columns) == ["ad_id", "role", "title", "company", "state", "post_date", "period_file", "url", "n_chars", "skills"]
+    assert set(s21.role) <= set(FAMILIES) and not s21.duplicated("ad_id").any()
+    own = COUNTS[(COUNTS.source == "seek_2020_21") & ~COUNTS.role.isin([MIXED_ROLE, IT_MIXED_ROLE])]
+    assert (own.total_ads >= MIN_ROLE_ADS).all()
+    blocks = own.groupby("role").total_ads.first().astype(int).to_dict()
+    counts = s21.role.value_counts()
+    assert blocks == {r: int(n) for r, n in counts.items() if n >= MIN_ROLE_ADS}
+
+
 def test_committed_seek_recent_adzuna_and_taxonomy_rows_are_what_the_builder_writes():
     v, f = VOCAB, FAMILIES
     assert committed("seek_2019_22").equals(rebuilt(seek_rows(v, INPUTS["seek"], f["Data Scientist"])))
@@ -284,6 +297,7 @@ def test_committed_seek_recent_adzuna_and_taxonomy_rows_are_what_the_builder_wri
     assert committed("adzuna_2026").equals(rebuilt(adzuna_rows(v, INPUTS["adzuna"], f)))
     assert committed("ats_2026").equals(rebuilt(ats_rows(v, INPUTS["ats"], f)[0]))
     assert committed("jobspipe_2026").equals(rebuilt(jobspipe_rows(v, INPUTS["jobspipe"], f)[0]))
+    assert committed("seek_2020_21").equals(rebuilt(seek_2020_21_rows(v, INPUTS["seek_2020_21"], f)[0]))
 
 
 def test_committed_data_jobs_rows_are_what_the_builder_writes():

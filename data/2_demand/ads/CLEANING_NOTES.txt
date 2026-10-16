@@ -190,3 +190,20 @@ esco_label_lookup.csv                           100,886 rows
  Result: Business Analyst 79, Data Analyst 78, QA/Test Engineer 78, Network/Systems Administrator 77, Software Engineer 73, Data Scientist 71, Data Engineer 70, Machine Learning Engineer 69, Cybersecurity Analyst 68, DevOps/SRE 67, Cloud Engineer 63. Sources: LinkedIn 576, Indeed
  183, other boards the rest; 209 ads from agencies.
  Counted in role_skill_demand.csv as source jobspipe_2026, period 2026-10.
+
+--------------------------------------------------------------------------------
+ seek_2020_21_skills.csv  --  IT ads of Seek Australia 2020-21, skills only       Claude for Quan, 17 Oct
+--------------------------------------------------------------------------------
+ Source: PromptCloud's Kaggle samples of Seek Australia, every profession, CC0:
+ jobs_au_seek_allcategories_2020.csv (Jan 2020, 5,847), _2020Q4.csv (Oct-Dec 2020,
+ 29,995) and _2021Q1.csv (Jan-Mar 2021, 29,998), converted from .ldjson with
+ build_seek_it_2020_21.py --convert; all three stay in data/raw/.
+ Cleaning: ads under 200 characters dropped; one row per uniq_id, then per company
+ + title + first 300 characters (re-crawls); contacts masked; title -> role with
+ classify_ats_roles.role_of plus two guards for an all-professions board (other
+ engineering and analyst fields out, the catch-all "engineer" rule needs an IT word,
+ help-desk titles out). Result: 2366 IT ads: Software Engineer 944, Business Analyst 389, Network/Systems Administrator 269, Cybersecurity Analyst 179, QA/Test Engineer 174, Data Analyst 145, DevOps/SRE 130, Data Engineer 59, Cloud Engineer 43, Data Scientist 30, Machine Learning Engineer 4.
+ Committed per ad: id, role, title, company, state, post_date, source file, url,
+ n_chars, and the vocabulary skills the text names (tier-1 matcher). No text.
+ Counted in role_skill_demand.csv as source seek_2020_21, period 2020-21, every
+ role with 30+ ads on its own (10 roles); the rest into the mixed block.
