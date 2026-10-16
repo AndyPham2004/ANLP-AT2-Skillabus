@@ -1,6 +1,6 @@
 """Baseline analysis the app falls back on until the real pipeline is wired in.
 
-Dictionary match for skills (skills_seed_v2.csv), keyword match over subject text for
+Dictionary match for skills (the vocabulary's detection rows, as the pipeline's extract()), keyword match over subject text for
 evidence, greedy demand-weighted learning path. Output follows docs/data_contract.md
 section 2, so swapping in src/skillabus changes nothing in the app.
 Everything it reads is committed, so it also runs on Streamlit Cloud.
@@ -21,11 +21,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 from skillabus import paths  # noqa: E402
+from skillabus.extract import load_dictionary  # noqa: E402
 
-SEED_CSV = paths.SKILLS_SEED
 COUNTS_CSV = paths.SKILL_COUNTS
 TOP_CSV = paths.TOP_SKILLS
-ESCO_CSV = paths.SKILL_TO_ESCO
 PROFILES_CSV = paths.SUBJECT_PROFILES
 
 MDSI = "C04372"
@@ -78,7 +77,7 @@ class Resources:
     regex: dict
     category: dict
     demand: dict
-    esco: dict
+    ids: dict            # canonical -> the vocabulary's skill_id (esco:<uri> or skillabus:<slug>)
     layers: pd.DataFrame
     role_skills: tuple
 
@@ -91,21 +90,17 @@ def _read_noted(path, **kwargs) -> pd.DataFrame:
 
 @lru_cache(maxsize=1)
 def resources() -> Resources:
-    seed = _read_noted(SEED_CSV, dtype=str)
-    regex, category = {}, {}
-    for _, r in seed.iterrows():
-        aliases = [r.canonical] + [a for a in str(r.aliases).split("|") if a and a != "nan"]
-        regex[r.canonical] = alias_regex(aliases, r.strict == "1")
-        category[r.canonical] = r.category
-    counts = _read_noted(COUNTS_CSV)
+    regex, category, ids = {}, {}, {}
+    for s in load_dictionary():
+        regex[s["canonical"]] = alias_regex(list(s["aliases"]), s["strict"])   # aliases only, as extract()
+        category[s["canonical"]] = s["category"]
+        if s.get("skill_id"):
+            ids[s["canonical"]] = s["skill_id"]
+    counts = _read_noted(COUNTS_CSV)          # Seek shares exist for the 148 seed skills; others are 0
     demand = dict(zip(counts.skill, counts.pct_ads.astype(float)))
-    esco = {}
-    if ESCO_CSV.exists():
-        e = pd.read_csv(ESCO_CSV, dtype=str).dropna(subset=["esco_uri"])
-        esco = {r.canonical: f"esco:{r.esco_uri}" for _, r in e.iterrows()}
     layers = pd.read_csv(PROFILES_CSV, dtype=str).fillna("")
     role = tuple(_read_noted(TOP_CSV).skill)
-    return Resources(regex, category, demand, esco, layers, role)
+    return Resources(regex, category, demand, ids, layers, role)
 
 
 def skill_regex(skill: str) -> re.Pattern:
@@ -218,7 +213,7 @@ def analyse(resume_text: str, ad_text: str | None = None, taken: list[str] | Non
                 status, cv_ev = "have", f"From {done[0]['subject_code']} {done[0]['subject_name']} (taken)"
         pct = round(res.demand.get(k, 0.0), 1)
         out.append({
-            "skill_id": res.esco.get(k, f"seed:{k.lower().replace(' ', '-')}"),
+            "skill_id": res.ids.get(k, f"seed:{k.lower().replace(' ', '-')}"),
             "skill_label": k,
             "status": status,
             "demand_pct": pct,

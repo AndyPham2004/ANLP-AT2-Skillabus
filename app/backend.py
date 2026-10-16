@@ -321,5 +321,7 @@ def subjects() -> list[tuple[str, str]]:
 
 
 def dictionary_size() -> int:
-    """Number of canonical skills in skills_seed_v2.csv, for the footer (148 on 14 Oct 2026; never hard-code it)."""
-    return len(baseline.resources().category)
+    """Number of skills the extractor looks for: the vocabulary's detection rows (281 on 16 Oct 2026;
+    never hard-code it), for the footer."""
+    from skillabus.extract import load_dictionary
+    return len(load_dictionary())
