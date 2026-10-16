@@ -394,6 +394,16 @@ def course_subjects(course: str) -> list[str]:
     return sorted(lay[lay.course.astype(str).str.contains(course, regex=False)].subject_code.astype(str).unique())
 
 
+def subject_courses() -> dict[str, list[str]]:
+    """subject code -> the course codes it belongs to (the profiles' pipe-joined `course` column)."""
+    lay = baseline.resources().layers
+    if "course" not in lay.columns:
+        return {}
+    pairs = lay[["subject_code", "course"]].drop_duplicates("subject_code")
+    return {str(r.subject_code): [c.strip() for c in str(r.course).split("|") if c.strip()]
+            for r in pairs.itertuples(index=False)}
+
+
 def mdsi_subjects() -> list[tuple[str, str]]:
     """(code, name) of the MDSI (C04372) subjects in the profiles: the "subjects taken" picker shows these first."""
     lay = baseline.resources().layers

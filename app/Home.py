@@ -65,10 +65,33 @@ CHAT_SUGGESTIONS = ("Which subject teaches LLMs?", "What does 36118 cover?",
                     "What should I build for data engineering?")
 STEP_OF = {"start": 1, "inputs": 2, "jobs": 2, "results": 3, "evidence": 3}
 SUBJECT_NAME = dict(backend.subjects())                      # code -> name, all 360 subjects
-_name_count: dict[str, int] = {}
-for _n in SUBJECT_NAME.values():
-    _name_count[_n] = _name_count.get(_n, 0) + 1
-SHARED_NAMES = {n for n, k in _name_count.items() if k > 1}    # "Machine Learning" exists under several codes
+
+
+def _subject_labels() -> dict[str, str]:
+    """code -> label for the subject picker. A name UTS runs under several codes (the same subject in a
+    bachelor, a master and an online master) gets the course that distinguishes it, never the code."""
+    courses = backend.subject_courses()
+    by_name: dict[str, list[str]] = {}
+    for code, name in SUBJECT_NAME.items():
+        by_name.setdefault(name, []).append(code)
+    out = {}
+    for name, codes in by_name.items():
+        if len(codes) == 1:
+            out[codes[0]] = name
+            continue
+        qual = {}
+        for code in codes:
+            first = next((COURSE_NAME[c] for c in courses.get(code, []) if c in COURSE_NAME), None)
+            qual[code] = re.sub(r" \(C\d{5}\)$", "", first) if first else "another course"
+        for code in codes:
+            q = qual[code]
+            if list(qual.values()).count(q) > 1:            # same first course too: say which code, last resort
+                q = f"{q}, {code}"
+            out[code] = f"{name} ({q})"
+    return out
+
+
+SUBJECT_LABEL = _subject_labels()
 
 st.set_page_config(page_title="Skillabus", page_icon="🎓", layout="wide", initial_sidebar_state="collapsed")
 st.markdown(ui.CSS, unsafe_allow_html=True)
@@ -157,9 +180,8 @@ def subject_name(code: str) -> str:
 
 
 def subject_label(code: str) -> str:
-    """Name, plus the code only when another subject has the same name."""
-    name = subject_name(code)
-    return f"{name} ({code})" if name in SHARED_NAMES else name
+    """Name, plus the course when another subject has the same name."""
+    return SUBJECT_LABEL.get(code, subject_name(code))
 
 
 def names(codes) -> str:
