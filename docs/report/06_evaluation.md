@@ -23,19 +23,19 @@ The test sets were labelled following the rules in `data/4_evaluation/labels/REA
 
 ## 6.2 Extraction
 
-On the 20 ads, the dictionary tier finds 154 of the 217 labelled skills and adds 24 that were not labelled. The extraction is scored after `normalise()`, as the app runs it; for tiers 1 and 2 this changes nothing, but GPT-4o-mini returns raw phrases that only `normalise()` maps to dictionary names.
+On the 20 ads, the dictionary tier finds 154 of the 217 labelled skills and adds 29 that were not labelled (24 on the labelled dictionary skills, 5 more from the larger skill vocabulary the pipeline now reads, see below). The extraction is scored after `normalise()`, as the app runs it; for tiers 1 and 2 this changes nothing, but GPT-4o-mini returns raw phrases that only `normalise()` maps to dictionary names.
 
 | Tier | Precision | Recall | F1 | TP / FP / FN |
 |---|---|---|---|---|
-| Dictionary | 0.865 | 0.710 | 0.780 | 154 / 24 / 63 |
-| spaCy, all skills | 0.657 | 0.742 | 0.697 | 161 / 84 / 56 |
+| Dictionary, all skills | 0.842 | 0.710 | 0.770 | 154 / 29 / 63 |
+| Dictionary, dictionary skills only | 0.865 | 0.710 | 0.780 | 154 / 24 / 63 |
+| spaCy, all skills | 0.649 | 0.742 | 0.692 | 161 / 87 / 56 |
 | spaCy, dictionary skills only | 0.866 | 0.742 | 0.799 | 161 / 25 / 56 |
 | GPT-4o-mini, all skills | 0.502 | 0.700 | 0.585 | 152 / 151 / 65 |
 | GPT-4o-mini, dictionary skills only | 0.910 | 0.700 | 0.792 | 152 / 15 / 65 |
 
-All labelled skills come from the dictionary, so for the dictionary tier scoring on dictionary skills alone gives the same
-figures. For spaCy the dictionary-only row is the fair one: it finds 7 more labelled skills (plural forms) for one more false
-positive. The 59 extra false positives in its all-skills row are off-dictionary candidates ("customer segmentation", tool
+All labelled skills come from the 148-skill dictionary the labels were made against. The pipeline now reads a larger vocabulary (#109), and the five extra false positives of the dictionary tier are skills from it that the labels do not list (Teradata, Salesforce, tidyverse, test automation and process mapping), so the "dictionary skills only" row is the one that compares with the labels. For spaCy the dictionary-only row is the fair one: it finds 7 more labelled skills (plural forms) for one more false
+positive. The 62 extra false positives in its all-skills row are off-dictionary candidates ("customer segmentation", tool
 names); the labels hold only dictionary skills, so every candidate counts as wrong, right or not. GPT-4o-mini shows the same pattern: 136 of its 151 false positives are skills outside the dictionary, which is what the tier is for, and on dictionary skills it has the best precision of the three tiers (0.910) with recall of 0.700, about the same as the dictionary tier's 0.710 and below spaCy's 0.742. Its F1 on dictionary skills (0.792) is close to spaCy's (0.799).
 
 **Where it fails.** Of the 63 misses, 25 are soft skills (communication, teamwork, stakeholder management), 13 are
