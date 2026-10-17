@@ -1,6 +1,8 @@
 """role_outlook.csv (plan D13, #118): the official Australian signal per role, from Jobs and Skills Australia."""
 
 import csv
+import re
+from datetime import date
 
 from skillabus import paths
 
@@ -27,16 +29,20 @@ def test_columns_and_one_row_per_role():
     assert sorted(by_role["Network/Systems Administrator"]) == ["262113", "263112"]   # two ANZSCO codes
 
 
-def test_values_are_what_the_sources_give():
-    for r in rows():
+def test_values_are_well_formed():
+    """Format only: the numbers are copied by hand from the JSA files, so a refresh may change the month and date."""
+    table = rows()
+    for r in table:
         assert r["anzsco_code"].isdigit() and len(r["anzsco_code"]) == 6
         assert r["shortage_2025"] in RATINGS
         for col in ("vacancies_latest", "vacancies_12m_ago"):
             assert r[col] == "" or float(r[col]) >= 0
-        assert r["vacancies_latest_month"] == "2026-08"
+        assert re.fullmatch(r"20\d\d-(0[1-9]|1[0-2])", r["vacancies_latest_month"]), r["vacancies_latest_month"]
         assert r["source_osl_url"].startswith("https://www.jobsandskills.gov.au/")
         assert r["source_ivi_url"].startswith("https://www.jobsandskills.gov.au/")
-        assert r["date_checked"] == "2026-10-16" and r["note"]       # every row says what its numbers are
+        date.fromisoformat(r["date_checked"])                         # raises on anything but YYYY-MM-DD
+        assert r["note"]                                              # every row says what its numbers are
+    assert len({r["vacancies_latest_month"] for r in table}) == 1    # one vacancy release for every role
 
 
 def test_shortage_roles_are_the_ones_the_2025_list_names():
