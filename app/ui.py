@@ -57,7 +57,7 @@ section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid=
 .k-h1 { font-family: 'Literata', Georgia, serif; font-weight: 400; letter-spacing: -.015em; line-height: 1.15; text-wrap: pretty; color: #e8e6e1; }
 .k-h1.xl { font-size: clamp(26px, 3.3vw, 46px); max-width: 920px; }
 .k-h1.lg { font-size: clamp(23px, 2.9vw, 38px); line-height: 1.2; }
-.k-h1.md { font-size: clamp(21px, 2.5vw, 34px); letter-spacing: -.01em; }
+.k-h1.md { font-size: clamp(21px, 2.5vw, 34px); letter-spacing: -.01em; margin-bottom: 8px; }
 .k-h2 { font-family: 'Literata', Georgia, serif; font-weight: 500; font-size: clamp(17px, 1.6vw, 21px); color: #e8e6e1; }
 .k-card-title { font-family: 'Literata', Georgia, serif; font-size: clamp(18px, 1.8vw, 24px); font-weight: 500; }
 .k-accent { width: 34px; height: 3px; border-radius: 2px; margin: 2px 0 12px; }
@@ -67,6 +67,15 @@ section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid=
 /* Streamlit 1.65 scrolls a pills row sideways; the role rows wrap instead, with smaller pills */
 .st-key-goal_col [role="radiogroup"] { flex-wrap: wrap !important; overflow: visible !important; row-gap: 6px; }
 .st-key-goal_col [data-testid="stVerticalBlock"] { gap: .55rem; }
+/* Pick a job ad: one line per ad with hairlines between; the opened ad on a panel under its line */
+.st-key-ad_list [data-testid="stVerticalBlock"] { gap: 0; }
+.st-key-ad_list [data-testid="stHorizontalBlock"] { border-top: 1px solid rgba(255,255,255,.07); padding: 1px 0; }
+.st-key-ad_list button[data-testid="stBaseButton-tertiary"] { min-height: 0; padding: 7px 0; }
+.st-key-ad_list button[data-testid="stBaseButton-tertiary"] p { font-weight: 500; text-align: left; }
+.st-key-ad_list .st-key-ad_panel [data-testid="stHorizontalBlock"] { border-top: 0; }
+.st-key-ad_list .st-key-ad_panel { gap: .5rem; background: #1b1e22; border-radius: 0 0 8px 8px; padding: 6px 16px 12px clamp(16px, 9%, 92px); }
+.k-chev { display: inline-block; margin-left: 10px; color: #6b6c68; transition: transform .15s; }
+.k-chev.open { transform: rotate(90deg); color: #8fbcff; }
 .st-key-goal_col button[data-variant="pills"] { min-height: 0 !important; padding: 2px 11px !important; }
 .st-key-goal_col button[data-variant="pills"] p { font-size: 13px !important; }
 div[data-testid="stVerticalBlockBorderWrapper"] { transition: border-color .15s; }

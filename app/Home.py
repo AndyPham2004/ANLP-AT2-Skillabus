@@ -194,7 +194,7 @@ def regex_for(label: str):
 
 ss = st.session_state
 DEFAULTS = {
-    "step": "inputs", "messages": [], "chat_from": "inputs", "ad_open": None, "certs_more": False,
+    "step": "inputs", "messages": [], "chat_from": "inputs", "ad_open": None, "ad_full": None, "certs_more": False,
     "show_ad": False,
     "show_details": False, "goal_keep": "A role", "ad_keep": "", "ad_mode_keep": "Try a sample", "ad_pick": None,
     "taken_keep": [], "result": None, "engine": "", "ran": False, "gap": None, "resume_text": "",
@@ -581,58 +581,116 @@ def posted(day: str) -> str:
     return f"{d.day} {d:%b %Y}"
 
 
-def open_ad(ad_id: str) -> None:
-    ss.ad_open = ad_id
+def day(day_iso: str) -> str:
+    """'2026-10-13' -> '13 Oct' this year, 'Mar 2025' before: the date column of the ads list."""
+    try:
+        d = date.fromisoformat(day_iso)
+    except ValueError:
+        return day_iso
+    return f"{d.day} {d:%b}" if d.year == date.today().year else f"{d:%b %Y}"
 
 
-def close_ad() -> None:
-    ss.ad_open = None
+def toggle_ad(ad_id: str) -> None:
+    ss.ad_open = None if ss.ad_open == ad_id else ad_id
+
+
+def read_full_ad(ad_id: str) -> None:
+    ss.ad_full = ad_id
+
+
+def close_full_ad() -> None:
+    ss.ad_full = None
+
+
+def use_ad(ad_id: str) -> None:
+    """The ad becomes the goal on the Inputs page, shown there as a card."""
+    ad = ads.by_id(ad_id)
+    ss.update(ad_keep=ad["text"], ad_pick=ad, ad_mode_keep="Browse ads", goal_keep="A job ad", ad_open=None,
+              ad_full=None, step="inputs", toast=f"Using “{ad['title']} — {ad['company']}”.")
+
+
+ROLE_TAB = {"All roles": "All", "Machine Learning Engineer": "ML Engineer"}
+
+
+def role_tab(role: str) -> str:
+    """'Data Analyst' -> 'Data Analyst · 63': the role tabs carry their ad counts."""
+    n = len(ads.load()) if role == "All roles" else sum(a["role"] == role for a in ads.load())
+    return f"{ROLE_TAB.get(role, role)} · {n}"
+
+
+def md_plain(text: str) -> str:
+    """Text for a button label, which Streamlit reads as Markdown: punctuation that would format is escaped."""
+    return re.sub(r"([\\`*_\[\]<>#|~:$])", r"\\\1", text)
+
+
+@st.cache_data(show_spinner=False, max_entries=200)
+def ad_tools(ad_id: str) -> list[str]:
+    """The technical skills of the dictionary an ad names, most in-demand first (soft skills left out)."""
+    res = baseline.resources()
+    return [k for k in baseline.find_skills(ads.by_id(ad_id)["text"])
+            if res.category.get(k) not in baseline.SOFT_CATEGORIES]
 
 
 def page_jobs() -> None:
-    """One full-width list of ads; an ad opens in a dialog with "Use this ad" (Quan's pick, 17 Oct: the list and
-    the ad side by side cut the company names)."""
-    st.button("← Back", key="jobs_back", type="tertiary", on_click=go, args=("inputs",), kwargs={"ad_open": None})
+    """Role tabs with their counts, then one line per ad; an ad opens in place with "Use this ad" (Quan's pick C,
+    17 Oct: the earlier list spread title, company and date across the page and showed four ads a screen)."""
+    st.button("← Back", key="jobs_back", type="tertiary", on_click=go, args=("inputs",),
+              kwargs={"ad_open": None, "ad_full": None})
     st.markdown(ui.h1("Pick a job ad", "md"), unsafe_allow_html=True)
-    search_col, _ = st.columns([1.2, 1])
+    ss.setdefault("job_role", "All roles")
+    st.segmented_control("Role", ads.ROLE_CHIPS, key="job_role", format_func=role_tab, label_visibility="collapsed")
+    search_col, loc_col = st.columns([3, 1], vertical_alignment="center")
     query = search_col.text_input("Search", key="job_q", placeholder="Search a title, company or skill",
                                   label_visibility="collapsed")
-    role = st.pills("Role", ads.ROLE_CHIPS, key="job_role", default="All roles", label_visibility="collapsed")
-    loc = st.pills("Location", ads.LOCATIONS, key="job_loc", default="Anywhere", label_visibility="collapsed")
-    rows = ads.search(query, role or "All roles", loc or "Anywhere")
+    loc = loc_col.selectbox("Location", ads.LOCATIONS, key="job_loc", label_visibility="collapsed")
+    rows = ads.search(query, ss.job_role or "All roles", loc or "Anywhere")
     if not rows:
         st.markdown("<div class='k-serif k-mute' style='font-size:18px;padding:24px 0'>No ads match. "
                     "Try a broader role or location.</div>", unsafe_allow_html=True)
         return
     n = len(rows)
     st.caption(f"{n} ad{'' if n == 1 else 's'}, newest first" + (" (the first 30)" if n == 30 else "")
-               + " · click one to read it")
-    for a in rows:
-        title_col, where_col, meta_col = st.columns([2.8, 2.2, 1.6], vertical_alignment="center")
-        title_col.button(a["title"], key=f"ad_{a['id']}", type="tertiary", on_click=open_ad, args=(a["id"],))
-        where_col.markdown(f"<span class='k-mute'>{ui.esc(a['company'])} · {ui.esc(a['location'])}</span>",
-                           unsafe_allow_html=True)
-        meta_col.markdown(f"<span class='k-small k-dim'>{posted(a['posted'])}</span> "
-                          + (ui.chip(a["role"], colour=ui.LINK) if a["role"] != "Other" else ""),
-                          unsafe_allow_html=True)
-    ad = ads.by_id(ss.ad_open) if ss.ad_open else None
+               + " · click an ad to read it here")
+    with st.container(key="ad_list"):
+        for a in rows:
+            is_open = ss.ad_open == a["id"]
+            date_col, title_col, where_col = st.columns([0.6, 4.4, 1.4], vertical_alignment="center", gap="small")
+            date_col.markdown(f"<span class='k-mono k-small k-mute'>{day(a['posted'])}</span>", unsafe_allow_html=True)
+            title_col.button(f"{md_plain(a['title'])} :gray[· {md_plain(a['company'])}]", key=f"ad_{a['id']}",
+                             type="tertiary", on_click=toggle_ad, args=(a["id"],))
+            where_col.markdown(f"<div class='k-small k-mute' style='text-align:right'>{ui.esc(a['location'])}"
+                               f"<span class='k-chev{' open' if is_open else ''}'>›</span></div>",
+                               unsafe_allow_html=True)
+            if is_open:
+                ad_panel(a)
+    ad = ads.by_id(ss.get("ad_full")) if ss.get("ad_full") else None
     if ad:
-        st.dialog(ad["title"], width="large", on_dismiss=close_ad)(ad_body)(ad)
+        st.dialog(ad["title"], width="large", on_dismiss=close_full_ad)(ad_body)(ad)
+
+
+def ad_panel(ad: dict) -> None:
+    """The opened ad, under its line: the opening, the tools it names, then use it, read it all, or the original."""
+    with st.container(key="ad_panel"):
+        tools = ad_tools(ad["id"])[:8]
+        st.markdown(f"<div class='k-soft' style='font-size:14px;line-height:1.55;max-width:80ch'>"
+                    f"{ui.esc(ad_excerpt(ad['text'], 420))}</div>"
+                    + ("<div style='margin-top:8px'>" + "".join(ui.chip(t, colour=ui.SOFT) for t in tools) + "</div>" if tools else ""),
+                    unsafe_allow_html=True)
+        use_col, full_col, link_col = st.columns([0.8, 0.9, 3.5], vertical_alignment="center", gap="small")
+        use_col.button("Use this ad", key="use_job", type="primary", on_click=use_ad, args=(ad["id"],))
+        full_col.button("Read the full ad", key="ad_full_btn", type="tertiary", on_click=read_full_ad, args=(ad["id"],))
+        if ad["url"]:
+            link_col.markdown(f"<a href='{ui.esc(ad['url'])}' target='_blank' class='k-small'>Open the original ↗</a>",
+                              unsafe_allow_html=True)
 
 
 def ad_body(ad: dict) -> None:
-    """The ad in its dialog; the button comes before the text, so a short screen shows it without scrolling."""
+    """The whole ad in a dialog; the button comes before the text, so a short screen shows it without scrolling."""
     st.markdown(f"<div class='k-mute' style='font-size:14px;margin:-4px 0 4px'>{ui.esc(ad['company'])} · "
                 f"{ui.esc(ad['location'])} · {posted(ad['posted'])} · {ui.esc(ad['source'])}</div>",
                 unsafe_allow_html=True)
-    use_col, link_col = st.columns([1, 3], vertical_alignment="center")
-    if ad["url"]:
-        link_col.markdown(f"<a href='{ui.esc(ad['url'])}' target='_blank' class='k-small'>Open the original ↗</a>",
-                          unsafe_allow_html=True)
-    if use_col.button("Use this ad", key="use_job", type="primary"):
-        ss.update(ad_keep=ad["text"], ad_pick=ad, ad_mode_keep="Browse ads", goal_keep="A job ad", ad_open=None)
-        ss.toast = f"Using “{ad['title']} — {ad['company']}”."
-        go("inputs")
+    if st.button("Use this ad", key="use_job_full", type="primary"):
+        use_ad(ad["id"])
         st.rerun()
     text = re.sub(r"\n\s*\n\s*\n+", "\n\n", ad["text"])           # scraped ads carry runs of blank lines
     st.markdown(f"<div class='k-preview'>{ui.esc(text)}</div>", unsafe_allow_html=True)
