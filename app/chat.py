@@ -26,6 +26,9 @@ STOP_WORDS = sorted(ENGLISH_STOP_WORDS | {"subject", "subjects", "teach", "teach
                                           "course", "courses", "student", "students", "uts"})
 LAYER_NAME = {"learning_objective": "learning objective", "assessment": "assessment",
               "weekly_topic": "topic", "description": "description"}
+POOL = 15              # passages retrieved, so the answer can draw on several subjects
+MAX_SUBJECTS = 4       # subjects shown and cited
+PER_SUBJECT = 2        # passages kept per subject
 
 
 @lru_cache(maxsize=1)
@@ -60,11 +63,32 @@ def retrieve(question: str, k: int = 5) -> list[dict]:
     return out
 
 
-def source_name(p: dict) -> str:
-    """'Applied Natural Language Processing (topic)': what a student reads, without the subject code."""
-    if p.get("subject_name"):
-        return f"{p['subject_name']} ({LAYER_NAME.get(p.get('layer'), p.get('layer') or 'Handbook')})"
-    return p["source"]
+def by_subject(passages: list[dict]) -> list[dict]:
+    """One source per subject, best first: '36118 Applied Natural Language Processing' with up to PER_SUBJECT
+    passages and the layers they come from. Five passages of one subject were five identical citations."""
+    groups: dict[str, dict] = {}
+    for p in passages:
+        key = p.get("subject_code") or p.get("subject_name") or p["source"]
+        if key not in groups:
+            if len(groups) == MAX_SUBJECTS:
+                continue
+            groups[key] = {"subject_code": p.get("subject_code"), "subject_name": p.get("subject_name"),
+                           "source": p["source"], "url": p.get("url"), "passages": []}
+        if len(groups[key]["passages"]) < PER_SUBJECT:
+            groups[key]["passages"].append(p)
+    return list(groups.values())
+
+
+def subject_label(s: dict) -> str:
+    """'36118 Applied Natural Language Processing': code and name, as the Handbook lists a subject."""
+    return " ".join(x for x in (s.get("subject_code"), s.get("subject_name")) if x) or s["source"]
+
+
+def source_name(s: dict) -> str:
+    """'36118 Applied Natural Language Processing (topic, learning objective)': a source line under the answer."""
+    layers = dict.fromkeys(LAYER_NAME.get(p.get("layer"), p.get("layer") or "Handbook")
+                           for p in s.get("passages", [s]))
+    return f"{subject_label(s)} ({', '.join(layers)})"
 
 
 def has_llm() -> bool:
@@ -72,14 +96,14 @@ def has_llm() -> bool:
 
 
 def answer(question: str, gap: dict | None) -> tuple[str, list[dict]]:
-    """Answer and the passages it rests on."""
-    passages = retrieve(question)
-    if not passages:
+    """Answer and its sources, one per subject (see by_subject)."""
+    sources = by_subject(retrieve(question, k=POOL))
+    if not sources:
         return ("I couldn't find anything about that in the UTS Handbook text I have. "
                 "Try naming a skill or a subject."), []
     if not has_llm():
-        lines = [f"- **{source_name(p)}**: {p['text']}" for p in passages[:3]]
-        return "Here's what the Handbook says:\n\n" + "\n".join(lines), passages
+        lines = [f"- **{source_name(s)}**: {s['passages'][0]['text']}" for s in sources[:3]]
+        return "Here's what the Handbook says:\n\n" + "\n".join(lines), sources
 
     from openai import OpenAI
 
@@ -87,18 +111,23 @@ def answer(question: str, gap: dict | None) -> tuple[str, list[dict]]:
     if gap:
         missing = [s["skill_label"] for s in gap["skills"] if s["status"] != "have"]
         gaps = f"The student's skill gaps for their target role: {', '.join(missing) or 'none'}.\n"
-    # Names, not codes, so the answer names subjects the way the rest of the app does.
-    context = "\n".join(f"[{i + 1}] {source_name(p)}: {p['text']}" for i, p in enumerate(passages))
+    # Code and name, so a student can find the subject in the Handbook and in My Student Admin.
+    context = "\n".join(
+        f"[{i + 1}] {subject_label(s)}: "
+        + " ".join(f"({LAYER_NAME.get(p.get('layer'), p.get('layer'))}) {p['text']}" for p in s["passages"])
+        for i, s in enumerate(sources))
     resp = OpenAI().chat.completions.create(
         model=MODEL,
         temperature=0.2,
         messages=[
             {"role": "system", "content": (
                 "You help UTS data science students choose subjects. Answer only from the numbered "
-                "Handbook passages. Cite them like [1] at the end of a sentence; do not write the word "
-                "\"passage\". If the passages do not answer the question, say so. Two to four sentences. "
+                "Handbook subjects. Name each subject by its code and name exactly as given, for example "
+                "\"36118 Applied Natural Language Processing\". Cite them like [1] at the end of a sentence; "
+                "do not write the word \"passage\". If they do not answer the question, say so. Mention the "
+                "student's skill gaps only when the question is about them. Two to four sentences. "
                 "Suggestions, not advice.")},
-            {"role": "user", "content": f"{gaps}Passages:\n{context}\n\nQuestion: {question}"},
+            {"role": "user", "content": f"{gaps}Subjects:\n{context}\n\nQuestion: {question}"},
         ],
     )
-    return resp.choices[0].message.content, passages
+    return resp.choices[0].message.content, sources

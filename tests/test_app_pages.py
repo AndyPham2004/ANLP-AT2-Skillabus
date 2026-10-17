@@ -430,8 +430,9 @@ def test_browse_ads_says_1_ad():
     assert ">1 ad <span class='k-tip" in page_text(at)
 
 
-def test_handbook_chat_is_its_own_page_and_names_no_codes():
-    # 6B (17 Oct): a page with a way back, not a column that squeezes the results; no subject codes.
+def test_handbook_chat_is_its_own_page_and_names_subjects_by_code():
+    # 6B (17 Oct): a page with a way back, not a column that squeezes the results. Suggestions name no codes;
+    # an answer names each subject by code and name, once (Van Thong, 17 Oct).
     import re
     at = open_app()
     pick_role(at, "Data Engineer")
@@ -445,8 +446,9 @@ def test_handbook_chat_is_its_own_page_and_names_no_codes():
     at.button(key="chat_sug_0").click().run()                                   # "Which subject teaches LLMs?"
     assert not at.exception, at.exception
     reply = at.session_state.messages[-1]
-    assert reply["role"] == "assistant" and "Applied Natural Language Processing" in reply["content"]
-    assert not re.search(r"\b\d{5}\b", reply["content"]), reply["content"]
+    assert reply["role"] == "assistant" and "36118 Applied Natural Language Processing" in reply["content"]
+    names = re.findall(r"\*\*(.+?) \(", reply["content"])                     # one line per subject
+    assert names and len(names) == len(set(names)), reply["content"]
     question, n = "Which subject teaches machine learning?", len(at.session_state.messages)
     at.chat_input(key="chat_in").set_value(question).run()
     assert not at.exception, at.exception
