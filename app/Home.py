@@ -258,7 +258,10 @@ def cached_analyse(resume_text: str, ad_text: str | None, taken: tuple[str, ...]
 def run_analysis() -> None:
     """Run the pipeline on what the Inputs page kept: the resume and the subjects taken against the goal."""
     ad = ss.ad_keep if ss.goal_keep == "A job ad" else None
-    result, engine = cached_analyse(ss.resume_text, ad, tuple(sorted(ss.taken_keep)), ss.role_keep,
+    # an ad picked from Browse carries its role; backend.analyse reads a pasted ad's role from its first line
+    pick = ss.get("ad_pick")
+    role = pick["role"] if ad and pick and pick.get("role") and ad.strip() == pick["text"].strip() else ss.role_keep
+    result, engine = cached_analyse(ss.resume_text, ad, tuple(sorted(ss.taken_keep)), role,
                                     ss.course_keep or backend.HOME_COURSE, bool(ss.gpt_keep))
     ss.update(result=result, engine=engine, ran=True)
 
@@ -923,7 +926,7 @@ def page_results() -> None:
     tab = ss.results_tab or "Skills"
     ss.results_tab_keep = tab
     if tab == "Skills":
-        skills_section(skills, counted, "ad" if is_ad(res) else "role", role)
+        skills_section(skills, counted, "ad" if is_ad(res) else "role", res.get("weigh_role") or role)
     elif tab == "Your path":
         path_section(res, by, counted)
     elif tab == "Outside UTS":
@@ -1079,7 +1082,7 @@ def page_evidence() -> None:
                 + ui.h1(ui.esc(s["skill_label"]), "lg") + ui.status_html(s["status"], ui.STATUS_TEXT[s["status"]])
                 + new + "</div>", unsafe_allow_html=True)
     # One band, not three grey cards (Quan's pick, 17 Oct): the trend as bars, the rest as coloured lines.
-    st.markdown(f"<div class='k-band'><div>{demand_chart(s, counted, role)}</div>"
+    st.markdown(f"<div class='k-band'><div>{demand_chart(s, counted, res.get('weigh_role') or role)}</div>"
                 f"<div class='k-lines'>{fact_lines(s)}</div></div>", unsafe_allow_html=True)
 
     if s["status"] == "have":

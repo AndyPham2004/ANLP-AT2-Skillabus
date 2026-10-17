@@ -282,3 +282,28 @@ def test_llm_only_gaps_are_weighed_like_the_ad_s_other_skills(monkeypatch):
     assert {k: row[k] for k in fields} == {k: twin[k] for k in fields}
     assert row["demand_pct"] > 0 and row["demand_pct_2019_22"] == 0.0      # in the 2026 ads, in none of 2019-22
     assert (row["demand_source"], row["demand_period"], row["total_ads"], row["text_type"]) == demand_meta()
+
+
+CYBER_AD = ("Cyber Security Analyst\nAcme Pty Ltd, Sydney\n"
+            "You will run SIEM use cases, lead incident response and track threat intelligence, scripting in Python.")
+
+
+def test_a_pasted_ad_is_weighed_by_its_own_role(monkeypatch):
+    """17 Oct: a pasted ad was always weighed by the Data Scientist ads, so a Cybersecurity ad showed SIEM at
+    about 0%. Its role now comes from its first line (the job-board rules), else from the role given, else
+    Data Scientist; shares, captions and the path weights follow that role."""
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    totals = {r["role"]: int(r["total_ads"]) for r in rows(paths.ROLE_SKILL_DEMAND) if r["source"] == "jobspipe_2026"}
+    result, _ = backend.analyse("", CYBER_AD, [], use_llm=False)
+    assert result["weigh_role"] == "Cybersecurity Analyst"
+    assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", totals["Cybersecurity Analyst"])}
+    assert next(s for s in result["skills"] if s["skill_label"] == "SIEM")["demand_pct"] > 20
+    plain, _ = backend.analyse("", "We need Python and SQL.", [], role="Data Engineer", use_llm=False)
+    assert plain["weigh_role"] == "Data Engineer"
+
+
+def test_a_taken_subject_also_completes_a_partial_skill():
+    """A resume with scikit-learn gives machine learning 'partial'; having taken 36106 Machine Learning makes it 'have'."""
+    skills = [{"skill_label": "Machine learning", "status": "partial", "resume_evidence": "Built models with scikit-learn."}]
+    out = backend.credit_taken(skills, ["36106"])
+    assert out[0]["status"] == "have" and "36106" in out[0]["resume_evidence"]

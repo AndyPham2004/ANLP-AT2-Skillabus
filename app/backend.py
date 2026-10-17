@@ -176,7 +176,7 @@ def role_gaps(role: str, resume_skills: list[dict]) -> list[dict]:
 def credit_taken(skills: list[dict], taken: list[str]) -> list[dict]:
     """A subject the student has taken counts as having the skills its text names (the 'taken' box), for a
     role and for a job ad alike. The app marks such a skill as not on the resume (Home.from_subject)."""
-    missing = [s["skill_label"] for s in skills if s["status"] == "missing"]
+    missing = [s["skill_label"] for s in skills if s["status"] in ("missing", "partial")]   # a taken subject completes a partial one too
     if not taken or not missing:
         return skills
     from skillabus.recommend import subject_evidence
@@ -184,7 +184,7 @@ def credit_taken(skills: list[dict], taken: list[str]) -> list[dict]:
     out = []
     for s in skills:
         done = [e for e in evidence.get(s["skill_label"], []) if e["subject_code"] in taken]
-        if s["status"] == "missing" and done:
+        if s["status"] in ("missing", "partial") and done:
             s = {**s, "status": "have", "resume_evidence": f"From {done[0]['subject_code']} {done[0]['subject_name']} (taken)"}
         out.append(s)
     return out
@@ -230,11 +230,13 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
     rank(gaps) -> {"recommendations", "learning_path", "outside_recommendations"}; the baseline ranker when not given.
     """
     from skillabus.llm_extract import extract_llm
-    from skillabus.match import _demand, _demand_2019_22, _demand_2026, block_meta
+    from skillabus.match import _block, _shares, block_2019_22, block_2026, block_meta, role_demand
     from skillabus.normalise import normalise
 
-    # weighed like match() weighs a pasted ad: the Data Scientist ads of its demand block
-    demand, demand_2026, demand_2019_22, meta = _demand(), _demand_2026(), _demand_2019_22(), block_meta()
+    # weighed like the ad's other skills: the ads of the role the ad is weighed by (analyse's weigh_role)
+    r = result.get("weigh_role") or DEFAULT_ROLE
+    demand, demand_2026 = role_demand(r), _shares(block_2026(r))
+    demand_2019_22, meta = _shares(block_2019_22(r)), block_meta(_block(r))
     ad = normalise(extract_llm(ad_text))
     cv = normalise(extract_llm(resume_text)) if resume_text else []
     cv_ids = {m["skill_id"]: m for m in cv} | {m["canonical"]: m for m in cv if m["canonical"]}
@@ -293,7 +295,8 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str =
     """
     try:
         from skillabus.extract import extract
-        from skillabus.match import match, slug, soft_skills
+        from skillabus.match import match_ad, slug, soft_skills
+        from skillabus.roles import ad_role
         from skillabus.normalise import normalise
         from skillabus.recommend import recommend
 
@@ -307,9 +310,12 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str =
             mode, soft = f"role-{slug(role)}", []
         else:
             ad_skills = normalise(extract(ad_text))
-            skills = credit_taken(match(ad_skills, resume_skills), taken)
+            # weighed by the ads of the ad's own role: its first line as a title, else the role given, else Data Scientist
+            weigh_role = ad_role(ad_text, role, {r for rs in role_families().values() for r in rs}) or DEFAULT_ROLE
+            skills = credit_taken(match_ad(ad_skills, resume_skills, weigh_role), taken)
             mode, soft = "pasted-ad", soft_skills(ad_skills)
         result = {"ad_id": mode, "mode": mode, "role": role if ad_text is None else None, "skills": skills,
+                  "weigh_role": role if ad_text is None else weigh_role,
                   "soft_skills": soft, **rank([s for s in skills if s["status"] != "have"])}
         engine = "pipeline"
     except Exception as e:  # a missing library or a half-finished stage: the demo must still run
