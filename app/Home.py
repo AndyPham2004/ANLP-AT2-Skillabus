@@ -26,7 +26,8 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
 try:  # Streamlit Cloud keeps keys in st.secrets
-    for key in ("OPENAI_API_KEY", "LIGHTCAST_CLIENT_ID", "LIGHTCAST_CLIENT_SECRET"):
+    for key in ("OPENAI_API_KEY", "LIGHTCAST_CLIENT_ID", "LIGHTCAST_CLIENT_SECRET",   # + the JobsPipe keys of ads.FETCH_KEYS
+                "JOBSPIPE_API_KEY_OLD_2026_10_16", "JOBSPIPE_API_KEY_2026_10_17_A", "JOBSPIPE_API_KEY"):
         if key in st.secrets and not os.getenv(key):
             os.environ[key] = st.secrets[key]
 except Exception:
@@ -612,10 +613,16 @@ def close_full_ad() -> None:
 
 
 def use_ad(ad_id: str) -> None:
-    """The ad becomes the goal on the Inputs page, shown there as a card."""
+    """The ad becomes the goal on the Inputs page, shown there as a card. A JobsPipe ad without its text on this
+    machine gets it from the API (free with the key that fetched it); failing that, the skills the ad named."""
     ad = ads.by_id(ad_id)
-    ss.update(ad_keep=ad["text"], ad_pick=ad, ad_mode_keep="Browse ads", goal_keep="A job ad", ad_open=None,
-              ad_full=None, step="inputs", toast=f"Using “{ad['title']} — {ad['company']}”.")
+    text, note = ad["text"], ""
+    if not text:
+        text = ads.fetch_text(ad)
+        if not text:
+            text, note = ads.skills_text(ad), " Its full text is not available here, so the skills it named are used."
+    ss.update(ad_keep=text, ad_pick={**ad, "text": text}, ad_mode_keep="Browse ads", goal_keep="A job ad", ad_open=None,
+              ad_full=None, step="inputs", toast=f"Using “{ad['title']} — {ad['company']}”.{note}")
 
 
 FAMILY_ALL = "All"
@@ -710,13 +717,13 @@ def ad_panel(ad: dict) -> None:
         if ad["text"]:
             opening = ui.esc(ad_excerpt(ad["text"], 420))
         else:                                            # a JobsPipe ad on a machine without the raw fetch
-            opening = ("The text of this ad is not on this machine (JobsPipe's terms keep it out of the repository). "
-                       "Open the original and paste it under &ldquo;Paste an ad&rdquo;.")
+            opening = ("The text of this ad is not stored here (JobsPipe's terms keep it out of the repository). "
+                       "&ldquo;Use this ad&rdquo; fetches it from JobsPipe, or else uses the skills it named.")
         st.markdown(f"<div class='k-soft' style='font-size:14px;line-height:1.55;max-width:80ch'>{opening}</div>"
                     + chips, unsafe_allow_html=True)
         use_col, full_col, link_col = st.columns([0.8, 0.9, 3.5], vertical_alignment="center", gap="small")
+        use_col.button("Use this ad", key="use_job", type="primary", on_click=use_ad, args=(ad["id"],))
         if ad["text"]:
-            use_col.button("Use this ad", key="use_job", type="primary", on_click=use_ad, args=(ad["id"],))
             full_col.button("Read the full ad", key="ad_full_btn", type="tertiary", on_click=read_full_ad,
                             args=(ad["id"],))
         if ad["url"]:

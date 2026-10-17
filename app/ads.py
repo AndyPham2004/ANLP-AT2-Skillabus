@@ -12,6 +12,7 @@ as a searchable list, so a student who has no ad at hand can pick a real one (Qu
 from __future__ import annotations
 
 import json
+import os
 import re
 from functools import lru_cache
 
@@ -26,6 +27,12 @@ LOCATIONS = ["Anywhere", "Sydney", "Melbourne", "Brisbane", "Perth", "Canberra",
 STATES = {"New South Wales": "NSW", "Victoria": "VIC", "Queensland": "QLD", "Western Australia": "WA",
           "South Australia": "SA", "Australian Capital Territory": "ACT", "Tasmania": "TAS", "Northern Territory": "NT"}
 STATE_CODES = "|".join(STATES.values())
+# A JobsPipe ad's text is not in git. "Use this ad" asks the API for it with the key of the batch that fetched it:
+# that account paid for the ad, so JobsPipe returns it again without a credit until the month ends. The three
+# keys are the team members' own free accounts (.env locally, st.secrets on Streamlit Cloud; Home.py copies them).
+JOBSPIPE_API = "https://api.jobspipe.dev/v1/jobs/search"
+FETCH_KEYS = {"2026-10-16": "JOBSPIPE_API_KEY_OLD_2026_10_16", "2026-10-17": "JOBSPIPE_API_KEY_2026_10_17_A",
+              "2026-10-17b": "JOBSPIPE_API_KEY"}
 
 
 def short_location(loc: str) -> str:
@@ -76,7 +83,8 @@ def load() -> list[dict]:
     jp = pd.read_csv(paths.JOBSPIPE_SKILLS, dtype=str).fillna("")
     out = [{"id": r.ad_id, "title": r.title.strip(), "company": r.company.strip(), "location": short_location(r.location),
             "posted": r.date_posted[:10], "source": f"{r.providers or 'a job board'} via JobsPipe", "url": r.url,
-            "role": r.role, "text": texts.get(r.ad_id, ""), "skills": [s for s in r.skills.split("|") if s]}
+            "role": r.role, "text": texts.get(r.ad_id, ""), "skills": [s for s in r.skills.split("|") if s],
+            "fetched": getattr(r, "fetched", "")}
            for r in jp.itertuples(index=False)]
     seen = {_key(a["company"], a["title"]) for a in out}
     ats = pd.read_csv(paths.ATS_2026_ADS, dtype=str).fillna("")
@@ -86,9 +94,52 @@ def load() -> list[dict]:
         seen.add(_key(r.company, r.title))
         out.append({"id": r.ad_id, "title": r.title.strip(), "company": r.company.strip(),
                     "location": short_location(r.location), "posted": r.posted[:10], "source": r.source, "url": r.url,
-                    "role": r.role, "text": r.description.strip(), "skills": None})
+                    "role": r.role, "text": r.description.strip(), "skills": None, "fetched": ""})
     # Newest first; within a day by id, which mixes the roles (the JobsPipe file is sorted by role).
     return sorted(out, key=lambda a: (a["posted"], a["id"]), reverse=True)
+
+
+def fetch_text(ad: dict, post=None) -> str | None:
+    """A JobsPipe ad's full text from the API, or None (not a JobsPipe ad, no key for its batch, the API fails).
+    Kept in memory only (lru_cache), never written to disk."""
+    if not str(ad.get("id", "")).startswith("jp-") or not ad.get("fetched"):
+        return None
+    if post is None:
+        return _fetch_cached(ad["id"], ad["fetched"])
+    return _fetch(ad["id"], ad["fetched"], post)
+
+
+@lru_cache(maxsize=256)
+def _fetch_cached(ad_id: str, fetched: str) -> str | None:
+    import requests
+    return _fetch(ad_id, fetched, requests.post)
+
+
+def _fetch(ad_id: str, fetched: str, post) -> str | None:
+    key = os.getenv(FETCH_KEYS.get(fetched, ""), "")
+    if not key:
+        return None
+    try:
+        reply = post(JOBSPIPE_API, json={"job_ids": [ad_id.removeprefix("jp-")], "limit": 1},
+                     headers={"Authorization": f"Bearer {key}"}, timeout=10)
+        data = (reply.json().get("data") or []) if reply.status_code == 200 else []
+    except Exception:          # the network, the API or its reply: any failure falls back to the skills
+        return None
+    text = str(data[0].get("description") or "").strip() if data else ""
+    return text or None
+
+
+def skills_text(ad: dict) -> str:
+    """When the text cannot be had: the ad as its title and the skills it named at fetch time, each written as the
+    extractor's first alias so the pipeline finds every one of them again (the title stays the first line, so
+    backend.analyse weighs the ad by its role)."""
+    from skillabus.extract import load_dictionary
+    first_alias = {s["canonical"]: s["aliases"][0] for s in load_dictionary() if s["aliases"]}
+    names = [first_alias.get(s, s) for s in ad.get("skills") or []]
+    return (f"{ad['title']}\n{ad.get('company', '')} · {ad.get('location', '')}\n"
+            f"The full text of this ad is not available here (JobsPipe keeps it), so Skillabus uses the skills the ad "
+            f"named when it was collected on {ad.get('fetched') or 'October 2026'}: {', '.join(names)}.\n"
+            f"Original: {ad.get('url', '')}")
 
 
 def roles_of(family: str | None) -> list[str]:

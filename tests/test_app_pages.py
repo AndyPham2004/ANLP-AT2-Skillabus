@@ -386,10 +386,12 @@ def test_browse_ads_lists_thirty_then_more():
     assert sum((b.key or "").startswith("ad_") for b in at.button) == 60
 
 
-def test_a_jobspipe_ad_without_its_text_offers_the_original(monkeypatch, tmp_path):
-    # A fresh clone or the deployed app has no data/raw/: the ad lists with its skills and link, and cannot be used.
+def test_a_jobspipe_ad_without_its_text_can_still_be_used(monkeypatch, tmp_path):
+    # A fresh clone or the deployed app has no data/raw/: "Use this ad" asks JobsPipe for the text (17 Oct) and,
+    # when that fails (here: no network call at all), uses the skills the ad named, its title first.
     import ads
     monkeypatch.setattr(ads.paths, "RAW", tmp_path)
+    monkeypatch.setattr(ads, "fetch_text", lambda ad, post=None: None)
     ads.jobspipe_texts.cache_clear()
     ads.load.cache_clear()
     try:
@@ -398,8 +400,11 @@ def test_a_jobspipe_ad_without_its_text_offers_the_original(monkeypatch, tmp_pat
         first = next(a for a in ads.search() if a["id"].startswith("jp-"))
         at.button(key=f"ad_{first['id']}").click().run()
         assert not at.exception, at.exception
-        assert "The text of this ad is not on this machine" in page_text(at)
-        assert not any(b.key in ("use_job", "ad_full_btn") for b in at.button)
+        assert "The text of this ad is not stored here" in page_text(at)
+        assert any(b.key == "use_job" for b in at.button) and not any(b.key == "ad_full_btn" for b in at.button)
+        at.button(key="use_job").click().run()
+        assert not at.exception, at.exception
+        assert at.session_state.ad_keep.startswith(first["title"]) and "skills the ad named" in at.session_state.ad_keep
     finally:
         ads.jobspipe_texts.cache_clear()
         ads.load.cache_clear()
