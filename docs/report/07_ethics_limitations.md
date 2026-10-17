@@ -33,8 +33,8 @@ students to confirm choices with their course coordinator.
    Data Scientist ads say "artificial intelligence" and 66% "AI".
 4. **Uneven subject text:** nine MDSI subjects have no topic list, two students reported, and
    "named" is not "taught in depth".
-5. **Course level:** the home course is used for admission rules, not subject level, so an MDSI
-   student's paths include 12 subjects listed only in bachelor courses.
+5. **Course level:** reading the role paths (section 6) found Bachelor-only subjects in an MDSI
+   student's paths; they are now closed to postgraduates, so IT roles get fewer UTS subjects.
 6. **No user test:** the planned test with five classmates did not happen, so ease of use is
    judged by the team only (section 8).
 7. **Demand is not outcome:** ads show what employers ask for, not who is hired.

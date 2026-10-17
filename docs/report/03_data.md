@@ -4,7 +4,7 @@ Skillabus needs four kinds of data: job ads for demand, subject text for supply,
 the input side, and one skills vocabulary that ties them together. It covers 11 IT roles in five
 families (data and AI, software, cloud and infrastructure, security, business analysis). Every
 number below comes from `notebooks/vt_eda.ipynb`, which runs on committed files only, or from the
-file named next to it; Appendix A lists every source with its licence, Appendix B every data file.
+file named next to it; Appendix A lists every source with its licence, Appendix C every data file.
 
 ## 3.1 Sources
 
