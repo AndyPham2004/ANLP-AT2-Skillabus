@@ -1,9 +1,9 @@
 """Drive the Streamlit page (app/Home.py) the way a student would, with no OpenAI key. Run: pytest tests/
 
-The v2 flow (docs/design/): Start -> Inputs -> Results -> Evidence for one skill. Role mode for a role
-with ad counts (Data Engineer) and one without (Cybersecurity Analyst), Job seeker mode with the sample ad
-and with a browsed ad, the what-if tick box and the plan download. Uses streamlit.testing (AppTest), so no
-browser is needed.
+One flow for a UTS student (17 Oct): Inputs (course, subjects, resume | a role or a job ad) -> Results ->
+Evidence for one skill. A role with ad counts (Data Engineer) and one without (Cybersecurity Analyst), the
+sample ad and a browsed ad, subjects taken counted for both goals, the "I've taken this" tick. Uses
+streamlit.testing (AppTest), so no browser is needed.
 """
 import os
 import sys
@@ -28,12 +28,17 @@ def no_api_key(monkeypatch):
     st.cache_data.clear()        # Home.py caches analyses per input; a test with another demand table must not reuse them
 
 
-def start(mode: str) -> AppTest:
-    """Open the app and press the card of one of the three user types (elective, job, switch)."""
+def open_app() -> AppTest:
+    """Open the app: it starts on the Inputs page."""
     at = AppTest.from_file(HOME, default_timeout=300)
     at.run()
-    at.button(key=f"role_{mode}").click().run()
-    assert not at.exception
+    assert not at.exception, at.exception
+    return at
+
+
+def aim_at_an_ad(at: AppTest) -> AppTest:
+    at.segmented_control(key="goal_box").set_value("A job ad").run()
+    assert not at.exception, at.exception
     return at
 
 
@@ -65,45 +70,51 @@ def page_text(at: AppTest) -> str:
     return "\n".join(str(p) for p in parts)
 
 
+def family_of(role: str) -> int:
+    import backend
+    return next(n for n, roles in enumerate(backend.role_families().values()) if role in roles)
+
+
 def pick_role(at: AppTest, role: str) -> None:
-    at.pills(key="role_box").set_value(role).run()
-    assert not at.exception
+    """The roles are one pills row per family (role_f0 .. role_f4)."""
+    at.pills(key=f"role_f{family_of(role)}").set_value(role).run()
+    assert not at.exception, at.exception
+    assert at.session_state.role_keep == role
 
 
-def test_start_page_has_the_three_cards():
-    at = AppTest.from_file(HOME, default_timeout=300)
-    at.run()
+def chosen_roles(at: AppTest) -> list:
+    return [at.pills(key=f"role_f{n}").value for n in range(5) if at.pills(key=f"role_f{n}").value]
+
+
+def test_app_opens_on_the_one_inputs_page():
+    # 17 Oct (Quan): one user, a UTS student; no "Who you are" cards, no study stage, no "not enrolled".
+    at = open_app()
     text = page_text(at)
-    assert "Find the skills a job wants" in text
-    for cta in ("Pick a role →", "Add ad and resume →", "Pick role, add resume →"):
-        assert cta in text
-    assert "Who you are" in text and "Your inputs" in text and "Results" in text      # the stepper in the top bar
+    assert at.session_state.step == "inputs"
+    assert "What you have and where you are heading" in text and "Your goal" in text
+    assert "Your inputs" in text and "Results" in text and "Who you are" not in text   # two steps in the top bar
+    assert "Pick a role →" not in text and not any(c.key == "stage_box" for c in at.segmented_control)
+    course = at.selectbox(key="course_box")
+    assert course.value == "C04372" and "" not in course.options                       # MDSI by default, always a course
+    assert at.segmented_control(key="goal_box").value == "A role"
+    assert at.multiselect(key="taken_box") and at.segmented_control(key="resume_mode")
     assert at.button(key="chat_go")
 
 
-def test_role_picker_lists_eleven_roles_with_their_source():
-    at = start("switch")
-    pills = at.pills(key="role_box")
-    assert len(pills.options) == 11 and pills.options[0] == "Data Scientist"
-    assert pills.value == "Data Scientist"
+def test_role_picker_lists_eleven_roles_by_family_with_their_source():
+    at = open_app()
+    assert sum(len(at.pills(key=f"role_f{n}").options) for n in range(5)) == 11
+    assert at.pills(key="role_f0").options[0] == "Data Scientist" and chosen_roles(at) == ["Data Scientist"]
+    assert "Data &amp; AI" in page_text(at) and "Cloud &amp; infrastructure" in page_text(at)   # family names, escaped
     assert "JobsPipe Data Scientist ads, Sep-Oct 2026, full text." in page_text(at)
     pick_role(at, "Cybersecurity Analyst")
+    assert chosen_roles(at) == ["Cybersecurity Analyst"]                               # one role across the rows
     assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)   # every role since C2
     assert "No Australian ad counts yet" not in page_text(at)
-    assert at.segmented_control(key="stage_box").value == "Studying at UTS"
-    assert at.selectbox(key="course_box").value == "C04372"                       # MDSI by default
-    at.segmented_control(key="stage_box").set_value("Already working").run()
-    assert at.selectbox(key="course_box").value == ""                            # not enrolled
-
-
-def test_uts_student_is_never_already_working():
-    at = start("elective")
-    assert at.segmented_control(key="stage_box").options == ["About to enrol", "Studying at UTS"]
-    assert at.selectbox(key="course_box").value == "C04372"
 
 
 def test_role_mode_data_engineer():
-    at = start("switch")
+    at = open_app()
     pick_role(at, "Data Engineer")
     assert "JobsPipe Data Engineer ads, Sep-Oct 2026, full text." in page_text(at)
     show_gaps(at)
@@ -128,7 +139,7 @@ def test_role_mode_data_engineer():
 
 
 def test_role_mode_cybersecurity_has_bars_since_c2():
-    at = start("switch")
+    at = open_app()
     pick_role(at, "Cybersecurity Analyst")
     show_gaps(at)
     text = page_text(at)
@@ -144,7 +155,7 @@ def test_role_mode_cybersecurity_has_bars_since_c2():
 
 def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sample):
     """The fallback page: the sample demand table has no block for Cybersecurity Analyst."""
-    at = start("switch")
+    at = open_app()
     pick_role(at, "Cybersecurity Analyst")
     assert "No Australian ad counts yet" in page_text(at)
     show_gaps(at)
@@ -162,8 +173,8 @@ def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sampl
     assert "Self-study" in text and "No self-study resource in our list" not in text   # every core skill has one (D9)
 
 
-def test_elective_mode_counts_taken_subjects():
-    at = start("elective")
+def test_taken_subjects_count_for_a_role():
+    at = open_app()
     pick_role(at, "Data Engineer")
     picker = at.multiselect(key="taken_box")                  # AppTest lists the options as shown: names, no codes
     assert picker.options[:2] == ["Data Science for Innovation", "Leading Data Science Initiatives"]   # MDSI first
@@ -173,18 +184,18 @@ def test_elective_mode_counts_taken_subjects():
     assert "94693" not in [r["subject_code"] for r in at.session_state.result["recommendations"]]
     spark = next(s for s in at.session_state.result["skills"] if s["skill_label"] == "Spark")
     assert spark["status"] == "have" and spark["resume_evidence"].startswith("From 94693")
-    # a UTS student's tick on a path card joins the one list of subjects taken (no separate what-if)
+    # the tick on a path card joins the one list of subjects taken
     show_tab(at, "Your path")
     first = at.session_state.result["learning_path"]["subjects"][0]
     at.checkbox(key=f"wi_path_{first}").check().run()
     assert not at.exception, at.exception
-    assert first in at.session_state.taken_keep and at.session_state.whatif == []
+    assert first in at.session_state.taken_keep and "whatif" not in at.session_state
     assert first not in at.session_state.result["learning_path"]["subjects"]
 
 
 def test_certifications_are_cards_with_the_ad_count():
     # 8A (17 Oct): cards in rows of three, six at first; "hot" carries the ad count, the long reason moves to a note.
-    at = start("switch")
+    at = open_app()
     pick_role(at, "Software Engineer")
     show_gaps(at)
     show_tab(at, "Certifications")
@@ -199,7 +210,7 @@ def test_certifications_are_cards_with_the_ad_count():
 def test_skill_page_tells_its_facts_in_one_band():
     # 17 Oct, Quan's pick B: one band (then-and-now bars, coloured lines) instead of three grey cards, and
     # "new skill" in plain words; a student never reads "ESCO".
-    at = start("elective")
+    at = open_app()
     pick_role(at, "Data Scientist")
     at.multiselect(key="taken_box").set_value(["36118"]).run()
     show_gaps(at)
@@ -216,7 +227,7 @@ def test_skill_page_tells_its_facts_in_one_band():
 def test_subject_picker_enter_picks_one_subject_not_every_match():
     # Typing "Statistical" + Enter added all 8 fuzzy matches via "Select 8 matches" (17 Oct UI check).
     from streamlit.proto.MultiSelect_pb2 import MultiSelect
-    at = start("elective")
+    at = open_app()
     picker = at.multiselect(key="taken_box").proto
     assert picker.select_all == 0                                   # no "Select N matches" row
     assert picker.filter_mode == MultiSelect.DESCRIPTOR.fields_by_name["filter_mode"].enum_type \
@@ -225,8 +236,9 @@ def test_subject_picker_enter_picks_one_subject_not_every_match():
 
 def test_skill_page_tells_apart_dropped_subjects_that_share_a_name():
     # Two "Database" subjects of other courses printed the same caption twice (17 Oct UI check).
-    at = start("elective")
+    at = open_app()
     pick_role(at, "Data Scientist")
+    at.segmented_control(key="resume_mode").set_value("No resume").run()       # SQL stays a gap
     at.multiselect(key="taken_box").set_value(["36103", "36118"]).run()
     show_gaps(at)
     open_skill(at, next(i for i, s in enumerate(at.session_state.result["skills"]) if s["skill_label"] == "SQL"))
@@ -240,7 +252,7 @@ def scroll_scripts(at: AppTest) -> list:
 
 def test_a_new_page_starts_at_the_top():
     # A skill opened from low in the list kept the list's scroll offset (17 Oct UI check).
-    at = start("switch")
+    at = open_app()
     pick_role(at, "Data Engineer")
     show_gaps(at)
     assert scroll_scripts(at)                                       # inputs -> results
@@ -253,15 +265,16 @@ def test_a_new_page_starts_at_the_top():
     assert not scroll_scripts(at)                                   # a filter on the same page too
 
 
-def test_job_seeker_mode_with_the_sample_ad():
-    at = start("job")
+def test_the_sample_ad_as_the_goal():
+    at = aim_at_an_ad(open_app())
     assert at.segmented_control(key="ad_mode").value == "Try a sample"
-    assert "Robert Walters" in at.text_area(key="ad_box").value
+    assert "Robert Walters" in at.session_state.ad_keep
+    assert "Data Scientist · Robert Walters · Sydney CBD" in page_text(at)                  # the ad as a card
     show_gaps(at)
     text = page_text(at)
     assert "Data Scientist · Robert Walters · Sydney CBD" in text
     assert "Skills the ad asks for" in text
-    assert "Certifications" not in at.segmented_control(key="results_tab").options   # no role in this mode
+    assert "Certifications" not in at.segmented_control(key="results_tab").options   # no role for an ad
     at.button(key="toggle_ad").click().run()
     assert "<mark" in page_text(at)                                            # skills highlighted on the ad
     open_skill(at)
@@ -276,7 +289,7 @@ def test_job_seeker_mode_with_the_sample_ad():
 
 def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
     # What augment_with_llm() lists apart (no key in tests, so it is set by hand) gets one line, no rows.
-    at = start("job")
+    at = aim_at_an_ad(open_app())
     show_gaps(at)
     res = dict(at.session_state.result)
     n = len(res["skills"])
@@ -289,7 +302,7 @@ def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
 
 
 def test_self_study_filters_change_the_column():
-    at = start("switch")
+    at = open_app()
     pick_role(at, "Data Engineer")
     show_gaps(at)
     open_skill(at)
@@ -300,27 +313,27 @@ def test_self_study_filters_change_the_column():
     assert not at.exception
 
 
-def test_what_if_taken_reruns_the_path():
-    at = start("switch")
+def test_taken_tick_reruns_the_path_and_shows_on_the_inputs_page():
+    at = open_app()
     pick_role(at, "Data Engineer")
     show_gaps(at)
     path = at.session_state.result["learning_path"]["subjects"]
     assert path
     first = path[0]
     show_tab(at, "Your path")
-    at.checkbox(key=f"wi_path_{first}").check().run()                           # "Already taken" on the first card
+    at.checkbox(key=f"wi_path_{first}").check().run()                           # "I've taken this" on the first card
     assert not at.exception, at.exception
-    assert at.session_state.whatif == [first]
+    assert at.session_state.taken_keep == [first]
     assert first not in at.session_state.result["learning_path"]["subjects"]
-    assert "Counting as taken" in page_text(at)
-    at.button(key="whatif_reset").click().run()
-    assert at.session_state.whatif == [] and first in at.session_state.result["learning_path"]["subjects"]
+    assert "1 subject taken" in page_text(at)                                   # the top bar says so
+    at.button(key="back_inputs").click().run()
+    assert at.multiselect(key="taken_box").value == [first]                     # the same list on the Inputs page
 
 
 def test_browse_ads_and_use_one():
     # 7A (17 Oct): one full-width list, an ad opens in a dialog with "Use this ad"; no split, no table.
     import ads
-    at = start("job")
+    at = aim_at_an_ad(open_app())
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     assert not at.exception
     assert "Pick a job ad" in page_text(at)
@@ -333,14 +346,14 @@ def test_browse_ads_and_use_one():
     at.button(key="use_job").click().run()
     assert not at.exception, at.exception
     assert at.session_state.step == "inputs"
-    assert at.text_area(key="ad_box").value == first["text"]
+    assert at.session_state.ad_keep == first["text"] and first["title"] in page_text(at)   # the ad as a card
     show_gaps(at)
     assert "Skills the ad asks for" in page_text(at)
     assert "Robert Walters" not in page_text(at)
 
 
 def test_browse_ads_says_1_ad():
-    at = start("job")
+    at = aim_at_an_ad(open_app())
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     at.text_input(key="job_q").set_value("carsales").run()
     assert any(c.value.startswith("1 ad, ") for c in at.caption), [c.value for c in at.caption]
@@ -349,7 +362,7 @@ def test_browse_ads_says_1_ad():
 def test_handbook_chat_is_its_own_page_and_names_no_codes():
     # 6B (17 Oct): a page with a way back, not a column that squeezes the results; no subject codes.
     import re
-    at = start("switch")
+    at = open_app()
     pick_role(at, "Data Engineer")
     show_gaps(at)
     show_tab(at, "Your path")
@@ -367,3 +380,40 @@ def test_handbook_chat_is_its_own_page_and_names_no_codes():
     assert at.session_state.messages[-1]["role"] == "assistant"
     at.button(key="chat_back").click().run()
     assert at.session_state.step == "results" and at.session_state.results_tab == "Your path"
+
+
+def test_taken_subjects_count_for_a_job_ad_and_ask_for_the_resume():
+    # 17 Oct: a skill the student has from a subject counts as "have" for an ad too, flagged as not on the resume.
+    at = aim_at_an_ad(open_app())
+    at.multiselect(key="taken_box").set_value(["36120"]).run()                  # Machine Learning Algorithms and Applications
+    show_gaps(at)
+    skills = at.session_state.result["skills"]
+    ml = next(s for s in skills if s["skill_label"] == "Machine learning")
+    assert ml["status"] == "have" and ml["resume_evidence"].startswith("From 36120")
+    assert "36120" not in [r["subject_code"] for r in at.session_state.result["recommendations"]]
+    assert "From subjects you have taken but not on your resume: machine learning" in page_text(at)
+    open_skill(at, next(i for i, s in enumerate(skills) if s["skill_label"] == "Machine learning"))
+    assert "a subject you have taken. Your resume does not mention it: add it." in page_text(at)
+
+
+def test_no_resume_counts_only_the_subjects():
+    at = open_app()
+    at.segmented_control(key="resume_mode").set_value("No resume").run()
+    assert not at.exception, at.exception
+    assert "No resume and no subject yet: every skill counts as a gap." in page_text(at)
+    show_gaps(at)
+    skills = at.session_state.result["skills"]
+    assert at.session_state.resume_text == "" and all(s["status"] == "missing" for s in skills)
+    assert "From subjects you have taken" not in page_text(at)
+
+
+def test_start_over_clears_the_inputs():
+    at = open_app()
+    pick_role(at, "Data Engineer")
+    at.multiselect(key="taken_box").set_value(["94693"]).run()
+    show_gaps(at)
+    at.button(key="start_over").click().run()
+    assert not at.exception, at.exception
+    assert at.session_state.step == "inputs" and at.session_state.result is None
+    assert at.session_state.taken_keep == [] and at.session_state.role_keep == "Data Scientist"
+    assert at.multiselect(key="taken_box").value == [] and chosen_roles(at) == ["Data Scientist"]

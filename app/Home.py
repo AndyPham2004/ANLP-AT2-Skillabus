@@ -2,10 +2,10 @@
 
 Run from the repo root:  streamlit run app/Home.py
 
-The layout and flow follow the v2 design in docs/design/ (Claude Design, 16 Oct 2026): a sidebar
-with the three steps and the Handbook chat; then Start -> Inputs (or Browse ads) -> Results ->
-Evidence for one skill, plus a subject dialog. app/ui.py holds the CSS and the HTML helpers,
-app/backend.py calls the pipeline, app/ads.py serves the ads to browse.
+The look follows the v2 design in docs/design/ (Claude Design, 16 Oct 2026). One user, a UTS student
+(Quan, 17 Oct: no user modes): Inputs (what you have | your goal, a role or a job ad; or Browse ads)
+-> Results -> Evidence for one skill, plus a subject dialog and the Handbook chat. app/ui.py holds the
+CSS and the HTML helpers, app/backend.py calls the pipeline, app/ads.py serves the ads to browse.
 """
 
 from __future__ import annotations
@@ -42,27 +42,19 @@ FEEDBACK_CSV = paths.FEEDBACK
 SAMPLE_AD = paths.SAMPLE_AD.read_text(encoding="utf-8")
 SAMPLE_RESUME = paths.SAMPLE_RESUME.read_text(encoding="utf-8")
 SAMPLE_AD_TITLE = "Data Scientist · Robert Walters · Sydney CBD"
-USER_TYPES = {   # key -> card label, the question it answers, the call to action (the design's start page)
-    "elective": ("UTS student", "Which elective moves me closest to the job I want?", "Pick a role →"),
-    "job": ("Job seeker", "What does my resume lack for this ad?", "Add ad and resume →"),
-    "switch": ("Career switcher", "How far am I from a new field?", "Pick role, add resume →"),
-}
-CARD_ACCENT = {"elective": ui.HAVE, "job": ui.LINK, "switch": ui.PARTIAL}   # one colour per card and its CTA
-INPUT_TITLES = {"job": "The ad and your resume", "elective": "The role and your subjects",
-                "switch": "The role and your resume"}
-STAGES = ("About to enrol", "Studying at UTS", "Already working")
-NOT_ENROLLED = ""                                              # the course picker's "not enrolled" value
 COURSES = backend.courses()                                    # (code, name) for all 44 courses, MDSI first
 COURSE_NAME = dict(COURSES)
+GOALS = ("A role", "A job ad")
 AD_MODES = ("Browse ads", "Paste an ad", "Try a sample")
-RESUME_MODES = ("Upload a file", "Paste text", "Use a sample")
+RESUME_MODES = ("No resume", "Upload a file", "Paste text", "Use a sample")
 MIN_AD_WORDS = 20
 FAMILIES = backend.role_families()
 ROLE_LIST = [role for roles in FAMILIES.values() for role in roles]        # all 11 roles, family by family
+ROLE_SHORT = {"Machine Learning Engineer": "ML Engineer"}                   # on its pill: a family fits one line
 CORE_SOURCE = {"onet": "O*NET in-demand tool", "esco": "ESCO essential skill"}
 CHAT_SUGGESTIONS = ("Which subject teaches LLMs?", "What does Applied NLP cover?", "Where can I learn SQL?")
-STEP_OF = {"start": 1, "inputs": 2, "jobs": 2, "results": 3, "evidence": 3}     # the chat page shows the step it came from
-CHAT_BACK = {"start": "← Back", "inputs": "← Back to your inputs", "jobs": "← Back to the ads",
+STEP_OF = {"inputs": 1, "jobs": 1, "results": 2, "evidence": 2}     # the chat page shows the step it came from
+CHAT_BACK = {"inputs": "← Back to your inputs", "jobs": "← Back to the ads",
              "results": "← Back to results", "evidence": "← Back to the skill"}
 CERTS_SHOWN = 6                                                # then "Show all 11"
 SUBJECT_NAME = dict(backend.subjects())                      # code -> name, all 360 subjects
@@ -201,16 +193,18 @@ def regex_for(label: str):
 
 ss = st.session_state
 DEFAULTS = {
-    "step": "start", "user_type": None, "messages": [], "chat_from": "start", "ad_open": None, "certs_more": False,
+    "step": "inputs", "messages": [], "chat_from": "inputs", "ad_open": None, "certs_more": False,
     "show_ad": False,
-    "show_details": False, "ad_keep": "", "ad_mode_keep": "Try a sample", "ad_pick": None, "taken_keep": [],
-    "whatif": [], "result": None, "engine": "", "ran": False, "gap": None, "resume_text": "", "resume_label": None,
-    "role_keep": backend.DEFAULT_ROLE, "stage_keep": "Studying at UTS", "course_keep": backend.HOME_COURSE,
+    "show_details": False, "goal_keep": "A role", "ad_keep": "", "ad_mode_keep": "Try a sample", "ad_pick": None,
+    "taken_keep": [], "result": None, "engine": "", "ran": False, "gap": None, "resume_text": "",
+    "resume_label": None, "role_keep": backend.DEFAULT_ROLE, "course_keep": backend.HOME_COURSE,
     "gpt_keep": backend.llm_enabled(),
     "level_keep": list(backend.LEVELS), "cost_keep": "Include free-to-audit", "toast": None,
 }
 for k, v in DEFAULTS.items():
     ss.setdefault(k, v)
+# Kept off screen but not in DEFAULTS: the resume the student gave (start_over() clears them too).
+RESUME_KEYS = ("resume_mode_keep", "resume_keep", "resume_text_keep")
 
 
 def go(step: str, **kw) -> None:
@@ -223,16 +217,11 @@ def toggle(key: str) -> None:
     ss[key] = not ss[key]
 
 
-def pick_type(key: str) -> None:
-    if key != ss.user_type:        # a new kind of question: the old result no longer answers it
-        ss.update(result=None, ran=False, whatif=[], gap=None)
-    ss.user_type = key
-    ss.step = "inputs"
-
-
 def start_over() -> None:
-    ss.update(step="start", user_type=None, result=None, ran=False, whatif=[], gap=None,
-              show_ad=False, show_details=False)
+    """Back to the Inputs page as a new visitor sees it; the Handbook chat stays."""
+    ss.update({k: v for k, v in DEFAULTS.items() if k != "messages"})
+    for k in RESUME_KEYS:
+        ss.pop(k, None)
 
 
 @st.cache_resource(show_spinner=False)
@@ -266,47 +255,31 @@ def cached_analyse(resume_text: str, ad_text: str | None, taken: tuple[str, ...]
 
 
 def run_analysis() -> None:
-    """Run the pipeline on what the Inputs page kept; subjects ticked as taken (what-if) count as taken."""
-    taken = tuple(sorted(set(ss.taken_keep) | set(ss.whatif)))
-    ad = ss.ad_keep if ss.user_type == "job" else None
-    result, engine = cached_analyse(ss.resume_text, ad, taken, ss.role_keep, ss.course_keep or None,
-                                    bool(ss.gpt_keep))
+    """Run the pipeline on what the Inputs page kept: the resume and the subjects taken against the goal."""
+    ad = ss.ad_keep if ss.goal_keep == "A job ad" else None
+    result, engine = cached_analyse(ss.resume_text, ad, tuple(sorted(ss.taken_keep)), ss.role_keep,
+                                    ss.course_keep or backend.HOME_COURSE, bool(ss.gpt_keep))
     ss.update(result=result, engine=engine, ran=True)
 
 
-def set_whatif(code: str, on: bool) -> None:
-    """'Already taken' on a subject: count it as taken and redo the gaps and the path (what-if, issue #60).
-
-    A UTS student keeps one list, the subjects taken on the Inputs page, so the tick edits that list;
-    the other two kinds of user have no such list and get a separate what-if set with a reset.
-    """
-    if ss.user_type == "elective":
-        taken = set(ss.taken_keep)
-        (taken.add if on else taken.discard)(code)
-        ss.taken_keep = sorted(taken)
-        ss.taken_box = list(ss.taken_keep)          # the Inputs page picker shows the same list
-    else:
-        codes = set(ss.whatif)
-        (codes.add if on else codes.discard)(code)
-        ss.whatif = sorted(codes)
+def set_taken(code: str, on: bool) -> None:
+    """"I've taken this" on a subject: it joins (or leaves) the one list of subjects taken from the Inputs
+    page, and the gaps and the path are recomputed (issue #60)."""
+    taken = set(ss.taken_keep)
+    (taken.add if on else taken.discard)(code)
+    ss.taken_keep = sorted(taken)
+    ss.taken_box = list(ss.taken_keep)          # the Inputs page picker shows the same list
     run_analysis()
 
 
-def whatif_from_box(code: str, key: str) -> None:
-    set_whatif(code, bool(ss[key]))
+def taken_from_tick(code: str, key: str) -> None:
+    set_taken(code, bool(ss[key]))
 
 
-def reset_whatif() -> None:
-    ss.whatif = []
-    run_analysis()
-
-
-def whatif_box(code: str, key: str, label: str = "Already taken") -> None:
+def taken_tick(code: str, key: str) -> None:
     """The tick box for one subject; every copy of it shows the same state."""
-    taken = ss.taken_keep if ss.user_type == "elective" else ss.whatif
-    ss[key] = code in taken
-    st.checkbox("I've taken this" if ss.user_type == "elective" else label, key=key,
-                on_change=whatif_from_box, args=(code, key))
+    ss[key] = code in ss.taken_keep
+    st.checkbox("I've taken this", key=key, on_change=taken_from_tick, args=(code, key))
 
 
 def open_gap(label: str) -> None:
@@ -314,8 +287,13 @@ def open_gap(label: str) -> None:
 
 
 def vote(code: str, skill: str, value: str) -> None:
-    save_vote(code, skill, value, code in ss.whatif)
+    save_vote(code, skill, value, code in ss.taken_keep)
     ss.toast = "Thanks, your vote is saved."
+
+
+def is_ad(res: dict) -> bool:
+    """The result answers a job ad (no role), not a role."""
+    return res.get("role") is None
 
 
 def ad_title() -> str:
@@ -334,26 +312,26 @@ def ad_mode_changed() -> None:
         ss.ad_mode = ss.ad_mode_keep
         return
     ss.ad_mode_keep = mode
-    if mode == "Browse ads":
+    if mode == "Browse ads" and not ss.ad_pick:
         ss.step = "jobs"
-    elif mode == "Try a sample":
-        ss.ad_box, ss.ad_pick = SAMPLE_AD, None
-    elif mode == "Paste an ad":
-        ss.ad_box, ss.ad_pick = "", None
 
 
-def stage_changed() -> None:
-    """Already working: not enrolled, unless a course was picked; a student without a course gets MDSI."""
-    if ss.stage_box == "Already working":
-        ss.course_box = NOT_ENROLLED
-    elif not ss.course_box:
-        ss.course_box = backend.HOME_COURSE
+def keep_goal() -> None:
+    if ss.goal_box is None:               # a segmented control can be deselected; a goal is always needed
+        ss.goal_box = ss.goal_keep
+    ss.goal_keep = ss.goal_box
 
 
-def keep_role() -> None:
-    if ss.role_box is None:               # pills can be deselected; a role is always needed
-        ss.role_box = ss.role_keep
-    ss.role_keep = ss.role_box
+def pick_role(n: int) -> None:
+    """One pills row per role family: a pick in one row clears the others, so one role stays chosen."""
+    role = ss[f"role_f{n}"]
+    if role is None:                      # pills can be deselected; a role is always needed
+        ss[f"role_f{n}"] = ss.role_keep
+        return
+    ss.role_keep = role
+    for i in range(len(FAMILIES)):
+        if i != n:
+            ss[f"role_f{i}"] = None
 
 
 def ask(question: str) -> None:
@@ -372,38 +350,28 @@ def open_chat() -> None:
 
 # ---------------------------------------------------------------- sidebar: steps and the chat button
 
-def step_note(n: int) -> str:
-    """The small line under a step of the sidebar: what was chosen there."""
-    ut = ss.user_type
-    if n == 1:
-        return USER_TYPES[ut][0] if ut else ""
-    if n == 2:
-        if not ut:
-            return ""
-        parts = [(ad_title() if ss.ad_keep.strip() else "an ad") if ut == "job" else ss.role_keep]
-        if ut != "elective" and ss.resume_label:
-            parts.append(ss.resume_label.lower() if ss.resume_label.endswith(" resume") else ss.resume_label)
-        return " · ".join(parts)
-    if ss.ran and ss.result and ss.result.get("skills"):
-        gaps = sum(x["status"] != "have" for x in ss.result["skills"])
-        return f"{gaps} of {len(ss.result['skills'])} skills to learn"
-    return ""
+def inputs_note() -> str:
+    """What the Inputs page holds, in a few words for the top bar: the goal, the resume, the subjects."""
+    parts = [(ad_title() if ss.ad_keep.strip() else "an ad") if ss.goal_keep == "A job ad" else ss.role_keep]
+    if ss.resume_label:
+        parts.append(ss.resume_label.lower() if ss.resume_label.endswith(" resume") else ss.resume_label)
+    n = len(ss.taken_keep)
+    parts.append(f"{n} subject{'' if n == 1 else 's'} taken")
+    return " · ".join(parts)
 
 
 def top_bar() -> None:
-    """One strip above every page: the name, the three steps, what was chosen so far, the chat button."""
+    """One strip above every page: the name, the two steps, what was chosen so far, the chat button."""
     current = STEP_OF[ss.chat_from if ss.step == "chat" else ss.step]
     parts = []
-    for n, label in enumerate(("Who you are", "Your inputs", "Results"), start=1):
+    for n, label in enumerate(("Your inputs", "Results"), start=1):
         done, active = current > n, current == n
         colour = ui.HAVE if done else (ui.INK if active else ui.DIM)
         dot = (f"<span class='k-hdot' style='border-color:{colour};background:{ui.HAVE if done else 'transparent'};"
                f"color:{ui.DARK if done else colour}'>{'✓' if done else n}</span>")
         parts.append(f"<span class='k-hstep' style='color:{colour};font-weight:{500 if active else 400}'>{dot}{label}</span>")
     stepper = "<span class='k-hline'></span>".join(parts)
-    ctx = " · ".join(x for x in (step_note(1), step_note(2)) if x)
-    if ss.whatif:
-        ctx = " · ".join(x for x in (ctx, "Counting as taken: " + ", ".join(subject_name(c) for c in ss.whatif)) if x)
+    ctx = inputs_note() if current > 1 else ""
     name_col, steps_col, ctx_col, chat_col = st.columns([1.1, 3.3, 2.6, 1.3], vertical_alignment="center", gap="small")
     name_col.markdown(f"<div class='k-mark' style='margin:0'><span class='k-dot' style='background:{ui.HAVE};"
                       "margin-right:8px;vertical-align:2px'></span>Skillabus</div>", unsafe_allow_html=True)
@@ -441,48 +409,58 @@ def chat_thread() -> None:
                     st.markdown(m["content"])
 
 
-# ---------------------------------------------------------------- step 1: who you are
+# ---------------------------------------------------------------- step 1: your inputs
 
-def page_start() -> None:
-    st.markdown(ui.h1(f"Find the skills a job wants that <span style='color:{ui.MISSING}'>you don't have yet</span>"
-                      f" — and the <span style='color:{ui.HAVE}'>UTS subject</span> that teaches each one.", "xl"),
-                unsafe_allow_html=True)
-    st.markdown("<div class='k-eyebrow' style='margin-top:36px'>I am a…</div>", unsafe_allow_html=True)
-    for col, (key, (label, question, cta)) in zip(st.columns(3, gap="medium"), USER_TYPES.items()):
-        with col, st.container(border=True):
-            st.markdown(f"<div class='k-accent' style='background:{CARD_ACCENT[key]}'></div>"
-                        f"<div class='k-card-title'>{label}</div>"
-                        f"<div class='k-soft k-body' style='min-height:3em;margin:6px 0 10px'>{question}</div>",
-                        unsafe_allow_html=True)
-            st.button(cta, key=f"role_{key}", width="stretch", on_click=pick_type, args=(key,))
+def ad_excerpt(text: str, n: int = 210) -> str:
+    """The ad's first sentences, skipping a header block of short lines (title, company, place, source)."""
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    start = next((i for i, ln in enumerate(lines) if len(ln.split()) >= 8), 0)
+    return short(" ".join(lines[start:]), n)
 
 
-# ---------------------------------------------------------------- step 2: your inputs
+def ad_card(title: str, meta: str, text: str) -> None:
+    st.markdown(ui.card(f"<div style='font-weight:500;font-size:15.5px'>{ui.esc(title)}</div>"
+                        + (f"<div class='k-small k-mute'>{ui.esc(meta)}</div>" if meta else "")
+                        + f"<div class='k-small k-soft' style='margin-top:6px;line-height:1.5'>"
+                          f"{ui.esc(ad_excerpt(text))}</div>"), unsafe_allow_html=True)
+
 
 def job_ad_block() -> None:
-    st.markdown(ui.eyebrow("The job ad"), unsafe_allow_html=True)
+    """Browse the 160 ads (the chosen one as a card), paste one, or use the sample."""
     # Widgets forget their value once off screen, so each keeps a *_keep twin that survives the other pages.
     ss.setdefault("ad_mode", ss.ad_mode_keep)
-    if "ad_box" not in ss:
-        ss.ad_box = ss.ad_keep or (SAMPLE_AD if ss.ad_mode == "Try a sample" else "")
     st.segmented_control("Where the ad comes from", AD_MODES, key="ad_mode", label_visibility="collapsed",
                          on_change=ad_mode_changed)
-    st.caption(f"Browse: {len(ads.load())} Australian ads 2024-26 · Paste: copy the full text · "
-               "Sample: Data Scientist, Sydney")
-    if ss.ad_mode == "Browse ads" and ss.ad_pick:
-        st.markdown(f"<div class='k-small k-mute'>Using <span style='color:{ui.INK}'>{ui.esc(ad_title())}"
-                    "</span></div>", unsafe_allow_html=True)
-    st.text_area("The ad", key="ad_box", height=190, label_visibility="collapsed",
-                 placeholder="Paste the full job ad here…")
-    ss.ad_keep = ss.ad_box or ""
+    mode = ss.ad_mode or ss.ad_mode_keep
+    pick = ss.ad_pick
+    if mode == "Browse ads" and pick:
+        ad_card(pick["title"], f"{pick['company']} · {pick['location']} · {posted(pick['posted'])}", pick["text"])
+        st.button(f"Pick another of the {len(ads.load())} ads", key="ads_again", type="tertiary", on_click=go,
+                  args=("jobs",))
+        ss.ad_keep = pick["text"]
+    elif mode == "Browse ads":
+        st.button(f"Browse {len(ads.load())} Australian ads →", key="ads_go", on_click=go, args=("jobs",))
+        ss.ad_keep = ""
+    elif mode == "Try a sample":
+        ad_card(SAMPLE_AD_TITLE, "", SAMPLE_AD)
+        ss.ad_keep = SAMPLE_AD
+    else:
+        if "ad_box" not in ss:
+            ss.ad_box = ss.get("ad_text_keep", "")
+        st.text_area("The ad", key="ad_box", height=170, label_visibility="collapsed",
+                     placeholder="Paste the full job ad here…")
+        ss.ad_keep = ss.ad_text_keep = ss.ad_box or ""
 
 
 def role_block() -> None:
-    st.markdown(ui.eyebrow("The role you want"), unsafe_allow_html=True)
-    ss.setdefault("role_box", ss.role_keep)
-    st.pills("Role", ROLE_LIST, key="role_box", label_visibility="collapsed", on_change=keep_role)
-    role = ss.role_box or ss.role_keep
-    ss.role_keep = role
+    """The 11 roles, one pills row per family with the family's name on the left."""
+    for n, (family, roles) in enumerate(FAMILIES.items()):
+        ss.setdefault(f"role_f{n}", ss.role_keep if ss.role_keep in roles else None)
+        name_col, pills_col = st.columns([0.75, 3.6], vertical_alignment="center", gap="small")
+        name_col.markdown(f"<span class='k-small k-mute'>{ui.esc(family)}</span>", unsafe_allow_html=True)
+        pills_col.pills(family, roles, key=f"role_f{n}", label_visibility="collapsed", on_change=pick_role, args=(n,),
+                        format_func=lambda r: ROLE_SHORT.get(r, r))
+    role = ss.role_keep
     if backend.has_ad_counts(role):
         st.caption(f"The role is the 15 skills most often asked for in {backend.role_source(role)}")
     else:
@@ -493,7 +471,7 @@ def taken_block() -> None:
     mine = backend.course_subjects(ss.course_keep or backend.HOME_COURSE)   # the student's course first
     options = mine + [c for c in SUBJECT_NAME if c not in set(mine)]
     ss.setdefault("taken_box", [c for c in ss.taken_keep if c in SUBJECT_NAME])
-    st.markdown(ui.eyebrow(f"Subjects you've already taken <span style='color:{ui.HAVE}'>· {len(ss.taken_box)}"
+    st.markdown(ui.eyebrow(f"Subjects you've taken <span style='color:{ui.HAVE}'>· {len(ss.taken_box)}"
                            "</span>"), unsafe_allow_html=True)
     # No "Select N matches" row: it sat first, so Enter after typing a name ticked every match.
     st.multiselect("Subjects taken", options, key="taken_box", format_func=subject_label,
@@ -503,13 +481,17 @@ def taken_block() -> None:
 
 
 def resume_block() -> str:
-    """Upload a file, paste the text, or use the sample. Returns the resume text ("" when there is none yet)."""
-    st.markdown(ui.eyebrow("Your resume <span class='k-dim'>· stays in memory for this session, never stored</span>"),
+    """None, a file, pasted text, or the sample. Returns the resume text ("" when there is none)."""
+    st.markdown(ui.eyebrow("Your resume <span class='k-dim'>· optional, kept for this session only</span>"),
                 unsafe_allow_html=True)
     ss.setdefault("resume_mode", ss.get("resume_mode_keep", "Use a sample"))
     st.segmented_control("Where the resume comes from", RESUME_MODES, key="resume_mode", label_visibility="collapsed")
     mode = ss.resume_mode or ss.get("resume_mode_keep", "Use a sample")
     ss.resume_mode_keep = mode
+    if mode == "No resume":
+        st.caption("The gaps then count only what your subjects teach.")
+        ss.resume_label = None
+        return ""
     if mode == "Upload a file":
         upload = st.file_uploader("PDF or text file", type=["pdf", "txt", "md"], key="resume_upload",
                                   label_visibility="collapsed")
@@ -537,56 +519,40 @@ def resume_block() -> str:
 
 
 def page_inputs() -> None:
-    ut = ss.user_type
-    st.markdown(ui.h1(INPUT_TITLES[ut], "md"), unsafe_allow_html=True)
-
-    stages = list(STAGES[:2]) if ut == "elective" else list(STAGES)     # a UTS student is not "already working"
-    if ss.get("stage_box") not in stages:
-        ss.stage_box = ss.stage_keep if ss.stage_keep in stages else "Studying at UTS"
-    ss.setdefault("course_box", ss.course_keep)
-    if ut == "elective" and not ss.course_box:
-        ss.course_box = backend.HOME_COURSE
-    stage_col, course_col = st.columns([1.1, 1], gap="large", vertical_alignment="bottom")
-    with stage_col:
-        st.markdown(ui.eyebrow("Where are you in your studies?"), unsafe_allow_html=True)
-        st.segmented_control("Stage", stages, key="stage_box", label_visibility="collapsed",
-                             on_change=stage_changed)
-    ss.stage_keep = ss.stage_box or ss.stage_keep
-    with course_col:
+    """Left what you have (course, subjects, resume), right your goal (a role or a job ad): Quan's pick A, 17 Oct."""
+    st.markdown(ui.h1("What you have and where you are heading", "md"), unsafe_allow_html=True)
+    you_col, goal_col = st.columns([1.1, 1.45], gap="large")   # 1.1: the four resume choices fit on one line
+    with you_col:
+        st.markdown("<div class='k-big'>You</div>", unsafe_allow_html=True)
         st.markdown(ui.eyebrow("Your course <span class='k-dim'>· decides which subjects are open to you</span>"),
                     unsafe_allow_html=True)
-        st.selectbox("Course", [NOT_ENROLLED] + [c for c, _ in COURSES], key="course_box",
-                     format_func=lambda c: "Not enrolled at UTS" if c == NOT_ENROLLED else COURSE_NAME[c],
+        ss.setdefault("course_box", ss.course_keep or backend.HOME_COURSE)
+        st.selectbox("Course", [c for c, _ in COURSES], key="course_box", format_func=COURSE_NAME.get,
                      label_visibility="collapsed")
-    ss.course_keep = ss.course_box or NOT_ENROLLED
-
-    resume = ""
-    if ut == "job":                     # ad and resume side by side: both in view on a short screen
-        ad_col, cv_col = st.columns([1.35, 1], gap="large")
-        with ad_col:
+        ss.course_keep = ss.course_box or backend.HOME_COURSE
+        taken_block()
+        ss.resume_text = resume_block()
+    with goal_col, st.container(key="goal_col"):
+        st.markdown("<div class='k-big'>Your goal</div>", unsafe_allow_html=True)
+        ss.setdefault("goal_box", ss.goal_keep)
+        st.segmented_control("Goal", GOALS, key="goal_box", label_visibility="collapsed", on_change=keep_goal)
+        ss.goal_keep = ss.goal_box or ss.goal_keep
+        if ss.goal_keep == "A job ad":
             job_ad_block()
-        with cv_col:
-            resume = resume_block()
-    else:
-        role_block()
-        if ut == "elective":
-            taken_block()
         else:
-            resume = resume_block()
-    ss.resume_text = resume
+            role_block()
+        find_gaps_row()
 
-    if ut == "job":
-        enough_ad = ui.word_count(ss.ad_keep) > MIN_AD_WORDS
-        ready = enough_ad and bool(resume)
-        hint = "" if ready else ("Add a job ad first: the full text." if not enough_ad else "Add a resume first.")
-    elif ut == "switch":
-        ready = bool(resume)
-        hint = "" if ready else "Add a resume first."
+
+def find_gaps_row() -> None:
+    """The button, what is still missing, and the GPT-4o-mini switch."""
+    if ss.goal_keep == "A job ad" and ui.word_count(ss.ad_keep) <= MIN_AD_WORDS:
+        ready, hint = False, ("Pick an ad first." if (ss.ad_mode_keep == "Browse ads") else "Paste the full ad first.")
+    elif not ss.resume_text and not ss.taken_keep:
+        ready, hint = True, "No resume and no subject yet: every skill counts as a gap."
     else:
-        ready = True
-        hint = "" if ss.taken_keep else "No subject ticked yet: every skill of the role counts as a gap."
-
-    run_col, hint_col = st.columns([1, 3], vertical_alignment="center")
+        ready, hint = True, ""
+    run_col, hint_col = st.columns([1, 1.6], vertical_alignment="center")
     if run_col.button("Find my gaps", type="primary", key="show_gaps", disabled=not ready, width="stretch"):
         waiting = ("Loading the language model for the first time, up to a minute…" if WARM.locked()
                    else "One moment: reading your inputs and matching 360 UTS subjects…")
@@ -594,7 +560,7 @@ def page_inputs() -> None:
             run_analysis()
         go("results", show_ad=False, results_tab_keep="Skills")
         st.rerun()
-    hint_col.markdown(f"<span class='k-mute'>{ui.esc(hint)}</span>", unsafe_allow_html=True)
+    hint_col.markdown(f"<span class='k-small k-mute'>{ui.esc(hint)}</span>", unsafe_allow_html=True)
     if backend.llm_enabled():
         ss.setdefault("gpt_box", ss.gpt_keep)
         st.toggle("GPT-4o-mini tier: also finds skills outside our dictionary", key="gpt_box")
@@ -663,7 +629,7 @@ def ad_body(ad: dict) -> None:
         link_col.markdown(f"<a href='{ui.esc(ad['url'])}' target='_blank' class='k-small'>Open the original ↗</a>",
                           unsafe_allow_html=True)
     if use_col.button("Use this ad", key="use_job", type="primary"):
-        ss.update(ad_box=ad["text"], ad_keep=ad["text"], ad_pick=ad, ad_mode_keep="Browse ads", ad_open=None)
+        ss.update(ad_keep=ad["text"], ad_pick=ad, ad_mode_keep="Browse ads", goal_keep="A job ad", ad_open=None)
         ss.toast = f"Using “{ad['title']} — {ad['company']}”."
         go("inputs")
         st.rerun()
@@ -710,7 +676,11 @@ def skills_section(skills: list[dict], counted: bool, noun: str, role: str | Non
         st.caption(f"Also in the ad, outside our skills list: {', '.join(also)}. Found by GPT-4o-mini; "
                    "not counted above.")
     st.caption(bars_note(skills, counted, role) + " Click a skill for the evidence and where to learn it.")
-    if ss.user_type == "job" and ss.ad_keep.strip():
+    off_cv = [lc(s["skill_label"]) for s in skills if from_subject(s)]
+    if off_cv and ss.resume_text:
+        st.caption(f"From subjects you have taken but not on your resume: {', '.join(off_cv)}. "
+                   "Add them to your resume: employers read it, not your transcript.")
+    if is_ad(ss.result) and ss.ad_keep.strip():
         st.button("Hide the ad" if ss.show_ad else "Show where these appear in the ad", key="toggle_ad",
                   type="tertiary", on_click=toggle, args=("show_ad",))
         if ss.show_ad:
@@ -730,7 +700,7 @@ def path_card(code: str, r: dict, by: dict, plan: dict) -> None:
         if when:
             colour = ui.PARTIAL if r.get("needs") else ui.MUTE
             st.markdown(f"<div class='k-small' style='color:{colour}'>{ui.esc(when)}</div>", unsafe_allow_html=True)
-        whatif_box(code, f"wi_path_{code}")
+        taken_tick(code, f"wi_path_{code}")
 
 
 def outside_card(o: dict, by: dict) -> None:
@@ -778,14 +748,9 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
         notes.append(f"The path covers {lp['demand_covered_pct']:.0f}% of the employer demand behind your gaps.")
     if notes:
         st.caption(" ".join(notes))
-    if ss.user_type == "elective":
-        if subjects:
-            st.caption("Tick \"I've taken this\" on a subject and it joins your subjects from the Inputs page; "
-                       "the gaps and the path are recomputed.")
-    elif ss.whatif:
-        st.button("Reset: count no subject as taken", key="whatif_reset", type="tertiary", on_click=reset_whatif)
-    elif subjects:
-        st.caption("Tick \"Already taken\" on a subject to see how your gaps and the path change.")
+    if subjects:
+        st.caption("Tick \"I've taken this\" on a subject and it joins your subjects from the Inputs page; "
+                   "the gaps and the path are recomputed.")
 
 
 def outside_section(res: dict, by: dict) -> None:
@@ -833,7 +798,7 @@ def certs_section(role: str) -> None:
 def page_results() -> None:
     res = ss.result
     skills = res["skills"]
-    role = res.get("role")                                          # None in Job seeker mode
+    role = res.get("role")                                          # None for a job ad
     counted = role is None or backend.has_ad_counts(role)           # False: core skills, no percentages
     by = {s["skill_label"]: s for s in skills}
     n_have = sum(s["status"] == "have" for s in skills)
@@ -851,7 +816,7 @@ def page_results() -> None:
             st.warning("I couldn't find any technical skills in that ad. Is it the full text?")
         return
 
-    target = ad_title() if ss.user_type == "job" else role
+    target = ad_title() if is_ad(res) else role
     st.markdown(ui.eyebrow(ui.esc(target)), unsafe_allow_html=True)
     colour = ui.HAVE if not gaps else (ui.MISSING if len(gaps) >= 4 else ui.PARTIAL)
     if not gaps:
@@ -871,7 +836,7 @@ def page_results() -> None:
     tab = ss.results_tab or "Skills"
     ss.results_tab_keep = tab
     if tab == "Skills":
-        skills_section(skills, counted, "ad" if ss.user_type == "job" else "role", role)
+        skills_section(skills, counted, "ad" if is_ad(res) else "role", role)
     elif tab == "Your path":
         path_section(res, by, counted)
     elif tab == "Outside UTS":
@@ -882,20 +847,29 @@ def page_results() -> None:
 
 # ---------------------------------------------------------------- step 3b: the evidence for one skill
 
+TAKEN_EVIDENCE = re.compile(r"From (\d{5,6}) (.+?) \(taken\)$")    # credit_taken(): "From 94692 Data Science Practice (taken)"
+
+
+def from_subject(s: dict) -> re.Match | None:
+    """A skill the student has only because a subject they took teaches it, not because the resume says so."""
+    return TAKEN_EVIDENCE.match(s.get("resume_evidence") or "") if s["status"] == "have" else None
+
+
 def resume_note(s: dict) -> str:
     label = s["skill_label"]
     if s["status"] == "have":
-        ev = s.get("resume_evidence") or ""
-        taken = re.match(r"From (\d{5,6}) (.+?) \(taken\)$", ev)      # credit_taken(): "From 94692 Data Science Practice (taken)"
+        taken = from_subject(s)
         if taken:
-            return f"Covered by {taken.group(2)}, a subject you have taken."
+            tail = " Your resume does not mention it: add it." if ss.resume_text else ""
+            return f"Covered by {taken.group(2)}, a subject you have taken.{tail}"
+        ev = s.get("resume_evidence") or ""
         # The skill page shows this after "You have it." with no label above it, so it says where it comes from.
         return f"Your resume says: “{ev}”." if ev else f"Your resume mentions {lc(label)}."
     if s["status"] == "partial":
         return f"Your resume says: \u201c{s.get('resume_evidence', '')}\u201d. Related, not quite the same skill."
-    if ss.user_type == "elective":
+    if not ss.resume_text:
         return f"No subject you ticked names {lc(label)}."
-    return f"Nothing in your resume mentions {lc(label)}."
+    return f"Nothing in your resume or the subjects you ticked mentions {lc(label)}."
 
 
 def short(text: str, n: int = 160) -> str:
@@ -935,9 +909,9 @@ STATUS_LINE = {"have": ("✓", "You have it."), "partial": ("~", "Partly."), "mi
 
 
 def fact_lines(s: dict) -> str:
-    """Right of the band: what the ad says (job seeker), the student's status, and "new skill" in plain words."""
+    """Right of the band: what the ad says (for an ad), the student's status, and "new skill" in plain words."""
     lines = []
-    if ss.user_type == "job":
+    if is_ad(ss.result):
         lines.append(("ad", "“", f"The ad says <q>“{ui.esc(short(s['ad_evidence'], 170))}”</q>"))
     icon, word = STATUS_LINE[s["status"]]
     lines.append((s["status"], icon, f"<b>{word}</b> {ui.esc(resume_note(s))}"))
@@ -974,7 +948,7 @@ def uts_cards(label: str, res: dict) -> None:
                 v1.button(f"👍 {up}", key=f"up_{i}", width="stretch", on_click=vote, args=(r["subject_code"], label, "up"))
                 v2.button(f"👎 {down}", key=f"down_{i}", width="stretch", on_click=vote,
                           args=(r["subject_code"], label, "down"))
-                whatif_box(r["subject_code"], f"wi_ev_{i}")
+                taken_tick(r["subject_code"], f"wi_ev_{i}")
         st.caption("👍 / 👎: does the subject really teach this? Your vote helps us check the matcher.")
     for d in [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]][:2]:
         reason = re.sub(r"\b\d{5,6} (?=[A-Z])", "", d["reason"])          # names, not codes
@@ -1075,7 +1049,7 @@ def subject_body(code: str) -> None:
         st.markdown(f"<a href='{ui.esc(info['source_url'])}' target='_blank'>Open in UTS Handbook ↗</a> "
                     f"<span class='k-mono k-small k-dim'>{ui.esc(code)}</span>", unsafe_allow_html=True)
     if not (r and r.get("provider")):
-        whatif_box(code, f"wi_dlg_{code}", "I've already taken this")
+        taken_tick(code, f"wi_dlg_{code}")
 
 
 # ---------------------------------------------------------------- routing
@@ -1084,10 +1058,8 @@ if ss.toast:
     st.toast(ss.toast)
     ss.toast = None
 if ss.step in ("results", "evidence") and not ss.result:
-    ss.step = "inputs" if ss.user_type else "start"
-if ss.step in ("inputs", "jobs") and not ss.user_type:
-    ss.step = "start"
-PAGES = {"start": page_start, "inputs": page_inputs, "jobs": page_jobs, "results": page_results,
+    ss.step = "inputs"
+PAGES = {"inputs": page_inputs, "jobs": page_jobs, "results": page_results,
          "evidence": page_evidence, "chat": page_chat}
 top_bar()
 PAGES[ss.step]()

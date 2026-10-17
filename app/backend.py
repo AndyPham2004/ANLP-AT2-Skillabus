@@ -1,7 +1,7 @@
 """The one place the app calls the pipeline.
 
 Runs the real stages in src/skillabus; if one fails, falls back to app/baseline.py, which
-returns the same shape (Job seeker and Data Scientist only). With an OpenAI key, the
+returns the same shape (a job ad, or the Data Scientist role, only). With an OpenAI key, the
 GPT-4o-mini tier then adds skills the dictionary does not know (e.g. "agentic AI"),
 normalised to ESCO / Lightcast / emerging. The app shows which engine produced the result.
 
@@ -174,7 +174,8 @@ def role_gaps(role: str, resume_skills: list[dict]) -> list[dict]:
 
 
 def credit_taken(skills: list[dict], taken: list[str]) -> list[dict]:
-    """A subject the student has taken counts as having the skills its text names (the 'taken' box)."""
+    """A subject the student has taken counts as having the skills its text names (the 'taken' box), for a
+    role and for a job ad alike. The app marks such a skill as not on the resume (Home.from_subject)."""
     missing = [s["skill_label"] for s in skills if s["status"] == "missing"]
     if not taken or not missing:
         return skills
@@ -267,7 +268,7 @@ def augment_with_llm(result: dict, resume_text: str, ad_text: str | None, taken:
     result = {**result, "also_in_ad": apart}
     if not extra:
         return result
-    skills = result["skills"] + extra
+    skills = result["skills"] + credit_taken(extra, taken)
     gaps = [s for s in skills if s["status"] != "have"]
     ranked = rank(gaps) if rank else baseline_ranking(gaps, taken)
     return {**result, "skills": skills, **ranked}
@@ -306,7 +307,7 @@ def analyse(resume_text: str, ad_text: str | None, taken: list[str], role: str =
             mode, soft = f"role-{slug(role)}", []
         else:
             ad_skills = normalise(extract(ad_text))
-            skills = match(ad_skills, resume_skills)
+            skills = credit_taken(match(ad_skills, resume_skills), taken)
             mode, soft = "pasted-ad", soft_skills(ad_skills)
         result = {"ad_id": mode, "mode": mode, "role": role if ad_text is None else None, "skills": skills,
                   "soft_skills": soft, **rank([s for s in skills if s["status"] != "have"])}

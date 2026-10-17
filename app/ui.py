@@ -61,12 +61,14 @@ section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid=
 .k-h2 { font-family: 'Literata', Georgia, serif; font-weight: 500; font-size: clamp(17px, 1.6vw, 21px); color: #e8e6e1; }
 .k-card-title { font-family: 'Literata', Georgia, serif; font-size: clamp(18px, 1.8vw, 24px); font-weight: 500; }
 .k-accent { width: 34px; height: 3px; border-radius: 2px; margin: 2px 0 12px; }
-.st-key-role_elective button p { color: #4fd1b8 !important; }
-.st-key-role_job button p { color: #8fbcff !important; }
-.st-key-role_switch button p { color: #f2b74f !important; }
-.st-key-role_elective button:hover { border-color: #4fd1b8; }
-.st-key-role_job button:hover { border-color: #8fbcff; }
-.st-key-role_switch button:hover { border-color: #f2b74f; }
+/* the Inputs page: what you have | your goal, a hairline between the two columns */
+.k-big { font: 500 12.5px/1 'Public Sans', system-ui, sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #c9c8c2; margin: 14px 0 6px; }
+.st-key-goal_col { border-left: 1px solid rgba(255,255,255,.08); padding-left: clamp(18px, 2.4vw, 32px); }
+/* Streamlit 1.65 scrolls a pills row sideways; the role rows wrap instead, with smaller pills */
+.st-key-goal_col [role="radiogroup"] { flex-wrap: wrap !important; overflow: visible !important; row-gap: 6px; }
+.st-key-goal_col [data-testid="stVerticalBlock"] { gap: .55rem; }
+.st-key-goal_col button[data-variant="pills"] { min-height: 0 !important; padding: 2px 11px !important; }
+.st-key-goal_col button[data-variant="pills"] p { font-size: 13px !important; }
 div[data-testid="stVerticalBlockBorderWrapper"] { transition: border-color .15s; }
 div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(255,255,255,.3); }
 /* Streamlit centres a button's label through two inner flex wrappers; the sidebar steps read left to right. */
