@@ -1,38 +1,99 @@
+# References
+
+arshkon. (2024). *LinkedIn job postings (2023–2024)* \[Data set\]. Kaggle. https://www.kaggle.com/datasets/arshkon/linkedin-job-postings
+
+asaniczka. (2024). *Data science job postings & skills (2024)* \[Data set\]. Kaggle. https://www.kaggle.com/datasets/asaniczka/data-science-job-postings-and-skills
+
+Barousse, L. (2025). *data_jobs* \[Data set\]. Hugging Face. https://huggingface.co/datasets/lukebarousse/data_jobs
+
+Cohen, J. (1960). A coefficient of agreement for nominal scales. *Educational and Psychological Measurement, 20*(1), 37–46. https://doi.org/10.1177/001316446002000104
+
+European Commission. (2017). *ESCO: European Skills, Competences, Qualifications and Occupations*. https://esco.ec.europa.eu
+
+European Commission. (2025). *ESCO: European skills, competences, qualifications and occupations* (Version 1.2.1) \[Data set\]. https://esco.ec.europa.eu/en/use-esco/download
+
+Frej, J., Dai, A., Montariol, S., Bosselut, A., & Käser, T. (2024). Course recommender systems need to consider the job market. In *Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval*. https://arxiv.org/abs/2404.10876
+
+Jobs and Skills Australia. (2025). *2025 Occupation Shortage List* \[Data set\]. Commonwealth of Australia. https://www.jobsandskills.gov.au/data/occupation-shortage
+
+Jobscan. (2023). *Resume skills: Top resume skills by job title*. https://jobscan.co/skills
+
+JobsPipe. (2026). *JobsPipe job search API* \[API\]. https://jobspipe.dev
+
+Karakolis, E., Kapsalis, P., Skalidakis, S., Kontzinos, C., Kokkinakos, P., Markaki, O., & Askounis, D. (2022). Bridging the gap between technological education and job market requirements through data analytics and decision support services. *Applied Sciences, 12*(14), Article 7139. https://doi.org/10.3390/app12147139
+
+Lewis, P., Perez, E., Piktus, A., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS 2020*.
+
+Lightcast. (2025, June 3). *Lightcast addresses higher education’s relevance crisis with real-time skills alignment technology* \[Press release\]. https://lightcast.io/resources/blog/skillabi-press-release-june-3-2025
+
+LinkedIn. (n.d.). *LinkedIn Learning Hub: Skill building*. Retrieved October 14, 2026, from https://learning.linkedin.com/skill-building
+
+Monroe, B. L., Colaresi, M. P., & Quinn, K. M. (2008). Fightin’ words: Lexical feature selection and evaluation for identifying the content of political conflict. *Political Analysis, 16*(4), 372–403.
+
+Musazade, N., Mezei, J., & Zhang, M. (2026). UniSkill: A dataset for matching university curricula to professional competencies. In *Proceedings of the Fifteenth Language Resources and Evaluation Conference* (pp. 456–469). https://aclanthology.org/2026.lrec-1.31/
+
+nadzmiagthomas. (2022). *Australia data science jobs* \[Data set\]. Kaggle. https://www.kaggle.com/datasets/nadzmiagthomas/australia-data-science-jobs
+
+National Center for O\*NET Development. (2026). *O\*NET 31.0 database* \[Data set\]. https://www.onetcenter.org/database.html
+
+National Skills Commission. (2021). *Australian Skills Classification* (Version 1.0) \[Data set\]. Commonwealth of Australia.
+
+Nemhauser, G. L., Wolsey, L. A., & Fisher, M. L. (1978). An analysis of approximations for maximizing submodular set functions—I. *Mathematical Programming, 14*, 265–294.
+
+nomilk. (2022). *Data science job listings – Australia – 2019–2021* \[Data set\]. Kaggle. https://www.kaggle.com/datasets/nomilk/data-science-job-listings-australia-20192020
+
+PromptCloud. (2021a). *Seek Australia job listing* (Oct–Dec 2020) \[Data set\]. Kaggle. https://www.kaggle.com/datasets/promptcloud/seek-australia-job-listing
+
+PromptCloud. (2021b). *Seek job listing Australia* (Jan–Mar 2021) \[Data set\]. Kaggle. https://www.kaggle.com/datasets/promptcloud/seek-job-listing-australia
+
+Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using Siamese BERT-networks. *EMNLP-IJCNLP 2019*.
+
+Schlippe, T., & Bothmer, K. (2023). Skill Scanner: An AI-based recommendation system for employers, job seekers and educational institutions. *International Journal of Advanced Corporate Learning, 16*(1), 55–64. https://doi.org/10.3991/ijac.v16i1.34779
+
+snehaanbhawal. (2021). *Resume dataset* \[Data set\]. Kaggle. https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset
+
+University of Technology Sydney. (2026). *UTS handbook 2026*. https://coursehandbook.uts.edu.au
+
+Wilson, E. B. (1927). Probable inference, the law of succession, and statistical inference. *Journal of the American Statistical Association, 22*(158), 209–212. https://doi.org/10.1080/01621459.1927.10502953
+
+Zhang, M., Jensen, K. N., Sonniks, S. D., & Plank, B. (2022). SkillSpan: Hard and soft skill extraction from English job postings. In *Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies* (pp. 4962–4984). https://doi.org/10.18653/v1/2022.naacl-main.366
+
+Zhang, M., Jensen, K. N., van der Goot, R., & Plank, B. (2022). Skill extraction from job postings using weak supervision. In *Proceedings of the 2nd Workshop on Recommender Systems for Human Resources (RecSys-in-HR 2022)* (CEUR Workshop Proceedings, Vol. 3218). https://ceur-ws.org/Vol-3218/RecSysHR2022-paper_10.pdf
+
 # Appendix
 
-**Repository:** https://github.com/AndyPham2004/ANLP-AT2-Skillabus · **App:** [link and QR code: Quan adds]
+**Repository:** https://github.com/AndyPham2004/ANLP-AT2-Skillabus · **App:** https://skillabus.streamlit.app
+
+![QR code for https://skillabus.streamlit.app](figures/qr_app.png)
 
 ## Appendix A. Data
 
 **Table A.1.** Every data source, what Skillabus uses it for, and its licence.
 
-| Source | What we use | Period | Role in Skillabus | Licence or terms |
-|---|---|---|---|---|
-| JobsPipe API (aggregates LinkedIn, Indeed, Workday and 11 job-board platforms) | 1,932 Australian ads, 89–216 per role, 11 roles; skills found and link only | 1 Sep – 16 Oct 2026 | main demand for every role | API terms: ad text not redistributed, link kept; one free account per person (three members' own accounts) |
+| **Source** | **What we use** | **Period** | **Role in Skillabus** | **Licence or terms** |
+|----|----|----|----|----|
+| JobsPipe API (aggregates LinkedIn, Indeed and other job boards; our ads come from 9 of them) | 1,932 Australian ads, 89–216 per role, 11 roles; skills found and link only | 1 Sep – 16 Oct 2026 | main demand for every role | API terms: ad text not redistributed, link kept; one free account per person (three members’ own accounts) |
 | Adzuna API | live search counts: 11 role totals, 162 skill × role counts | 16 Oct 2026 | second 2026 view; rank check | API terms (counts only) |
-| Public job boards of 65 employers (Greenhouse, Lever, SmartRecruiters, Ashby, Workable) | 392 ads posted within 60 days, 85 with a role | Oct 2026 | third 2026 view | employers' public ads |
+| Public job boards of 51 employers (65 boards read; Greenhouse, Lever, SmartRecruiters, Ashby, Workable) | 392 ads posted within 60 days, 85 in the 11 roles | Oct 2026 | third 2026 view | employers’ public ads |
 | Seek Australia, Data Scientist (nomilk, 2022) | 3,204 listings, full text | Feb 2019 – Jan 2022 | Data Scientist trend | CC0 |
-| Seek Australia samples (PromptCloud, 2021) | 2,362 IT ads out of 65,840, 10 roles (4 more Machine Learning Engineer ads, too few to use) | 2020–21 | pre-2022 baseline per role | CC0 |
+| Seek Australia samples (PromptCloud, 2021a, 2021b) | 2,362 IT ads out of 65,840, 10 roles (4 more Machine Learning Engineer ads, too few to use) | 2020–21 | pre-2022 baseline per role | CC0 |
 | data_jobs (Barousse, 2025) | 10,925 Australian postings in 7 roles, tool lists | 2023 | cross-check | Apache-2.0 |
 | LinkedIn data-science postings (asaniczka, 2024) | 122 Australian data roles | Jan 2024 | trend midpoint | ODC-By |
 | LinkedIn job postings (arshkon, 2024) | 247 US Data Scientist ads | 2023–24 | validation | CC BY-SA 4.0 |
 | Glassdoor Australia (nadzmiagthomas, 2022) | 193 data roles | Aug – Dec 2022 | validation | CC BY-NC 4.0 |
-| ESCO v1.2.1 | 13,960 skills, 100,135 labels; essential and optional skills of each role's occupation | 2025 | base of the vocabulary; core skills | free reuse with attribution |
-| O\*NET 31.0 | 8,753 software products (Technology Skills); the "In Demand" ones per occupation | 2026 | in-demand tools per role | CC BY 4.0 |
+| ESCO v1.2.1 | 13,960 skills, 100,135 distinct labels; essential and optional skills of each role’s occupation | 2025 | base of the vocabulary; core skills | free reuse with attribution |
+| O\*NET 31.0 | 8,753 software products (Technology Skills); the “In Demand” ones per occupation | 2026 | in-demand tools per role | CC BY 4.0 |
 | Australian Skills Classification v1.0 | core competencies and tool categories per ANZSCO occupation | 2021 | Australian taxonomy | CC BY 4.0 |
 | Jobs and Skills Australia | 2025 Occupation Shortage List; Internet Vacancy Index | 2025–26 | shortage label per role | CC BY 4.0 |
 | UTS Handbook 2026 | 360 subjects in 44 courses, 19 of them MDSI | 2026 | subject profiles, prerequisites, sessions | public pages; text kept for matching |
-| Students' Canvas reports | 305 skill rows for 9 MDSI subjects, 2 students | 2025–26 | what subjects taught | our own data |
+| Students’ Canvas reports | 305 skill rows for 9 MDSI subjects, 2 students | 2025–26 | what subjects taught | our own data |
 | Official course, tutorial and certification pages | 56 outside courses, 250 self-study resources, 49 certifications (19 vendors) | Oct 2026 | outside courses, self-study, certifications | links and our own summaries |
 | Resume Dataset (snehaanbhawal, 2021) | 2,481 resumes, 24 categories | 2021 | test inputs, CV–JD pairs | CC0 |
 
-**Table A.2.** Ads per role and source in `data/2_demand/role_skill_demand.csv` (4,494 rows; notebook section 10). The app
-reads the first source that has the role, in the order JobsPipe 2026, Adzuna 2026, job boards 2026, data_jobs 2023,
-Seek 2019–22 (`match.DEMAND_PRIORITY`); today that is JobsPipe for all 11 roles. The 2026 job-board ads form three blocks
-of 26–33 ads: Software Engineer 33, data roles (mixed) 26 and IT roles (mixed) 26.
+**Table A.2.** Ads per role and source in `data/2_demand/role_skill_demand.csv` (4,494 rows; notebook section 10; for data_jobs, the ads that name at least one tool). The app reads the first source that has the role, in the order JobsPipe 2026, Adzuna 2026, job boards 2026, data_jobs 2023, Seek 2019–22 (`match.DEMAND_PRIORITY`); today that is JobsPipe for all 11 roles. The 2026 job-board ads form three blocks of 26–33 ads: Software Engineer 33, data roles (mixed) 26 and IT roles (mixed) 26.
 
-| Family | Role | JobsPipe 2026 | Adzuna 2026 | Seek 2020–21 | data_jobs 2023 | Seek 2019–22 |
-|---|---|---|---|---|---|---|
+| **Family** | **Role** | **JobsPipe 2026** | **Adzuna 2026** | **Seek 2020–21** | **data_jobs 2023** | **Seek 2019–22** |
+|----|----|----|----|----|----|----|
 | Data & AI | Data Scientist | 89 | 171 | 30 | 1,047 | 3,204 |
 | Data & AI | Data Analyst | 205 | 290 | 145 | 1,362 | – |
 | Data & AI | Data Engineer | 188 | 811 | 59 | 4,438 | – |
@@ -45,40 +106,35 @@ of 26–33 ads: Software Engineer 33, data roles (mixed) 26 and IT roles (mixed)
 | Security | Cybersecurity Analyst | 132 | 139 | 179 | – | – |
 | Business analysis | Business Analyst | 216 | 876 | 389 | 576 | – |
 
-**Table A.3.** Do skill rankings agree across sources? Spearman rank correlation over the skills both name
-(`data/5_crosscheck/`; notebook section 5).
+**Table A.3.** Do skill rankings agree across sources? Spearman rank correlation over the skills both name (`data/5_crosscheck/`; notebook section 5).
 
-| Compared | What differs | Skills | Rank correlation |
-|---|---|---|---|
+| **Compared** | **What differs** | **Skills** | **Rank correlation** |
+|----|----|----|----|
 | Seek 2019–22 vs Glassdoor Australia 2022 (193 ads) | platform | 95 | 0.75 |
 | Seek 2019–22 vs LinkedIn US 2023–24 (247 Data Scientist ads) | country and years | 100 | 0.82 |
 | Seek 2019–22 vs LinkedIn Australia Jan 2024 (122 data roles) | years and role mix | 84 | 0.61 |
 | Adzuna 2026 vs data_jobs 2023, per role (7 roles) | years and kind of source | 6–15 | 0.40 (Business Analyst) to 0.97 (Data Scientist); 0.50 Machine Learning Engineer; 0.69–0.77 the other four |
 | Adzuna 2026 vs Seek 2019–22, Data Scientist | years and kind of source | 15 | 0.57 |
 
-Only each role's 15 priority skills were searched on Adzuna, and they were picked from the older sources, so the Adzuna
-rows test the order within that top group (`role_rank_agreement.csv`).
+Only each role’s 15 priority skills were searched on Adzuna, and they were picked from the older sources, so the Adzuna rows test the order within that top group (`role_rank_agreement.csv`).
 
 **Table A.4.** Subject profiles (`data/1_knowledge/uts/subject_profiles.csv`, 6,853 rows, 360 subjects in 44 courses).
 
-| Layer | Rows | Subjects | Source |
-|---|---|---|---|
+| **Layer** | **Rows** | **Subjects** | **Source** |
+|----|----|----|----|
 | Learning objective | 1,516 | 354 | one row per objective |
 | Assessment | 1,015 | 326 | one row per task: name, type, weight, group or individual, description |
 | Weekly topic | 2,769 | 327 | one row per listed topic |
 | Description | 1,553 | 360 | one row per sentence |
 
-Alongside them, `prerequisites.csv` holds 2,200 requisite items for 290 subjects, 70 empty rules and 301 anti-requisite
-rows for 172 subjects, and `offerings.csv` the teaching sessions of 330 subjects. Tables A.5 and A.6 give the layers per
-course and per MDSI subject.
+Alongside them, `prerequisites.csv` holds 2,200 requisite items for 290 subjects, 70 empty rules and 301 anti-requisite rows for 172 subjects, and `offerings.csv` the teaching sessions of 330 subjects. Tables A.5 and A.6 give the layers per course and per MDSI subject.
 
-The Handbook 2026 pages were scraped on 13 Oct 2026 (`data/1_knowledge/uts/subject_profiles.md`). A dash means the
-Handbook has no text for that layer.
+The Handbook 2026 pages were scraped on 13 Oct 2026 (`data/1_knowledge/uts/subject_profiles.md`). A dash means the Handbook has no text for that layer.
 
 **Table A.5.** Courses. A subject in several courses is counted in each, so columns do not add up to the total.
 
-| Course | Level | Name | Subjects | Obj. | Assess. | Topics | Desc. |
-|---|---|---|---|---|---|---|---|
+| **Course** | **Level** | **Name** | **Subjects** | **Obj.** | **Assess.** | **Topics** | **Desc.** |
+|----|----|----|----|----|----|----|----|
 | C04256 | Master | AI (Online) | 11 | 50 | 12 | 89 | 43 |
 | C04265 | Master | Science (Extension) | 18 | 74 | 45 | 145 | 69 |
 | C04277 | Master | Engineering (Extension) | 11 | 42 | 33 | 84 | 43 |
@@ -123,12 +179,12 @@ Handbook has no text for that layer.
 | C11350 | Grad. certificate | Data Visualisation and Storytelling | 4 | 17 | 13 | 42 | 14 |
 | C11376 | Grad. certificate | Applied AI for Finance | 4 | 19 | 12 | 28 | 24 |
 | C11385 | Grad. certificate | Business Analytics | 4 | 18 | 11 | 31 | 19 |
-| **All** | | 44 courses | **360** | 1,516 | 1,015 | 2,769 | 1,553 |
+| **All** |  | 44 courses | **360** | 1,516 | 1,015 | 2,769 | 1,553 |
 
 **Table A.6.** MDSI subjects (C04372).
 
-| Code | Subject | Obj. | Assess. | Topics | Desc. |
-|---|---|---|---|---|---|
+| **Code** | **Subject** | **Obj.** | **Assess.** | **Topics** | **Desc.** |
+|----|----|----|----|----|----|
 | 36100 | Data Science for Innovation | 5 | 3 | 5 | 5 |
 | 36101 | Leading Data Science Initiatives | 5 | 3 | 12 | 5 |
 | 36103 | Statistical Thinking for Data Science | 5 | 3 | 12 | 5 |
