@@ -65,7 +65,7 @@ def test_second_run_uses_the_cache(tmp_path, monkeypatch):
     client = FakeClient([{"text": "SQL", "kind": "hard"}])
     first = llm_extract.extract_llm(AD, client=client)
     second = llm_extract.extract_llm(AD, client=client)
-    assert first == second and client.calls == 1
+    assert first == second and client.calls == 1     # a cached text never reaches the key check in _call
 
 
 def test_no_key_and_no_cache_raises_runtime_error(tmp_path, monkeypatch):
@@ -78,13 +78,6 @@ def test_no_key_and_no_cache_raises_runtime_error(tmp_path, monkeypatch):
     else:
         raise AssertionError("expected RuntimeError")
     assert not list(tmp_path.iterdir())   # nothing cached
-
-
-def test_no_key_still_reads_the_cache(tmp_path, monkeypatch):
-    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
-    first = llm_extract.extract_llm(AD, client=FakeClient([{"text": "SQL", "kind": "hard"}]))
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    assert llm_extract.extract_llm(AD) == first
 
 
 def test_reads_the_evaluation_cache_but_writes_only_the_runtime_cache(tmp_path, monkeypatch):
@@ -102,12 +95,29 @@ def test_reads_the_evaluation_cache_but_writes_only_the_runtime_cache(tmp_path, 
     assert sorted(p.parent.name for p in tmp_path.rglob("*.json")) == ["evaluation", "runtime"]
 
 
-def test_bad_json_returns_nothing(tmp_path, monkeypatch):
-    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
+def replying(content):
     client = FakeClient([])
     client.chat.completions.create = lambda **kw: SimpleNamespace(
-        choices=[SimpleNamespace(message=SimpleNamespace(content="not json"))])
-    assert llm_extract.extract_llm(AD, client=client) == []
+        choices=[SimpleNamespace(message=SimpleNamespace(content=content))])
+    return client
+
+
+def test_a_reply_that_is_not_json_returns_nothing_and_is_not_cached(tmp_path, monkeypatch):
+    # 17 Oct: such a reply was cached as [], so that ad or resume never got GPT skills again.
+    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
+    for content in ("not json", "", None):
+        assert llm_extract.extract_llm(AD, client=replying(content)) == []
+        assert not list(tmp_path.iterdir()), content                 # nothing cached
+    good = FakeClient([{"text": "SQL", "kind": "hard"}])
+    assert [m["text"] for m in llm_extract.extract_llm(AD, client=good)] == ["SQL"]   # the next run asks again
+    assert good.calls == 1
+
+
+def test_a_reply_with_no_skills_is_cached(tmp_path, monkeypatch):
+    # An answer that says "no skills" is an answer: the next run reads it instead of paying for it again.
+    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
+    assert llm_extract.extract_llm(AD, client=FakeClient([])) == []
+    assert len(list(tmp_path.iterdir())) == 1
 
 
 def test_whole_word_sentence_match():

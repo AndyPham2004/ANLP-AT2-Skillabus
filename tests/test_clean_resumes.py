@@ -24,5 +24,6 @@ def test_titled_names_are_masked_but_not_software():
 
 
 def test_names_before_a_credential_are_masked_but_not_places():
-    out = CREDENTIAL_NAME.sub("[NAME]", "Edna Takahashi, RN ICU; Microsoft Office, PhD; Rockville, MD")
-    assert out == "[NAME], RN ICU; Microsoft Office, PhD; Rockville, MD"
+    # Two words, like a name: only leaving MD (Maryland) out of the credentials keeps it.
+    out = CREDENTIAL_NAME.sub("[NAME]", "Edna Takahashi, RN ICU; Microsoft Office, PhD; Silver Spring, MD")
+    assert out == "[NAME], RN ICU; Microsoft Office, PhD; Silver Spring, MD"

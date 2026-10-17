@@ -77,6 +77,10 @@ section[data-testid="stSidebar"] button[data-testid^="stBaseButton"] { padding-l
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] div[data-testid="stMarkdownContainer"],
 div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] p { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; line-height: 1.35; }
 .k-mute { color: #9a9a94; } .k-dim { color: #6b6c68; } .k-soft { color: #c9c8c2; }
+/* st.caption fades notes with opacity .6, which sinks them into the charcoal on a laptop screen:
+   full opacity, soft ink. */
+[data-testid="stCaptionContainer"] { opacity: 1 !important; }
+[data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] p { color: #c9c8c2 !important; }
 .k-small { font-size: 13px; } .k-body { font-size: 15px; line-height: 1.5; }
 .k-mono { font-family: 'DM Mono', monospace; }
 .k-card { background: #1b1e22; border: 1px solid rgba(255,255,255,.07); border-radius: 6px; padding: 16px 18px; margin-bottom: 10px; }

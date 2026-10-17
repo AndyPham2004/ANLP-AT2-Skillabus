@@ -35,6 +35,7 @@ def test_a_skill_count_never_exceeds_its_role_total():
 
 
 def test_blank_count_only_where_no_phrase_was_searched():
-    merged = counts.merge(queries, on=["role", "skill"])
+    merged = counts.merge(queries, on=["role", "skill"], validate="one_to_one")
+    assert len(merged) == len(counts)              # every counted row has its query row, so none goes unchecked
     assert (merged.skill_query == merged.what_phrase).all()
     assert (merged["count"].isna() == (merged.what_phrase == "")).all()
