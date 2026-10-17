@@ -1,59 +1,41 @@
 # 2 Related work
 
-> Quan's draft (4 Oct) merged with Akash's table (#30). Checked on 14 Oct: Schlippe and Bothmer (2023) and
-> Karakolis et al. (2022) against their full texts; UniSkill against the ACL Anthology entry; SEEK and the
-> industry rows against their public pages. References in APA 7.
+> Phuong Nhi, 17 Oct 2026, cut to ~500 words (#158) from Quan's draft and Akash's comparison table (#30); the sources
+> were checked on 14 Oct. References in APA 7.
 
-## 2.1 Comparison
+**Skill extraction.** ESCO (European Commission, 2017) gives a shared, multilingual skill inventory that most research
+systems map to. SkillSpan (Zhang, Jensen, Sonniks & Plank, 2022) annotated skill spans in English job ads, and a
+weak-supervision follow-up linked spans to ESCO by embedding similarity (Zhang, Jensen, van der Goot & Plank, 2022).
+Both note that a fixed inventory misses new skills. Large language models now extract skills from ads, resumes and
+course descriptions with few examples (Frej et al., 2024); an LLM can, however, return skills that are not in the text. This
+motivates our design: a vocabulary lookup as the precise backbone, spaCy and GPT-4o-mini for what it misses (with every
+skill checked against the text), and an explicit class for skills ESCO lacks.
 
-Columns: **CV gap**: finds a person's missing skills from their CV. **Subject rec.**: recommends specific
-university subjects. **Evidence**: shows why a subject matches a skill. **Demand**: ranks gaps by labour-market
-demand. **Beyond description**: uses subject text other than the description (objectives, weekly topics,
-assessments). **Emerging**: handles skills absent from the taxonomy.
+**Job–resume matching.** LinkedIn's Skills Match and resume checkers such as Jobscan compare a profile or resume with a
+job. They stop at "add this keyword" or point to their own short courses, never to a university subject, and they show
+no evidence for a match.
 
-| System | For whom | What it does | What it lacks for our users | CV gap | Subject rec. | Evidence | Demand | Beyond description | Emerging |
-|---|---|---|---|---|---|---|---|---|---|
-| LinkedIn (Skills Match, LinkedIn Learning) | Job seekers | Shows which of a job's top skills a profile lists; suggests LinkedIn Learning courses from job title and profile skills | Matches self-declared profile skills, not CV text; recommends its own short courses, not university subjects; no evidence for a match | ✓ | ✗ | ✗ | Partial | n/a | Own taxonomy |
-| SEEK (in-demand skills, SEEK Profile, SEEK Learning) | Job seekers (AU) | Publishes top skills by industry from SEEK ads; links to courses at TAFEs and universities | Industry-level only, no comparison with a specific job; course links at program level; no evidence | ✗ | ✗ (program level) | ✗ | Aggregate only | ✗ | Not reported |
-| Jobscan and similar ATS checkers | Job seekers | Keyword match between a resume and a job description; top skills by job title | Stops at "add this keyword"; never says where to learn a skill; lexical matching | ✓ | ✗ | Keywords highlighted | ✗ | n/a | ✗ |
-| University handbooks and course planners | Students | List subjects, learning outcomes and requisites | No labour-market signal; electives listed, not ranked by career value | ✗ | Rules only | ✗ | ✗ | ✗ | ✗ |
-| Lightcast Skillabi (Lightcast, 2025) | Program leaders, L&D | Maps curriculum text (descriptions, learning outcomes, syllabi) to the Lightcast taxonomy and scores program-occupation alignment 0-100 | Program level, not student level; no CV; proprietary and licensed | ✗ | ✗ (program audit) | ✗ | ✓ | Syllabi if supplied | ✓ (Lightcast) |
-| UniSkill (Musazade et al., 2026) | Researchers | Dataset pairing graduate course sentences with ESCO skills; a BERT baseline reaches 87% F1 on course-skill matching | No job ads, no student, no recommendation | ✗ | ✗ | Sentence-level | ✗ | ✗ | ✗ |
-| SkillSpan and weak supervision (Zhang, Jensen, Sonniks et al., 2022; Zhang, Jensen, van der Goot et al., 2022) | Researchers | Expert-annotated skill spans in English job ads; spans linked to ESCO skills by embedding similarity | Extraction only; both note that fixed inventories like ESCO miss new skills | ✗ | ✗ | n/a | ✗ | n/a | Identified, not solved |
-| Skill Scanner (Schlippe & Bothmer, 2023) | Employers, job seekers, institutions | Sentence-BERT embeddings of 2,633 data-scientist ads (Indeed, Kaggle), CVs and one data-science master's curriculum, clustered with UMAP, DBSCAN and K-means; reports which market skills a document covers | Coverage reports, not subject recommendations for one student; no taxonomy; clusters labelled by bigrams, no evidence sentences; evaluated by silhouette score and a user survey, not against labelled ground truth | Partial (vs. market) | ✗ | ✗ | Partial | Not stated | Partial (clusters, no taxonomy) |
-| Karakolis et al. (2022) | Students, professors | ~1,500 posts from Greek job sites; ESCO-based extraction; recommends skills and NTUA courses from the learner's CV, plus curriculum updates via association rules | Gap is to a job specialisation, not a target ad; course skills from descriptions only; relevance scores rather than evidence sentences; frequency threshold drops rare skills; evaluated by a survey of 31 early users | Partial (vs. specialisation) | ✓ | Scores only | ✓ | ✗ | ✗ |
-| Frej et al. (2024), JCRec | Researchers | LLM few-shot skill extraction from resumes, ads and course descriptions; reinforcement learning picks course sequences that maximise jobs a learner qualifies for | Explainability is a goal, not a feature; description-only course text; optimises job count, not gaps to one role; simulated users | ✓ | ✓ (sequence) | ✗ | ✓ | ✗ | Partial (LLM) |
-| **Skillabus (ours)** | UTS students | CV and one ad or role → gaps → UTS subjects with evidence → demand-weighted learning path | | ✓ | ✓ (subject level) | Ad and subject sentence | ✓ | ✓ (objectives, weekly topics, assessments) | ✓ (Lightcast, then "emerging") |
+**Course recommendation.** Karakolis et al. (2022) recommend university courses from a learner's CV using ESCO, but read
+course descriptions only and show relevance scores instead of evidence. Skill Scanner (Schlippe & Bothmer, 2023) embeds
+ads, CVs and one master's curriculum and reports which market skill clusters a document covers, without recommending
+subjects. JCRec (Frej et al., 2024) uses reinforcement learning to choose course sequences that maximise the jobs a
+learner qualifies for, evaluated on simulated users. UniSkill (Musazade, Mezei & Zhang, 2026) shows that sentence-level
+course–skill matching works with fine-tuned encoders, which supports sentence embeddings over keywords for subject
+evidence. None of these evaluates recommendations against labelled ground truth.
 
-## 2.2 What is new
+**Closest system.** Lightcast Skillabi (Lightcast, 2025) maps curriculum text to the Lightcast taxonomy and scores how
+well a program aligns with occupations: it compares "taught" with "sought" skills, as we do. It works at program level for
+program leaders, is proprietary, and shows no evidence sentences. The similar names are a coincidence.
 
-Existing tools each cover part of the problem. LinkedIn and Jobscan find what a CV lacks against a job but stop
-at a keyword or point to their own short courses. SEEK and Skillabi measure demand, but for an industry or a
-whole program, not one student. Handbooks know the subjects but not the job market. The two research systems
-closest to ours connect CVs, ads and courses, but in different ways: Skill Scanner reports coverage at the level
-of skill clusters and recommends no subjects, and Karakolis et al. recommend courses from a CV but use course
-descriptions only and show relevance scores rather than evidence. Neither evaluates its recommendations against
-labelled ground truth; both rely on user surveys.
-
-Skillabus combines the steps for one student and one target ad or role. It links each gap to a specific UTS
-subject; shows the ad sentence and the subject sentence side by side, with the layer the match came from;
-draws on objectives, weekly topics and assessments, not only the description (the marker's 36118 example);
-weights gaps by Australian ad demand and picks the 2-3 subjects that close the most of it; and keeps skills
-missing from ESCO, such as GenAI, through a Lightcast lookup and an explicit "emerging" class. Each stage is
-measured against a baseline on hand-labelled test sets (section 6).
-
-**Closest system.** Skillabi is the nearest in spirit: it compares "taught" with "sought" skills. Skillabus
-differs in the unit of analysis (one student, not a program), in showing evidence for every recommendation, in
-using an open taxonomy with an emerging class, and in producing a short list of electives. The similar names are
-a coincidence; we note it so a reader does not assume a link.
-
-**What we take from the literature.** UniSkill shows that sentence-level course-skill matching works with
-fine-tuned encoders, which supports sentence embeddings over keyword matching for subject ranking (section 4).
-SkillSpan and its weak-supervision follow-up motivate a dictionary-plus-ESCO pipeline with a fallback for skills
-the inventory lacks. Retrieval-augmented generation (Lewis et al., 2020) grounds the chat in Handbook text
-instead of the model's memory.
+**The gap Skillabus fills.** No system we found does all of the following for one student and one target ad or role:
+finds the gaps in their resume, links each gap to a specific UTS subject with the Handbook sentence that justifies it
+(from learning objectives, assessments and weekly topics, not only the description), ranks gaps by Australian ad
+demand, chooses the two or three subjects the student can actually enrol in, and keeps skills that ESCO lacks. Each
+stage is measured against a baseline on hand-labelled data (section 6).
 
 ## References
+
+European Commission. (2017). *ESCO: European Skills, Competences, Qualifications and Occupations*. https://esco.ec.europa.eu
 
 Frej, J., Dai, A., Montariol, S., Bosselut, A., & Käser, T. (2024). Course recommender systems need to consider
 the job market. In *Proceedings of the 47th International ACM SIGIR Conference on Research and Development in
@@ -64,10 +46,6 @@ Jobscan. (2023). *Resume skills: Top resume skills by job title*. https://jobsca
 Karakolis, E., Kapsalis, P., Skalidakis, S., Kontzinos, C., Kokkinakos, P., Markaki, O., & Askounis, D. (2022).
 Bridging the gap between technological education and job market requirements through data analytics and
 decision support services. *Applied Sciences, 12*(14), Article 7139. https://doi.org/10.3390/app12147139
-
-Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N., Küttler, H., Lewis, M., Yih, W.,
-Rocktäschel, T., Riedel, S., & Kiela, D. (2020). Retrieval-augmented generation for knowledge-intensive NLP
-tasks. In *Advances in Neural Information Processing Systems* (Vol. 33, pp. 9459–9474).
 
 Lightcast. (2025, June 3). *Lightcast addresses higher education's relevance crisis with real-time skills
 alignment technology* [Press release]. https://lightcast.io/resources/blog/skillabi-press-release-june-3-2025
@@ -82,9 +60,6 @@ professional competencies. In *Proceedings of the Fifteenth Language Resources a
 Schlippe, T., & Bothmer, K. (2023). Skill Scanner: An AI-based recommendation system for employers, job seekers
 and educational institutions. *International Journal of Advanced Corporate Learning, 16*(1), 55–64.
 https://doi.org/10.3991/ijac.v16i1.34779
-
-SEEK. (2025, October 23). *Most in-demand skills in your industry right now*.
-https://www.seek.com.au/career-advice/article/in-demand-skills
 
 Zhang, M., Jensen, K. N., Sonniks, S. D., & Plank, B. (2022). SkillSpan: Hard and soft skill extraction from
 English job postings. In *Proceedings of the 2022 Conference of the North American Chapter of the Association
