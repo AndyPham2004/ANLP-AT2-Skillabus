@@ -30,7 +30,7 @@ Every later push to the deployed branch redeploys the app by itself within a few
    out, so the build takes a minute or two and the app starts without the one-minute model load.
 6. Make the QR code for the report:
    ```powershell
-   python src/make_qr.py https://anlp-at2-skillabus-eippveupf3g9iimpi93dma.streamlit.app
+   python src/make_qr.py https://skillabus.streamlit.app
    ```
    It writes `docs/report/figures/qr_app.png`.
 

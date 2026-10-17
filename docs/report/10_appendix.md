@@ -62,9 +62,9 @@ Zhang, M., Jensen, K. N., van der Goot, R., & Plank, B. (2022). Skill extraction
 
 # Appendix
 
-**Repository:** https://github.com/AndyPham2004/ANLP-AT2-Skillabus · **App:** https://anlp-at2-skillabus-eippveupf3g9iimpi93dma.streamlit.app
+**Repository:** https://github.com/AndyPham2004/ANLP-AT2-Skillabus · **App:** https://skillabus.streamlit.app
 
-![QR code for https://anlp-at2-skillabus-eippveupf3g9iimpi93dma.streamlit.app](figures/qr_app.png)
+![QR code for https://skillabus.streamlit.app](figures/qr_app.png)
 
 ## Appendix A. Data
 
