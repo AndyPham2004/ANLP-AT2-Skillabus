@@ -52,11 +52,14 @@ def test_eleven_roles_in_five_families():
 
 def test_role_source_takes_n_from_the_demand_table():
     totals = {r["role"]: int(r["total_ads"]) for r in rows(paths.ROLE_SKILL_DEMAND) if r["source"] == "jobspipe_2026"}
+    then = {r["role"]: int(r["total_ads"]) for r in rows(paths.ROLE_SKILL_DEMAND) if r["source"] == "seek_2020_21"}
     for role in all_roles():
         text = backend.role_source(role)
         assert text == f"{totals[role]:,} JobsPipe {role} ads, Sep-Oct 2026, full text."
-        assert backend.source_2019_22(role) == (                     # the trend column: Data Scientist only
-            "3,204 Seek Data Scientist ads, 2019-22, full text." if role == "Data Scientist" else None)
+        # the trend column (17 Oct): Seek 2019-22 for Data Scientist, Seek 2020-21 for the others, none for ML Engineer
+        expected = ("3,204 Seek Data Scientist ads, 2019-22, full text." if role == "Data Scientist"
+                    else f"{then[role]:,} Seek {role} ads, 2020-21, full text." if role in then else None)
+        assert backend.source_2019_22(role) == expected
     assert backend.source_2019_22(None) == backend.source_2019_22("Data Scientist")   # an ad: the Data Scientist ads
     # Home.py passes a gap row's demand_source and demand_period
     assert backend.role_source("Data Scientist", "seek_2019_22", "2019-22") == backend.source_2019_22("Data Scientist")

@@ -307,7 +307,8 @@ def test_every_role_has_ad_counts_from_the_demand_table():
     for role, r in by.items():            # JobsPipe has a full-text block for every role, Data Scientist too
         assert (r["source"], r["text_type"], r["n_ads"]) == ("jobspipe_2026", "full_text", blocks[role, "jobspipe_2026"])
         assert block_2026(role)["source"] == "jobspipe_2026"
-        assert (block_2019_22(role) is None) == (role != "Data Scientist")
+        # the trend (17 Oct): Seek 2019-22 for Data Scientist, Seek 2020-21 for the others; no ML Engineer titles in either
+        assert (block_2019_22(role) is None) == (role == "Machine Learning Engineer")
     assert block_2019_22()["total_ads"] == 3204
 
 
@@ -331,3 +332,14 @@ def test_data_scientist_role_ranks_part_skills_by_every_share():
     viz = next(s for s in match_role(resume) if s["skill_label"] == "Data visualisation")
     assert viz["status"] == "partial" and viz["related_skill"] == "Excel"
 
+
+
+def test_every_role_with_pre_2022_ads_gets_a_trend():
+    """17 Oct: Seek 2020-21 (#145) is the trend for the roles Seek 2019-22 lacks; Data Scientist keeps its 3,204
+    ads of 2019-22, and a role with neither (Machine Learning Engineer) has no trend."""
+    from skillabus.match import block_2019_22, match_role, trend_period
+    assert block_2019_22("Data Scientist")["source"] == "seek_2019_22" and trend_period("Data Scientist") == "2019-22"
+    assert block_2019_22("Business Analyst")["source"] == "seek_2020_21" and trend_period("Business Analyst") == "2020-21"
+    assert block_2019_22("Machine Learning Engineer") is None and trend_period("Machine Learning Engineer") is None
+    rows = match_role([], "Software Engineer")
+    assert rows and all(r["demand_pct_2019_22"] is not None for r in rows)
