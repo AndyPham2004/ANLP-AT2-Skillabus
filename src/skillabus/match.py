@@ -46,11 +46,15 @@ SOURCES_2026 = tuple(s for s in DEMAND_PRIORITY if s.endswith("_2026"))
 # demand_pct_2019_22, the trend column: the Seek Data Scientist ads, counted by the table with the same
 # matcher as the 2026 ads (the poster's own counts, skill_counts_v2.csv, are 0.2-1.7 points lower for 26 skills)
 SOURCE_2019_22 = "seek_2019_22"
+# The trend column's sources, first found per role: Seek 2019-22 (Data Scientist, 3,204 ads), then the Seek
+# all-professions samples of 2020-21 (#145) for the other roles; Machine Learning Engineer has neither.
+TREND_SOURCES = (SOURCE_2019_22, "seek_2020_21")
 COUNTED = ("full_text", "tool_list", "search_count")   # text types with a share; taxonomy rows have none
 MIXED = "(mixed)"                                      # "Data roles (mixed)": ads of several roles, not a role
 # For captions: source -> (its name in a sentence, when its ads were posted or counted)
 SOURCE_NAMES = {
     "seek_2019_22": ("Seek", "2019-22"),
+    "seek_2020_21": ("Seek", "2020-21"),
     "jobspipe_2026": ("JobsPipe", "Sep-Oct 2026"),     # posted 1 Sep to 16 Oct
     "adzuna_2026": ("Adzuna", "16 Oct 2026"),          # live ads on the day of the search
     "ats_2026": ("job-board", "Aug-Oct 2026"),         # posted within 60 days of the 13 and 16 Oct fetches
@@ -134,8 +138,15 @@ def block_2026(role: str = DEFAULT_ROLE) -> dict | None:
 
 
 def block_2019_22(role: str = DEFAULT_ROLE) -> dict | None:
-    """The block behind the trend column `demand_pct_2019_22`: the Seek ads, Data Scientist only."""
-    return _pick(role, (SOURCE_2019_22,))
+    """The block behind the trend column `demand_pct_2019_22`: the role's pre-2022 Seek ads, 2019-22 for
+    Data Scientist and 2020-21 for the other roles (TREND_SOURCES); None for a role with neither."""
+    return _pick(role, TREND_SOURCES)
+
+
+def trend_period(role: str = DEFAULT_ROLE) -> str | None:
+    """When the role's trend ads were posted ("2019-22", "2020-21"), for the app's labels; None without a trend."""
+    block = block_2019_22(role)
+    return SOURCE_NAMES.get(block["source"], ("", block["period"]))[1] if block else None
 
 
 def block_meta(block: dict | None = None) -> dict:

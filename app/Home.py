@@ -733,26 +733,30 @@ def bars_note(skills: list[dict], counted: bool, role: str | None) -> str:
     who = backend.DEFAULT_ROLE if role is None else role      # a pasted ad is weighed by the Data Scientist ads
     note = "Bars: share of " + backend.role_source(who, skills[0].get("demand_source"), skills[0].get("demand_period"))
     if backend.source_2019_22(role):
-        note += " Hover a bar for the 2019-22 share; a hatched bar is a skill those older ads never named."
+        from skillabus.match import trend_period
+        note += (f" Hover a bar for the {trend_period(who)} share; a hatched bar is a skill those older ads"
+                 " never named.")
     return note
 
 
 def skills_section(skills: list[dict], counted: bool, noun: str, role: str | None = None) -> None:
     aside = "bar = how often employers ask" if counted else "core skills · no Australian ad counts yet"
     st.markdown(ui.h2(f"Skills the {noun} asks for", aside), unsafe_allow_html=True)
+    from skillabus.match import trend_period
+    period = trend_period(role or backend.DEFAULT_ROLE)      # "2019-22" for Data Scientist, "2020-21" for the others
     for i, s in enumerate(skills):
         name_col, bar_col, status_col = st.columns([2.4, 4.4, 1.1], vertical_alignment="center")
         name_col.button(s["skill_label"] + (" ✦" if s["emerging"] else ""), key=f"open_{i}", type="tertiary",
                         on_click=open_gap, args=(s["skill_label"],))
         if counted:
             pct, old = s.get("demand_pct"), s.get("demand_pct_2019_22")
-            new_since_2022 = old is not None and old < 1 <= (pct or 0)     # the 2019-22 ads never named it
+            new_since_2022 = old is not None and old < 1 <= (pct or 0)     # the pre-2022 ads never named it
             tip = ""
             if pct is not None:
                 when = f" ({s['demand_period']})" if s.get("demand_period") else ""
                 tip = f"{pct:.0f}% of {s.get('total_ads') or 'the'} ads{when}"
                 if old is not None:
-                    tip += f"; {old:.0f}% of the 2019-22 Seek ads"
+                    tip += f"; {old:.0f}% of the {period} Seek ads"
             bar_col.markdown(ui.bar(pct, s["status"], new_since_2022, tip), unsafe_allow_html=True)
         else:
             bar_col.markdown(f"<span class='k-small k-mute'>{CORE_SOURCE.get(s.get('core_source'), '')}</span>",
@@ -968,7 +972,7 @@ BAR_PX = 80                      # a 100% bar on the skill page; every bar on th
 
 
 def demand_chart(s: dict, counted: bool, role: str | None) -> str:
-    """Left of the skill page's band: the share of ads that ask for the skill, 2019-22 next to now."""
+    """Left of the skill page's band: the share of ads that ask for the skill before 2022 next to now."""
     if not counted:
         return (f"<div class='k-small k-dim'>Core skill</div>"
                 f"<div class='k-soft' style='margin-top:4px'>{ui.esc(CORE_SOURCE.get(s.get('core_source'), 'core skill of the role'))}</div>"
@@ -977,12 +981,12 @@ def demand_chart(s: dict, counted: bool, role: str | None) -> str:
     who = role or backend.DEFAULT_ROLE
     if pct is None:
         return f"<div class='k-small k-dim'>Employers ask</div><div class='k-soft'>No count in the {ui.esc(who)} ads</div>"
-    from skillabus.match import SOURCE_NAMES, block_2019_22      # "jobspipe_2026" -> ("JobsPipe", "Sep-Oct 2026")
+    from skillabus.match import SOURCE_NAMES, block_2019_22, trend_period   # "jobspipe_2026" -> ("JobsPipe", "Sep-Oct 2026")
     when = SOURCE_NAMES.get(s.get("demand_source"), ("", s.get("demand_period") or "now"))[1]
     bars = []
     if old is not None:
         then_ads = (block_2019_22(who) or {}).get("total_ads")
-        bars.append((old, "2019-22", f"{then_ads:,} ads" if then_ads else "", "rgba(143,188,255,.4)"))
+        bars.append((old, trend_period(who) or "before 2022", f"{then_ads:,} ads" if then_ads else "", "rgba(143,188,255,.4)"))
     bars.append((pct, when, f"{s['total_ads']:,} ads" if s.get("total_ads") else "", ui.LINK))
     cols = "".join(f"<div class='k-tbar' style='--c:{c}'><span>{v:.0f}%</span>"
                    f"<b style='height:{max(2, v / 100 * BAR_PX):.0f}px'></b></div>" for v, _, _, c in bars)
