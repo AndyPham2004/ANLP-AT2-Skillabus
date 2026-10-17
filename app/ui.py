@@ -34,7 +34,7 @@ header[data-testid="stHeader"] { background: transparent !important; height: 2.4
 section[data-testid="stSidebar"] { border-right: 1px solid rgba(255,255,255,.07); }
 section[data-testid="stSidebar"] .block-container { padding: 1rem 1rem 1rem; }
 h1, h2, h3, .k-h1, .k-h2, .k-serif { font-family: 'Literata', Georgia, serif; }
-.k-mark { font-family: 'Literata', Georgia, serif; font-size: 22px; font-weight: 500; margin: 0 0 14px; }
+.k-mark { font-family: 'Literata', Georgia, serif; font-size: clamp(18px, 1.9vw, 22px); font-weight: 500; margin: 0 0 14px; white-space: nowrap; }
 .k-step { display: flex; flex-direction: column; align-items: center; padding-top: 7px; }
 .k-step-dot { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid; display: grid; place-items: center; font: 500 11px 'DM Mono', monospace; box-sizing: border-box; }
 .k-step-line { display: block; height: 30px; border-left: 1.5px dashed rgba(255,255,255,.16); margin-top: 4px; }
@@ -67,6 +67,13 @@ section[data-testid="stSidebar"] div[data-testid="stButton"] button[data-testid=
 /* Streamlit 1.65 scrolls a pills row sideways; the role rows wrap instead, with smaller pills */
 .st-key-goal_col [role="radiogroup"] { flex-wrap: wrap !important; overflow: visible !important; row-gap: 6px; }
 .st-key-goal_col [data-testid="stVerticalBlock"] { gap: .55rem; }
+/* The role rows: a family's name wraps between words only ("infrastructur / e" before) and keeps room for
+   "infrastructure" at 13 px; on a narrow window the pills give way, so no row drops its pills below the name. */
+.k-fam { overflow-wrap: normal; word-break: normal; }
+@media (min-width: 640px) {
+  .st-key-role_rows [data-testid="stHorizontalBlock"] { flex-wrap: nowrap; }
+  .st-key-role_rows [data-testid="stColumn"]:first-child { min-width: 90px; }
+}
 /* Pick a job ad: one line per ad with hairlines between; the opened ad on a panel under its line */
 .st-key-ad_list [data-testid="stVerticalBlock"] { gap: 0; }
 .st-key-ad_list [data-testid="stHorizontalBlock"] { border-top: 1px solid rgba(255,255,255,.07); padding: 1px 0; }
