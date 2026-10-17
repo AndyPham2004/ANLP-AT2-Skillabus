@@ -82,6 +82,15 @@ def test_a_choice_leaves_out_taken_and_named_subjects(stub):
     assert [s["subject_code"] for s in sources] == ["36121"]
 
 
+def test_a_subject_asked_about_stays_even_when_taken(stub):
+    # 17 Oct: "36106 or 36120 for deep learning?" with both ticked as taken answered "couldn't find anything".
+    stub.replies = ["36120 Advanced Machine Learning Application goes further than 36106; you have taken both."]
+    reply, sources = chat.answer("36106 or 36120 for deep learning?", None, ["36106", "36120", "36100"], "C04372")
+    context = stub.calls[0][-1]["content"]
+    assert "asks about subjects they have already taken" in context and "36106" in context.split("Subjects:")[1]
+    assert [s["subject_code"] for s in sources] == ["36120", "36106"]
+
+
 def test_a_repeated_question_shows_its_sources_once(stub):
     # 17 Oct: the history carried the source list the app adds; the model copied it and the app added its own.
     stub.replies = ["Take 36118 Applied Natural Language Processing [1].\n\n[1] 36118 Applied Natural Language Processing"]

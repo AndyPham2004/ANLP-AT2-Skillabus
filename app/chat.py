@@ -151,12 +151,13 @@ DONE_OR_PLANNED = re.compile(r"\b(took|taken|completed|finished|done|passed|alre
                              r"will take|enrolled)\b", re.I)
 
 
-def named_in(question: str, sources: list[dict]) -> set[str]:
-    """Codes of the subjects the student says they took or plan to take ("I already took Data Visualization, ..."):
-    named in a sentence with such a word, by code or by the first two or more words of the name, typos allowed
-    (ratio 0.85). "Should I take 36121 or 36123?" names subjects to compare, so they stay."""
+def named_in(question: str, sources: list[dict], done_or_planned: bool = True) -> set[str]:
+    """Codes of the subjects the question names, by code or by the first two or more words of the name, typos allowed
+    (ratio 0.85). done_or_planned: only in a sentence that says the student took or plans to take them ("I already
+    took Data Visualization, ..."); "Should I take 36121 or 36123?" names subjects to compare, so they stay."""
     from difflib import SequenceMatcher
-    q = _words(" ".join(s for s in re.split(r"[.!?;\n]", question) if DONE_OR_PLANNED.search(s)))
+    sentences = re.split(r"[.!?;\n]", question)
+    q = _words(" ".join(s for s in sentences if not done_or_planned or DONE_OR_PLANNED.search(s)))
     out = set()
     for s in sources:
         code, name = s.get("subject_code"), _words(s.get("subject_name") or "")
@@ -227,13 +228,17 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
         query = f"{asked} {question}"
     done, advice = set(taken), bool(ADVICE.search(query))
     passages = retrieve(spell_out(query), k=POOL)
+    # a subject the student asks about stays even when taken ("36106 or 36120 for deep learning?" with both ticked
+    # found nothing); only the subjects the question does not name are left out as taken
+    asked = named_in(query, passages, done_or_planned=False) - named_in(query, passages)
+    done -= asked
     if advice:
         lp = (gap or {}).get("learning_path")
         path = lp.get("subjects", []) if isinstance(lp, dict) else []
         # the path and what the question is about first, then the rest of the student's course
         passages = (subject_passages(path, done) + passages
                     + subject_passages(backend.course_subjects(home_course), done))
-        named = named_in(query, passages)             # taken or planned, as the student wrote them
+        named = named_in(query, passages) - asked     # taken or planned, as the student wrote them
         passages = [p for p in passages if p.get("subject_code") not in named]
     sources = by_subject(passages, done, home_course, MAX_CHOICES if advice else MAX_SUBJECTS)
     if not sources:
@@ -249,9 +254,14 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     if gap:
         missing = [s["skill_label"] for s in gap["skills"] if s["status"] != "have"]
         gaps = f"The student's skill gaps for their target role: {', '.join(missing) or 'none'}.\n"
+    names = dict(backend.subjects())
     if done:
-        names = dict(backend.subjects())
         gaps += f"Subjects the student has already taken: {', '.join(f'{c} {names.get(c, c)}' for c in sorted(done))}.\n"
+    if asked & set(taken):
+        gaps += ("The student asks about subjects they have already taken, "
+                 f"{', '.join(f'{c} {names.get(c, c)}' for c in sorted(asked & set(taken)))}: still answer the "
+                 "question in full (describe or compare them from the Handbook text), then add one short note that "
+                 "they have taken them.\n")
     # Code and name, so a student can find the subject in the Handbook and in My Student Admin.
     context = "\n".join(
         f"[{i + 1}] {subject_label(s)}"
