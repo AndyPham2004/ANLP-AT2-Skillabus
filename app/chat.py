@@ -31,6 +31,11 @@ MAX_SUBJECTS = 4       # subjects shown and cited
 MAX_CHOICES = 10       # subjects the model may choose from when the student asks what to take
 PER_SUBJECT = 2        # passages kept per subject
 HISTORY = 6            # earlier chat messages the model sees
+# A student about to start a course ("I will be enrolling in the Master of Cybersecurity") was offered the Industry
+# Project and the Research Project for their first session.
+STARTING = re.compile(r"\b(enrol(?:l)?ing|will enrol|will be|starting|start|first (?:semester|session|year)|"
+                      r"new student|incoming|commencing)\b", re.I)
+END_OF_COURSE = re.compile(r"\b(project|capstone|internship|research|thesis|dissertation|honours)\b", re.I)
 FOLLOW_ON = re.compile(r"\b(it|its|that|this|those|these|them|they|more|else|another|other|others|again|instead|"
                        r"what about|how about|full plan|the plan)\b", re.I)
 FOLLOW_UP = "FOLLOW-UP:"   # how the model marks a question back to the student
@@ -398,6 +403,9 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
                     + subject_passages(backend.course_subjects(course), done))
         named = named_in(query, passages) - asked     # taken or planned, as the student wrote them
         passages = [p for p in passages if p.get("subject_code") not in named]
+    starting = advice and not done and bool(STARTING.search(query))
+    if starting:                                 # projects, capstones, internships come at the end of a course
+        passages = [p for p in passages if not END_OF_COURSE.search(p.get("subject_name") or "")]
     sources = by_subject(passages, done, course, MAX_CHOICES if advice else MAX_SUBJECTS)
     if not sources:
         return ("I couldn't find anything about that in the UTS Handbook text I have. "
@@ -415,6 +423,10 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     names = dict(backend.subjects())
     if done:
         gaps += f"Subjects the student has already taken: {', '.join(f'{c} {names.get(c, c)}' for c in sorted(done))}.\n"
+    else:   # "considering the subjects you have already taken" was said to a student who had ticked none
+        gaps += "No subjects are marked as taken: do not say the student has taken any.\n"
+    if starting:
+        gaps += "The student is starting the course: suggest subjects for a first session.\n"
     if asked & set(taken):
         gaps += ("The student asks about subjects they have already taken, "
                  f"{', '.join(f'{c} {names.get(c, c)}' for c in sorted(asked & set(taken)))}: still answer the "
@@ -460,4 +472,9 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     at = reply.upper().find(FOLLOW_UP.upper())        # the marker, even after a sentence the model put before it
     if at != -1:
         return reply[at + len(FOLLOW_UP):].strip(), None
-    return cited_only(link_courses(link_handbook(fix_codes(reply, question), course)), sources)
+    reply = fix_codes(reply, question)
+    if named_course or starting:                 # the course's core subjects are on its page: say where
+        label, url = course_page(course)
+        if url not in reply:
+            reply += f"\n\nThe core subjects of the course are on its Handbook page: [{label}]({url})."
+    return cited_only(link_courses(link_handbook(reply, course)), sources)

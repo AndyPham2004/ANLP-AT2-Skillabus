@@ -161,6 +161,19 @@ def test_fixes_from_the_17_oct_test_run(stub):
     assert "Python Programming:" not in stub.calls[0][-1]["content"].split("Question:")[0].split("Subjects:")[1][:80]
 
 
+def test_a_student_starting_a_course_gets_first_session_subjects(stub):
+    # 17 Oct: "will be enrolling in the Master of Cybersecurity" got the Industry and Research Projects, "considering
+    # the subjects you have already taken" (none ticked), and no link to the course
+    stub.replies = ["For Autumn 2027 consider 42000 Cryptography."]
+    reply, sources = chat.answer("What should I take this Autumn 2027 given I will be enrolling to master of "
+                                 "cybersecurity?", None, [], None)
+    sent = stub.calls[0][-1]["content"]
+    listed = sent.split("Subjects:")[1]
+    assert not re.search(r"\b(Project|Capstone|Internship|Research)\b", listed)
+    assert "No subjects are marked as taken" in sent and "starting the course" in sent
+    assert "(https://coursehandbook.uts.edu.au/course/2026/C04430)" in reply
+
+
 def test_a_subject_asked_about_stays_even_when_taken(stub):
     # 17 Oct: "36106 or 36120 for deep learning?" with both ticked as taken answered "couldn't find anything".
     stub.replies = ["36120 Advanced Machine Learning Application goes further than 36106; you have taken both."]
