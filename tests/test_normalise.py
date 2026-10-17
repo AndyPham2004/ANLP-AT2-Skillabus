@@ -7,13 +7,16 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+import skillabus.normalise as normalise_module  # noqa: E402
 from skillabus.normalise import key, normalise  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
-def rules_only(tfidf_only, monkeypatch):
-    """No embedding model and no live Lightcast call, per test: set at import, both leaked into every later file."""
+def rules_only(tfidf_only, monkeypatch, tmp_path):
+    """No embedding model and no live Lightcast call, per test: set at import, both leaked into every later file.
+    The Lightcast cache is emptied too: lightcast_lookup() reads a cached answer before it checks for a key."""
     monkeypatch.delenv("LIGHTCAST_CLIENT_ID", raising=False)
+    monkeypatch.setattr(normalise_module, "LIGHTCAST_CACHE", tmp_path / "lightcast")
 
 
 def norm(*phrases):
@@ -37,9 +40,25 @@ def test_known_non_esco_skills_become_emerging_not_a_wrong_concept():
     assert r["LLM"]["vocab"] == "emerging" and r["LLM"]["skill_label"] == "Large language models"
 
 
+SPARK_JAVA = "http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f"   # ESCO "SPARK", a Java framework
+
+
 def test_spark_is_not_linked_to_the_esco_java_framework():
     r = norm("PySpark")["PySpark"]
     assert r["vocab"] == "seed" and r["skill_label"] == "Spark"
+
+
+def test_the_embedding_step_never_links_the_blocked_spark_concept(monkeypatch):
+    """A phrase outside the vocabulary reaches the embedding step, where the nearest ESCO label can be "SPARK"."""
+    def nearest(uri):
+        return lambda phrases: [(uri, "SPARK", 0.99)] * len(phrases)
+
+    phrase = "Spark Structured Streaming"
+    monkeypatch.setattr(normalise_module, "esco_nearest", nearest("http://data.europa.eu/esco/skill/other"))
+    assert norm(phrase)[phrase]["how"] == "esco_embed"                    # the stub is what normalise() calls
+    monkeypatch.setattr(normalise_module, "esco_nearest", nearest(SPARK_JAVA))
+    r = norm(phrase)[phrase]
+    assert r["vocab"] == "emerging" and SPARK_JAVA not in r["skill_id"]
 
 
 def test_a_mention_that_is_just_ai_is_the_ai_skill():
@@ -66,19 +85,19 @@ def test_canonical_from_extract_is_kept():
     assert r["canonical"] == "API development" and r["vocab"] != "emerging"
 
 
-def test_csharp_row_survives_reading_the_seed():
-    r = norm("C#")["C#"]
-    assert r["canonical"] == "C#"
+def test_csharp_keeps_its_hash_sign():
+    # read_csv(comment="#") once cut the row to "C"; and without "#" in the key, C# and C are one skill.
+    r = norm("C#", "C")
+    assert r["C#"]["canonical"] == "C#" and r["C"]["canonical"] == "C"
 
 
 def test_vocabulary_skills_esco_lacks_are_seed_not_emerging():
     """Review #109: Kafka, MLflow and the certifications are known skills ESCO lacks; "emerging" is
     for phrases outside the vocabulary, plus generative AI and LLMs."""
-    r = norm("Kafka", "MLflow", "AWS Certified Solutions Architect - Associate", "GenAI", "agentic AI")
+    r = norm("Kafka", "MLflow", "AWS Certified Solutions Architect - Associate")
     assert r["Kafka"]["vocab"] == "seed" and r["Kafka"]["skill_id"] == "skillabus:kafka"
     assert r["MLflow"]["vocab"] == "seed" and r["MLflow"]["skill_id"] == "skillabus:mlflow"
     assert r["AWS Certified Solutions Architect - Associate"]["vocab"] == "seed"
-    assert r["GenAI"]["vocab"] == "emerging" and r["agentic AI"]["vocab"] == "emerging"
 
 
 def test_vocabulary_ids_keep_close_tools_apart():

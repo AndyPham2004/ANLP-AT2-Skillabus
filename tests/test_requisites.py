@@ -23,11 +23,11 @@ def rules(tmp_path):
         "F,requisite,(1 AND 2),1,academic,A,A Intro,y,u",                             # item 2 was not scraped
         "G,requisite,,,,,,n,u",                                                       # no record: unverified
         "H,requisite,(1),1,corequisite,A,A Intro,y,u",
-        "I,requisite,,,,,,y,u",
+        "I,requisite,,,,,,y,u",                                                       # scraped, not taught in 2026
         "J,antirequisite,(1 AND 2 AND 3),1,academic,A,A Intro,y,u",                   # a list printed as AND
         "J,antirequisite,(1 AND 2 AND 3),2,academic,X1,X1 Offshore copy,y,u",
         "J,antirequisite,(1 AND 2 AND 3),3,academic,X2,X2 Offshore copy,y,u",
-        "K,antirequisite,(1),1,academic,J,J Listed on K's side only,y,u",                                                       # scraped, not taught in 2026
+        "K,antirequisite,(1),1,academic,J,J Listed on K's side only,y,u",             # J does not list K
     ]) + "\n", encoding="utf-8")
     offer = tmp_path / "offerings.csv"
     offer.write_text("subject_code,teaching_period,mode\n" + "\n".join(
