@@ -71,7 +71,7 @@ The right sentence is in the top five for 94% of rows and is usually first. TF-I
 ## 6.6 Limits
 
 - 20 ads, 45 pairs, 33 skill–subject pairs and 15 chat questions give wide confidence intervals; differences between tiers are mostly smaller than the noise.
-- Gold labels come from one annotator. A second annotator, on 20 overlap ads, agrees well on dictionary skills (kappa 0.856) and less on free-text skills outside the dictionary (0.686). Extraction scores use the first annotator's rows only.
+- Gold labels come from one annotator. A second annotator, on 20 overlap ads, agrees well on dictionary skills (kappa 0.856) and less on free-text skills outside the dictionary (0.686); on 6 ads of 2026 kappa is only 0.361. Extraction scores use the first annotator's rows only.
 - One ad row and one pair row carry an "unsure" mark that the loaders drop, so unsure labels count as gold, which slightly lowers recall.
 - Retrieval can fill the top five with one subject under several codes (Machine Learning appears as 31005, 320513 and 321513 for one question), which lowers recall for other subjects. The fix belongs in `rag.py`.
 - The labelled extraction ads are Seek ads, not the 2026 ads that drive the app's role profiles, so the numbers show how well the methods work, not how well the app serves a particular role.

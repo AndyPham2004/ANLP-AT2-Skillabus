@@ -17,7 +17,7 @@ Skillabus answers one question for three users: *which subject moves me closest 
 want?* (UTS student), *what does my resume lack for this ad?* (job seeker) and *how far am I from
 a new field?* (career switcher). It covers 11 data and IT roles in five families. Demand comes
 from 1,932 Australian ads posted between 1 September and 16 October 2026 (89 to 216 per role);
-supply from 360 UTS Handbook subjects in 44 courses, plus 56 outside courses, 248 self-study
+supply from 360 UTS Handbook subjects in 44 courses, plus 56 outside courses, 250 self-study
 resources and 49 certifications for skills UTS does not teach.
 
 ## 1.3 What is new

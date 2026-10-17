@@ -27,6 +27,19 @@ Five of the 50 selected pairs (CVJD01, CVJD02, CVJD33, CVJD43, CVJD49) have no s
 
 Of the 64 dictionary-tier misses, 25 are soft skills, 13 programming (11 are the bare letter "R") and 12 machine learning. The 29 false positives are 12 real errors (a degree list such as "Statistics, Data Science, Mathematics" in six ads; a partner list; a company description; "Dash" read as Plotly) and 17 judgement calls or label gaps (for example "text mining" as NLP, "data pipelines" as ETL, and four tools that entered the dictionary after labelling: Kafka, React, Linux, Microsoft Office).
 
+### Extraction on 18 ATS ads of 2026 (10 roles, 273 labels)
+
+| Tier | Scored on | Precision | Recall | F1 | TP / FP / FN |
+|---|---|---|---|---|---|
+| Dictionary | all labels | 0.686 | 0.527 | 0.596 | 144 / 66 / 129 |
+| Dictionary | vocabulary skills only | 0.686 | 0.809 | 0.742 | 144 / 66 / 34 |
+| spaCy | all labels | 0.500 | 0.674 | 0.574 | 184 / 184 / 89 |
+| spaCy | vocabulary skills only | 0.677 | 0.826 | 0.744 | 147 / 70 / 31 |
+| GPT-4o-mini | all labels | 0.392 | 0.608 | 0.477 | 166 / 257 / 107 |
+| GPT-4o-mini | vocabulary skills only | 0.843 | 0.601 | 0.702 | 107 / 20 / 71 |
+
+Cohen's kappa between the two annotators on 6 of these ads: 0.361 on vocabulary skills (observed agreement 0.982; 9 labels shared, 29 only the first annotator's, 2 only the second's) and 0.319 on all labels (0.965), both "fair".
+
 ## B.3 Matching
 
 | Tier | Ad skills from | Accuracy | Macro F1 | have P / R | partial P / R | missing P / R |

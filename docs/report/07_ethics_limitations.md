@@ -25,7 +25,7 @@ students to confirm choices with their course coordinator.
 ## 7.2 Limitations
 
 1. **Small test sets:** 20 labelled ads, 45 CV–JD pairs, 33 skill–subject pairs and 15 chat
-   questions, one annotator (kappa 0.856 on 20 shared ads; section 6.6).
+   questions, one annotator (kappa 0.856 on 20 shared ads, but only 0.361 on 6 ads of 2026; section 6.6).
 2. **Small samples:** 89–216 ads per role in 2026 (up to ±10 points); the 2019–22 trend exists for
    Data Scientist only, and shares from different sources are not comparable.
 3. **The "AI" trade-off:** counting Artificial intelligence only in phrases such as "AI models"

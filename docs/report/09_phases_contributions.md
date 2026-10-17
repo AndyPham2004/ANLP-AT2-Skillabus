@@ -14,13 +14,13 @@ The first pull request merged on 11 October; the deadline is 17 October. The wee
 
 ## 9.2 Contributions by member
 
-Counts are merged pull requests on `main` (78 in total).
+Counts are merged pull requests on `main` at 17:00 on 17 October (94 in total).
 
-- **Quan** (36): Streamlit app and its redesign; data layout and `paths.py`; Handbook data; one skills vocabulary; self-study store; demand table; JobsPipe 2026 ads; evaluation re-runs; label kits; report integration.
-- **Phuong Nhi** (16): dictionary and spaCy extraction; matching; evidence ranking; recommendation with prerequisites and outside courses; emerging-skill detection; normalisation error table; methods section.
-- **Van Thong** (18): data cleaning; subject profiles; 2026 ad samples and skill counts; FAISS retrieval; second-annotator labels; role profiles; external courses; Adzuna counts; data section.
-- **Amy (Hoai Thuong)** (6): evaluation harness and Cohen's kappa; CV–JD pairs; ad labels; skill–subject pairs and chat questions; evaluation run and section 6.
-- **Akash** (2 merged; more open): ethics and limitations draft; related-work section with its comparison table.
+- **Quan** (44): Streamlit app and its redesign; data layout and `paths.py`; Handbook data; one skills vocabulary; self-study store; demand table; JobsPipe 2026 ads; evaluation re-runs; label kits; report integration.
+- **Phuong Nhi** (19): dictionary and spaCy extraction; matching; evidence ranking; recommendation with prerequisites and outside courses; emerging-skill detection; normalisation error table; methods section.
+- **Van Thong** (22): data cleaning; subject profiles; 2026 ad samples and skill counts; FAISS retrieval; second-annotator labels; role profiles; external courses; Adzuna counts; data section.
+- **Hoai Thuong** (7): evaluation harness and Cohen's kappa; CV–JD pairs; ad labels; skill–subject pairs and chat questions; evaluation run and section 6.
+- **Akash** (2): ethics and limitations draft; related-work section with its comparison table.
 
 ## 9.3 Challenges and solutions
 

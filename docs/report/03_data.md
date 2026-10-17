@@ -95,8 +95,8 @@ large differences only.
 ## 3.6 Can the counts be trusted?
 
 Two annotators labelled the same 20 ads independently and agree with a Cohen's kappa of 0.856 on
-dictionary skills (0.686 including free-text labels), so the test labels in section 6 agree
-well. On the Seek ads, our matcher agrees with the dataset author's own tool flags with a
+dictionary skills (0.686 including free-text labels), so the labels of the first test set in section 6 agree
+well (on the 2026 ads the agreement is lower, section 6.2). On the Seek ads, our matcher agrees with the dataset author's own tool flags with a
 median kappa of 0.637 over 14 tools; most disagreements are the author's flags firing on ads
 that never name the tool. Rankings hold across platforms and periods: rank correlation 0.75
 with Glassdoor Australia and 0.82 with LinkedIn US, and 0.40–0.97 between live Adzuna counts and
