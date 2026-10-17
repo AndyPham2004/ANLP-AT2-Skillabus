@@ -20,7 +20,7 @@ from pathlib import Path
 
 from . import evaluate as ev
 from . import paths
-from .extract import extract
+from .extract import extract, load_dictionary
 from .match import match, rank_evidence
 from .normalise import normalise
 
@@ -29,6 +29,11 @@ RES = paths.RESUMES
 DICT = paths.SKILLS_SEED
 LAB = paths.LABELS
 TIERS = ("dictionary", "ner", "llm")
+# The 2026 set (17 Oct): 18 ATS ads of 10 roles, labelled on the skill vocabulary (#153, #161); the second
+# annotator labelled the 6 ads marked second_annotator (#154, #167) and gives kappa only.
+ADS_2026 = paths.EVALUATION / "inputs" / "ats_2026_label_sample.csv"
+AD_SKILLS_2026 = LAB / "ad_skills_2026.csv"
+GOLD_2026 = "tompham9016"
 GOLD_ANNOTATOR = "hoaithuongnguyen-uts"   # whose ad_skills.csv rows are the extraction gold; the other annotator is for kappa only
 
 
@@ -121,6 +126,63 @@ def kappa_result(gold_annotator: str | None = GOLD_ANNOTATOR) -> dict | str:
     res["all_labels"] = ev.annotator_agreement(a, b, shared, universe)
     res["annotators"] = names[:2]
     return res
+
+
+def run_2026(methods=TIERS, gold_annotator: str = GOLD_2026) -> dict | str:
+    """Extraction scores of each tier on the 2026 ads, and kappa between the two annotators on the shared ads.
+
+    Scored on all labels and on vocabulary skills only (the detection rows extract() reads; labels outside it
+    cannot be found by tiers 1 and 2). The shared ads are those marked second_annotator in the sample, also
+    when the second annotator gave one of them no row.
+    """
+    if not (AD_SKILLS_2026.exists() and ADS_2026.exists()):
+        return f"not run: {AD_SKILLS_2026.name} or {ADS_2026.name} does not exist yet"
+    ads, roles = _table(ADS_2026, "ad_id", "description"), _table(ADS_2026, "ad_id", "role")
+    gold = ev.load_ad_skills(str(AD_SKILLS_2026), gold_annotator)
+    universe = sorted({ev.norm(s["canonical"]) for s in load_dictionary()})
+    out: dict = {"n_ads": len(gold), "n_labels": sum(len(s) for s in gold.values()),
+                 "n_roles": len({roles[a] for a in gold}), "tiers": {}, "skipped": {}}
+    for m in methods:
+        try:
+            pred = {ad: {ev.norm(x.get("canonical") or x.get("skill_label") or x["text"]) for x in _extract(ads[ad], m)}
+                    for ad in gold}
+        except (RuntimeError, ImportError, NotImplementedError, OSError) as error:
+            out["skipped"][m] = f"{type(error).__name__}: {str(error).splitlines()[0][:120]}"
+            continue
+        out["tiers"][m] = {"all": ev.extraction_scores(gold, pred),
+                           "vocabulary": ev.extraction_scores(ev.restrict_to(gold, universe), ev.restrict_to(pred, universe))}
+    names = sorted({r.get("annotator", "").strip() for r in ev._rows(str(AD_SKILLS_2026))} - {"", gold_annotator})
+    if names:
+        second = ev.load_ad_skills(str(AD_SKILLS_2026), names[0])
+        flagged = _table(ADS_2026, "ad_id", "second_annotator")
+        shared = sorted(a for a in gold if flagged.get(a) == "y")
+        res = ev.annotator_agreement(ev.restrict_to(gold, universe), ev.restrict_to(second, universe), shared, universe)
+        res["all_labels"] = ev.annotator_agreement(gold, second, shared, universe)
+        res["annotators"] = [gold_annotator, names[0]]
+        out["kappa"] = res
+    return out
+
+
+def tables_2026(res) -> list[str]:
+    if isinstance(res, str):
+        return ["", "## Extraction, 2026 ads", "", res]
+    L = ["", f"## Extraction, 2026 ads ({res['n_ads']} ATS ads, {res['n_roles']} roles, {res['n_labels']} labels)", "",
+         "| Tier | Scored on | P | R | F1 | TP / FP / FN |", "|---|---|---|---|---|---|"]
+    for m in TIERS:
+        if m in res["tiers"]:
+            for label, key in (("all labels", "all"), ("vocabulary skills only", "vocabulary")):
+                e = res["tiers"][m][key]
+                L.append(f"| {m} | {label} | {_f(e['precision'])} | {_f(e['recall'])} | {_f(e['f1'])} | {e['tp']} / {e['fp']} / {e['fn']} |")
+        elif m in res["skipped"]:
+            L.append(f"| {m} | not run | | | | {res['skipped'][m]} |")
+    k = res.get("kappa")
+    if k:
+        L += ["", f"Cohen's kappa between {' and '.join(k['annotators'])} on {k['n_ads']} ads:", "",
+              "| Items | kappa | Interpretation | Observed agreement | both / first only / second only |", "|---|---|---|---|---|"]
+        for label, r in (("Vocabulary skills only", k), ("All labels", k["all_labels"])):
+            L.append(f"| {label} | {_f(r['kappa'])} | {r['interpretation']} | {_f(r['observed_agreement'])} | "
+                     f"{r['both_yes']} / {r['a_only']} / {r['b_only']} |")
+    return L
 
 
 SUBJECT_METHODS = ("keyword", "tfidf", "embed")
@@ -217,7 +279,7 @@ def _f(x) -> str:
     return f"{x:.3f}"
 
 
-def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
+def tables_md(results: dict, skipped: dict, kappa, other: dict, y2026=None) -> str:
     L = ["# Evaluation tables", "", "Generated by `python -m skillabus.evaluate --all`. Do not edit by hand.", ""]
     first_run = next((results[m] for m in TIERS if m in results), {})
     n_ads, n_pairs = first_run.get("n_ads", "?"), first_run.get("n_pairs", "?")
@@ -274,6 +336,8 @@ def tables_md(results: dict, skipped: dict, kappa, other: dict) -> str:
             j = ch["judge"]
             L += ["", f"LLM judge (retrieval: {j['method']}, n={j['n']}, unparsed={j['n_unparsed']}): relevance {j['relevance_mean']:.2f}/5, "
                       f"faithfulness {j['faithfulness_mean']:.2f}/5, share of answers with faithfulness 4+: {j['share_faithfulness_4plus']:.2f}"]
+    if y2026 is not None:
+        L += tables_2026(y2026)
     L += ["", "## Not run", ""] + [f"- {k}: {v}" for k, v in other.items() if isinstance(v, str)]
     return "\n".join(L) + "\n"
 
@@ -294,6 +358,11 @@ def run_all(methods=TIERS, out_dir: str | Path | None = None, gold_annotator: st
         e = results[m]
         print(f"{m}: extraction F1 {e['extraction_all']['f1']:.3f}; matching accuracy {e['matching_end_to_end']['accuracy']:.3f}; Hit@5 {e['ranking']['hit_at_k']:.3f}")
     kappa = kappa_result(gold_annotator)
+    y2026 = run_2026(methods)
+    if isinstance(y2026, dict):
+        (out / "eval_results_2026.json").write_text(json.dumps(y2026, indent=1, default=str), encoding="utf-8")
+        for m, e in y2026["tiers"].items():
+            print(f"{m} (2026 ads): extraction F1 {e['all']['f1']:.3f}, vocabulary skills {e['vocabulary']['f1']:.3f}")
     other: dict = {}
     for key, name, fname, fn in (("subject", "Subject P@3", "skill_subject_pairs.csv", subject_result),
                                  ("chat", "Chat retrieval and judge", "chat_questions.csv", lambda: chat_result(openai_caller()))):
@@ -307,6 +376,6 @@ def run_all(methods=TIERS, out_dir: str | Path | None = None, gold_annotator: st
             other[name] = f"not run: {type(error).__name__}: {str(error).splitlines()[0][:120]}"
     if isinstance(other.get("chat"), dict) and "judge" not in other["chat"]:
         other["Chat LLM judge"] = "not run: set OPENAI_API_KEY (answers and judge use GPT-4o-mini)"
-    (out / "eval_tables.md").write_text(tables_md(results, skipped, kappa, other), encoding="utf-8")
+    (out / "eval_tables.md").write_text(tables_md(results, skipped, kappa, other, y2026), encoding="utf-8")
     print("wrote", out / "eval_tables.md")
     return 0

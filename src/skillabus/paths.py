@@ -125,7 +125,7 @@ LABEL_SAMPLE = INPUTS / "seek_label_sample_200.csv"
 RESUMES = INPUTS / "resumes_us_2021_clean.csv"
 
 RESULTS = EVALUATION / "results"
-LLM_CACHE_EVAL = EVALUATION / "llm_cache"                 # the 30 committed GPT-4o-mini responses; read only
+LLM_CACHE_EVAL = EVALUATION / "llm_cache"                 # the 48 committed GPT-4o-mini responses (30 + the 18 ads of 2026); read only
 
 # ------------------------------------------------------------------ 5_crosscheck
 SKILL_COUNTS_PRIMARY = CROSSCHECK / "skill_counts_PRIMARY.csv"
