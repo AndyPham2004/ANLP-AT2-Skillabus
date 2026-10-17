@@ -215,7 +215,7 @@ DEFAULTS = {
     "taken_keep": [], "result": None, "engine": "", "ran": False, "gap": None, "resume_text": "",
     "resume_label": None, "role_keep": backend.DEFAULT_ROLE, "course_keep": backend.HOME_COURSE,
     "gpt_keep": backend.llm_enabled(),
-    "level_keep": list(backend.LEVELS), "cost_keep": "Include free-to-audit", "toast": None,
+    "level_keep": list(backend.LEVELS), "toast": None,
 }
 for k, v in DEFAULTS.items():
     ss.setdefault(k, v)
@@ -1095,19 +1095,20 @@ def uts_cards(label: str, res: dict) -> None:
 
 @st.fragment
 def self_study_cards(label: str, role: str | None) -> None:
-    """Self-study: the filters on one line, then up to three resources as cards. A fragment: a filter redraws this only."""
+    """Self-study: the level filter, then up to three resources as cards. A fragment: a filter redraws this only.
+
+    No cost filter (Quan, 17 Oct): free and free-to-audit resources, and paid ones only for a skill no free one
+    teaches (Econometrics); each card shows its cost."""
     ss.setdefault("level_filter", list(ss.level_keep))
-    ss.setdefault("cost_filter", ss.cost_keep)
-    head, f1, f2 = st.columns([1.1, 1.4, 1.7], vertical_alignment="center", gap="medium")
+    head, f1 = st.columns([1.1, 3.1], vertical_alignment="center", gap="medium")
     head.markdown(ui.eyebrow("Self-study <span class='k-dim'>· not for credit</span>"), unsafe_allow_html=True)
     f1.pills("Level", list(backend.LEVELS), key="level_filter", selection_mode="multi", label_visibility="collapsed")
-    f2.segmented_control("Cost", list(backend.COST_CHOICES), key="cost_filter", label_visibility="collapsed")
     levels = list(ss.level_filter or [])
-    cost = ss.cost_filter or ss.cost_keep
-    ss.level_keep, ss.cost_keep = levels, cost
-    found = backend.self_study(label, levels, backend.COST_CHOICES[cost], role)
+    ss.level_keep = levels
+    found = (backend.self_study(label, levels, backend.COST_CHOICES["Include free-to-audit"], role)
+             or backend.self_study(label, levels, backend.COST_CHOICES["Include paid"], role))
     if not found and backend.self_study(label, backend.LEVELS, backend.COST_CHOICES["Include paid"], role):
-        st.markdown("<span class='k-mute'>Nothing with these filters: widen the level or cost above.</span>",
+        st.markdown("<span class='k-mute'>Nothing at these levels: pick another level above.</span>",
                     unsafe_allow_html=True)
     elif not found:
         st.markdown("<span class='k-mute'>No self-study resource in our list for this skill yet.</span>",
