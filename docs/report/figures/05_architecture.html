@@ -1,0 +1,64 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Skillabus architecture</title>
+<style>
+  :root { --ink:#1d2433; --mute:#5b6475; --line:#c9d3e3; --accent:#2f5597; --in:#eef3fb; --pipe:#f4f6fa; --app:#eaf6f1; --data:#fbf6ea; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#fff; font-family: Calibri, "Segoe UI", Arial, sans-serif; color:var(--ink); }
+  #fig { width:1500px; padding:22px 26px 24px; background:#fff; }
+  .row { display:grid; grid-template-columns: 300px 46px 560px 46px 440px; align-items:stretch; }
+  .col h3 { margin:0 0 10px; font-size:22px; color:var(--accent); letter-spacing:.2px; }
+  .box { border:1.5px solid var(--line); border-radius:10px; padding:10px 14px; margin-bottom:10px; font-size:19px; line-height:1.3; }
+  .box b { display:block; font-size:20px; margin-bottom:2px; }
+  .box span { color:var(--mute); }
+  .in .box { background:var(--in); }
+  .pipe .box { background:var(--pipe); }
+  .app .box { background:var(--app); }
+  .arrow { display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--accent); }
+  .down { text-align:center; color:var(--accent); font-size:20px; margin:-8px 0 2px; line-height:1; }
+  code { font-family: Consolas, monospace; font-size:17px; }
+  .data { margin-top:12px; border-top:2px dashed var(--line); padding-top:12px; }
+  .data h3 { margin:0 0 10px; font-size:22px; color:var(--accent); }
+  .stores { display:grid; grid-template-columns: repeat(5, 1fr); gap:12px; }
+  .store { background:var(--data); border:1.5px solid #e6d9b8; border-radius:10px; padding:9px 12px; font-size:18px; line-height:1.3; }
+  .store b { display:block; font-size:19px; }
+  .store i { color:var(--mute); font-style:normal; font-size:16.5px; }
+</style></head>
+<body><div id="fig">
+  <div class="row">
+    <div class="col in">
+      <h3>Inputs</h3>
+      <div class="box"><b>Start page</b><span>a role · a job ad · not sure yet</span></div>
+      <div class="box"><b>You</b><span>course (enrolled or not), subjects taken, resume (optional)</span></div>
+      <div class="box"><b>Goal</b><span>one of 11 IT roles, or a job ad: browsed (1,996 of 2026), pasted or the sample</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col pipe">
+      <h3>Pipeline <code>src/skillabus</code></h3>
+      <div class="box"><b>extract</b><span>vocabulary → spaCy → GPT-4o-mini, every skill checked against the text</span></div>
+      <div class="down">↓</div>
+      <div class="box"><b>normalise</b><span>vocabulary → ESCO exact → ESCO embedding → emerging</span></div>
+      <div class="down">↓</div>
+      <div class="box"><b>match</b><span>have / partial / missing, weighted by the role's 2026 demand</span></div>
+      <div class="down">↓</div>
+      <div class="box"><b>recommend and rank</b><span>subject evidence by layer → greedy path with prerequisites → self-study; courses ranked for a role; roles ranked by fit</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col app">
+      <h3>App (Streamlit)</h3>
+      <div class="box"><b>Results tabs</b><span>Skills · Your path · Outside UTS · UTS courses · Certifications</span></div>
+      <div class="box"><b>Roles that fit you</b><span>for “not sure yet”: 11 roles ranked</span></div>
+      <div class="box"><b>Skill page</b><span>ad sentence ↔ Handbook sentence and its layer, votes, self-study</span></div>
+      <div class="box"><b>Ask the Handbook</b><span>RAG chat: MiniLM + FAISS (TF-IDF on the free host), GPT-4o-mini</span></div>
+    </div>
+  </div>
+  <div class="data">
+    <h3>Data the pipeline reads</h3>
+    <div class="stores">
+      <div class="store"><b>Skill vocabulary</b><i>504 rows: ESCO + 145 added skills · extract, normalise</i></div>
+      <div class="store"><b>Role × skill demand</b><i>1,932 JobsPipe ads of 2026; Seek trend · match</i></div>
+      <div class="store"><b>Subject profiles</b><i>360 subjects, 44 courses, 6,853 rows · recommend, chat</i></div>
+      <div class="store"><b>Prerequisites, sessions</b><i>2,571 requisite rows, 510 offerings · path</i></div>
+      <div class="store"><b>Self-study, certifications</b><i>250 resources, 49 certifications · path</i></div>
+    </div>
+  </div>
+</div></body></html>
