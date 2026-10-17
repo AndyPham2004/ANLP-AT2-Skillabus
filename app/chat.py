@@ -223,7 +223,8 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     history = list(history)[-HISTORY:]
     replying = bool(history) and history[-1].get("followup", False)       # this message answers our follow-up
     query = question
-    if replying:
+    # a reply to our follow-up, or a short follow-on ("Can you give me a full plan?"), is searched with the message before
+    if replying or (history and len(question.split()) < 8):
         asked = next((m["content"] for m in reversed(history) if m["role"] == "user"), "")
         query = f"{asked} {question}"
     done, advice = set(taken), bool(ADVICE.search(query))
@@ -271,7 +272,8 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     follow_up = (
         "The student has just answered your follow-up question: answer now and do not ask another."
         if replying else
-        "Only if the student asks what to take and names no goal, interest, skill, subject or skill gaps, reply "
+        "Only if the student asks what to take and names no goal, interest, skill, subject or skill gaps, in this "
+        "message or earlier in the chat, reply "
         f"with one short follow-up question that starts with \"{FOLLOW_UP}\" and nothing else. Answer everything "
         "else directly: a question about a skill (abbreviations such as ML, AI, NLP or BI are clear) or about a "
         "named subject never needs one.")
@@ -290,7 +292,11 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
                 "student's skill gaps only when the question is about them. Never suggest a subject the "
                 "student has taken or says they have taken or plan to take, nor one whose name or topic is "
                 "nearly the same (a second deep learning subject for someone taking Deep Learning). If the "
-                "student names a session, suggest only subjects that run in it. Two to four sentences. "
+                "student names a session, suggest only subjects that run in it. If asked for a full study plan "
+                "or a course's structure, say plainly that the Handbook text here does not include the course "
+                "structure (which subjects are core, credit points, how many per session), so you cannot give a "
+                "complete plan; then suggest a few subjects for their goal with the sessions they run in, and point "
+                "to the course's page in the UTS Handbook and their course coordinator. Two to five sentences. "
                 "Suggestions, not advice. " + follow_up)},
             *turns,
             {"role": "user", "content": f"{gaps}Subjects:\n{context}\n\nQuestion: {question}"},
