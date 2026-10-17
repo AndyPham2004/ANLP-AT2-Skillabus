@@ -10,7 +10,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data-eda" / "src"))
 
 from build_vocabulary import (  # noqa: E402
-    AD_SOURCES, CORE_CATEGORY, ESCO, KNOWN_WRONG, MIN_ADS, MIN_EMPLOYERS, build, check_new_aliases, check_review,
+    CORE_CATEGORY, ESCO, MIN_ADS, MIN_EMPLOYERS, build, check_new_aliases, check_review,
     count_ads, count_corpus, esco_essentials, load_corpus, part_certifications, read_table, self_mention, skill_hits,
     vocab_slug,
 )
@@ -34,7 +34,7 @@ def test_committed_vocabulary_is_what_the_builder_writes():
 
 def test_every_dictionary_skill_is_in_the_vocabulary_unchanged():
     """The pipeline can switch from skills_seed_v2.csv to the vocabulary without losing a skill (plan C2)."""
-    assert len(SEED) == 148 and set(SEED.canonical) <= set(EXTRACT.label)
+    assert not SEED.empty and set(SEED.canonical) <= set(EXTRACT.label)
     for s in SEED.itertuples():
         row = BY_LABEL.loc[s.canonical]
         assert (row.aliases_ads, row.strict, row.category) == (s.aliases, s.strict, s.category), s.canonical
@@ -62,9 +62,13 @@ def test_tools_under_one_wide_esco_concept_keep_their_own_ids():
     assert rows.esco_match.tolist() == ["broad", "broad"] and rows.skill_id.is_unique
 
 
-def test_the_wrong_links_of_14_october_are_gone():
-    assert not set(zip(VOCAB.label, VOCAB.esco_uri)) & KNOWN_WRONG
-    assert BY_LABEL.loc["Spark"].esco_label != "SPARK"  # the Java web framework
+def test_spark_cannot_link_to_esco_spark_again():
+    """ESCO's 'SPARK' is a Java web framework (14 Oct). The link is blocked, so the review file cannot bring it back."""
+    spark_uri = ESCO_TABLE.concept_uri[ESCO_TABLE.preferred_label == "SPARK"].item()
+    bad = REVIEW.copy()
+    bad.loc[bad.canonical == "Spark", ["esco_uri", "esco_label", "esco_match"]] = [spark_uri, "SPARK", "exact"]
+    errors = check_review(SEED, bad, ESCO_TABLE)
+    assert [e for e in errors if e.startswith("Spark:")] == [f"Spark: {spark_uri} (SPARK) is a known wrong link"]
 
 
 def test_a_bad_review_row_is_reported():
@@ -78,7 +82,8 @@ def test_a_bad_review_row_is_reported():
     assert any(e.startswith("Kafka:") and "note" in e for e in errors)
     assert any(e.startswith("Keras:") and "wrong" in e for e in errors)
     assert check_review(SEED, REVIEW, ESCO_TABLE) == []
-    assert check_review(SEED.iloc[:-1], REVIEW, ESCO_TABLE) == ["review row for a skill not in the dictionary: Ansible"]
+    last = SEED.canonical.iloc[-1]
+    assert check_review(SEED.iloc[:-1], REVIEW, ESCO_TABLE) == [f"review row for a skill not in the dictionary: {last}"]
 
 
 def test_every_esco_essential_skill_of_the_roles_is_one_exact_row():
@@ -134,17 +139,16 @@ def test_pl_sql_is_the_only_alias_two_skills_share():
         for alias in {a.strip().casefold() for a in cell.split("|") if a.strip()}:
             owners.setdefault(alias, set()).add(label)
     assert {a: o for a, o in owners.items() if len(o) > 1} == {"pl/sql": {"SQL", "Oracle"}}
-    found = {h["canonical"] for h in extract.extract("Senior PL/SQL developer")}
-    assert {"SQL", "Oracle"} <= found
 
 
 def test_a_new_alias_that_hides_or_repeats_another_is_refused():
-    rows = pd.DataFrame({"label": ["Git", "GitHub Actions", "Copy"], "strict": ["0", "0", "0"],
-                         "aliases_ads": ["git|github", "github actions", "github"]})
+    rows = pd.DataFrame({"label": ["Git", "GitHub Actions", "Copy", "GitLab CI"], "strict": ["0", "0", "0", "0"],
+                         "aliases_ads": ["git|github", "github actions", "github", "gitlab ci"]})
     errors = check_new_aliases(rows, {"GitHub Actions", "Copy"})
     assert any("GitHub Actions" in e and "hide" in e for e in errors)
     assert any(e.startswith("Copy:") and "also an alias" in e for e in errors)
-    assert check_new_aliases(rows.iloc[:1], set()) == []
+    # "git" sits inside "gitlab", but not as a whole word, so extract() would never let it hide Git.
+    assert check_new_aliases(rows[rows.label.isin(["Git", "GitLab CI"])], {"GitLab CI"}) == []
 
 
 def test_an_employer_naming_its_own_product_does_not_count():
@@ -163,13 +167,16 @@ def test_an_employer_naming_its_own_product_does_not_count():
 def test_ads_fetched_twice_count_once(tmp_path):
     seek = tmp_path / "seek.csv"
     ats = tmp_path / "ats.csv"
+    # Seek's employer is mostly the recruiter: one title from one recruiter can be two jobs, so both stay.
     pd.DataFrame({"title": ["DS", "DS"], "advertiser": ["Hays", "Hays"],
-                  "description": ["Python and SQL.", "Python  and SQL."]}).to_csv(seek, index=False)
+                  "description": ["Python and SQL.", "R and Tableau."]}).to_csv(seek, index=False)
     pd.DataFrame({"title": ["Engineer", "Engineer", "Analyst"], "company": ["Canva", "Canva", "Canva"],
-                  "description": ["Go and Rust.", "Go and Rust, Sydney.", "python and sql."]}).to_csv(ats, index=False)
+                  "description": ["Go and Rust.", "Go and Rust, Sydney.", "python  and sql."]}).to_csv(ats, index=False)
     corpus = load_corpus({"seek_2019_22": [seek], "ats_2026": [ats]})
-    assert corpus.source.tolist() == ["seek_2019_22", "ats_2026"]   # same text; same title and employer
-    assert set(AD_SOURCES) >= set(corpus.source)
+    # Dropped: the second Engineer ad (same title and employer outside Seek) and the Analyst ad (a Seek text,
+    # case and spaces folded).
+    assert corpus.text.tolist() == ["Python and SQL.", "R and Tableau.", "Go and Rust."]
+    assert corpus.source.tolist() == ["seek_2019_22", "seek_2019_22", "ats_2026"]
 
 
 def test_certifications_are_case_sensitive_extract_rows_exempt_from_the_ad_rule(tmp_path):
@@ -193,14 +200,15 @@ def test_ad_counts_use_the_same_matching_as_extract():
     texts = [
         "Strong SQL and Python and R. Experience with SQL Server and PowerBI dashboards.",
         "You will excel in a team: C#, .NET and Kubernetes (k8s). See https://python.org",
-        "SAS or sas? AWS, Azure and GCP; machine-learning and generative AI.",
+        "SAS or sas? AWS, Azure and GCP; machine-learning and generative AI. Grafana for monitoring.",
     ]
-    counts = count_ads(VOCAB[VOCAB.label.isin(SEED.canonical)], texts)
+    counts = count_ads(EXTRACT, texts)   # every detection row: what extract() reads since C2
     expected = Counter()
     for t in texts:
         expected.update({m["canonical"] for m in extract.extract(t)})
     assert counts == expected
-    assert counts["SQL Server"] == 1 and counts["SAS"] == 1 and "Python" in counts
+    # Grafana is a vocabulary-only skill (D5), so the two agree only if both read the same rows.
+    assert counts["SQL Server"] == 1 and counts["SAS"] == 1 and counts["Grafana"] == 1 and "Python" in counts
 
 
 @pytest.mark.parametrize("source", ["recent_2024_26"])

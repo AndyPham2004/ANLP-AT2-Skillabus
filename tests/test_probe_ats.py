@@ -14,7 +14,8 @@ def row(title, location):
 
 def test_counts_split_by_country_and_title():
     rows = [row("Data Scientist", "Sydney"), row("Senior Data Scientist", "Melbourne, VIC"),
-            row("Data Engineer", "Sydney"), row("Data Scientist", "London"), row("Graphic AI Designer", "Sydney")]
+            row("Data Engineer", "Sydney"), row("Data Scientist", "London"),
+            row("Quantitative AI Designer", "Sydney")]   # DATA_TITLE takes "quantitative"; the bare "AI" rule drops it
     assert count_roles(rows) == {"total": 5, "au": 4, "data_au": 3, "ds_au": 2}
 
 

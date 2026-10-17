@@ -30,8 +30,9 @@ def test_task_text_folds_type_weight_group_and_description():
 
 
 def test_rows_are_ordered_by_task_number_in_profile_shape():
-    rows = rows_from_items(ITEMS, SUBJECT, "u")
-    assert [r["text"].split(":")[0] for r in rows] == ["Assessment 1", "Assessment 2", "Assessment 3"]
+    ten = {**ITEMS[0], "number": "10", "name": "Assessment 10: Viva"}   # 10 after 3: numbers, not text
+    rows = rows_from_items([ten] + ITEMS, SUBJECT, "u")
+    assert [r["text"].split(":")[0] for r in rows] == ["Assessment 1", "Assessment 2", "Assessment 3", "Assessment 10"]
     assert set(rows[0]) == {"subject_code", "subject_name", "course", "layer", "text", "source_url", "collected_by"}
     assert rows[0]["layer"] == "assessment" and rows[0]["course"] == "C04372"
 
