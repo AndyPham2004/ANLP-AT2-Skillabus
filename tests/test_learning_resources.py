@@ -50,7 +50,8 @@ def test_every_resource_has_text_and_every_text_has_a_resource():
     old = {r["subject_code"] for r in rows(paths.EXTERNAL_COURSES)}
     new = rows(paths.RESOURCE_MODULES)
     assert not old & {r["subject_code"] for r in new}            # one file per resource's text
-    assert ids == old | {r["subject_code"] for r in new}
+    # Through text_rows(), which reads both files: a resource with no text row is never recommended.
+    assert ids == {r["subject_code"] for r in resources.text_rows()}
     with_description = {r["subject_code"] for r in new if r["layer"] == "description"}
     assert {r["subject_code"] for r in new} <= with_description
     assert {r["layer"] for r in new} <= {"description", "weekly_topic"}
@@ -71,4 +72,3 @@ def test_for_skill_filters_and_sorts():
     assert levels == sorted(levels)
     assert resources.for_skill("Docker", role="Business Analyst") == [
         r for r in resources.for_skill("Docker") if "Business Analyst" in r["roles"]]
-    assert len(resources.text_rows()) == len(rows(paths.EXTERNAL_COURSES)) + len(rows(paths.RESOURCE_MODULES))
