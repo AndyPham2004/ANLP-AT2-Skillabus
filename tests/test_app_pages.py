@@ -447,7 +447,7 @@ def test_handbook_chat_is_its_own_page_and_names_subjects_by_code():
     assert not at.exception, at.exception
     reply = at.session_state.messages[-1]
     assert reply["role"] == "assistant" and "36118 Applied Natural Language Processing" in reply["content"]
-    names = re.findall(r"\*\*(.+?) \(", reply["content"])                     # one line per subject
+    names = re.findall(r"\*\*(.+?)\*\*", reply["content"])                    # one line per subject
     assert names and len(names) == len(set(names)), reply["content"]
     question, n = "Which subject teaches machine learning?", len(at.session_state.messages)
     at.chat_input(key="chat_in").set_value(question).run()

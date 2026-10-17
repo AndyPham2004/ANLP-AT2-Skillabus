@@ -85,10 +85,9 @@ def subject_label(s: dict) -> str:
 
 
 def source_name(s: dict) -> str:
-    """'36118 Applied Natural Language Processing (topic, learning objective)': a source line under the answer."""
-    layers = dict.fromkeys(LAYER_NAME.get(p.get("layer"), p.get("layer") or "Handbook")
-                           for p in s.get("passages", [s]))
-    return f"{subject_label(s)} ({', '.join(layers)})"
+    """A source line under the answer: code and name only. The layer stays in the model's context; shown here
+    it was noise (the skill page and path cards are where a layer tells a student how a subject covers a skill)."""
+    return subject_label(s)
 
 
 def has_llm() -> bool:
