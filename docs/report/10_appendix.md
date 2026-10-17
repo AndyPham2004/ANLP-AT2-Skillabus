@@ -16,7 +16,7 @@
 | Adzuna API | live search counts: 11 role totals, 162 skill × role counts | 16 Oct 2026 | second 2026 view; rank check | API terms (counts only) |
 | Public job boards of 65 employers (Greenhouse, Lever, SmartRecruiters, Ashby, Workable) | 392 ads posted within 60 days, 85 with a role | Oct 2026 | third 2026 view | employers' public ads |
 | Seek Australia, Data Scientist (nomilk, 2022) | 3,204 listings, full text | Feb 2019 – Jan 2022 | Data Scientist trend | CC0 |
-| Seek Australia samples (PromptCloud, 2021) | 2,366 IT ads out of 65,840, 10 roles | 2020–21 | pre-2022 baseline per role | CC0 |
+| Seek Australia samples (PromptCloud, 2021) | 2,362 IT ads out of 65,840, 10 roles (4 more Machine Learning Engineer ads, too few to use) | 2020–21 | pre-2022 baseline per role | CC0 |
 | data_jobs (Barousse, 2025) | 10,925 Australian postings in 7 roles, tool lists | 2023 | cross-check | Apache-2.0 |
 | LinkedIn data-science postings (asaniczka, 2024) | 122 Australian data roles | Jan 2024 | trend midpoint | ODC-By |
 | LinkedIn job postings (arshkon, 2024) | 247 US Data Scientist ads | 2023–24 | validation | CC BY-SA 4.0 |
@@ -33,7 +33,7 @@
 **Table A.2.** Ads per role and source in `data/2_demand/role_skill_demand.csv` (4,494 rows; notebook section 10). The app
 reads the first source that has the role, in the order JobsPipe 2026, Adzuna 2026, job boards 2026, data_jobs 2023,
 Seek 2019–22 (`match.DEMAND_PRIORITY`); today that is JobsPipe for all 11 roles. The 2026 job-board ads form three blocks
-of 30+ ads: Software Engineer 33, data roles (mixed) 26 and IT roles (mixed) 26.
+of 26–33 ads: Software Engineer 33, data roles (mixed) 26 and IT roles (mixed) 26.
 
 | Family | Role | JobsPipe 2026 | Adzuna 2026 | Seek 2020–21 | data_jobs 2023 | Seek 2019–22 |
 |---|---|---|---|---|---|---|
@@ -76,9 +76,8 @@ Alongside them, `prerequisites.csv` holds 2,200 requisite items for 290 subjects
 rows for 172 subjects, and `offerings.csv` the teaching sessions of 330 subjects. Tables A.5 and A.6 give the layers per
 course and per MDSI subject.
 
-Rows per layer in `data/1_knowledge/uts/subject_profiles.csv`: 6,853 rows for 360 subjects in 44 courses, one row per
-learning objective, assessment task, weekly topic or description sentence (UTS Handbook 2026, scraped 13 Oct 2026;
-`data/1_knowledge/uts/subject_profiles.md`). A dash means the Handbook has no text for that layer.
+The Handbook 2026 pages were scraped on 13 Oct 2026 (`data/1_knowledge/uts/subject_profiles.md`). A dash means the
+Handbook has no text for that layer.
 
 **Table A.5.** Courses. A subject in several courses is counted in each, so columns do not add up to the total.
 
