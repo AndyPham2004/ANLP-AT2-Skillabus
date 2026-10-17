@@ -1,6 +1,8 @@
 """Tests for src/skillabus/evaluate.py. Every expected value is worked out by hand in the comment beside it.
 
-Run from the repo root (no extra packages needed):  python -m unittest discover -s tests -v
+Run from the repo root:  python -m pytest tests/test_evaluate.py   (or: python tests/test_evaluate.py)
+The evaluate.py tests need only the standard library. EvalRunTables imports skillabus.eval_run, which loads the
+pipeline and its packages (requirements.txt); its last test runs the dictionary tier on the committed labels.
 """
 import os
 import sys
@@ -29,13 +31,8 @@ class PhraseEvidenceTests(unittest.TestCase):
         self.assertEqual(ev.hit_at_k(["Led a team of four."], {"xgboost"}, 5), 0.0)
 
 
-class UnsureAndDictionary(unittest.TestCase):
-    def test_leading_question_mark_is_dropped_from_ad_labels(self):
-        path = os.path.join(tempfile.mkdtemp(), "a.csv")
-        with open(path, "w", encoding="utf-8") as f:
-            f.write("ad_id,skill_label,in_dictionary,evidence_text,annotator\n1,?Telecommunications,n,x,A\n1,SQL,y,y,A\n")
-        self.assertEqual(ev.load_ad_skills(path), {"1": {"telecommunications", "sql"}})
-
+class Dictionary(unittest.TestCase):
+    # the unsure mark '?' on ad labels: Files.test_unsure_mark_is_dropped_from_ad_skill_labels
     def test_restrict_to_dictionary(self):
         got = ev.restrict_to({"1": {"sql", "telecommunications"}}, ["SQL", "Python"])
         self.assertEqual(got, {"1": {"sql"}})
@@ -229,10 +226,6 @@ class Files(unittest.TestCase):
             self.assertEqual(ev.main(["kappa", path, path, "--a-name", "Hoai Thuong", "--b-name", "Akash", "--dictionary", seed]), 0)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class EvalRunTables(unittest.TestCase):
     """--all must say what it could not run instead of failing or leaving a table out silently."""
 
@@ -256,7 +249,11 @@ class EvalRunTables(unittest.TestCase):
         self.assertIn("- Chat LLM judge: not run: no key", text)
 
     def test_run_all_dictionary_tier_writes_the_tables(self):
-        """Smoke test on the committed labels: the run must reach the tables, not stop on a missing helper."""
+        """Smoke test on the committed labels: the dictionary tier must run and reach the tables.
+
+        run_all returns 0 and writes the table headings even when a tier fails (it lists the tier as "not run"),
+        so only the tier's own row shows that it ran.
+        """
         import tempfile
         from pathlib import Path
         from skillabus import paths
@@ -264,5 +261,11 @@ class EvalRunTables(unittest.TestCase):
         if not (paths.AD_SKILLS.exists() and paths.CV_JD_PAIRS.exists() and paths.SEEK_ADS.exists() and paths.RESUMES.exists()):
             self.skipTest("labelled sets or their inputs are not in this checkout")
         with tempfile.TemporaryDirectory() as tmp:
-            self.assertEqual(run_all(("dictionary",), tmp), 0)
-            self.assertIn("## Extraction (", (Path(tmp) / "eval_tables.md").read_text(encoding="utf-8"))
+            run_all(("dictionary",), tmp)
+            text = (Path(tmp) / "eval_tables.md").read_text(encoding="utf-8")
+            self.assertIn("| dictionary | all skills |", text)
+            self.assertNotIn("| dictionary | not run |", text)
+
+
+if __name__ == "__main__":
+    unittest.main()

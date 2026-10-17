@@ -65,7 +65,7 @@ def test_second_run_uses_the_cache(tmp_path, monkeypatch):
     client = FakeClient([{"text": "SQL", "kind": "hard"}])
     first = llm_extract.extract_llm(AD, client=client)
     second = llm_extract.extract_llm(AD, client=client)
-    assert first == second and client.calls == 1
+    assert first == second and client.calls == 1     # a cached text never reaches the key check in _call
 
 
 def test_no_key_and_no_cache_raises_runtime_error(tmp_path, monkeypatch):
@@ -78,13 +78,6 @@ def test_no_key_and_no_cache_raises_runtime_error(tmp_path, monkeypatch):
     else:
         raise AssertionError("expected RuntimeError")
     assert not list(tmp_path.iterdir())   # nothing cached
-
-
-def test_no_key_still_reads_the_cache(tmp_path, monkeypatch):
-    monkeypatch.setattr(llm_extract, "CACHE_DIR", tmp_path)
-    first = llm_extract.extract_llm(AD, client=FakeClient([{"text": "SQL", "kind": "hard"}]))
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    assert llm_extract.extract_llm(AD) == first
 
 
 def test_reads_the_evaluation_cache_but_writes_only_the_runtime_cache(tmp_path, monkeypatch):

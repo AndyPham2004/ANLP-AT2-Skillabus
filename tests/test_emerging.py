@@ -43,13 +43,14 @@ def test_log_odds_rises_with_the_new_count_and_shrinks_small_counts():
 
 def test_known_skills_and_esco_labels_are_not_emerging():
     assert known_as(("python",)) == "dictionary"
-    assert known_as(("llms",)) == "dictionary"                           # alias "llm" + plural
+    assert known_as(("data", "warehouses")) == "dictionary"              # plural of "data warehouse"
     assert known_as(("evaluation",)) == "esco"
     assert known_as(("agentic", "workflows")) == ""
 
 
 def test_boilerplate_words_are_not_candidates():
-    new = ads(["Python. You'll thrive building scale."] * 3, employers=["A", "B", "C"])
+    # In the skill line, or skill_text drops it first; "you will" keeps Python out of its n-grams.
+    new = ads(["Python: you will thrive building at scale."] * 3, employers=["A", "B", "C"])
     assert [r["phrase"] for r in detect(("ngram",), new=new, old=OLD)] == []
 
 
@@ -59,10 +60,14 @@ def test_detect_keeps_rising_phrases_from_several_employers():
     assert phrases[0] == "agentic workflows"                              # 3 ads, 3 employers, 0 before
     assert "agentic" not in phrases and "workflows" not in phrases        # nested, same ads
     assert "python" not in phrases and "sql" not in phrases               # dictionary skills
-    assert "wellness allowance" not in phrases                            # one employer, no skill line
+    assert "wellness allowance" not in phrases                            # not in a skill line
     row = table[0]
     assert (row["df_new"], row["employers_new"], row["df_2019_22"], row["rank"]) == (3, 3, 0, 1)
     assert row["is_skill"] == ""
+    # The same three ads from one employer are its boilerplate, not a rising skill.
+    lines = ["Lakehouse tooling and Python."] * 3
+    assert "lakehouse tooling" in [r["phrase"] for r in detect(("ngram",), new=ads(lines, ["A", "B", "C"]), old=OLD)]
+    assert detect(("ngram",), new=ads(lines, ["A", "A", "A"]), old=OLD) == []
 
 
 def test_overlap_counts_shared_phrases():

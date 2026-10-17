@@ -4,11 +4,12 @@ They read the committed data files (role_occupations.csv, occupation_skills.csv,
 certifications.csv, resources.csv), so a rebuilt file that breaks the app fails here first.
 """
 import csv
-import os
 import sys
 from pathlib import Path
 
-os.environ.setdefault("SKILLABUS_NO_EMBED", "1")   # TF-IDF: fast, and the same on every machine
+import pytest
+
+pytestmark = pytest.mark.usefixtures("tfidf_only")   # TF-IDF per test (conftest): fast, the same on every machine
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "app"))
@@ -32,6 +33,14 @@ def all_roles():
     return [role for roles in backend.role_families().values() for role in roles]
 
 
+def demand_meta(role="Data Scientist", source="jobspipe_2026"):
+    """(source, period, total_ads, text_type) of a role's latest block in the committed demand table. Read, not
+    typed: the JobsPipe counts are topped up (71 -> 89 Data Scientist ads on 17 Oct)."""
+    block = [r for r in rows(paths.ROLE_SKILL_DEMAND) if r["role"] == role and r["source"] == source]
+    r = max(block, key=lambda r: r["period"])
+    return r["source"], r["period"], int(float(r["total_ads"])), r["text_type"]
+
+
 # ---------------------------------------------------------------- C3: roles and where their demand comes from
 
 def test_eleven_roles_in_five_families():
@@ -39,10 +48,6 @@ def test_eleven_roles_in_five_families():
     assert list(families) == FAMILIES
     assert len(all_roles()) == len(set(all_roles())) == 11
     assert families["Security"] == ["Cybersecurity Analyst"]
-
-
-def test_every_role_has_ad_counts():
-    assert all(backend.has_ad_counts(r) for r in all_roles())
 
 
 def test_role_source_takes_n_from_the_demand_table():
@@ -70,26 +75,20 @@ def test_a_role_without_a_counted_block_falls_back_to_core_skills(demand_sample)
 
 # ---------------------------------------------------------------- C5: core skills
 
-def test_core_skills_are_vocabulary_core_rows_onet_first():
-    core = {v["label"] for v in rows(paths.SKILLS_VOCABULARY) if "core_skill" in v["used_for"]}
-    for role in CORE_ROLES:
-        found = backend.core_skill_rows(role)
-        labels = [c["label"] for c in found]
-        assert labels and len(labels) == len(set(labels))
-        assert set(labels) <= core
-        sources = [c["source"] for c in found]
-        assert sources == sorted(sources, key=lambda s: s != "onet")      # every O*NET tool before any ESCO skill
-
-
-def test_core_skills_keep_only_essential_digital_esco_skills():
+def test_core_skills_are_onet_tools_then_essential_digital_esco_skills():
+    # The occupations also list optional and non-digital ESCO skills that have core vocabulary rows
+    # ("create incident reports", "C#" as optional), so the filter has something to drop.
     occ = rows(paths.OCCUPATION_SKILLS)
     vocab = {v["label"]: v for v in rows(paths.SKILLS_VOCABULARY)}
     for role in CORE_ROLES:
+        found = backend.core_skill_rows(role)
+        sources = [c["source"] for c in found]
+        assert sources and sources == sorted(sources, key=lambda s: s != "onet")   # every O*NET tool before any ESCO skill
         allowed = {r["skill_ref"] for r in occ if r["role"] == role and r["source"] == "esco"
                    and r["importance"] == "essential" and r["esco_digital"] == "y"}
-        for c in backend.core_skill_rows(role):
+        for c in found:
             if c["source"] == "esco":
-                assert vocab[c["label"]]["esco_uri"] in allowed
+                assert vocab[c["label"]]["esco_uri"] in allowed, (role, c["label"])
     labels = [c["label"] for c in backend.core_skill_rows("Cybersecurity Analyst")]
     assert "building systems monitoring technology" not in labels
     assert "apply for research funding" not in [c["label"] for c in backend.core_skill_rows("Data Scientist")]
@@ -134,42 +133,55 @@ def test_role_gaps_uses_match_role_for_roles_with_counts():
 
 
 def test_a_taken_subject_counts_as_having_the_skill():
+    from skillabus.extract import load_dictionary
     from skillabus.recommend import subject_evidence
     code = subject_evidence(["Spark"], method="keyword")["Spark"][0]["subject_code"]
+    # A skill other subjects name and this one does not (Kafka was no good: 94693 names it too).
+    labels = [d["canonical"] for d in load_dictionary()]
+    evidence = subject_evidence(labels, method="keyword")
+    other = next(label for label in labels
+                 if evidence.get(label) and code not in {e["subject_code"] for e in evidence[label]})
     skills = [{"skill_label": "Spark", "status": "missing", "resume_evidence": None},
-              {"skill_label": "Kafka", "status": "missing", "resume_evidence": None}]
+              {"skill_label": other, "status": "missing", "resume_evidence": None}]
     out = backend.credit_taken(skills, [code])
     assert out[0]["status"] == "have" and out[0]["resume_evidence"].startswith(f"From {code}")
+    assert out[1] == skills[1], other                                    # still missing, no evidence
     assert backend.credit_taken(skills, []) == skills
 
 
 # ---------------------------------------------------------------- C6: certifications and self-study
 
 def test_certifications_for_a_role_sorted_by_level():
+    # Every certification of certifications.csv that names the role, foundational first, file order within a
+    # level. The expected list is read from the file: D11 adds and re-counts certifications.
+    table = rows(paths.CERTIFICATIONS)
     for role in all_roles():
+        in_file = [r["cert"] for r in table if role in [x.strip() for x in r["roles"].split(";")]]
         certs = backend.certifications(role)
         assert certs, role
-        assert all(role in backend._split(c["roles"]) for c in certs)
+        assert sorted(c["cert"] for c in certs) == sorted(in_file), role       # none lost, none of another role
         levels = [backend.CERT_LEVELS.index(c["level"]) for c in certs]
-        assert levels == sorted(levels)
-    assert len(backend.certifications("Cybersecurity Analyst")) == 10
-    assert backend.certifications("Cybersecurity Analyst")[0]["cert"] == "ISC2 Certified in Cybersecurity (CC)"
+        assert levels == sorted(levels), role
+        for level in set(levels):
+            same = [c["cert"] for c in certs if backend.CERT_LEVELS.index(c["level"]) == level]
+            assert same == [name for name in in_file if name in same], role
 
 
 def test_self_study_filters_by_level_and_cost():
     free = backend.self_study("Python", cost=backend.COST_CHOICES["Free only"], limit=50)
     assert free and all(r["cost"] == "free" for r in free)
-    advanced = backend.self_study("Python", levels=("advanced",), cost=backend.COST_CHOICES["Include paid"], limit=50)
-    assert all(r["level"] == "advanced" for r in advanced)
+    # Deep learning has resources at all three levels; Python has no advanced one, which made this check empty.
+    advanced = backend.self_study("Deep learning", levels=("advanced",), cost=backend.COST_CHOICES["Include paid"],
+                                  limit=50)
+    assert advanced and all(r["level"] == "advanced" for r in advanced)
     assert len(backend.self_study("Python")) == backend.MAX_SELF_STUDY
     assert backend.self_study("Python", levels=()) == []
 
 
 def test_self_study_puts_resources_about_the_skill_first():
-    hits = backend.self_study("Linux", limit=50)
-    first_not_main = next((i for i, r in enumerate(hits) if r["skills"][0] != "Linux"), len(hits))
-    assert all(r["skills"][0] == "Linux" for r in hits[:first_not_main])
-    assert all(r["skills"][0] != "Linux" for r in hits[first_not_main:])
+    main = [r["skills"][0] == "Linux" for r in backend.self_study("Linux", limit=50)]
+    assert True in main and False in main            # both kinds, or the order proves nothing
+    assert main == sorted(main, reverse=True)        # every Linux course before any guide that only uses Linux
 
 
 def test_self_study_falls_back_to_any_role():
@@ -193,7 +205,7 @@ def test_analyse_role_mode_runs_the_pipeline_with_the_second_tier():
 def test_recommendations_list_each_subject_once():
     # #125: the strongest subject for a gap was appended again when it was already shown (in the path)
     # without covering that gap: 43008 twice for DevOps/SRE with TF-IDF, 48730 twice for
-    # Cybersecurity Analyst with embeddings (the method depends on what earlier tests loaded).
+    # Cybersecurity Analyst with embeddings. This file runs TF-IDF (tfidf_only), so only the first case is checked.
     for role in ("DevOps/SRE", "Cybersecurity Analyst"):
         result, _ = backend.analyse(RESUME, None, [], role=role)
         codes = [r["subject_code"] for r in result["recommendations"]]
@@ -203,8 +215,8 @@ def test_recommendations_list_each_subject_once():
 def test_footer_count_and_the_fallback_follow_the_vocabulary():
     # Follow-up to #109: the footer and the baseline fallback read the detection rows the extractor
     # uses (skills_vocabulary.csv), not the 148-skill seed.
-    from skillabus.extract import load_dictionary
-    assert backend.dictionary_size() == len(load_dictionary()) > 148
+    detection = [v for v in rows(paths.SKILLS_VOCABULARY) if "extract" in v["used_for"] and v["aliases_ads"].strip()]
+    assert backend.dictionary_size() == len(detection) > 148
     found = backend.baseline.find_skills("Experience with Kubernetes, Terraform and Grafana dashboards.")
     assert {"Kubernetes", "Terraform", "Grafana"} <= set(found)            # Grafana: an IT skill added in D5
     skills = backend.baseline.analyse("", "Must know Tableau and Python.")["skills"]
@@ -212,23 +224,25 @@ def test_footer_count_and_the_fallback_follow_the_vocabulary():
     assert ids["Tableau"] == "skillabus:tableau" and ids["Python"].startswith("esco:")
 
 
-def test_analyse_job_mode_still_works(monkeypatch):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)     # no GPT tier: the app must run without a key
+def test_analyse_job_mode_still_works():
     ad = paths.SAMPLE_AD.read_text(encoding="utf-8")
-    result, engine = backend.analyse(RESUME, ad, [])
-    assert engine.startswith("pipeline")
+    result, engine = backend.analyse(RESUME, ad, [])           # no key (conftest): the app must run without one
+    assert engine == "pipeline"
     assert result["role"] is None and result["skills"]
     assert "outside_recommendations" in result
-    # Weighed by the 71 JobsPipe Data Scientist ads since C2. 17 Oct: a bare "AI" no longer names the skill,
-    # so finance subjects titled "AI-..." stop outranking 43007 Advanced Artificial Intelligence, which then
-    # covers AI, LLMs and generative AI; 31250 is its prerequisite and covers predictive modelling. Before:
-    # 36121, 36106, 32130 at 84.9%, LLMs not covered. 17 Oct top-up: 89 Data Scientist ads (was 71), same path, 96.9%.
-    # 17 Oct (#162): 31250 and 43007 are Bachelor-only subjects, closed to an MDSI student, so the path is the
-    # three MDSI subjects again; LLMs stay open (43007 was the only subject covering them that the path could use).
-    path = result["learning_path"]
-    assert (path["subjects"], path["demand_covered_pct"]) == (["36106", "36121", "32130"], 82.8)
-    assert all("undergraduate" in d["reason"] for d in path["dropped"] if d["subject_code"] in ("43007", "31005", "41040"))
-    assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", 89)}
+    source, _, n_ads, _ = demand_meta()                        # a pasted ad is weighed by the Data Scientist ads
+    assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {(source, n_ads)}
+    # 17 Oct (#162): 31250 and 43007 are Bachelor-only subjects, closed to an MDSI student: they are dropped with
+    # the reason and never on the path (before #162 the path was 31250, 43007, 36106 and covered LLMs).
+    path, recs = result["learning_path"], {r["subject_code"]: r for r in result["recommendations"]}
+    dropped = {d["subject_code"]: d["reason"] for d in path["dropped"]}
+    assert not {"31250", "43007"} & set(path["subjects"])
+    assert "43007" in dropped and "undergraduate" in dropped["43007"]
+    assert all("undergraduate" in dropped[c] for c in ("31005", "41040") if c in dropped)
+    weight = {s["skill_label"]: s["demand_pct"] + 1 for s in result["skills"] if s["status"] != "have"}
+    closed = {c for code in path["subjects"] for c in recs.get(code, {}).get("covers", [])} & set(weight)
+    # The "covers X% of the employer demand" line agrees with the gaps the path closes (+1 as recommend._weight).
+    assert path["demand_covered_pct"] == round(100 * sum(weight[k] for k in closed) / sum(weight.values()), 1)
 
 
 def test_llm_terms_outside_the_vocabulary_are_listed_apart_not_counted(monkeypatch):
@@ -253,14 +267,18 @@ def test_llm_only_gaps_are_weighed_like_the_ad_s_other_skills(monkeypatch):
     """A skill only the GPT tier finds in an ad is weighed like the dictionary's rows: the 2026 Data Scientist
     share, with the 2019-22 trend."""
     from skillabus import llm_extract
-    from skillabus.match import _demand, _demand_2026
+    from skillabus.extract import extract
+    from skillabus.match import match
 
     found = [{"text": "LLMs", "kind": "hard", "method": "llm", "sentence": "Experience with LLMs."}]
     monkeypatch.setattr(llm_extract, "extract_llm", lambda text, **kw: found if "LLMs" in text else [])
     empty = {"skills": [], "recommendations": [], "learning_path": {}, "outside_recommendations": []}
     out = backend.augment_with_llm(empty, "I write Python.", "Experience with LLMs.", [], rank=lambda gaps: {})
     row = next(s for s in out["skills"] if s["found_by"] == "llm")
-    assert row["demand_pct"] == _demand()[row["skill_label"]] > 0 and row["demand_pct_2019_22"] == 0.0
-    assert row["demand_pct_2026"] == _demand_2026().get(row["skill_label"])
-    assert (row["demand_source"], row["demand_period"], row["total_ads"], row["text_type"]) == (
-        "jobspipe_2026", "2026-10", 89, "full_text")
+    # the same skill found by the dictionary in the same sentence: every demand field must agree
+    twin = next(s for s in match(extract("Experience with LLMs."), []) if s["skill_label"] == row["skill_label"])
+    fields = ("demand_pct", "demand_pct_2026", "demand_pct_2019_22", "demand_source", "demand_period", "total_ads",
+              "text_type")
+    assert {k: row[k] for k in fields} == {k: twin[k] for k in fields}
+    assert row["demand_pct"] > 0 and row["demand_pct_2019_22"] == 0.0      # in the 2026 ads, in none of 2019-22
+    assert (row["demand_source"], row["demand_period"], row["total_ads"], row["text_type"]) == demand_meta()

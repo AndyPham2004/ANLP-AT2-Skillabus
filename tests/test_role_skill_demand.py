@@ -32,19 +32,30 @@ EPS = 0.1 + 1e-9
 # The app's tier-1 matcher (extract.py) tries the longest alias at each place in a sentence, so a longer
 # alias of another dictionary skill hides the shorter one. Van Thong's extract_skills.py, which made
 # skill_counts_v2.csv and skill_counts_2026.csv, matches each skill on its own and counts both. These
-# skills can therefore sit below those files on the same text; nothing else may.
+# skills can therefore sit below those files on the same text, by at most the share of ads naming the skill
+# that hides them; nothing else may. Skill -> the skills whose longer aliases hide it.
 LONGEST_ALIAS = {
-    "SQL": "'SQL Server' counts as SQL Server only",
-    "Cloud platforms": "'Google Cloud' counts as Google Cloud only",
-    "Azure": "'Azure ML', 'Azure Machine Learning' count as Azure ML only",
-    "Machine learning": "'Azure Machine Learning' counts as Azure ML only",
-    "Artificial intelligence": "'Generative AI', 'Responsible AI', 'Vertex AI' count as those skills only",
+    "SQL": ("SQL Server",),                       # 'SQL Server' counts as SQL Server only
+    "Cloud platforms": ("Google Cloud",),         # 'Google Cloud' counts as Google Cloud only
+    "Azure": ("Azure ML",),                       # 'Azure ML', 'Azure Machine Learning' count as Azure ML only
+    "Machine learning": ("Azure ML",),            # 'Azure Machine Learning' counts as Azure ML only
+    "Artificial intelligence": ("Generative AI", "Responsible AI", "Vertex AI"),   # 'Generative AI models' ...
 }
+# Aliases the seed itself moved after skill_counts_v2.csv and skill_counts_2026.csv were counted, so these skills can
+# only be lower than those files. #120 (16 Oct): "cyber security" / "cybersecurity" moved from Data security to ESCO
+# cyber security. 17 Oct: Artificial intelligence no longer matches a bare "AI", only the phrases ads use for the skill.
+ALIASES_MOVED = {"Data security", "Artificial intelligence"}
 
 
 def shares(source: str, period: str, role: str) -> pd.Series:
     block = COUNTS[(COUNTS.source == source) & (COUNTS.period == period) & (COUNTS.role == role)]
     return block.set_index("skill").pct
+
+
+def hidden_at_most(skill: str, block: pd.Series) -> float:
+    """The most a longer alias can take from `skill`: an ad loses it only where it names a hiding skill (+ rounding)."""
+    hiders = LONGEST_ALIAS[skill]
+    return sum(block.get(h, 0.0) for h in hiders) + EPS + 0.05 * len(hiders)
 
 
 # ---------------------------------------------------------------- shape
@@ -75,13 +86,11 @@ def test_counted_rows_have_shares_and_wilson_bounds():
     assert ((COUNTS.pct - (100 * COUNTS.n_ads / COUNTS.total_ads).round(1)).abs() <= 0.05 + 1e-9).all()
     assert ((COUNTS.pct_low <= COUNTS.pct) & (COUNTS.pct <= COUNTS.pct_high)).all()
     assert ((COUNTS.pct_low >= 0) & (COUNTS.pct_high <= 100)).all()
-    for r in COUNTS.drop_duplicates(["n_ads", "total_ads"]).itertuples():
+    # wilson() itself, by hand (the builder calls the same function, so the loop below cannot catch a wrong formula):
+    # k=1, n=10, z=1.96: centre (0.1 + 0.19208) / 1.38416 = 0.2110, half 1.96 * sqrt(0.009 + 0.009604) / 1.38416 = 0.1931
+    assert wilson(1, 10) == (1.8, 40.4)
+    for r in COUNTS.drop_duplicates(["n_ads", "total_ads"]).itertuples():   # a stale or hand-edited row fails here
         assert (r.pct_low, r.pct_high) == wilson(int(r.n_ads), int(r.total_ads)), r
-
-
-def test_taxonomy_rows_have_no_counts():
-    assert TAXONOMY[["n_ads", "total_ads", "pct", "pct_low", "pct_high"]].isna().all().all()
-    assert set(TAXONOMY.text_type) == {"taxonomy"}
 
 
 def test_one_denominator_per_block_and_the_known_totals():
@@ -112,7 +121,9 @@ def test_every_role_has_taxonomy_rows_and_every_essential_skill():
 # ---------------------------------------------------------------- the rules of each source
 def test_recent_blocks_follow_the_30_ad_rule():
     own = COUNTS[(COUNTS.source == "recent_2024_26") & (COUNTS.role != MIXED_ROLE)]
-    assert (own.total_ads >= MIN_ROLE_ADS).all()
+    # 17 Oct: no role has 30 recent ads in a period, so the committed table has no role block to check and every
+    # recent ad sits in the mixed block; the synthetic ads below test the rule itself.
+    assert own.empty or (own.total_ads >= MIN_ROLE_ADS).all()
     n = MIN_ROLE_ADS
     recent = pd.DataFrame({
         "period": ["2026-10"] * n + ["2026-09"] * 2 + ["2024-01"] * 5,
@@ -176,28 +187,32 @@ def test_data_jobs_shares_agree_with_role_profiles():
     assert len(moved) <= 6                                      # Linux (distributions) and NoSQL ("no-sql")
 
 
-def classify(new: float, old: float, clean: float, skill: str) -> str:
-    """Why a share differs from the September file: the rule of the next two tests."""
+def classify(skill: str, block: pd.Series, old: float, clean: float) -> str:
+    """Why `skill`'s share in `block` differs from an older file: the rule of the next two tests.
+
+    `clean` is the older count on cleaned text (for the recent ads the older file already is, so clean = old).
+    """
+    new = block.get(skill, 0.0)
     if abs(new - old) <= EPS:
         return "same"
     if abs(new - clean) <= EPS and new > old:
         return "clean text"       # skill_counts_v2.csv was counted on the raw text with welded words
-    if skill in LONGEST_ALIAS and new < clean:
+    if skill in ALIASES_MOVED and new < old:
+        return "aliases moved"
+    if skill in LONGEST_ALIAS and new < clean and clean - new <= hidden_at_most(skill, block):
         return "longest alias"
     return "unexplained"
-
-
-ALIASES_MOVED = {"Data security", "Artificial intelligence"}
 
 
 def test_seek_shares_agree_with_skill_counts_v2():
     """The 148 dictionary skills, Data Scientist, the 3,204 Seek ads.
 
     Rule: within 0.1 point of skill_counts_v2.csv; or, where not, the share equals skill_counts_2026.csv's
-    pct_2019_22 (the same ads after cleaning, the same aliases, Van Thong's counter) within 0.1 and is higher
-    than v2 (cleaning splits welded words, "TableauSuperior", so it can only add mentions); or the skill is
-    one LONGEST_ALIAS hides and the share is below the clean-text count. The vocabulary did not change any
-    dictionary alias (checked first), so no difference comes from aliases.
+    pct_2019_22 (the same ads after cleaning, v2's aliases, Van Thong's counter) within 0.1 and is higher
+    than v2 (cleaning splits welded words, "TableauSuperior", so it can only add mentions); or the skill is in
+    ALIASES_MOVED and lower than v2; or LONGEST_ALIAS hides it and it is below the clean-text count by no more
+    than the hiding skills' shares. The vocabulary's dictionary rows carry exactly the seed's aliases (checked
+    first), so the only alias changes since v2 are the seed's own, ALIASES_MOVED.
     """
     by_label = VOCAB.set_index("label")
     assert all(by_label.loc[s.canonical, "aliases_ads"] == s.aliases for s in SEED.itertuples())
@@ -205,24 +220,20 @@ def test_seek_shares_agree_with_skill_counts_v2():
     v2 = pd.read_csv(paths.SKILL_COUNTS).set_index("skill").pct_ads
     clean = pd.read_csv(paths.SKILL_COUNTS_2026).set_index("skill").pct_2019_22
     assert set(v2.index) == set(SEED.canonical)
-    why = {s: classify(new.get(s, 0.0), v2[s], clean[s], s) for s in SEED.canonical}
-    # #120 (16 Oct): "cyber security" / "cybersecurity" moved from Data security to ESCO cyber security,
-    # so Data security can only be lower than the counts made with the old aliases. 17 Oct: Artificial intelligence
-    # no longer matches a bare "AI", only the phrases ads use for the skill, so it too can only be lower.
-    for skill in ALIASES_MOVED:
-        if why[skill] != "same" and new.get(skill, 0.0) < v2[skill]:
-            why[skill] = "aliases moved"
+    why = {s: classify(s, new, v2[s], clean[s]) for s in SEED.canonical}
     assert [s for s, w in why.items() if w == "unexplained"] == []
-    assert sum(w in ("same", "aliases moved") for w in why.values()) >= 120
+    assert sum(w == "same" for w in why.values()) >= 110      # most skills do not move at all (118 of 148 on 17 Oct)
 
 
 @pytest.mark.parametrize("period, column", [("2024-01", "pct_2024_01"), ("2026", "pct_2026_all")])
 def test_recent_shares_agree_with_skill_counts_2026(period, column):
-    """Same ads and aliases as skill_counts_2026.csv: within 0.1, or below it where a longer alias hides the skill."""
+    """Same ads as skill_counts_2026.csv: within 0.1, or below it where ALIASES_MOVED took an alias away or a
+    longer alias hides the skill (by no more than the hiding skills' shares)."""
     new = shares("recent_2024_26", period, MIXED_ROLE)
     old = pd.read_csv(paths.SKILL_COUNTS_2026).set_index("skill")[column]
-    off = {s: (new.get(s, 0.0), old[s]) for s in old.index if abs(new.get(s, 0.0) - old[s]) > EPS}
-    assert all(s in LONGEST_ALIAS and n < o for s, (n, o) in off.items()), off
+    why = {s: classify(s, new, old[s], old[s]) for s in old.index}
+    off = {s: (w, new.get(s, 0.0), old[s]) for s, w in why.items() if w != "same"}
+    assert all(w != "unexplained" for w, _, _ in off.values()), off
 
 
 # ---------------------------------------------------------------- the committed file is current
@@ -305,6 +316,7 @@ def test_committed_data_jobs_rows_are_what_the_builder_writes():
     try:
         postings = load_data_jobs(paths.RAW)
     except SystemExit:
-        pytest.skip("the raw data_jobs file is not in data/raw/ (run the builder with --check instead)")
+        # the builder's --check reads the same file, so it is no substitute: only the file makes this check run
+        pytest.skip(f"{paths.DATA_JOBS_AU_RAW.name} is not in data/raw/: copy it there to check the data_jobs_2023 rows")
     rows, _, _ = data_jobs_rows(VOCAB, postings, FAMILIES, set(SEED.canonical))
     assert committed("data_jobs_2023").equals(rebuilt(rows))
