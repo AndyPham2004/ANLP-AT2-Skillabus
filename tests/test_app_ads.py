@@ -3,6 +3,8 @@ import re
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "app"))
 sys.path.insert(0, str(ROOT / "src"))
@@ -11,27 +13,54 @@ import ads  # noqa: E402
 import ui  # noqa: E402
 
 
-def test_only_full_text_ads_newest_first():
+@pytest.fixture
+def no_raw_fetch(monkeypatch, tmp_path):
+    """A machine without data/raw/ (a fresh clone, the deployed app): the JobsPipe texts are not there."""
+    monkeypatch.setattr(ads.paths, "RAW", tmp_path)
+    ads.jobspipe_texts.cache_clear()
+    ads.load.cache_clear()
+    yield tmp_path
+    ads.jobspipe_texts.cache_clear()
+    ads.load.cache_clear()
+
+
+def test_the_ads_are_the_2026_ones_for_all_eleven_roles():
+    # Quan, 17 Oct: the newest sources only. JobsPipe 2026 for all 11 roles, plus the job-board ads with an IT role.
+    import pandas as pd
     rows = ads.load()
-    assert 100 <= len(rows) <= 192
-    assert all(len(a["text"]) >= 500 for a in rows)
+    jobspipe = pd.read_csv(ads.paths.JOBSPIPE_SKILLS, dtype=str)
+    assert sum(a["id"].startswith("jp-") for a in rows) == len(jobspipe)
+    assert {a["role"] for a in rows} == set(ads.roles_of(None)) and len(ads.roles_of(None)) == 11
+    assert min(a["posted"] for a in rows) >= "2026-08"
     assert [a["posted"] for a in rows] == sorted((a["posted"] for a in rows), reverse=True)
+    keys = [ads._key(a["company"], a["title"]) for a in rows if not a["id"].startswith("jp-")]
+    jp_keys = {ads._key(a["company"], a["title"]) for a in rows if a["id"].startswith("jp-")}
+    assert keys and not set(keys) & jp_keys and len(keys) == len(set(keys))   # a job-board ad JobsPipe has: once
+    assert all(len(a["text"]) >= 500 for a in rows if a["skills"] is None)    # the job-board text is in git
 
 
-def test_role_and_location_chips():
-    # The chips use the app's role names and show only roles that have ads (17 Oct UI check):
-    # AI Engineer ads count as Machine Learning Engineer, BI Developer ads as Data Analyst.
-    assert ads.ROLE_CHIPS == ["All roles", "Data Analyst", "Data Engineer", "Data Scientist", "Machine Learning Engineer"]
-    assert all(ads.search(role=chip, limit=1) for chip in ads.ROLE_CHIPS[1:])      # no chip that finds no ad
-    assert ads.role_of("Senior Data Scientist, Personalisation") == "Data Scientist"
-    assert ads.role_of("Machine Learning Engineer - AI Platform") == "Machine Learning Engineer"
-    assert ads.role_of("Applied AI Engineer, Codex") == "Machine Learning Engineer"
-    assert ads.role_of("Tableau - BI Developer") == "Data Analyst"
-    assert ads.role_of("Accountant") == "Other"
+def test_jobspipe_text_comes_only_from_the_raw_fetch(no_raw_fetch):
+    import json
+    rows = ads.load()
+    jp = [a for a in rows if a["id"].startswith("jp-")]
+    assert jp and not any(a["text"] for a in jp) and all(a["skills"] is not None for a in jp)   # listed, no text
+    (no_raw_fetch / "jobspipe").mkdir()
+    one = jp[0]
+    (no_raw_fetch / "jobspipe" / "2026-10-16_x.json").write_text(
+        json.dumps([{"id": one["id"][3:], "description": "We need SQL and Python."}]), encoding="utf-8")
+    ads.jobspipe_texts.cache_clear()
+    ads.load.cache_clear()
+    assert ads.by_id(one["id"])["text"] == "We need SQL and Python."
+
+
+def test_places_are_short():
     assert ads.short_location("Sydney, New South Wales, Australia") == "Sydney, NSW"
     assert ads.short_location("Sydney, Sydney Region") == "Sydney"
     assert ads.short_location("") == "Australia"
-    # the applicant-tracking ads' own spellings (17 Oct)
+    # the job boards' own spellings (17 Oct)
+    assert ads.short_location("Sydney NSW 2000") == "Sydney, NSW"
+    assert ads.short_location("Melbourne VIC") == "Melbourne, VIC"
+    assert ads.short_location("Australian Capital Territory, Australia") == "ACT"
     assert ads.short_location("AU - HQ - NSW") == "NSW"
     assert ads.short_location("AU - Sydney") == "Sydney"
     assert ads.short_location("AU: Melbourne: (260 Burwood Rd)") == "Melbourne"
@@ -40,12 +69,17 @@ def test_role_and_location_chips():
 
 
 def test_search_filters_combine():
-    scientists = ads.search(role="Data Scientist")
+    scientists = ads.search(role="Data Scientist", limit=None)
     assert scientists and all(a["role"] == "Data Scientist" for a in scientists)
+    cloud = ads.search(family="Cloud & infrastructure", limit=None)
+    assert {a["role"] for a in cloud} == {"Cloud Engineer", "DevOps/SRE", "Network/Systems Administrator"}
+    assert not ads.search(role="Data Scientist", family="Security")              # a role outside the family
     sydney = ads.search(role="Data Scientist", location="Sydney")
     assert sydney and all("sydney" in (a["location"] + a["text"][:300]).lower() for a in sydney)
+    power_bi = ads.search("power bi", limit=None)                               # the skills found at fetch time count
+    assert any("Power BI" in (a["skills"] or []) and "power bi" not in a["title"].lower() for a in power_bi)
     assert ads.search(query="zzzz-no-such-skill") == []
-    assert len(ads.search(limit=5)) == 5
+    assert len(ads.search(limit=5)) == 5 and len(ads.search(limit=None)) == len(ads.load())
 
 
 def test_highlight_marks_every_mention_in_its_skill_s_colour():

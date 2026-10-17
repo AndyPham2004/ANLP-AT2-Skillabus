@@ -337,8 +337,8 @@ def test_taken_tick_reruns_the_path_and_shows_on_the_inputs_page():
 
 
 def test_browse_ads_opens_an_ad_in_place_and_uses_it():
-    # C (17 Oct): role tabs with their counts, one line per ad; an ad opens under its line with "Use this ad",
-    # the whole text in a dialog only on "Read the full ad".
+    # C (17 Oct): family tabs with their counts, one line per ad; an ad opens under its line with "Use this ad",
+    # the whole text in a dialog only on "Read the full ad". The ads are 2026 ones for all 11 roles.
     import re
 
     import ads
@@ -347,12 +347,15 @@ def test_browse_ads_opens_an_ad_in_place_and_uses_it():
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     assert not at.exception
     assert "Pick a job ad" in page_text(at)
-    tabs = at.segmented_control(key="job_role")
-    n_ds = sum(a["role"] == "Data Scientist" for a in ads.load())
-    assert tabs.options[0] == f"All · {len(ads.load())}" and f"Data Scientist · {n_ds}" in tabs.options
-    tabs.set_value("Data Scientist").run()
-    assert not at.dataframe
-    first = ads.search(role="Data Scientist")[0]
+    tabs = at.segmented_control(key="job_family")
+    n_cloud = len(ads.search(family="Cloud & infrastructure", limit=None))
+    assert tabs.options[0] == f"All · {len(ads.load()):,}" and f"Cloud & infrastructure · {n_cloud:,}" in tabs.options
+    tabs.set_value("Data & AI").run()
+    at.selectbox(key="job_role").set_value("Data Scientist").run()
+    assert not at.exception, at.exception
+    # A job-board ad, whose text is in git, so the test does not need the JobsPipe fetch in data/raw/.
+    first = next(a for a in ads.search(role="Data Scientist", limit=None) if a["skills"] is None)
+    at.text_input(key="job_q").set_value(first["title"]).run()
     at.button(key=f"ad_{first['id']}").click().run()                            # opens the ad in place
     assert not at.exception, at.exception
     assert at.session_state.ad_open == first["id"] and at.button(key="use_job")
@@ -369,6 +372,35 @@ def test_browse_ads_opens_an_ad_in_place_and_uses_it():
     show_gaps(at)
     assert "Skills the ad asks for" in page_text(at)
     assert "Robert Walters" not in page_text(at)
+
+
+def test_browse_ads_lists_thirty_then_more():
+    import ads
+    at = aim_at_an_ad(open_app())
+    at.segmented_control(key="ad_mode").set_value("Browse ads").run()
+    assert sum((b.key or "").startswith("ad_") for b in at.button if b.key not in ("ad_full_btn",)) == 30
+    assert any(c.value.startswith(f"{len(ads.load()):,} ads, newest first (showing 30)") for c in at.caption)
+    at.button(key="jobs_more").click().run()
+    assert sum((b.key or "").startswith("ad_") for b in at.button) == 60
+
+
+def test_a_jobspipe_ad_without_its_text_offers_the_original(monkeypatch, tmp_path):
+    # A fresh clone or the deployed app has no data/raw/: the ad lists with its skills and link, and cannot be used.
+    import ads
+    monkeypatch.setattr(ads.paths, "RAW", tmp_path)
+    ads.jobspipe_texts.cache_clear()
+    ads.load.cache_clear()
+    try:
+        at = aim_at_an_ad(open_app())
+        at.segmented_control(key="ad_mode").set_value("Browse ads").run()
+        first = next(a for a in ads.search() if a["id"].startswith("jp-"))
+        at.button(key=f"ad_{first['id']}").click().run()
+        assert not at.exception, at.exception
+        assert "The text of this ad is not on this machine" in page_text(at)
+        assert not any(b.key in ("use_job", "ad_full_btn") for b in at.button)
+    finally:
+        ads.jobspipe_texts.cache_clear()
+        ads.load.cache_clear()
 
 
 def test_an_open_ad_closes_on_a_second_click():

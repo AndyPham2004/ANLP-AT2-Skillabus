@@ -436,11 +436,11 @@ def job_ad_block() -> None:
     pick = ss.ad_pick
     if mode == "Browse ads" and pick:
         ad_card(pick["title"], f"{pick['company']} · {pick['location']} · {posted(pick['posted'])}", pick["text"])
-        st.button(f"Pick another of the {len(ads.load())} ads", key="ads_again", type="tertiary", on_click=go,
+        st.button(f"Pick another of the {len(ads.load()):,} ads", key="ads_again", type="tertiary", on_click=go,
                   args=("jobs",))
         ss.ad_keep = pick["text"]
     elif mode == "Browse ads":
-        st.button(f"Browse {len(ads.load())} Australian ads →", key="ads_go", on_click=go, args=("jobs",))
+        st.button(f"Browse {len(ads.load()):,} Australian ads from 2026 →", key="ads_go", on_click=go, args=("jobs",))
         ss.ad_keep = ""
     elif mode == "Try a sample":
         ad_card(SAMPLE_AD_TITLE, "", SAMPLE_AD)
@@ -609,13 +609,13 @@ def use_ad(ad_id: str) -> None:
               ad_full=None, step="inputs", toast=f"Using “{ad['title']} — {ad['company']}”.")
 
 
-ROLE_TAB = {"All roles": "All", "Machine Learning Engineer": "ML Engineer"}
+FAMILY_ALL = "All"
+JOBS_PAGE = 30                                                  # ads listed at a time, then "Show 30 more"
 
 
-def role_tab(role: str) -> str:
-    """'Data Analyst' -> 'Data Analyst · 63': the role tabs carry their ad counts."""
-    n = len(ads.load()) if role == "All roles" else sum(a["role"] == role for a in ads.load())
-    return f"{ROLE_TAB.get(role, role)} · {n}"
+def family_tab(family: str) -> str:
+    """'Data & AI' -> 'Data & AI · 702': the family tabs carry their ad counts."""
+    return f"{family} · {len(ads.search(family=None if family == FAMILY_ALL else family, limit=None)):,}"
 
 
 def md_plain(text: str) -> str:
@@ -625,31 +625,47 @@ def md_plain(text: str) -> str:
 
 @st.cache_data(show_spinner=False, max_entries=200)
 def ad_tools(ad_id: str) -> list[str]:
-    """The technical skills of the dictionary an ad names, most in-demand first (soft skills left out)."""
+    """The technical skills of the dictionary an ad names, most in-demand first (soft skills left out): found at
+    fetch time for a JobsPipe ad, found here in the text for a job-board ad."""
+    ad = ads.by_id(ad_id)
     res = baseline.resources()
-    return [k for k in baseline.find_skills(ads.by_id(ad_id)["text"])
-            if res.category.get(k) not in baseline.SOFT_CATEGORIES]
+    found = ad["skills"] if ad["skills"] is not None else baseline.find_skills(ad["text"])
+    return [k for k in found if res.category.get(k) not in baseline.SOFT_CATEGORIES]
+
+
+def show_more_ads() -> None:
+    ss.jobs_shown += JOBS_PAGE
 
 
 def page_jobs() -> None:
-    """Role tabs with their counts, then one line per ad; an ad opens in place with "Use this ad" (Quan's pick C,
-    17 Oct: the earlier list spread title, company and date across the page and showed four ads a screen)."""
+    """Family tabs with their counts, then one line per ad; an ad opens in place with "Use this ad" (Quan's pick C,
+    17 Oct). The ads are the 2026 ones for all 11 roles (app/ads.py), newest first, 30 at a time."""
     st.button("← Back", key="jobs_back", type="tertiary", on_click=go, args=("inputs",),
               kwargs={"ad_open": None, "ad_full": None})
     st.markdown(ui.h1("Pick a job ad", "md"), unsafe_allow_html=True)
-    ss.setdefault("job_role", "All roles")
-    st.segmented_control("Role", ads.ROLE_CHIPS, key="job_role", format_func=role_tab, label_visibility="collapsed")
-    search_col, loc_col = st.columns([3, 1], vertical_alignment="center")
+    ss.setdefault("job_family", FAMILY_ALL)
+    st.segmented_control("Family", [FAMILY_ALL, *ads.FAMILIES], key="job_family", format_func=family_tab,
+                         label_visibility="collapsed")
+    family = None if ss.job_family in (FAMILY_ALL, None) else ss.job_family
+    roles = [ads.ALL, *ads.roles_of(family)]
+    if ss.get("job_role") not in roles:                  # a role of another family: back to all of this one
+        ss.job_role = ads.ALL
+    search_col, role_col, loc_col = st.columns([2.6, 1.3, 1], vertical_alignment="center")
     query = search_col.text_input("Search", key="job_q", placeholder="Search a title, company or skill",
                                   label_visibility="collapsed")
+    role = role_col.selectbox("Role", roles, key="job_role", label_visibility="collapsed")
     loc = loc_col.selectbox("Location", ads.LOCATIONS, key="job_loc", label_visibility="collapsed")
-    rows = ads.search(query, ss.job_role or "All roles", loc or "Anywhere")
-    if not rows:
+    found = ads.search(query, role or ads.ALL, loc or "Anywhere", limit=None, family=family)
+    if not found:
         st.markdown("<div class='k-serif k-mute' style='font-size:18px;padding:24px 0'>No ads match. "
                     "Try a broader role or location.</div>", unsafe_allow_html=True)
         return
-    n = len(rows)
-    st.caption(f"{n} ad{'' if n == 1 else 's'}, newest first" + (" (the first 30)" if n == 30 else "")
+    filters = (ss.job_family, role, loc, query)
+    if ss.get("jobs_filters") != filters:                # new filters: back to the first 30
+        ss.jobs_filters, ss.jobs_shown = filters, JOBS_PAGE
+    rows = found[:ss.jobs_shown]
+    n = len(found)
+    st.caption(f"{n:,} ad{'' if n == 1 else 's'}, newest first" + (f" (showing {len(rows)})" if n > len(rows) else "")
                + " · click an ad to read it here")
     with st.container(key="ad_list"):
         for a in rows:
@@ -663,6 +679,11 @@ def page_jobs() -> None:
                                unsafe_allow_html=True)
             if is_open:
                 ad_panel(a)
+    if n > len(rows):
+        st.button(f"Show {min(JOBS_PAGE, n - len(rows))} more", key="jobs_more", type="tertiary",
+                  on_click=show_more_ads)
+    st.caption("2026 ads: JobsPipe (LinkedIn, Indeed and job boards, 1 Sep to 16 Oct) and 65 employers' own "
+               "job boards (Aug to Oct). A role's skill bars count the same JobsPipe ads.")
     ad = ads.by_id(ss.get("ad_full")) if ss.get("ad_full") else None
     if ad:
         st.dialog(ad["title"], width="large", on_dismiss=close_full_ad)(ad_body)(ad)
@@ -672,13 +693,20 @@ def ad_panel(ad: dict) -> None:
     """The opened ad, under its line: the opening, the tools it names, then use it, read it all, or the original."""
     with st.container(key="ad_panel"):
         tools = ad_tools(ad["id"])[:8]
-        st.markdown(f"<div class='k-soft' style='font-size:14px;line-height:1.55;max-width:80ch'>"
-                    f"{ui.esc(ad_excerpt(ad['text'], 420))}</div>"
-                    + ("<div style='margin-top:8px'>" + "".join(ui.chip(t, colour=ui.SOFT) for t in tools) + "</div>" if tools else ""),
-                    unsafe_allow_html=True)
+        chips = ("<div style='margin-top:8px'>" + "".join(ui.chip(t, colour=ui.SOFT) for t in tools) + "</div>"
+                 if tools else "")
+        if ad["text"]:
+            opening = ui.esc(ad_excerpt(ad["text"], 420))
+        else:                                            # a JobsPipe ad on a machine without the raw fetch
+            opening = ("The text of this ad is not on this machine (JobsPipe's terms keep it out of the repository). "
+                       "Open the original and paste it under &ldquo;Paste an ad&rdquo;.")
+        st.markdown(f"<div class='k-soft' style='font-size:14px;line-height:1.55;max-width:80ch'>{opening}</div>"
+                    + chips, unsafe_allow_html=True)
         use_col, full_col, link_col = st.columns([0.8, 0.9, 3.5], vertical_alignment="center", gap="small")
-        use_col.button("Use this ad", key="use_job", type="primary", on_click=use_ad, args=(ad["id"],))
-        full_col.button("Read the full ad", key="ad_full_btn", type="tertiary", on_click=read_full_ad, args=(ad["id"],))
+        if ad["text"]:
+            use_col.button("Use this ad", key="use_job", type="primary", on_click=use_ad, args=(ad["id"],))
+            full_col.button("Read the full ad", key="ad_full_btn", type="tertiary", on_click=read_full_ad,
+                            args=(ad["id"],))
         if ad["url"]:
             link_col.markdown(f"<a href='{ui.esc(ad['url'])}' target='_blank' class='k-small'>Open the original ↗</a>",
                               unsafe_allow_html=True)
