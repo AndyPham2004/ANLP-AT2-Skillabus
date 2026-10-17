@@ -36,8 +36,10 @@ HISTORY = 6            # earlier chat messages the model sees
 STARTING = re.compile(r"\b(enrol(?:l)?ing|will enrol|will be|starting|start|first (?:semester|session|year)|"
                       r"new student|incoming|commencing)\b", re.I)
 END_OF_COURSE = re.compile(r"\b(project|capstone|internship|research|thesis|dissertation|honours)\b", re.I)
-FOLLOW_ON = re.compile(r"\b(it|its|that|this|those|these|them|they|more|else|another|other|others|again|instead|"
-                       r"what about|how about|full plan|the plan)\b", re.I)
+# Pointing back: a pronoun (case-sensitive, so "IT security" is not "it") or a phrase. "more", "other", "this" alone
+# are not ("Which subject teaches more statistics?" was merged with the question before; review of #194).
+FOLLOW_ON = re.compile(r"\b(?:[Ii]ts?|[Tt]hat|[Tt]hose|[Tt]hese|[Tt]hem|[Tt]hey)\b"
+                       r"|(?i:\b(?:what about|how about|two more|three more|another one|instead|again|full plan|the plan)\b)")
 FOLLOW_UP = "FOLLOW-UP:"   # how the model marks a question back to the student
 # "I took ..., which one more should I pick?": a request for a choice, so the student's own course subjects
 # join the retrieved ones (words of the question alone found the subjects already taken).
@@ -261,8 +263,11 @@ def course_page(home_course: str | None) -> tuple[str, str]:
 
 # A study plan or a course's structure: the chat does not build one (the app checks prerequisites and sessions, not
 # credit-point rules); it points to the right course page in the Handbook, so it needs to know the course.
-PLAN = re.compile(r"\b(study plan|plan|structure|core subjects?|electives?|credit points?|two[- ]years?|2[- ]years?|"
-                  r"semester by semester|roadmap)\b", re.I)
+# Only a request for the whole plan or structure; "Which electives …", "I plan to take …", "core subjects that teach …",
+# "credit points of 36118" are questions to answer (review of #194).
+PLAN = re.compile(r"\b(study plan|course structure|structure of (?:the|my|this) (?:course|degree)|roadmap|"
+                  r"semester[- ]by[- ]semester|(?:two|2)[- ]years? (?:study )?plan|full (?:study )?plan|"
+                  r"plan for (?:the|my) (?:course|degree|masters?))\b", re.I)
 
 
 def course_named(text: str) -> str | None:
@@ -321,7 +326,9 @@ def fix_codes(reply: str, question: str = "") -> str:
         return m.group(0)
 
     # a code, then the Title Case words that follow it (up to punctuation): the name the model gave it
-    return re.sub(r"(?<![\w/\[])(\d{5,6})(?![\w/])((?:\s+[A-Z0-9][\w&'’-]*(?:\s+(?:and|of|for|in|to|the|&))?)*)",
+    # (title words start with a capital letter, so the run stops at the next code: "… and 36120 …" stays)
+    return re.sub(r"(?<![\w/\[])(\d{5,6})(?![\w/])"
+                  r"((?:\s+[A-Z][\w&'’-]*(?:\s+(?:and|of|for|in|to|the|&)(?=\s+[A-Z]))?)*)",
                   fix, reply)
 
 
@@ -461,7 +468,9 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
                 "student's skill gaps only when the question is about them. Never suggest a subject the "
                 "student has taken or says they have taken or plan to take, nor one whose name or topic is "
                 "nearly the same (a second deep learning subject for someone taking Deep Learning). If the "
-                "student names a session, suggest only subjects that run in it. Two to five sentences. "
+                "student names a session, suggest only subjects that run in it. Credit points, fees and timetables "
+                "are not in the text here: never state them; say they are on the subject's Handbook page. Two to "
+                "five sentences. "
                 "Suggestions, not advice. " + follow_up)},
             *turns,
             {"role": "user", "content": f"{gaps}Subjects:\n{context}\n\nQuestion: {question}"},

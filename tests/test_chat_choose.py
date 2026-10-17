@@ -174,6 +174,31 @@ def test_a_student_starting_a_course_gets_first_session_subjects(stub):
     assert "(https://coursehandbook.uts.edu.au/course/2026/C04430)" in reply
 
 
+def test_review_194_questions_are_answered_not_canned(stub):
+    # Quan's review: PLAN caught "electives", "plan to", "core subjects", "credit points" and gave the fixed text
+    for q in ("Which electives should I take for data engineering?",
+              "I plan to take Deep Learning next semester, which one more should I pick?",
+              "Which core subjects teach machine learning?", "How many credit points is 36118?"):
+        stub.replies, stub.calls[:] = ["See 36106 Machine Learning Algorithms and Applications."], []
+        reply, sources = chat.answer(q, None, [], "C04372")
+        assert stub.calls and "I can't lay out a full study plan" not in reply, q
+    for q in ("Give me a 2-year study plan", "Can you give me a full plan?", "What is the course structure?"):
+        assert chat.PLAN.search(q), q
+
+
+def test_review_194_fix_codes_keeps_a_second_subject():
+    assert chat.fix_codes("Take 36118 Data Analytics and 36120 Advanced Machine Learning Application.") == \
+        "Take 36118 Applied Natural Language Processing and 36120 Advanced Machine Learning Application."
+
+
+def test_review_194_follow_on_needs_a_real_pointer():
+    assert not chat.FOLLOW_ON.search("Which subject teaches more statistics?")
+    assert not chat.FOLLOW_ON.search("Which subject teaches IT security?")
+    assert not chat.FOLLOW_ON.search("What should I take this Autumn?")
+    for q in ("Does it run in Spring?", "Give me two more", "How about the Master of Business Analytics?"):
+        assert chat.FOLLOW_ON.search(q), q
+
+
 def test_a_subject_asked_about_stays_even_when_taken(stub):
     # 17 Oct: "36106 or 36120 for deep learning?" with both ticked as taken answered "couldn't find anything".
     stub.replies = ["36120 Advanced Machine Learning Application goes further than 36106; you have taken both."]
