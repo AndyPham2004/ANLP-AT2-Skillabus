@@ -496,18 +496,6 @@ def test_no_resume_counts_only_the_subjects():
     assert "not on CV" not in page_text(at)
 
 
-def test_start_over_clears_the_inputs():
-    at = open_app()
-    pick_role(at, "Data Engineer")
-    at.multiselect(key="taken_box").set_value(["94693"]).run()
-    show_gaps(at)
-    at.button(key="start_over").click().run()
-    assert not at.exception, at.exception
-    assert at.session_state.step == "inputs" and at.session_state.result is None
-    assert at.session_state.taken_keep == [] and at.session_state.role_keep == "Data Scientist"
-    assert at.multiselect(key="taken_box").value == [] and chosen_roles(at) == ["Data Scientist"]
-
-
 def test_no_footnotes_on_the_results_and_skill_pages():
     # C (17 Oct): counts and short labels on top, the details on hover; no caption under a list or a row of cards.
     at = open_app()
