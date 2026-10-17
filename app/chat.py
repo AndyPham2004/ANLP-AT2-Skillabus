@@ -225,6 +225,54 @@ def link_subjects(reply: str, sources: list[dict]) -> tuple[str, list[dict]]:
     return reply, rest
 
 
+HANDBOOK = "https://coursehandbook.uts.edu.au"
+
+
+def course_page(home_course: str | None) -> tuple[str, str]:
+    """(label, url) of the student's course in the Handbook (scrape_handbook.py reads the same URL); the Handbook's
+    front page for a student not enrolled yet."""
+    if not home_course:
+        return "the UTS Handbook", HANDBOOK
+    name = dict(backend.courses()).get(home_course, f"UTS course {home_course}")
+    return f"{name} ({home_course}) in the UTS Handbook", f"{HANDBOOK}/course/2026/{home_course}"
+
+
+def link_handbook(reply: str, home_course: str | None) -> str:
+    """Link the first mention of the Handbook to the student's course page, unless the answer already links it."""
+    label, url = course_page(home_course)
+    if url in reply:
+        return reply
+    return re.sub(r"(?<!\[)(?:the )?(?:course's page in the )?UTS Handbook", lambda m: f"[{label}]({url})", reply, count=1)
+
+
+def link_courses(reply: str) -> str:
+    """Link the first mention of every UTS course (by code, 'C04372', or by name, 'Master of Data Science and
+    Innovation') to its Handbook page; text already inside a link is left alone. All 44 pages answered 200 on 17 Oct."""
+    courses = backend.courses()
+    by_name = sorted(((n, c) for c, n in courses if not re.search(r"\(C\d{5}\)$", n)), key=lambda x: -len(x[0]))
+    parts = re.split(r"(\[[^\]]*\]\([^)]*\))", reply)                   # odd items are existing links
+    done: set[str] = set()
+
+    def link(text: str) -> str:
+        for code, _ in courses:
+            if code not in done and re.search(rf"\b{code}\b", text):
+                text = re.sub(rf"\b{code}\b", f"[{code}]({HANDBOOK}/course/2026/{code})", text, count=1)
+                done.add(code)
+        for name, code in by_name:
+            if code not in done and re.search(rf"(?<!\[){re.escape(name)}\b(?!\])", text):
+                text = re.sub(rf"(?<!\[){re.escape(name)}\b(?!\])", f"[{name}]({HANDBOOK}/course/2026/{code})", text,
+                              count=1)
+                done.add(code)
+        return text
+
+    for i, part in enumerate(parts):
+        if i % 2:
+            done.update(re.findall(r"/course/2026/(C\d{5})", part))
+        else:
+            parts[i] = link(part)
+    return "".join(parts)
+
+
 def has_llm() -> bool:
     return bool(os.getenv("OPENAI_API_KEY"))
 
@@ -323,4 +371,4 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     reply = re.sub(r"(\n\s*\[\d+\] [^\n]*)+\s*$", "", reply).strip()   # a source list the model wrote itself
     if reply.upper().startswith(FOLLOW_UP.upper()):
         return reply[len(FOLLOW_UP):].strip(), None
-    return cited_only(reply, sources)
+    return cited_only(link_courses(link_handbook(reply, home_course)), sources)

@@ -93,6 +93,27 @@ def test_subjects_named_in_the_answer_link_to_the_handbook():
     assert [r["subject_code"] for r in rest] == ["94699"]
 
 
+def test_the_handbook_links_to_the_students_course_page():
+    reply = chat.link_handbook("Please refer to the UTS Handbook and your coordinator.", "C04372")
+    assert reply == ("Please refer to [Master of Data Science and Innovation (C04372) in the UTS Handbook]"
+                     "(https://coursehandbook.uts.edu.au/course/2026/C04372) and your coordinator.")
+    assert chat.link_handbook("See the UTS Handbook.", None) == \
+        "See [the UTS Handbook](https://coursehandbook.uts.edu.au)."                      # not enrolled yet
+    linked = "[MDSI](https://coursehandbook.uts.edu.au/course/2026/C04372) and the UTS Handbook"
+    assert chat.link_handbook(linked, "C04372") == linked                                    # linked once only
+
+
+def test_every_course_mentioned_links_to_its_handbook_page():
+    url = "https://coursehandbook.uts.edu.au/course/2026/"
+    reply = chat.link_courses("Compare the Master of Artificial Intelligence with C04372 and the Master of "
+                              "Artificial Intelligence again.")
+    assert reply == (f"Compare the [Master of Artificial Intelligence]({url}C04443) with [C04372]({url}C04372) and "
+                     "the Master of Artificial Intelligence again.")                     # first mention only
+    linked = f"[Master of Data Science and Innovation]({url}C04372), the Master of Data Science and Innovation"
+    assert chat.link_courses(linked) == linked                                          # already linked: left alone
+    assert len(chat.backend.courses()) == 44 and all(c.startswith("C") for c, _ in chat.backend.courses())
+
+
 def test_a_subject_asked_about_stays_even_when_taken(stub):
     # 17 Oct: "36106 or 36120 for deep learning?" with both ticked as taken answered "couldn't find anything".
     stub.replies = ["36120 Advanced Machine Learning Application goes further than 36106; you have taken both."]
