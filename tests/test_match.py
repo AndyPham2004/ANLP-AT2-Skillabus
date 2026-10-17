@@ -79,7 +79,7 @@ def test_umbrella_skill_is_partial_when_the_resume_shows_a_part_of_it():
     resume = extract("Built churn models with scikit-learn and XGBoost.")
     skills = match(ad, resume)
     assert status(skills) == {"Machine learning": "partial", "Deep learning": "missing"}
-    ml = skills[0]
+    ml = next(s for s in skills if s["skill_label"] == "Machine learning")     # not skills[0]: that is demand order
     assert ml["related_skill"] in ("scikit-learn", "XGBoost")
     assert ml["resume_evidence"] == "Built churn models with scikit-learn and XGBoost."
 
@@ -125,12 +125,14 @@ def test_empty_inputs():
 
 # --------------------------------------------------------------------- role and ranking
 
-def test_role_profile_matches_like_an_ad():
+def test_role_profile_matches_like_an_ad(demand_sample):
+    # On the sample table (the committed one is topped up often): its Data Scientist 2026 block has two skills.
     role = role_profile()
-    assert len(role) == 15 and role[0]["canonical"] == "Python"
+    assert [m["canonical"] for m in role] == ["Python", "Large language models"]     # most asked first
+    assert [m["canonical"] for m in role_profile(top_n=1)] == ["Python"]
     skills = match(role, extract(RESUME))
-    assert {k for k, v in status(skills).items() if v == "have"} == {"Python", "SQL", "Statistics", "Data visualisation"}
-    assert skills[1]["ad_evidence"] == "Asked for in 68% of 89 JobsPipe Data Scientist ads (Sep-Oct 2026)."   # SQL
+    assert status(skills) == {"Python": "have", "Large language models": "missing"}
+    assert skills[0]["ad_evidence"] == "Asked for in 80% of 71 JobsPipe Data Scientist ads (Sep-Oct 2026)."
 
 
 def test_each_role_takes_the_first_source_with_a_block(demand_sample):
@@ -151,7 +153,6 @@ def test_match_role_uses_the_role_s_own_demand(demand_sample):
     assert profile[0]["sentence"] == "Asked for in 87% of 70 JobsPipe Data Engineer ads (Sep-Oct 2026)."
     skills = {s["skill_label"]: s for s in match_role(extract(RESUME), "Data Engineer")}
     assert skills["SQL"]["status"] == "have" and skills["Spark"]["demand_pct"] == 51.4
-    assert match_role(extract(RESUME))[0]["demand_pct"] == 80.3             # Data Scientist: its 2026 ads too
     with pytest.raises(KeyError):
         role_profile("Astronaut")
     with pytest.raises(KeyError):
@@ -166,8 +167,8 @@ def test_data_scientist_is_counted_on_2026_ads_with_2019_22_as_the_trend(demand_
     python, llm = skills["Python"], skills["Large language models"]
     assert (python["demand_pct"], python["demand_pct_2026"], python["demand_pct_2019_22"]) == (80.3, 80.3, 84.5)
     assert (llm["demand_pct"], llm["demand_pct_2019_22"]) == (33.8, 0.0)    # counted in 2019-22, named in none
-    assert (python["demand_source"], python["demand_period"], python["total_ads"], python["text_type"]) == (
-        "jobspipe_2026", "2026-10", 71, "full_text")
+    assert {(s["demand_source"], s["demand_period"], s["total_ads"], s["text_type"]) for s in skills.values()} == {
+        ("jobspipe_2026", "2026-10", 71, "full_text")}
     assert all(s["demand_pct_2019_22"] is None for s in match_role(extract(RESUME), "Data Engineer"))
 
 
@@ -285,9 +286,7 @@ def test_role_rows_carry_the_role_s_source_and_period(demand_sample):
     assert all(s["demand_pct_2026"] == s["demand_pct"] for s in engineer)   # its demand already is its 2026 block
     cloud = match_role(extract(RESUME), "Cloud Engineer")
     assert {(s["demand_source"], s["text_type"]) for s in cloud} == {("adzuna_2026", "search_count")}
-    scientist = match_role(extract(RESUME))
-    assert {(s["demand_source"], s["demand_period"]) for s in scientist} == {("jobspipe_2026", "2026-10")}
-    assert any(s["demand_pct_2019_22"] is not None for s in scientist)   # Data Scientist keeps the 2019-22 trend
+    # Data Scientist rows: test_data_scientist_is_counted_on_2026_ads_with_2019_22_as_the_trend
     ad = match(extract(AD), extract(RESUME))
     assert {(s["demand_source"], s["total_ads"]) for s in ad} == {("jobspipe_2026", 71)}   # an ad: Data Scientist ads
 
@@ -315,12 +314,11 @@ def test_every_role_has_ad_counts_from_the_demand_table():
 def test_partial_credit_and_soft_skills_follow_the_given_demand():
     from skillabus.match import _related
     resume = {"PyTorch": [], "TensorFlow": []}
-    by_seek = _related("Deep learning", resume)
-    assert by_seek in resume
-    other = next(k for k in resume if k != by_seek)
+    by_default = _related("Deep learning", resume)                     # the Data Scientist 2026 shares
+    assert by_default in resume
+    other = next(k for k in resume if k != by_default)
     assert _related("Deep learning", resume, {other: 50.0}) == other    # the role's shares decide
-    ad = extract(AD)
-    assert soft_skills(ad) == ["Teamwork", "Problem solving"]
+    ad = extract(AD)          # default order: test_soft_skills_are_listed_apart
     assert soft_skills(ad, {"Problem solving": 40.0, "Teamwork": 10.0}) == ["Problem solving", "Teamwork"]
 
 
