@@ -111,7 +111,8 @@ def test_the_one_inputs_page():
     assert "Your inputs" in text and "Results" in text                                   # two steps in the top bar
     assert not any(c.key == "stage_box" for c in at.segmented_control)
     course = at.selectbox(key="course_box")
-    assert course.value == "C04372" and course.options[-1] == "Not enrolled at UTS yet"   # MDSI by default; not enrolled last
+    assert course.value == "C04372" and "" not in course.options                       # MDSI by default
+    assert at.segmented_control(key="enrol_box").value == "Enrolled at UTS"
     assert at.segmented_control(key="goal_box").value == "A role"
     assert at.multiselect(key="taken_box") and at.segmented_control(key="resume_mode")
 
@@ -595,10 +596,41 @@ def ui_esc(text: str) -> str:
 def test_not_enrolled_yet_hides_the_subjects_and_opens_the_courses_tab():
     at = open_app()
     pick_role(at, "Data Analyst")
-    at.selectbox(key="course_box").set_value("").run()
+    at.segmented_control(key="enrol_box").set_value("Not enrolled yet").run()
     assert not at.exception, at.exception
     assert at.session_state.course_keep == "" and not any(m.key == "taken_box" for m in at.multiselect)
+    assert not any(s.key == "course_box" for s in at.selectbox)                           # no course list either
     show_gaps(at)
     assert at.session_state.results_tab == "UTS courses"
     assert "your course" not in page_text(at)                                            # no course to mark
     assert "not enrolled yet" in page_text(at)                                           # the top bar says so
+
+
+def test_enrolled_again_brings_the_course_back():
+    at = open_app()
+    at.selectbox(key="course_box").set_value("C04379").run()                               # Master of Business Analytics
+    at.segmented_control(key="enrol_box").set_value("Not enrolled yet").run()
+    assert at.session_state.course_keep == ""
+    at.segmented_control(key="enrol_box").set_value("Enrolled at UTS").run()
+    assert not at.exception, at.exception
+    assert at.session_state.course_keep == "C04379" and at.selectbox(key="course_box").value == "C04379"
+    assert any(m.key == "taken_box" for m in at.multiselect)
+
+
+def test_top_bar_brand_and_steps_are_links_that_keep_the_inputs():
+    # Quan, 17 Oct: "Skillabus" goes to the start page, the two steps to their pages; nothing typed is lost.
+    at = AppTest.from_file(HOME, default_timeout=300)
+    at.run()
+    assert at.button(key="home").disabled and at.button(key="step_results").disabled      # on the start page itself
+    at.button(key="step_inputs").click().run()
+    assert at.session_state.step == "inputs"
+    pick_role(at, "Data Engineer")
+    at.button(key="home").click().run()
+    assert at.session_state.step == "start" and at.session_state.role_keep == "Data Engineer"
+    at.button(key="door_role").click().run()
+    assert chosen_roles(at) == ["Data Engineer"]                                            # the inputs survived
+    show_gaps(at)
+    at.button(key="step_inputs").click().run()
+    assert at.session_state.step == "inputs" and not at.button(key="step_results").disabled
+    at.button(key="step_results").click().run()
+    assert at.session_state.step == "results"

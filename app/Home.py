@@ -47,7 +47,8 @@ SAMPLE_AD_TITLE = "Data Scientist · Robert Walters · Sydney CBD"
 COURSES = backend.courses()                                    # (code, name) for all 44 courses, MDSI first
 COURSE_NAME = dict(COURSES)
 GOALS = ("A role", "A job ad", "Not sure yet")
-NOT_ENROLLED = ""                                              # the course picker's "not enrolled yet" value
+NOT_ENROLLED = ""                                              # course_keep for a student not enrolled yet
+ENROL = ("Enrolled at UTS", "Not enrolled yet")
 AD_MODES = ("Browse ads", "Paste an ad", "Try a sample")
 RESUME_MODES = ("No resume", "Upload a file", "Paste text", "Use a sample")
 MIN_AD_WORDS = 20
@@ -299,6 +300,20 @@ def pick_fit(role: str) -> None:
     run_analysis()
 
 
+def enrol_changed() -> None:
+    """Enrolled / Not enrolled: the course is kept aside while not enrolled and comes back on Enrolled."""
+    if ss.enrol_box is None:                  # a segmented control can be deselected; keep the last choice
+        ss.enrol_box = ENROL[0] if enrolled() else ENROL[1]
+        return
+    if ss.enrol_box == ENROL[1]:
+        if ss.course_keep:
+            ss.course_last = ss.course_keep
+        ss.course_keep = NOT_ENROLLED
+    else:
+        ss.course_keep = ss.get("course_last") or backend.HOME_COURSE
+        ss.course_box = ss.course_keep
+
+
 def start_with(goal: str) -> None:
     """A door on the start page: the goal is chosen, the Inputs page opens."""
     ss.update(goal_keep=goal, goal_box=goal, step="inputs")
@@ -407,22 +422,29 @@ def inputs_note() -> str:
     return " · ".join(parts)
 
 
+def step_target(n: int) -> str | None:
+    """Where a step of the top bar leads: 1 the Inputs page; 2 the results, or the roles that fit (none yet: disabled)."""
+    if n == 1:
+        return "inputs"
+    return "results" if ss.result else ("fit" if ss.fit else None)
+
+
 def top_bar() -> None:
-    """One strip above every page: the name, the two steps, what was chosen so far, the chat button."""
+    """One strip above every page: the name (a link to the start page), the two steps (links too; Quan, 17 Oct),
+    what was chosen so far, the chat button. Nothing typed is lost on the way."""
     current = STEP_OF[ss.chat_from if ss.step == "chat" else ss.step]
-    parts = []
-    for n, label in enumerate(("Your inputs", "Results"), start=1):
-        done, active = current > n, current == n
-        colour = ui.HAVE if done else (ui.INK if active else ui.DIM)
-        dot = (f"<span class='k-hdot' style='border-color:{colour};background:{ui.HAVE if done else 'transparent'};"
-               f"color:{ui.DARK if done else colour}'>{'✓' if done else n}</span>")
-        parts.append(f"<span class='k-hstep' style='color:{colour};font-weight:{500 if active else 400}'>{dot}{label}</span>")
-    stepper = "<span class='k-hline'></span>".join(parts)
     ctx = inputs_note() if current > 1 else ""
     name_col, steps_col, ctx_col, chat_col = st.columns([1.1, 3.3, 2.6, 1.3], vertical_alignment="center", gap="small")
-    name_col.markdown(f"<div class='k-mark' style='margin:0'><span class='k-dot' style='background:{ui.HAVE};"
-                      "margin-right:8px;vertical-align:2px'></span>Skillabus</div>", unsafe_allow_html=True)
-    steps_col.markdown(f"<div class='k-hsteps'>{stepper}</div>", unsafe_allow_html=True)
+    name_col.button("Skillabus", key="home", type="tertiary", on_click=go, args=("start",), disabled=ss.step == "start")
+    with steps_col, st.container(key="steps"):
+        one, line, two, _ = st.columns([0.82, 0.14, 0.62, 1.5], vertical_alignment="center", gap="small")
+        for col, n, label in ((one, 1, "Your inputs"), (two, 2, "Results")):
+            state = "done" if current > n else ("active" if current == n else "todo")
+            target = step_target(n)
+            with col, st.container(key=f"step{n}_{state}"):
+                st.button(label, key=f"step_{'inputs' if n == 1 else 'results'}", type="tertiary", on_click=go,
+                          args=(target or "inputs",), disabled=target is None)
+        line.markdown("<span class='k-hline'></span>", unsafe_allow_html=True)
     ctx_col.markdown(f"<div class='k-hctx' title='{ui.esc(ctx)}'>{ui.esc(ctx)}</div>", unsafe_allow_html=True)
     chat_col.button("Ask the Handbook", key="chat_go", width="stretch", on_click=open_chat, disabled=ss.step == "chat")
     st.markdown("<div class='k-rule'></div>", unsafe_allow_html=True)
@@ -603,13 +625,14 @@ def page_inputs() -> None:
     you_col, goal_col = st.columns([1.1, 1.45], gap="large")   # 1.1: the four resume choices fit on one line
     with you_col:
         st.markdown("<div class='k-big'>You</div>", unsafe_allow_html=True)
-        st.markdown(ui.eyebrow("Your course <span class='k-dim'>· decides which subjects are open to you</span>"),
-                    unsafe_allow_html=True)
-        ss.setdefault("course_box", ss.course_keep)
-        st.selectbox("Course", [c for c, _ in COURSES] + [NOT_ENROLLED], key="course_box",
-                     format_func=lambda c: COURSE_NAME.get(c) or "Not enrolled at UTS yet", label_visibility="collapsed")
-        ss.course_keep = ss.course_box if ss.course_box is not None else ss.course_keep
+        st.markdown(ui.eyebrow("Your course"), unsafe_allow_html=True)
+        ss.setdefault("enrol_box", ENROL[0] if enrolled() else ENROL[1])
+        st.segmented_control("Enrolment", ENROL, key="enrol_box", label_visibility="collapsed", on_change=enrol_changed)
         if enrolled():
+            ss.setdefault("course_box", ss.course_keep)
+            st.selectbox("Course", [c for c, _ in COURSES], key="course_box", format_func=COURSE_NAME.get,
+                         label_visibility="collapsed")
+            ss.course_keep = ss.course_box or ss.course_keep
             taken_block()
         else:
             st.markdown("<div class='k-small k-mute' style='margin:-2px 0 10px'>No subjects yet: your gaps count "
