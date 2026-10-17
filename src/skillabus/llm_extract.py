@@ -76,7 +76,8 @@ def _cached(text: str) -> Path | None:
     return None
 
 
-def _call(text: str, client) -> list[dict]:
+def _call(text: str, client) -> list[dict] | None:
+    """The skills in the reply, or None when the reply is empty or not JSON: no answer, so nothing to cache."""
     if client is None:
         if not os.getenv("OPENAI_API_KEY"):   # RuntimeError: the evaluation reports the tier as "not run"
             raise RuntimeError("OPENAI_API_KEY is not set and this text is not in the cache")
@@ -88,10 +89,13 @@ def _call(text: str, client) -> list[dict]:
         response_format={"type": "json_object"},
         messages=[{"role": "system", "content": SYSTEM}, {"role": "user", "content": text}],
     )
+    content = resp.choices[0].message.content
+    if not content:
+        return None
     try:
-        data = json.loads(resp.choices[0].message.content or "{}")
+        data = json.loads(content)
     except json.JSONDecodeError:
-        return []
+        return None
     items = data.get("skills", []) if isinstance(data, dict) else []
     return [i for i in items if isinstance(i, dict) and isinstance(i.get("text"), str)]
 
@@ -106,7 +110,9 @@ def extract_llm(text: str, client=None, use_cache: bool = True) -> list[dict]:
         raw = json.loads(cached.read_text(encoding="utf-8"))
     else:
         raw = _call(clean, client)
-        if use_cache:
+        if raw is None:              # a broken reply: nothing found this time, and the next run asks again
+            raw = []
+        elif use_cache:
             path = _cache_path(clean)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")

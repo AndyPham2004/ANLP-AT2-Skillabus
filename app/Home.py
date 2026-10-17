@@ -2,10 +2,11 @@
 
 Run from the repo root:  streamlit run app/Home.py
 
-The layout and flow follow the v2 design in docs/design/ (Claude Design, 16 Oct 2026): a sidebar
-with the three steps and the Handbook chat; then Start -> Inputs (or Browse ads) -> Results ->
-Evidence for one skill, plus a subject dialog. app/ui.py holds the CSS and the HTML helpers,
-app/backend.py calls the pipeline, app/ads.py serves the ads to browse.
+The layout and flow follow the v2 design in docs/design/ (Claude Design, 16 Oct 2026), reshaped with Quan
+on 16-17 Oct: a top bar with the steps and the "Ask the Handbook" button (the chat is a page of its own);
+Start -> Inputs (or Browse ads) -> Results, one tab at a time -> Evidence for one skill, plus a subject
+dialog. app/ui.py holds the CSS and the HTML helpers, app/backend.py calls the pipeline, app/ads.py serves
+the ads to browse.
 """
 
 from __future__ import annotations
@@ -64,7 +65,7 @@ CHAT_SUGGESTIONS = ("Which subject teaches LLMs?", "What does Applied NLP cover?
 STEP_OF = {"start": 1, "inputs": 2, "jobs": 2, "results": 3, "evidence": 3}     # the chat page shows the step it came from
 CHAT_BACK = {"start": "← Back", "inputs": "← Back to your inputs", "jobs": "← Back to the ads",
              "results": "← Back to results", "evidence": "← Back to the skill"}
-CERTS_SHOWN = 6                                                # then "Show all 11"
+CERTS_SHOWN = 6                                                # then a "Show all" button
 SUBJECT_NAME = dict(backend.subjects())                      # code -> name, all 360 subjects
 
 
@@ -370,10 +371,10 @@ def open_chat() -> None:
     ss.step = "chat"
 
 
-# ---------------------------------------------------------------- sidebar: steps and the chat button
+# ---------------------------------------------------------------- top bar: steps and the chat button
 
 def step_note(n: int) -> str:
-    """The small line under a step of the sidebar: what was chosen there."""
+    """What was chosen at a step, for the short line in the top bar after the steps."""
     ut = ss.user_type
     if n == 1:
         return USER_TYPES[ut][0] if ut else ""
@@ -1033,7 +1034,8 @@ def page_evidence() -> None:
 # ---------------------------------------------------------------- the subject dialog
 
 def subject_dialog(code: str) -> None:
-    """Open the subject dialog; the title is the code, as a dialog's title is fixed when it is declared."""
+    """Open the subject dialog, titled with the subject's name: a dialog's title is fixed when it is declared,
+    so the dialog is declared here, per subject."""
     st.dialog(subject_name(code), width="large")(subject_body)(code)
 
 
