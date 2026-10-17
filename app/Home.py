@@ -392,11 +392,20 @@ def pick_role(n: int) -> None:
 
 
 def ask(question: str) -> None:
+    history = list(ss.messages)
     ss.messages.append({"role": "user", "content": question})
-    reply, sources = chat.answer(question, ss.result)
+    reply, sources = chat.answer(question, ss.result, taken_now(), ss.course_keep or None, history)
+    if sources is None:                     # a follow-up question: no sources, and the next message answers it
+        ss.messages.append({"role": "assistant", "content": reply, "followup": True})
+        return
+    shown = reply
     if sources and chat.has_llm():
-        reply += "\n\n" + "  \n".join(f"[{i + 1}] {chat.source_name(s)}" for i, s in enumerate(sources))
-    ss.messages.append({"role": "assistant", "content": reply})
+        # subjects named in the answer link to their Handbook page; any other source is listed once, also linked
+        shown, rest = chat.link_subjects(reply, sources)
+        if rest:
+            shown += "\n\nHandbook: " + " · ".join(
+                f"[{chat.source_name(s)}]({s['url']})" if s.get("url") else chat.source_name(s) for s in rest)
+    ss.messages.append({"role": "assistant", "content": shown, "answer": reply})   # "answer" goes back to the model
 
 
 def open_chat() -> None:
@@ -470,7 +479,10 @@ def chat_thread() -> None:
         if question:
             ask(question)
         with thread:
-            if not ss.messages:
+            if ss.messages:                          # the chat remembers the thread; a new topic may want a clean one
+                st.button("New chat", key="chat_new", type="tertiary", icon=":material/refresh:",
+                          on_click=lambda: ss.update(messages=[]))
+            else:
                 for col, (i, text) in zip(st.columns(3, gap="small"), enumerate(CHAT_SUGGESTIONS)):
                     col.button(text, key=f"chat_sug_{i}", width="stretch", on_click=ask, args=(text,))
             for m in ss.messages:
