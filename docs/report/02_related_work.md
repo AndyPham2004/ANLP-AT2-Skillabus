@@ -1,8 +1,5 @@
 # 2 Related work
 
-> Phuong Nhi, 17 Oct 2026, cut to ~500 words (#158) from Quan's draft and Akash's comparison table (#30); the sources
-> were checked on 14 Oct. References in APA 7.
-
 **Skill extraction.** ESCO (European Commission, 2017) gives a shared, multilingual skill inventory that most research
 systems map to. SkillSpan (Zhang, Jensen, Sonniks & Plank, 2022) annotated skill spans in English job ads, and a
 weak-supervision follow-up linked spans to ESCO by embedding similarity (Zhang, Jensen, van der Goot & Plank, 2022).

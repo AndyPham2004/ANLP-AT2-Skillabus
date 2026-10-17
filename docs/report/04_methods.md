@@ -1,8 +1,5 @@
 # 4 Methods
 
-> Phuong Nhi, 17 Oct 2026, cut to ~1,500 words (#158). Every threshold and weight, with the data it was set on, is in
-> `data/3_tuning/README.md` in the repository. No threshold was set on a test set. Code: `src/skillabus/`.
-
 Each stage pairs a traditional method with a newer one on the same inputs, so section 6 can show what the newer method
 adds and where it fails (Table 4.1).
 
@@ -117,7 +114,7 @@ direction. A subject needing one or two open prerequisites enters with them, val
 taken is listed with the reason. The path is laid out over Autumn and Spring sessions; valuing a step per place gives up
 the (1 − 1/e) guarantee of plain greedy, a small price for a path the student can take. The sample-ad path is in section 1.
 
-Gaps the UTS path leaves open get a second greedy pass over 248 self-study resources (free, free-to-audit or paid, with
+Gaps the UTS path leaves open get a second greedy pass over 250 self-study resources (free, free-to-audit or paid, with
 the price shown), never mixed with UTS subjects. A course counts for a gap only when its hand-checked skill list names
 the gap: matching the text alone picked courses that mention a skill in passing ("Sign up for an AWS account" in a
 Redshift course).

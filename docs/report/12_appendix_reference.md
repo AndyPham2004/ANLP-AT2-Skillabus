@@ -1,8 +1,5 @@
 # Appendix C. Data dictionary
 
-> Drafted by Akash (#79, #91), updated 17 Oct 2026 by Van Thong for the files on `main`. Appendix B (evaluation tables)
-> is `11_appendix_evaluation.md`.
-
 
 All files are UTF-8 CSV in five folders under `data/`; code takes every path from `src/skillabus/paths.py`. Raw
 downloads (`data/raw/`, 655 MB) and files written while the app runs (`data/runtime/`: feedback votes, caches) are not
