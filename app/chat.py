@@ -207,6 +207,24 @@ def source_name(s: dict) -> str:
     return subject_label(s)
 
 
+def link_subjects(reply: str, sources: list[dict]) -> tuple[str, list[dict]]:
+    """The answer with each source's first mention ('36103' or '36103 Statistical Thinking for Data Science') linked to
+    its Handbook page, and the sources it does not mention. Linked in the text, the numbered list under every answer
+    only repeated the subjects the answer had just named."""
+    rest = []
+    for s in sources:
+        code, url = s.get("subject_code"), s.get("url")
+        if not code or not url:
+            rest.append(s)
+            continue
+        name = re.escape(s.get("subject_name") or "")
+        pattern = rf"(?<![\[\w/]){re.escape(code)}\b(?:\s+{name})?" if name else rf"(?<![\[\w/]){re.escape(code)}\b"
+        reply, n = re.subn(pattern, lambda m: f"[{m.group(0)}]({url})", reply, count=1)
+        if not n:
+            rest.append(s)
+    return reply, rest
+
+
 def has_llm() -> bool:
     return bool(os.getenv("OPENAI_API_KEY"))
 

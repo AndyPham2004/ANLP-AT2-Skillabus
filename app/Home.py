@@ -353,7 +353,11 @@ def ask(question: str) -> None:
         return
     shown = reply
     if sources and chat.has_llm():
-        shown += "\n\n" + "  \n".join(f"[{i + 1}] {chat.source_name(s)}" for i, s in enumerate(sources))
+        # subjects named in the answer link to their Handbook page; any other source is listed once, also linked
+        shown, rest = chat.link_subjects(reply, sources)
+        if rest:
+            shown += "\n\nHandbook: " + " · ".join(
+                f"[{chat.source_name(s)}]({s['url']})" if s.get("url") else chat.source_name(s) for s in rest)
     ss.messages.append({"role": "assistant", "content": shown, "answer": reply})   # "answer" goes back to the model
 
 

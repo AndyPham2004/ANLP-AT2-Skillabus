@@ -82,6 +82,17 @@ def test_a_choice_leaves_out_taken_and_named_subjects(stub):
     assert [s["subject_code"] for s in sources] == ["36121"]
 
 
+def test_subjects_named_in_the_answer_link_to_the_handbook():
+    url = "https://coursehandbook.uts.edu.au/subject/2026/"
+    s = [{"subject_code": "36103", "subject_name": "Statistical Thinking for Data Science", "url": url + "36103"},
+         {"subject_code": "36100", "subject_name": "Data Science for Innovation", "url": url + "36100"},
+         {"subject_code": "94699", "subject_name": "Innovation Lab: Internship Project", "url": url + "94699"}]
+    reply, rest = chat.link_subjects("Take 36103 Statistical Thinking for Data Science, then 36100. 36103 again.", s)
+    assert reply == (f"Take [36103 Statistical Thinking for Data Science]({url}36103), then [36100]({url}36100). "
+                     "36103 again.")                                                   # first mention only
+    assert [r["subject_code"] for r in rest] == ["94699"]
+
+
 def test_a_subject_asked_about_stays_even_when_taken(stub):
     # 17 Oct: "36106 or 36120 for deep learning?" with both ticked as taken answered "couldn't find anything".
     stub.replies = ["36120 Advanced Machine Learning Application goes further than 36106; you have taken both."]
