@@ -214,6 +214,17 @@ def self_study(skill: str, levels=LEVELS, cost=COST_CHOICES["Include free-to-aud
     return hits[:limit]
 
 
+def self_study_ladder(skill: str, role: str | None = None, limit: int = MAX_SELF_STUDY) -> list[dict]:
+    """The skill page's self-study cards as a ladder (Quan, 17 Oct, in place of the level and cost filters): the
+    first resource of each level the skill has, beginner first, then the next ones to fill `limit`, shown easiest
+    level first. Free and free-to-audit; paid only when no free resource teaches the skill (Econometrics)."""
+    pool = (self_study(skill, LEVELS, COST_CHOICES["Include free-to-audit"], role, limit=10_000)
+            or self_study(skill, LEVELS, COST_CHOICES["Include paid"], role, limit=10_000))
+    firsts = [next(r for r in pool if r["level"] == level) for level in LEVELS if any(r["level"] == level for r in pool)]
+    chosen = (firsts + [r for r in pool if r not in firsts])[:limit]
+    return sorted(chosen, key=lambda r: LEVELS.index(r["level"]))       # stable: pool order within a level
+
+
 # ---------------------------------------------------------------- analysis
 
 def baseline_ranking(gaps: list[dict], taken: list[str]) -> dict:
