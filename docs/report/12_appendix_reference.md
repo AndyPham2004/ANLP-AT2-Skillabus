@@ -34,7 +34,7 @@ truncates the `C#` row.
 |---|---|---|---|
 | `role_skill_demand.csv` | 4,494 | **the one demand table**: one skill for one role from one source and period | `role`, `skill_id`, `skill`, `source`, `period`, `text_type`, `n_ads`, `total_ads`, `pct`, `pct_low`, `pct_high` |
 | `ads/jobspipe_2026_skills.csv` | 1,932 | one JobsPipe ad of Sep-Oct 2026, **without its text** | `role`, `title`, `company`, `date_posted`, `employer_type`, `url`, `skills` |
-| `ads/seek_2020_21_skills.csv` | 2,366 | one Seek Australia IT ad of 2020–21, **without its text** | `role`, `title`, `company`, `url`, `skills` |
+| `ads/seek_2020_21_skills.csv` | 2,366 | one Seek Australia IT ad of 2020–21, **without its text** (2,362 in the 10 roles used, 4 Machine Learning Engineer) | `role`, `title`, `company`, `url`, `skills` |
 | `ads/ats_2026_clean.csv` | 392 | one ad from 65 employers' job boards, Oct 2026, with a role | `company`, `title`, `role`, `posted`, `description`, `url` |
 | `ads/jobs_au_seek_datascientist_2019-2022_clean.csv` | 3,204 | one Seek Data Scientist ad, glued words repaired | ad text |
 | `ads/jobs_au_recent_2024-2026_clean.csv` | 192 | one recent data-role ad (job boards 2026, Adzuna, LinkedIn Jan 2024) | ad text, period |
@@ -49,11 +49,11 @@ truncates the `C#` row.
 
 | File | Rows | One row = |
 |---|---|---|
-| `4_evaluation/labels/ad_skills.csv` | 534 (+679 in #123) | one skill asked for in one labelled ad, by one annotator |
+| `4_evaluation/labels/ad_skills.csv` | 534 | one skill asked for in one labelled ad, by one annotator |
 | `4_evaluation/labels/cv_jd_pairs.csv` | 287 | one skill in one of 45 CV-ad pairs: `gold_status` have / partial / missing |
-| `4_evaluation/labels/skill_subject_pairs.csv` | 33 (+15 in #124) | one skill-subject claim: `teaches` y / partly / n, with the Handbook evidence |
+| `4_evaluation/labels/skill_subject_pairs.csv` | 33 | one skill-subject claim: `teaches` y / partly / n, with the Handbook evidence |
 | `4_evaluation/labels/chat_questions.csv` | 15 | one chat test question with a reference answer |
-| `4_evaluation/labels/ad_skills_2026.csv`, `role_paths_review.csv` | 17 Oct | labels of 18 ads of 2026 across 10 roles; a reader's verdict on each of the 33 role-path subjects |
+| `4_evaluation/labels/ad_skills_2026.csv`, `role_paths_review.csv` | 17 Oct | labels of 18 ads of 2026 across 10 roles; a reader's verdict on each of the 32 role-path subjects |
 | `4_evaluation/inputs/` | 200; 2,481; 18 | the 200-ad label sample; the de-identified resumes; the 18 ads of 2026 to label |
 | `4_evaluation/results/` | | scores for section 6 |
 | `3_tuning/` | | every threshold, where it is set and on what data |
