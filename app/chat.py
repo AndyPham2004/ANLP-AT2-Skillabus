@@ -237,6 +237,25 @@ def course_page(home_course: str | None) -> tuple[str, str]:
     return f"{name} ({home_course}) in the UTS Handbook", f"{HANDBOOK}/course/2026/{home_course}"
 
 
+# A study plan or a course's structure: the chat does not build one (the app checks prerequisites and sessions, not
+# credit-point rules); it points to the right course page in the Handbook, so it needs to know the course.
+PLAN = re.compile(r"\b(study plan|plan|structure|core subjects?|electives?|credit points?|two[- ]years?|2[- ]years?|"
+                  r"semester by semester|roadmap)\b", re.I)
+
+
+def course_named(text: str) -> str | None:
+    """The UTS course the text names: a code (C04372), MDSI, or a course name (the longest that appears)."""
+    known = dict(backend.courses())
+    code = next((c for c in re.findall(r"\bC\d{5}\b", text) if c in known), None)
+    if code:
+        return code
+    if re.search(r"\bMDSI\b", text):
+        return "C04372"
+    low = text.lower()
+    names = sorted(((n, c) for c, n in known.items() if not re.search(r"\(C\d{5}\)$", n)), key=lambda x: -len(x[0]))
+    return next((c for n, c in names if n.lower() in low), None)
+
+
 def link_handbook(reply: str, home_course: str | None) -> str:
     """Link the first mention of the Handbook to the student's course page, unless the answer already links it."""
     label, url = course_page(home_course)
@@ -298,15 +317,21 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     # found nothing); only the subjects the question does not name are left out as taken
     asked = named_in(query, passages, done_or_planned=False) - named_in(query, passages)
     done -= asked
+    # the course the question names, else the student's; a plan for an unknown course asks which one, once, so the
+    # answer can link the right course page
+    course = course_named(query) or home_course
+    if PLAN.search(query) and not course and not replying:
+        return ("Which UTS course are you in, or planning to take (for example the Master of Data Science and "
+                "Innovation, C04372)? I'll point you to its structure in the Handbook."), None
     if advice:
         lp = (gap or {}).get("learning_path")
         path = lp.get("subjects", []) if isinstance(lp, dict) else []
         # the path and what the question is about first, then the rest of the student's course
         passages = (subject_passages(path, done) + passages
-                    + subject_passages(backend.course_subjects(home_course), done))
+                    + subject_passages(backend.course_subjects(course), done))
         named = named_in(query, passages) - asked     # taken or planned, as the student wrote them
         passages = [p for p in passages if p.get("subject_code") not in named]
-    sources = by_subject(passages, done, home_course, MAX_CHOICES if advice else MAX_SUBJECTS)
+    sources = by_subject(passages, done, course, MAX_CHOICES if advice else MAX_SUBJECTS)
     if not sources:
         return ("I couldn't find anything about that in the UTS Handbook text I have. "
                 "Try naming a skill or a subject."), []
@@ -358,10 +383,10 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
                 "student has taken or says they have taken or plan to take, nor one whose name or topic is "
                 "nearly the same (a second deep learning subject for someone taking Deep Learning). If the "
                 "student names a session, suggest only subjects that run in it. If asked for a full study plan "
-                "or a course's structure, say plainly that the Handbook text here does not include the course "
-                "structure (which subjects are core, credit points, how many per session), so you cannot give a "
-                "complete plan; then suggest a few subjects for their goal with the sessions they run in, and point "
-                "to the course's page in the UTS Handbook and their course coordinator. Two to five sentences. "
+                "or a course's structure, do not lay one out: say in one sentence that the course structure (core "
+                "subjects, electives, credit points) is on the course's page in the UTS Handbook, suggest two or "
+                "three subjects for their goal with the sessions they run in, and suggest confirming the plan with "
+                "their course coordinator. Two to five sentences. "
                 "Suggestions, not advice. " + follow_up)},
             *turns,
             {"role": "user", "content": f"{gaps}Subjects:\n{context}\n\nQuestion: {question}"},
@@ -369,6 +394,7 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     )
     reply = resp.choices[0].message.content.strip()
     reply = re.sub(r"(\n\s*\[\d+\] [^\n]*)+\s*$", "", reply).strip()   # a source list the model wrote itself
-    if reply.upper().startswith(FOLLOW_UP.upper()):
-        return reply[len(FOLLOW_UP):].strip(), None
-    return cited_only(link_courses(link_handbook(reply, home_course)), sources)
+    at = reply.upper().find(FOLLOW_UP.upper())        # the marker, even after a sentence the model put before it
+    if at != -1:
+        return reply[at + len(FOLLOW_UP):].strip(), None
+    return cited_only(link_courses(link_handbook(reply, course)), sources)

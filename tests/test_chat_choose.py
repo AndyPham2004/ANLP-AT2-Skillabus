@@ -114,6 +114,18 @@ def test_every_course_mentioned_links_to_its_handbook_page():
     assert len(chat.backend.courses()) == 44 and all(c.startswith("C") for c, _ in chat.backend.courses())
 
 
+def test_a_plan_without_a_course_asks_which_course_then_links_it(stub):
+    # 17 Oct: not enrolled, "give me a study plan" pointed to the Handbook's front page; the course page is the help
+    reply, sources = chat.answer("Give me a full 2-year study plan", None, [], None)
+    assert sources is None and "Which UTS course" in reply and not stub.calls             # asked without the model
+    history = [{"role": "user", "content": "Give me a full 2-year study plan"},
+               {"role": "assistant", "content": reply, "followup": True}]
+    stub.replies = ["The course structure is in the UTS Handbook. Consider 36103 Statistical Thinking for Data Science."]
+    reply, sources = chat.answer("Master of Data Science and Innovation", None, [], None, history)
+    assert "(https://coursehandbook.uts.edu.au/course/2026/C04372)" in reply and "do not lay one out" in stub.calls[0][0]["content"]
+    assert chat.course_named("I'm in MDSI") == "C04372" and chat.course_named("the Master of Cybersecurity") == "C04430"
+
+
 def test_a_subject_asked_about_stays_even_when_taken(stub):
     # 17 Oct: "36106 or 36120 for deep learning?" with both ticked as taken answered "couldn't find anything".
     stub.replies = ["36120 Advanced Machine Learning Application goes further than 36106; you have taken both."]
