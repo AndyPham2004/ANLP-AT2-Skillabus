@@ -124,3 +124,26 @@ def test_no_subject_is_ruled_out_by_its_own_prerequisite(real_rules):
     clashes = [(code, item.code) for code, rule in real_rules.requisite.items() for item in rule.items.values()
                if item.code and antirequisite_clash(code, {item.code}, real_rules)]
     assert clashes == []
+
+
+def test_an_undergraduate_only_subject_is_closed_to_a_postgraduate_student(tmp_path):
+    """#162: 31250 and 43007 sat in an MDSI student's path, but UTS lists them only in Bachelor courses
+    (C10xxx, C09xxx Honours). A subject with a postgraduate course stays open, and so does every subject
+    for a Bachelor student or someone not enrolled at UTS."""
+    prereq = tmp_path / "prerequisites.csv"
+    prereq.write_text(HEADER + "\n".join(["U,requisite,,,,,,y,u", "M,requisite,,,,,,y,u",
+                                         "N,requisite,(1),1,academic,U,U Intro,y,u"]) + "\n", encoding="utf-8")
+    offer = tmp_path / "offerings.csv"
+    offer.write_text("subject_code,teaching_period,mode\nU,Autumn Session,On campus\nM,Autumn Session,On campus\n"
+                     "N,Autumn Session,On campus\n", encoding="utf-8")
+    profiles = tmp_path / "subject_profiles.csv"
+    profiles.write_text("subject_code,subject_name,course,layer,text,source_url,collected_by\n"
+                        "U,Intro,C10143|C09118,description,x,u,c\nU,Intro,C10143|C09118,weekly_topic,y,u,c\n"
+                        "M,Mixed,C10143|C04379,description,x,u,c\nN,Next,C04372,description,x,u,c\n", encoding="utf-8")
+    rules = load_rules(prereq, offer, profiles)
+    closed = enrolment("U", set(), rules, home_course="C04372")
+    assert closed["status"] == "closed" and "undergraduate" in closed["reason"]
+    assert enrolment("U", set(), rules, home_course="C10143")["status"] == "open"
+    assert enrolment("U", set(), rules, home_course=None)["status"] == "open"
+    assert enrolment("M", set(), rules, home_course="C04372")["status"] == "open"
+    assert enrolment("N", set(), rules, home_course="C04372")["status"] == "closed"   # its only prerequisite is U

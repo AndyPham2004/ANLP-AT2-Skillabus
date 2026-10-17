@@ -223,8 +223,11 @@ def test_analyse_job_mode_still_works(monkeypatch):
     # so finance subjects titled "AI-..." stop outranking 43007 Advanced Artificial Intelligence, which then
     # covers AI, LLMs and generative AI; 31250 is its prerequisite and covers predictive modelling. Before:
     # 36121, 36106, 32130 at 84.9%, LLMs not covered. 17 Oct top-up: 89 Data Scientist ads (was 71), same path, 96.9%.
+    # 17 Oct (#162): 31250 and 43007 are Bachelor-only subjects, closed to an MDSI student, so the path is the
+    # three MDSI subjects again; LLMs stay open (43007 was the only subject covering them that the path could use).
     path = result["learning_path"]
-    assert (path["subjects"], path["demand_covered_pct"]) == (["31250", "43007", "36106"], 96.9)
+    assert (path["subjects"], path["demand_covered_pct"]) == (["36106", "36121", "32130"], 82.8)
+    assert all("undergraduate" in d["reason"] for d in path["dropped"] if d["subject_code"] in ("43007", "31005", "41040"))
     assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {("jobspipe_2026", 89)}
 
 
