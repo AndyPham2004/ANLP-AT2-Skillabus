@@ -38,8 +38,16 @@ def role_of(title: str) -> str:
 
 
 def short_location(loc: str) -> str:
-    """'Sydney, New South Wales, Australia' -> 'Sydney, NSW'; 'Sydney, Sydney Region' -> 'Sydney'."""
-    parts = [p.strip() for p in str(loc or "").split(",") if p.strip() and p.strip() != "Australia"]
+    """'Sydney, New South Wales, Australia' -> 'Sydney, NSW'; 'Sydney, Sydney Region' -> 'Sydney'.
+
+    The applicant-tracking ads write it their own way: 'AU - HQ - NSW' -> 'NSW', 'AU - Sydney' -> 'Sydney',
+    'AU: Melbourne: (260 Burwood Rd)' -> 'Melbourne', 'Greater Sydney Area' -> 'Sydney'.
+    """
+    loc = re.sub(r"\(.*?\)", "", str(loc or ""))                 # a street address in brackets
+    loc = re.sub(r"^\s*AU\s*[-:]\s*", "", loc)                    # the country as a prefix
+    loc = re.sub(r"\bHQ\s*[-:]\s*", "", loc)
+    loc = re.sub(r"^\s*Greater (.+?) Area\s*$", r"\1", loc).strip(" :-")
+    parts = [p.strip() for p in loc.split(",") if p.strip() and p.strip() != "Australia"]
     if not parts:
         return "Australia"
     city = parts[0]

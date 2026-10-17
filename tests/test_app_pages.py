@@ -336,8 +336,9 @@ def test_taken_tick_reruns_the_path_and_shows_on_the_inputs_page():
     assert at.multiselect(key="taken_box").value == [first]                     # the same list on the Inputs page
 
 
-def test_browse_ads_and_use_one():
-    # 7A (17 Oct): one full-width list, an ad opens in a dialog with "Use this ad"; no split, no table.
+def test_browse_ads_opens_an_ad_in_place_and_uses_it():
+    # C (17 Oct): role tabs with their counts, one line per ad; an ad opens under its line with "Use this ad",
+    # the whole text in a dialog only on "Read the full ad".
     import re
 
     import ads
@@ -346,21 +347,39 @@ def test_browse_ads_and_use_one():
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     assert not at.exception
     assert "Pick a job ad" in page_text(at)
-    at.pills(key="job_role").set_value("Data Scientist").run()
+    tabs = at.segmented_control(key="job_role")
+    n_ds = sum(a["role"] == "Data Scientist" for a in ads.load())
+    assert tabs.options[0] == f"All · {len(ads.load())}" and f"Data Scientist · {n_ds}" in tabs.options
+    tabs.set_value("Data Scientist").run()
     assert not at.dataframe
     first = ads.search(role="Data Scientist")[0]
-    at.button(key=f"ad_{first['id']}").click().run()                            # opens the ad
+    at.button(key=f"ad_{first['id']}").click().run()                            # opens the ad in place
+    assert not at.exception, at.exception
+    assert at.session_state.ad_open == first["id"] and at.button(key="use_job")
+    assert not any("class='k-preview'" in m.value for m in at.markdown)         # no dialog yet
+    at.button(key="ad_full_btn").click().run()                                  # the whole ad
     assert not at.exception, at.exception
     # The dialog folds runs of blank lines and escapes the text, so an ad with ' or & would miss the raw slice.
     shown = ui.esc(re.sub(r"\n\s*\n\s*\n+", "\n\n", first["text"]))[:80]
     assert any(shown in m.value for m in at.markdown)
     at.button(key="use_job").click().run()
     assert not at.exception, at.exception
-    assert at.session_state.step == "inputs"
-    assert at.session_state.ad_keep == first["text"] and first["title"] in page_text(at)   # the ad as a card
+    assert at.session_state.step == "inputs" and at.session_state.ad_full is None
+    assert at.session_state.ad_keep == first["text"] and ui.esc(first["title"]) in page_text(at)   # the ad as a card
     show_gaps(at)
     assert "Skills the ad asks for" in page_text(at)
     assert "Robert Walters" not in page_text(at)
+
+
+def test_an_open_ad_closes_on_a_second_click():
+    import ads
+    at = aim_at_an_ad(open_app())
+    at.segmented_control(key="ad_mode").set_value("Browse ads").run()
+    first = ads.search()[0]
+    at.button(key=f"ad_{first['id']}").click().run()
+    assert at.session_state.ad_open == first["id"]
+    at.button(key=f"ad_{first['id']}").click().run()
+    assert at.session_state.ad_open is None and not any(b.key == "use_job" for b in at.button)
 
 
 def test_browse_ads_says_1_ad():

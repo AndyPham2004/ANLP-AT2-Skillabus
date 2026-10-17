@@ -31,6 +31,12 @@ def test_role_and_location_chips():
     assert ads.short_location("Sydney, New South Wales, Australia") == "Sydney, NSW"
     assert ads.short_location("Sydney, Sydney Region") == "Sydney"
     assert ads.short_location("") == "Australia"
+    # the applicant-tracking ads' own spellings (17 Oct)
+    assert ads.short_location("AU - HQ - NSW") == "NSW"
+    assert ads.short_location("AU - Sydney") == "Sydney"
+    assert ads.short_location("AU: Melbourne: (260 Burwood Rd)") == "Melbourne"
+    assert ads.short_location("Greater Sydney Area") == "Sydney"
+    assert ads.short_location("Sydney or Melbourne") == "Sydney or Melbourne"
 
 
 def test_search_filters_combine():
