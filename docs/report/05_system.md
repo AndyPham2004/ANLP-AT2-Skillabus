@@ -1,8 +1,5 @@
 # 5 System
 
-> Phuong Nhi, 17 Oct 2026, rewritten for the app after #143 and #150 (#158). Code: `src/skillabus/` (pipeline),
-> `app/` (Streamlit). Screenshots: `docs/report/figures/`.
-
 ## 5.1 Architecture
 
 ```mermaid

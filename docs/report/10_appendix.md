@@ -1,9 +1,5 @@
 # Appendix
 
-> Appendix A by Van Thong, 17 Oct 2026, from `notebooks/vt_eda.ipynb` and the files on `main`. Tables A.5–A.6, and
-> Appendices C and D (`12_appendix_reference.md`), were drafted by Akash (#79, #91) and updated on 17 Oct. The full file
-> list, with builders and rebuild commands, is `data/README.md`; the pipeline's JSON output is in `docs/data_contract.md`.
-
 **Repository:** https://github.com/AndyPham2004/ANLP-AT2-Skillabus · **App:** [link and QR code: Quan adds]
 
 ## Appendix A. Data
