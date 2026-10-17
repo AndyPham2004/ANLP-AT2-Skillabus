@@ -93,3 +93,62 @@ def test_highlight_marks_every_mention_in_its_skill_s_colour():
     marks = re.findall(r"<mark style='[^']*border-bottom-color:([^']+)'>([^<]*)</mark>", html)
     assert marks == [(ui.HAVE, "Python"), (ui.HAVE, "SQL Server"), (ui.PARTIAL, "Deep learning"), (ui.HAVE, "Python")]
     assert "</mark> &amp; <mark" in html and "&lt;3" in html and "<3" not in html
+
+
+# ------------------------------------------------- "Use this ad" without the raw text (17 Oct: the deployed app)
+
+class _Reply:
+    status_code = 200
+
+    def __init__(self, body):
+        self.body = body
+
+    def json(self):
+        return self.body
+
+
+def test_a_jobspipe_ad_records_the_fetch_it_came_from(no_raw_fetch):
+    jp = [a for a in ads.load() if a["id"].startswith("jp-")]
+    assert jp and {a["fetched"] for a in jp} <= set(ads.FETCH_KEYS)
+
+
+def test_the_full_text_comes_from_the_api_with_the_key_that_fetched_the_ad(monkeypatch):
+    """That key paid for the ad this month, so JobsPipe returns it again without a credit."""
+    calls = []
+
+    def post(url, json, headers, timeout):
+        calls.append((json, headers))
+        return _Reply({"data": [{"id": "123", "description": "Full text of the ad."}], "metadata": {}})
+
+    monkeypatch.setenv(ads.FETCH_KEYS["2026-10-17b"], "key-3")
+    assert ads.fetch_text({"id": "jp-123", "fetched": "2026-10-17b"}, post=post) == "Full text of the ad."
+    assert calls[0][0]["job_ids"] == ["123"] and calls[0][1]["Authorization"] == "Bearer key-3"
+
+
+def test_no_key_or_a_failing_api_gives_no_text(monkeypatch):
+    ad = {"id": "jp-123", "fetched": "2026-10-16"}
+    monkeypatch.delenv(ads.FETCH_KEYS["2026-10-16"], raising=False)
+    assert ads.fetch_text(ad, post=lambda *a, **k: _Reply({"data": [{"description": "x"}]})) is None
+    monkeypatch.setenv(ads.FETCH_KEYS["2026-10-16"], "key-1")
+
+    def down(*a, **k):
+        raise OSError("JobsPipe is down")
+
+    assert ads.fetch_text(ad, post=down) is None
+    assert ads.fetch_text({"id": "ats-1", "fetched": ""}, post=down) is None          # not a JobsPipe ad
+
+
+def test_without_its_text_an_ad_is_analysed_from_the_skills_it_named():
+    from skillabus.extract import extract
+    from skillabus.roles import role_of
+    ad = {"id": "jp-1", "title": "Senior Cyber Security Analyst", "company": "Acme", "location": "Sydney",
+          "fetched": "2026-10-17", "url": "https://example.com/ad", "skills": ["SIEM", "R", "Communication", "Incident response"]}
+    text = ads.skills_text(ad)
+    assert role_of(text.splitlines()[0]) == "Cybersecurity Analyst"          # the title stays the first line
+    assert {m["canonical"] for m in extract(text)} >= set(ad["skills"])       # every skill is found again
+    assert len(text.split()) > 20                                             # enough words for the Inputs page
+
+
+def test_home_copies_every_jobspipe_key_from_the_streamlit_secrets():
+    home = (ROOT / "app" / "Home.py").read_text(encoding="utf-8")
+    assert all(f'"{name}"' in home for name in ads.FETCH_KEYS.values())

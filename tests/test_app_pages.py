@@ -26,10 +26,12 @@ def fresh_analysis_cache():
     st.cache_data.clear()        # Home.py caches analyses per input; a test with another demand table must not reuse them
 
 
-def open_app() -> AppTest:
-    """Open the app: it starts on the Inputs page."""
+def open_app(door: str = "role") -> AppTest:
+    """Open the app and go through a door of the start page (role, ad or fit) to the Inputs page."""
     at = AppTest.from_file(HOME, default_timeout=300)
     at.run()
+    assert not at.exception, at.exception
+    at.button(key=f"door_{door}").click().run()
     assert not at.exception, at.exception
     return at
 
@@ -84,19 +86,35 @@ def chosen_roles(at: AppTest) -> list:
     return [at.pills(key=f"role_f{n}").value for n in range(5) if at.pills(key=f"role_f{n}").value]
 
 
-def test_app_opens_on_the_one_inputs_page():
-    # 17 Oct (Quan): one user, a UTS student; no "Who you are" cards, no study stage, no "not enrolled".
+def test_start_page_has_three_doors_and_the_numbers():
+    # Quan's pick A (17 Oct): what the app does, three ways in, the size of the data. No user modes behind them.
+    import ads
+    at = AppTest.from_file(HOME, default_timeout=300)
+    at.run()
+    assert not at.exception, at.exception
+    text = page_text(at)
+    assert at.session_state.step == "start"
+    assert "Find the skills employers want" in text and f"{len(ads.load()):,}" in text and "UTS subjects" in text
+    assert [b.label for b in at.button if (b.key or "").startswith("door_")] == \
+        ["Pick a role →", "Use an ad →", "See roles that fit me →"]
+    assert "Who you are" not in text and at.button(key="chat_go")
+    at.button(key="door_ad").click().run()
+    assert at.session_state.step == "inputs" and at.segmented_control(key="goal_box").value == "A job ad"
+
+
+def test_the_one_inputs_page():
+    # 17 Oct (Quan): one user, a UTS student; no study stage. "Not enrolled yet" is the last course choice.
     at = open_app()
     text = page_text(at)
     assert at.session_state.step == "inputs"
     assert "What you have and where you are heading" in text and "Your goal" in text
-    assert "Your inputs" in text and "Results" in text and "Who you are" not in text   # two steps in the top bar
-    assert "Pick a role →" not in text and not any(c.key == "stage_box" for c in at.segmented_control)
+    assert "Your inputs" in text and "Results" in text                                   # two steps in the top bar
+    assert not any(c.key == "stage_box" for c in at.segmented_control)
     course = at.selectbox(key="course_box")
-    assert course.value == "C04372" and "" not in course.options                       # MDSI by default, always a course
+    assert course.value == "C04372" and "" not in course.options                       # MDSI by default
+    assert at.segmented_control(key="enrol_box").value == "Enrolled at UTS"
     assert at.segmented_control(key="goal_box").value == "A role"
     assert at.multiselect(key="taken_box") and at.segmented_control(key="resume_mode")
-    assert at.button(key="chat_go")
 
 
 def test_role_picker_lists_eleven_roles_by_family_with_their_source():
@@ -118,7 +136,8 @@ def test_role_mode_data_engineer():
     show_gaps(at)
     text = page_text(at)
     assert "Data Engineer" in text and "skills still to learn" in text
-    assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Outside UTS", "Certifications"]
+    assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Outside UTS", "UTS courses",
+                                                              "Certifications"]
     show_tab(at, "Outside UTS")
     assert "Outside UTS" in page_text(at)
     # the source sits on the heading, how to read the bars on hover (C, 17 Oct: no footnotes)
@@ -254,8 +273,10 @@ def test_a_new_page_starts_at_the_top():
     show_tab(at, "Skills")
     open_skill(at)
     assert scroll_scripts(at)                                       # results -> one skill
-    at.pills(key="level_filter").set_value(["beginner"]).run()
-    assert not scroll_scripts(at)                                   # a filter on the same page too
+    first = next(k for k in (c.key or "" for c in at.checkbox) if k.startswith("wi_ev_"))
+    at.checkbox(key=first).check().run()                            # a tick on the same page too
+    assert not at.exception, at.exception
+    assert not scroll_scripts(at)
 
 
 def test_the_sample_ad_as_the_goal():
@@ -294,8 +315,8 @@ def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
     assert f"of {n}</span>" in text and "Metaflow" not in [b.label for b in at.button]
 
 
-def test_self_study_has_a_level_filter_and_no_cost_filter():
-    # Quan, 17 Oct: no cost filter. Free and free-to-audit resources; a paid one only when no free one teaches the skill.
+def test_self_study_is_a_ladder_with_no_filters():
+    # Quan, 17 Oct: no level or cost filter; the three cards climb from beginner, each with its level and cost.
     import backend
     import ui
     role = "Software Engineer"
@@ -303,23 +324,18 @@ def test_self_study_has_a_level_filter_and_no_cost_filter():
     pick_role(at, role)
     show_gaps(at)
     skills = at.session_state.result["skills"]
-    n = next(i for i, s in enumerate(skills) if s["status"] != "have"
-             and backend.self_study(s["skill_label"], role=role))
+    n = next(i for i, s in enumerate(skills) if s["status"] != "have" and backend.self_study_ladder(s["skill_label"], role))
     label = skills[n]["skill_label"]
     open_skill(at, n)
-    assert not any(c.key == "cost_filter" for c in at.segmented_control)
+    assert not any(c.key in ("cost_filter", "level_filter") for c in [*at.segmented_control, *at.pills])
     text = page_text(at)
-    shown = backend.self_study(label, backend.LEVELS, backend.COST_CHOICES["Include free-to-audit"], role)[:3]
-    assert shown and all(ui.esc(r["title"]) in text for r in shown)
-    at.pills(key="level_filter").set_value([]).run()
-    assert not at.exception
-    assert "Nothing at these levels: pick another level above." in page_text(at)
+    assert all(ui.esc(r["title"]) in text for r in backend.self_study_ladder(label, role))
 
 
 def test_a_skill_with_only_paid_resources_still_shows_them():
     import backend
     assert not backend.self_study("Econometrics", cost=backend.COST_CHOICES["Include free-to-audit"])
-    paid = backend.self_study("Econometrics", cost=backend.COST_CHOICES["Include paid"])
+    paid = backend.self_study_ladder("Econometrics")
     assert paid and all(r["cost"] == "paid" for r in paid)
 
 
@@ -389,10 +405,12 @@ def test_browse_ads_lists_thirty_then_more():
     assert sum((b.key or "").startswith("ad_") for b in at.button) == 60
 
 
-def test_a_jobspipe_ad_without_its_text_offers_the_original(monkeypatch, tmp_path):
-    # A fresh clone or the deployed app has no data/raw/: the ad lists with its skills and link, and cannot be used.
+def test_a_jobspipe_ad_without_its_text_can_still_be_used(monkeypatch, tmp_path):
+    # A fresh clone or the deployed app has no data/raw/: "Use this ad" asks JobsPipe for the text (17 Oct) and,
+    # when that fails (here: no network call at all), uses the skills the ad named, its title first.
     import ads
     monkeypatch.setattr(ads.paths, "RAW", tmp_path)
+    monkeypatch.setattr(ads, "fetch_text", lambda ad, post=None: None)
     ads.jobspipe_texts.cache_clear()
     ads.load.cache_clear()
     try:
@@ -401,8 +419,11 @@ def test_a_jobspipe_ad_without_its_text_offers_the_original(monkeypatch, tmp_pat
         first = next(a for a in ads.search() if a["id"].startswith("jp-"))
         at.button(key=f"ad_{first['id']}").click().run()
         assert not at.exception, at.exception
-        assert "The text of this ad is not on this machine" in page_text(at)
-        assert not any(b.key in ("use_job", "ad_full_btn") for b in at.button)
+        assert "The text of this ad is not stored here" in page_text(at)
+        assert any(b.key == "use_job" for b in at.button) and not any(b.key == "ad_full_btn" for b in at.button)
+        at.button(key="use_job").click().run()
+        assert not at.exception, at.exception
+        assert at.session_state.ad_keep.startswith(first["title"]) and "skills the ad named" in at.session_state.ad_keep
     finally:
         ads.jobspipe_texts.cache_clear()
         ads.load.cache_clear()
@@ -504,7 +525,7 @@ def test_no_footnotes_on_the_results_and_skill_pages():
     pick_role(at, "Data Engineer")
     at.multiselect(key="taken_box").set_value(["94693"]).run()                   # Big Data Engineering
     show_gaps(at)
-    for tab in ("Skills", "Your path", "Outside UTS", "Certifications"):
+    for tab in ("Skills", "Your path", "Outside UTS", "UTS courses", "Certifications"):
         show_tab(at, tab)
         assert not at.caption, (tab, [c.value for c in at.caption])
     text = page_text(at)
@@ -523,3 +544,95 @@ def test_generic_one_word_skills_are_lower_case_in_running_text():
     assert ns["lc"]("Statistics") == "statistics" and ns["lc"]("Teamwork") == "teamwork"
     assert ns["lc"]("Python") == "Python" and ns["lc"]("Spring") == "Spring" and ns["lc"]("Tableau") == "Tableau"
     assert ns["lc"]("Machine learning") == "machine learning" and ns["lc"]("Power BI") == "Power BI"
+
+
+def test_not_sure_yet_ranks_the_roles_and_a_click_opens_one():
+    # Quan's pick D (17 Oct): the third goal; the 11 roles ranked by how much of each the student already has.
+    at = open_app("fit")
+    assert at.segmented_control(key="goal_box").value == "Not sure yet"
+    assert at.button(key="show_gaps").label == "See roles that fit me"
+    at.segmented_control(key="resume_mode").set_value("No resume").run()
+    assert at.button(key="show_gaps").disabled                                           # nothing to rank with
+    at.segmented_control(key="resume_mode").set_value("Use a sample").run()
+    at.multiselect(key="taken_box").set_value(["36100", "36103", "36104"]).run()
+    show_gaps(at)
+    fit = at.session_state.fit
+    assert at.session_state.step == "fit" and len(fit) == 11
+    assert fit == sorted(fit, key=lambda r: (-r["pct"], r["role"])) and fit[0]["role"] == "Data Analyst"
+    assert "You are closest to" in page_text(at) and "Roles that fit you" in page_text(at)
+    assert not at.caption
+    at.button(key="fit_1").click().run()                                                 # the second role
+    assert not at.exception, at.exception
+    assert at.session_state.step == "results" and at.session_state.role_keep == fit[1]["role"]
+    assert at.session_state.goal_keep == "A role"
+    assert "UTS courses" in at.segmented_control(key="results_tab").options
+    at.button(key="back_fit").click().run()
+    assert at.session_state.step == "fit"
+    at.button(key="back_inputs_fit").click().run()
+    assert at.session_state.step == "inputs" and chosen_roles(at) == [fit[1]["role"]]   # the role picker shows it
+
+
+def test_uts_courses_tab_ranks_courses_and_marks_the_students_own():
+    # Quan's pick A (17 Oct): a Results tab with the courses whose best subjects teach most of the role.
+    import backend
+    at = open_app()
+    pick_role(at, "Data Analyst")
+    show_gaps(at)
+    show_tab(at, "UTS courses")
+    text = page_text(at)
+    rows = backend.course_fit("Data Analyst")
+    assert "UTS courses for a Data Analyst" in text and "your course" in text
+    assert text.count("class='k-crow") >= 6 and ui_esc(rows[0]["course"]) in text
+    assert not at.caption
+    mdsi = next(r for r in rows if r["code"] == "C04372")
+    assert mdsi["pct"] >= 70 and "Data Visualisation and Narratives" in mdsi["subjects"]
+    cyber = backend.course_fit("Cybersecurity Analyst")
+    assert cyber[0]["course"] == "Bachelor of Cybersecurity" and all(r["size"] in (4, 8, 12, 24) for r in cyber)
+
+
+def ui_esc(text: str) -> str:
+    import ui
+    return ui.esc(text)
+
+
+def test_not_enrolled_yet_hides_the_subjects_and_opens_the_courses_tab():
+    at = open_app()
+    pick_role(at, "Data Analyst")
+    at.segmented_control(key="enrol_box").set_value("Not enrolled yet").run()
+    assert not at.exception, at.exception
+    assert at.session_state.course_keep == "" and not any(m.key == "taken_box" for m in at.multiselect)
+    assert not any(s.key == "course_box" for s in at.selectbox)                           # no course list either
+    show_gaps(at)
+    assert at.session_state.results_tab == "UTS courses"
+    assert "your course" not in page_text(at)                                            # no course to mark
+    assert "not enrolled yet" in page_text(at)                                           # the top bar says so
+
+
+def test_enrolled_again_brings_the_course_back():
+    at = open_app()
+    at.selectbox(key="course_box").set_value("C04379").run()                               # Master of Business Analytics
+    at.segmented_control(key="enrol_box").set_value("Not enrolled yet").run()
+    assert at.session_state.course_keep == ""
+    at.segmented_control(key="enrol_box").set_value("Enrolled at UTS").run()
+    assert not at.exception, at.exception
+    assert at.session_state.course_keep == "C04379" and at.selectbox(key="course_box").value == "C04379"
+    assert any(m.key == "taken_box" for m in at.multiselect)
+
+
+def test_top_bar_brand_and_steps_are_links_that_keep_the_inputs():
+    # Quan, 17 Oct: "Skillabus" goes to the start page, the two steps to their pages; nothing typed is lost.
+    at = AppTest.from_file(HOME, default_timeout=300)
+    at.run()
+    assert at.button(key="home").disabled and at.button(key="step_results").disabled      # on the start page itself
+    at.button(key="step_inputs").click().run()
+    assert at.session_state.step == "inputs"
+    pick_role(at, "Data Engineer")
+    at.button(key="home").click().run()
+    assert at.session_state.step == "start" and at.session_state.role_keep == "Data Engineer"
+    at.button(key="door_role").click().run()
+    assert chosen_roles(at) == ["Data Engineer"]                                            # the inputs survived
+    show_gaps(at)
+    at.button(key="step_inputs").click().run()
+    assert at.session_state.step == "inputs" and not at.button(key="step_results").disabled
+    at.button(key="step_results").click().run()
+    assert at.session_state.step == "results"

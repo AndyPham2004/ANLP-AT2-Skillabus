@@ -181,6 +181,22 @@ def test_self_study_filters_by_level_and_cost():
     assert backend.self_study("Python", levels=()) == []
 
 
+def test_self_study_ladder_climbs_from_beginner():
+    from skillabus.resources import resources
+    skills = sorted({k for r in resources() for k in r["skills"]})
+    levels = {k: [r["level"] for r in backend.self_study(k, limit=10_000)] for k in skills}
+    # a skill with free resources at all three levels: one card of each, in order
+    three = next(k for k in skills if set(levels[k]) == set(backend.LEVELS))
+    assert [r["level"] for r in backend.self_study_ladder(three)] == list(backend.LEVELS)
+    # a skill with beginner resources only: the three easiest, as before
+    only = next(k for k in skills if set(levels[k]) == {"beginner"} and len(levels[k]) >= 3)
+    assert backend.self_study_ladder(only) == backend.self_study(only)
+    # two levels: both appear, easiest level first
+    two = next(k for k in skills if len(set(levels[k])) == 2 and len(levels[k]) >= 3)
+    ladder = [r["level"] for r in backend.self_study_ladder(two)]
+    assert set(ladder) == set(levels[two]) and ladder == sorted(ladder, key=backend.LEVELS.index)
+
+
 def test_self_study_puts_resources_about_the_skill_first():
     main = [r["skills"][0] == "Linux" for r in backend.self_study("Linux", limit=50)]
     assert True in main and False in main            # both kinds, or the order proves nothing

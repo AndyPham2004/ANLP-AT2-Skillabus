@@ -44,10 +44,24 @@ h1, h2, h3, .k-h1, .k-h2, .k-serif { font-family: 'Literata', Georgia, serif; }
 .k-legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: #9a9a94; margin-top: 12px; }
 .k-legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
 /* the top bar (no sidebar): name, horizontal stepper, context, chat button */
-.k-hsteps { display: flex; align-items: center; gap: 10px; font-size: 13px; white-space: nowrap; overflow: hidden; }
-.k-hstep { display: inline-flex; align-items: center; gap: 6px; }
-.k-hdot { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid; display: inline-grid; place-items: center; font: 500 10px 'DM Mono', monospace; box-sizing: border-box; }
-.k-hline { display: inline-block; width: 22px; border-top: 1.5px dashed rgba(255,255,255,.16); }
+/* The top bar's links: the brand (to the start page) and the two steps, drawn as the design's dots and labels */
+.st-key-home button[data-testid="stBaseButton-tertiary"] { padding: 0; min-height: 0; }
+.st-key-home button p { font-family: 'Literata', Georgia, serif !important; font-size: clamp(18px, 1.9vw, 22px) !important; font-weight: 500; color: #e8e6e1 !important; white-space: nowrap; }
+.st-key-home button p::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #4fd1b8; margin-right: 8px; vertical-align: 2px; }
+.st-key-home button:disabled { opacity: 1; cursor: default; }
+.st-key-steps button[data-testid="stBaseButton-tertiary"] { padding: 0 2px; min-height: 0; }
+.st-key-steps button:disabled { opacity: 1; cursor: default; }
+.st-key-steps div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] p,
+.st-key-home div[data-testid="stButton"] button[data-testid="stBaseButton-tertiary"] p { white-space: nowrap !important; }
+.st-key-steps button p { font-size: 13px !important; display: inline-flex; align-items: center; gap: 6px; }
+.st-key-steps button p::before { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid currentColor; font: 500 10px 'DM Mono', monospace; box-sizing: border-box; }
+.st-key-step1_active button p::before, .st-key-step1_todo button p::before { content: "1"; }
+.st-key-step2_active button p::before, .st-key-step2_todo button p::before { content: "2"; }
+.st-key-step1_done button p::before, .st-key-step2_done button p::before { content: "✓"; background: #4fd1b8; border-color: #4fd1b8; color: #0a0b0c; }
+.st-key-step1_done button p, .st-key-step2_done button p { color: #4fd1b8 !important; }
+.st-key-step1_active button p, .st-key-step2_active button p { color: #e8e6e1 !important; font-weight: 500; }
+.st-key-step1_todo button p, .st-key-step2_todo button p { color: #6b6c68 !important; }
+.k-hline { display: inline-block; width: 22px; border-top: 1.5px dashed rgba(255,255,255,.16); vertical-align: middle; }
 .k-hctx { font-size: 12px; color: #6b6c68; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .k-rule { border-top: 1px solid rgba(255,255,255,.08); margin: 4px 0 18px; }
 section[data-testid="stSidebar"], div[data-testid="stSidebarCollapsedControl"], button[data-testid="stExpandSidebarButton"] { display: none !important; }
@@ -149,6 +163,18 @@ button[data-testid="stBaseButton-pills"]:hover, button[data-testid="stBaseButton
 .k-count.o { background: transparent; border: 1px solid; }
 .k-swatch { display: inline-block; width: 16px; height: 6px; border-radius: 3px; background: #4fd1b8; margin-right: 7px; vertical-align: middle; }
 .k-dotted { border-bottom: 1px dotted currentColor; }
+/* the start page: the size of the data under the three doors; the third door (not sure yet) stands out */
+.k-nums { display: flex; gap: 36px; margin-top: 26px; }
+.k-nums div { display: grid; } .k-nums b { font: 500 26px 'Literata', Georgia, serif; color: #e8e6e1; }
+.k-nums span { font-size: 12.5px; color: #9a9a94; }
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-door_fit_box), .st-key-door_fit_box[data-testid="stVerticalBlockBorderWrapper"] { border-color: rgba(79,209,184,.55); background: rgba(79,209,184,.04); }
+/* the UTS courses tab: one row per course, the student's own course tinted */
+.k-crow { display: grid; grid-template-columns: minmax(300px, 38%) 1fr 56px; gap: 6px 18px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(255,255,255,.08); }
+.k-crow.mine { background: rgba(143,188,255,.06); margin: 0 -12px; padding: 10px 12px; border-radius: 6px; }
+.k-crow .c { font-size: 15px; font-weight: 500; } .k-crow .c small { display: block; font-weight: 400; font-size: 12px; color: #9a9a94; }
+.k-crow .subs { grid-column: 1 / -1; display: flex; gap: 0; flex-wrap: wrap; }
+.k-crow .subs .k-chip { font-size: 12px; padding: 2px 9px; }
+.k-yours { font: 500 10.5px 'Public Sans', system-ui, sans-serif; color: #8fbcff; border: 1px solid rgba(143,188,255,.5); border-radius: 99px; padding: 1px 7px; margin-left: 8px; vertical-align: 2px; }
 div[data-testid="stDataFrame"] { border-radius: 6px; overflow: hidden; }
 div[data-testid="stTextArea"] textarea { font-family: 'Literata', Georgia, serif; font-size: 16px; line-height: 1.6; }
 /* A chosen item in a multiselect: Streamlit paints it in the (light) primary colour with light text. Dark chip instead.

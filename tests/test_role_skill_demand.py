@@ -276,7 +276,7 @@ def test_committed_ats_file_has_roles_and_masked_text():
 def test_jobspipe_blocks_cover_every_role_from_the_committed_skills_file():
     jp = INPUTS["jobspipe"]
     assert list(jp.columns) == ["ad_id", "role", "title", "company", "location", "date_posted", "employer_type", "seniority",
-                                "providers", "url", "n_chars", "skills", "esco_tags"]
+                                "providers", "url", "n_chars", "skills", "esco_tags", "fetched"]
     assert set(jp.role) == set(FAMILIES) and (jp.role.value_counts() >= MIN_ROLE_ADS).all()   # every role its own block
     assert not jp.duplicated("ad_id").any() and not jp.duplicated(["company", "title"]).any()
     assert jp.url.str.startswith("http").all()                                                 # the link to the posting
