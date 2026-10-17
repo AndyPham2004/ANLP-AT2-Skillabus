@@ -764,14 +764,14 @@ def skills_section(skills: list[dict], counted: bool, noun: str, role: str | Non
         else:
             bar_col.markdown(f"<span class='k-small k-mute'>{CORE_SOURCE.get(s.get('core_source'), '')}</span>",
                              unsafe_allow_html=True)
-        status_col.markdown(ui.status_html(s["status"]), unsafe_allow_html=True)
+        status_col.markdown(status_cell(s), unsafe_allow_html=True)
     also = ss.result.get("also_in_ad") or []       # GPT-4o-mini found them; the vocabulary has no count for them
     if also:
         st.caption(f"Also in the ad, outside our skills list: {', '.join(also)}. Found by GPT-4o-mini; "
                    "not counted above.")
     st.caption(bars_note(skills, counted, role) + " Click a skill for the evidence and where to learn it.")
-    off_cv = [lc(s["skill_label"]) for s in skills if from_subject(s)]
-    if off_cv and ss.resume_text:
+    off_cv = [lc(s["skill_label"]) for s in skills if not_on_cv(s)]
+    if off_cv:
         st.caption(f"From subjects you have taken but not on your resume: {', '.join(off_cv)}. "
                    "Add them to your resume: employers read it, not your transcript.")
     if is_ad(ss.result) and ss.ad_keep.strip():
@@ -949,6 +949,19 @@ def from_subject(s: dict) -> re.Match | None:
     return TAKEN_EVIDENCE.match(s.get("resume_evidence") or "") if s["status"] == "have" else None
 
 
+def not_on_cv(s: dict) -> bool:
+    """Had from a subject, but the resume the student gave does not show it: an employer would not see it."""
+    return bool(from_subject(s)) and bool(ss.resume_text)
+
+
+def status_cell(s: dict, long: bool = False) -> str:
+    """A skill's status; amber "not on CV" for one the student has from a subject but not on the resume (Quan, 17 Oct:
+    the note under the list was easy to miss)."""
+    if not_on_cv(s):
+        return ui.status_html("partial", "you have it · not on your CV" if long else "have · not on CV")
+    return ui.status_html(s["status"], ui.STATUS_TEXT[s["status"]] if long else None)
+
+
 def resume_note(s: dict) -> str:
     label = s["skill_label"]
     if s["status"] == "have":
@@ -1083,7 +1096,7 @@ def page_evidence() -> None:
     st.button("← All skills", key="back_results", type="tertiary", on_click=go, args=("results",))
     new = ui.chip("✦ New skill", colour=ui.EMERGING) if s["emerging"] else ""
     st.markdown("<div style='display:flex;align-items:baseline;gap:16px;flex-wrap:wrap'>"
-                + ui.h1(ui.esc(s["skill_label"]), "lg") + ui.status_html(s["status"], ui.STATUS_TEXT[s["status"]])
+                + ui.h1(ui.esc(s["skill_label"]), "lg") + status_cell(s, long=True)
                 + new + "</div>", unsafe_allow_html=True)
     # One band, not three grey cards (Quan's pick, 17 Oct): the trend as bars, the rest as coloured lines.
     st.markdown(f"<div class='k-band'><div>{demand_chart(s, counted, res.get('weigh_role') or role)}</div>"
