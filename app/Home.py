@@ -889,7 +889,8 @@ def resume_note(s: dict) -> str:
         taken = re.match(r"From (\d{5,6}) (.+?) \(taken\)$", ev)      # credit_taken(): "From 94692 Data Science Practice (taken)"
         if taken:
             return f"Covered by {taken.group(2)}, a subject you have taken."
-        return ev or f"Your resume mentions {lc(label)}."
+        # The skill page shows this after "You have it." with no label above it, so it says where it comes from.
+        return f"Your resume says: “{ev}”." if ev else f"Your resume mentions {lc(label)}."
     if s["status"] == "partial":
         return f"Your resume says: \u201c{s.get('resume_evidence', '')}\u201d. Related, not quite the same skill."
     if ss.user_type == "elective":
@@ -902,28 +903,51 @@ def short(text: str, n: int = 160) -> str:
     return text if len(text) <= n else text[:n - 1].rstrip() + "\u2026"
 
 
-def fact(label: str, value: str, sub: str = "", serif: bool = False) -> str:
-    """One of the fact cards at the top of a skill page; `value` is already HTML-safe."""
-    style = "font-family:'Literata',Georgia,serif;font-size:16px" if serif else "font-size:15px"
-    html = (f"<div class='k-small k-dim'>{label}</div>"
-            f"<div class='k-soft' style='{style};line-height:1.45;margin-top:3px'>{value}</div>")
-    if sub:
-        html += f"<div class='k-small k-mute' style='margin-top:6px'>{ui.esc(sub)}</div>"
-    return ui.card(html)
+BAR_PX = 80                      # a 100% bar on the skill page; every bar on the same 0-100% scale
 
 
-def demand_fact(s: dict, counted: bool, role: str | None) -> tuple[str, str, str, bool]:
-    """How often employers ask for the skill, as a fact card (label, value, sub, serif)."""
+def demand_chart(s: dict, counted: bool, role: str | None) -> str:
+    """Left of the skill page's band: the share of ads that ask for the skill, 2019-22 next to now."""
     if not counted:
-        return ("Core skill", ui.esc(CORE_SOURCE.get(s.get("core_source"), "core skill of the role")),
-                "no Australian ad counts for this role yet", False)
+        return (f"<div class='k-small k-dim'>Core skill</div>"
+                f"<div class='k-soft' style='margin-top:4px'>{ui.esc(CORE_SOURCE.get(s.get('core_source'), 'core skill of the role'))}</div>"
+                "<div class='k-small k-mute' style='margin-top:4px'>no Australian ad counts for this role yet</div>")
     pct, old = s.get("demand_pct"), s.get("demand_pct_2019_22")
     who = role or backend.DEFAULT_ROLE
-    value = f"{pct:.0f}% of {s.get('total_ads') or 'the'} {ui.esc(who)} ads" if pct is not None else "no count"
-    from skillabus.match import SOURCE_NAMES        # "jobspipe_2026" -> ("JobsPipe", "Sep-Oct 2026")
-    when = SOURCE_NAMES.get(s.get("demand_source"), ("", s.get("demand_period") or ""))[1]
-    sub = " · ".join(x for x in (when, f"{old:.0f}% in 2019-22" if old is not None else "") if x)
-    return ("Employers ask", value, sub, False)
+    if pct is None:
+        return f"<div class='k-small k-dim'>Employers ask</div><div class='k-soft'>No count in the {ui.esc(who)} ads</div>"
+    from skillabus.match import SOURCE_NAMES, block_2019_22      # "jobspipe_2026" -> ("JobsPipe", "Sep-Oct 2026")
+    when = SOURCE_NAMES.get(s.get("demand_source"), ("", s.get("demand_period") or "now"))[1]
+    bars = []
+    if old is not None:
+        then_ads = (block_2019_22(who) or {}).get("total_ads")
+        bars.append((old, "2019-22", f"{then_ads:,} ads" if then_ads else "", "rgba(143,188,255,.4)"))
+    bars.append((pct, when, f"{s['total_ads']:,} ads" if s.get("total_ads") else "", ui.LINK))
+    cols = "".join(f"<div class='k-tbar' style='--c:{c}'><span>{v:.0f}%</span>"
+                   f"<b style='height:{max(2, v / 100 * BAR_PX):.0f}px'></b></div>" for v, _, _, c in bars)
+    labels = "".join(f"<div>{ui.esc(w)}<br><span class='k-dim'>{n}</span></div>" for _, w, n, _ in bars)
+    return (f"<div class='k-small k-dim'>Employers ask · share of {ui.esc(who)} ads</div>"
+            f"<div class='k-bars' style='--n:{len(bars)}'>{cols}</div>"
+            f"<div class='k-bars-x' style='--n:{len(bars)}'>{labels}</div>")
+
+
+STATUS_LINE = {"have": ("✓", "You have it."), "partial": ("~", "Partly."), "missing": ("✕", "Missing.")}
+
+
+def fact_lines(s: dict) -> str:
+    """Right of the band: what the ad says (job seeker), the student's status, and "new skill" in plain words."""
+    lines = []
+    if ss.user_type == "job":
+        lines.append(("ad", "“", f"The ad says <q>“{ui.esc(short(s['ad_evidence'], 170))}”</q>"))
+    icon, word = STATUS_LINE[s["status"]]
+    lines.append((s["status"], icon, f"<b>{word}</b> {ui.esc(resume_note(s))}"))
+    if s["emerging"]:                          # no concept in ESCO, the EU's skills list the matcher uses
+        old = s.get("demand_pct_2019_22")
+        before = "Employers barely asked for it before 2022. " if old is not None and old < 1 else ""
+        lines.append(("new", "✦", f"<b>New skill.</b> {before}Too new for the EU's official skills list, "
+                                  "so Skillabus tracks it itself."))
+    return "".join(f"<div class='k-line {kind}'><span class='k-ic'>{icon}</span><span>{html}</span></div>"
+                   for kind, icon, html in lines)
 
 
 def uts_cards(label: str, res: dict) -> None:
@@ -989,18 +1013,13 @@ def page_evidence() -> None:
     role = res.get("role")
     counted = role is None or backend.has_ad_counts(role)
     st.button("← All skills", key="back_results", type="tertiary", on_click=go, args=("results",))
+    new = ui.chip("✦ New skill", colour=ui.EMERGING) if s["emerging"] else ""
     st.markdown("<div style='display:flex;align-items:baseline;gap:16px;flex-wrap:wrap'>"
                 + ui.h1(ui.esc(s["skill_label"]), "lg") + ui.status_html(s["status"], ui.STATUS_TEXT[s["status"]])
-                + "</div>", unsafe_allow_html=True)
-
-    facts = [demand_fact(s, counted, role)]
-    if ss.user_type == "job":
-        facts.append(("The ad says", f"\u201c{ui.esc(short(s['ad_evidence'], 170))}\u201d", "", True))
-    facts.append(("Your resume" if ss.user_type != "elective" else "Your subjects", ui.esc(resume_note(s)), "", False))
-    if s["emerging"]:
-        facts.append(("✦ Emerging skill", "No ESCO concept yet", "kept and tracked as an emerging skill", False))
-    for col, f in zip(st.columns(len(facts), gap="medium"), facts):
-        col.markdown(fact(*f), unsafe_allow_html=True)
+                + new + "</div>", unsafe_allow_html=True)
+    # One band, not three grey cards (Quan's pick, 17 Oct): the trend as bars, the rest as coloured lines.
+    st.markdown(f"<div class='k-band'><div>{demand_chart(s, counted, role)}</div>"
+                f"<div class='k-lines'>{fact_lines(s)}</div></div>", unsafe_allow_html=True)
 
     if s["status"] == "have":
         st.markdown("<div class='k-serif k-soft' style='font-size:18px;line-height:1.5;margin-top:8px'>You already have "

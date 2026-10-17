@@ -126,6 +126,27 @@ div[data-testid="stChatMessageAvatarUser"], div[data-testid="stChatMessageAvatar
   background: #1b1e22 !important; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; color: #9a9a94 !important; }
 div[data-testid="stChatMessageAvatarAssistant"] { border-color: #8fbcff; color: #8fbcff !important; }
 div[data-testid="stChatMessageAvatarUser"] svg, div[data-testid="stChatMessageAvatarAssistant"] svg { fill: currentColor; color: inherit; }
+/* Skill page: one band. Left, the share of ads then and now on one 0-100% scale; right, a coloured line per fact. */
+.k-band { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 32px; align-items: center;
+  background: #1b1e22; border: 1px solid rgba(255,255,255,.1); border-radius: 8px; padding: 18px 22px; margin: 6px 0 18px; }
+@media (max-width: 760px) { .k-band { grid-template-columns: 1fr; gap: 18px; } }
+.k-bars, .k-bars-x { display: grid; grid-template-columns: repeat(var(--n), 96px); gap: 16px; padding: 0 12px; }
+.k-bars { height: 112px; align-items: end; border-bottom: 1px solid rgba(255,255,255,.16); margin-top: 8px; }
+.k-tbar { display: grid; justify-items: center; align-content: end; gap: 4px; }
+.k-tbar span { font-family: 'DM Mono', monospace; font-size: 16px; color: #e8e6e1; font-variant-numeric: tabular-nums; }
+.k-tbar b { width: 44px; background: var(--c); border-radius: 3px 3px 0 0; }
+.k-bars-x div { text-align: center; font-size: 12.5px; color: #9a9a94; line-height: 1.35; padding-top: 6px; }
+.k-lines { display: grid; gap: 12px; }
+.k-line { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 15px;
+  line-height: 1.5; color: #c9c8c2; }
+.k-line b { font-weight: 500; }
+.k-line q { font-family: 'Literata', Georgia, serif; quotes: none; }
+.k-ic { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 600;
+  background: rgba(255,255,255,.06); color: #9a9a94; }
+.k-line.have .k-ic { background: rgba(79,209,184,.14); color: #4fd1b8; } .k-line.have b { color: #4fd1b8; }
+.k-line.partial .k-ic { background: rgba(242,183,79,.14); color: #f2b74f; } .k-line.partial b { color: #f2b74f; }
+.k-line.missing .k-ic { background: rgba(240,109,132,.14); color: #f06d84; } .k-line.missing b { color: #f06d84; }
+.k-line.new .k-ic { background: rgba(184,156,255,.15); color: #b89cff; } .k-line.new b { color: #b89cff; }
 /* Certifications: cards in rows of three, like the path's subject cards. */
 .k-certs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 4px 0 6px; }
 .k-cert { background: #1b1e22; border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 14px 16px;
