@@ -10,6 +10,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 # The embedding switch as the shell set it. conftest is imported before any test file, so a test file that
 # changes it at import time shows up as a difference (test_match.py checks).
 NO_EMBED_AT_START = os.environ.get("SKILLABUS_NO_EMBED")
+LIVE_KEYS = ("OPENAI_API_KEY", "LIGHTCAST_CLIENT_ID", "LIGHTCAST_CLIENT_SECRET", "JOBSPIPE_API_KEY",
+             "ADZUNA_APP_ID", "ADZUNA_APP_KEY")
+
+
+@pytest.fixture(autouse=True)
+def no_live_keys(monkeypatch):
+    """No test calls a paid service: the keys are removed and load_dotenv does nothing, for every test.
+    A test that needs a key sets a fake one itself (monkeypatch.setenv) and stubs the call."""
+    for key in LIVE_KEYS:
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **k: False)
 
 
 @pytest.fixture
