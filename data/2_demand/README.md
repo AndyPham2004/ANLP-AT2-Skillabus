@@ -66,7 +66,9 @@ role's demand.
 - `demand_pct_2026` = the role's first 2026 block, the same order (equal to `demand_pct` today).
 - `recommend._weight` = `demand_pct + 1`; the 2026 floor for skills new since 2022 is gone, the 2026 shares
   name them. The sample ad's path went from 36106 -> 36121 -> 32130 (87.9% of demand, 2019-22 weights) to
-  36121 -> 36106 -> 32130 (84.9%; LLMs now weigh 34% and no subject teaches them).
+  36121 -> 36106 -> 32130 (84.9%; LLMs now weigh 34% and no subject teaches them). On 17 Oct it became
+  31250 -> 43007 -> 36106 (95.5%, then 96.9% with the larger JobsPipe sample, #148, #160) and, once Bachelor-only
+  subjects were closed to an MDSI student (#166), 36106 -> 36121 -> 32130 again (82.8%; LLMs stay open).
 - A role's 15 skills leave out soft skills and certifications. Every gap row carries `demand_source`,
   `demand_period`, `total_ads` and `text_type`; the caption reads "70 JobsPipe Data Engineer ads, Sep-Oct
   2026, full text."
