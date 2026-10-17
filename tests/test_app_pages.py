@@ -254,8 +254,10 @@ def test_a_new_page_starts_at_the_top():
     show_tab(at, "Skills")
     open_skill(at)
     assert scroll_scripts(at)                                       # results -> one skill
-    at.pills(key="level_filter").set_value(["beginner"]).run()
-    assert not scroll_scripts(at)                                   # a filter on the same page too
+    first = next(k for k in (c.key or "" for c in at.checkbox) if k.startswith("wi_ev_"))
+    at.checkbox(key=first).check().run()                            # a tick on the same page too
+    assert not at.exception, at.exception
+    assert not scroll_scripts(at)
 
 
 def test_the_sample_ad_as_the_goal():
@@ -294,8 +296,8 @@ def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
     assert f"of {n}</span>" in text and "Metaflow" not in [b.label for b in at.button]
 
 
-def test_self_study_has_a_level_filter_and_no_cost_filter():
-    # Quan, 17 Oct: no cost filter. Free and free-to-audit resources; a paid one only when no free one teaches the skill.
+def test_self_study_is_a_ladder_with_no_filters():
+    # Quan, 17 Oct: no level or cost filter; the three cards climb from beginner, each with its level and cost.
     import backend
     import ui
     role = "Software Engineer"
@@ -303,23 +305,18 @@ def test_self_study_has_a_level_filter_and_no_cost_filter():
     pick_role(at, role)
     show_gaps(at)
     skills = at.session_state.result["skills"]
-    n = next(i for i, s in enumerate(skills) if s["status"] != "have"
-             and backend.self_study(s["skill_label"], role=role))
+    n = next(i for i, s in enumerate(skills) if s["status"] != "have" and backend.self_study_ladder(s["skill_label"], role))
     label = skills[n]["skill_label"]
     open_skill(at, n)
-    assert not any(c.key == "cost_filter" for c in at.segmented_control)
+    assert not any(c.key in ("cost_filter", "level_filter") for c in [*at.segmented_control, *at.pills])
     text = page_text(at)
-    shown = backend.self_study(label, backend.LEVELS, backend.COST_CHOICES["Include free-to-audit"], role)[:3]
-    assert shown and all(ui.esc(r["title"]) in text for r in shown)
-    at.pills(key="level_filter").set_value([]).run()
-    assert not at.exception
-    assert "Nothing at these levels: pick another level above." in page_text(at)
+    assert all(ui.esc(r["title"]) in text for r in backend.self_study_ladder(label, role))
 
 
 def test_a_skill_with_only_paid_resources_still_shows_them():
     import backend
     assert not backend.self_study("Econometrics", cost=backend.COST_CHOICES["Include free-to-audit"])
-    paid = backend.self_study("Econometrics", cost=backend.COST_CHOICES["Include paid"])
+    paid = backend.self_study_ladder("Econometrics")
     assert paid and all(r["cost"] == "paid" for r in paid)
 
 

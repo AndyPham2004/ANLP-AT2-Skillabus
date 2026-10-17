@@ -214,8 +214,7 @@ DEFAULTS = {
     "show_details": False, "goal_keep": "A role", "ad_keep": "", "ad_mode_keep": "Try a sample", "ad_pick": None,
     "taken_keep": [], "result": None, "engine": "", "ran": False, "gap": None, "resume_text": "",
     "resume_label": None, "role_keep": backend.DEFAULT_ROLE, "course_keep": backend.HOME_COURSE,
-    "gpt_keep": backend.llm_enabled(),
-    "level_keep": list(backend.LEVELS), "toast": None,
+    "gpt_keep": backend.llm_enabled(), "toast": None,
 }
 for k, v in DEFAULTS.items():
     ss.setdefault(k, v)
@@ -1093,29 +1092,20 @@ def uts_cards(label: str, res: dict) -> None:
                                             ui.tip_lines(lines))]), unsafe_allow_html=True)
 
 
-@st.fragment
 def self_study_cards(label: str, role: str | None) -> None:
-    """Self-study: the level filter, then up to three resources as cards. A fragment: a filter redraws this only.
-
-    No cost filter (Quan, 17 Oct): free and free-to-audit resources, and paid ones only for a skill no free one
-    teaches (Econometrics); each card shows its cost."""
-    ss.setdefault("level_filter", list(ss.level_keep))
-    head, f1 = st.columns([1.1, 3.1], vertical_alignment="center", gap="medium")
-    head.markdown(ui.eyebrow("Self-study <span class='k-dim'>· not for credit</span>"), unsafe_allow_html=True)
-    f1.pills("Level", list(backend.LEVELS), key="level_filter", selection_mode="multi", label_visibility="collapsed")
-    levels = list(ss.level_filter or [])
-    ss.level_keep = levels
-    found = (backend.self_study(label, levels, backend.COST_CHOICES["Include free-to-audit"], role)
-             or backend.self_study(label, levels, backend.COST_CHOICES["Include paid"], role))
-    if not found and backend.self_study(label, backend.LEVELS, backend.COST_CHOICES["Include paid"], role):
-        st.markdown("<span class='k-mute'>Nothing at these levels: pick another level above.</span>",
-                    unsafe_allow_html=True)
-    elif not found:
+    """Self-study: up to three resources as a ladder, beginner first (backend.self_study_ladder). No filters (Quan,
+    17 Oct): the level and cost controls mostly changed nothing, as most skills have beginner resources only;
+    each card shows its level and cost."""
+    found = backend.self_study_ladder(label, role)
+    levels = [lvl for lvl in backend.LEVELS if any(r["level"] == lvl for r in found)]
+    aside = f" <span class='k-dim'>· {' → '.join(levels)}</span>" if len(levels) > 1 else ""
+    st.markdown(ui.eyebrow(f"Self-study <span class='k-dim'>· not for credit</span>{aside}"), unsafe_allow_html=True)
+    if not found:
         st.markdown("<span class='k-mute'>No self-study resource in our list for this skill yet.</span>",
                     unsafe_allow_html=True)
-    else:
-        for col, r in zip(st.columns(3, gap="medium"), found[:3]):
-            col.markdown(resource_html(r), unsafe_allow_html=True)
+        return
+    for col, r in zip(st.columns(3, gap="medium"), found):
+        col.markdown(resource_html(r), unsafe_allow_html=True)
 
 
 def page_evidence() -> None:
