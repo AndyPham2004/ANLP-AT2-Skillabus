@@ -1,1 +1,21 @@
 ad_id,skill_label,in_dictionary,evidence_text,annotator
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Jira,y,"Jira",nhinguyenuts
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,Confluence,y,"Confluence",nhinguyenuts
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,ISO 27001,y,"ISO27001:2022",nhinguyenuts
+ats-lv-8a01506d-c642-4e08-8b2e-3dacead446f6,SOC 2,y,"SOC 2 Type 2",nhinguyenuts
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Python,y,"reusable code in Python",nhinguyenuts
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Natural language processing,y,"Applying techniques such as NLP",nhinguyenuts
+ats-as-7c3e039c-02ee-4eba-9dc2-d2c19ba21c6a,Computer vision,y,"NLP and computer vision",nhinguyenuts
+ats-gh-8238733,Linux,y,"Deep expertise in Linux systems",nhinguyenuts
+ats-gh-8238733,AWS,y,"Linux fleets across AWS, Azure",nhinguyenuts
+ats-gh-8238733,Azure,y,"Linux fleets across AWS, Azure",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,BGP,n,"IP fabrics using BGP, EVPN-VXLAN and ECMP",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,EVPN-VXLAN,n,"IP fabrics using BGP, EVPN-VXLAN and ECMP",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,ECMP,n,"IP fabrics using BGP, EVPN-VXLAN and ECMP",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,GPU networking,n,"GPU and storage networks",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,QoS,n,"including QoS, ECN and Priority Flow Control",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,ECN,n,"including QoS, ECN and Priority Flow Control",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,Priority Flow Control,n,"including QoS, ECN and Priority Flow Control",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,RoCEv2,n,"Understanding of RoCEv2, RDMA",nhinguyenuts
+ats-lv-4c09a935-9ad4-4e94-8377-ee960d258dea,RDMA,n,"Understanding of RoCEv2, RDMA",nhinguyenuts
+ats-sr-6000000001468836,C++,y,"comfortable with C++",nhinguyenuts

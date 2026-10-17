@@ -232,12 +232,15 @@ def test_analyse_job_mode_still_works():
     assert "outside_recommendations" in result
     source, _, n_ads, _ = demand_meta()                        # a pasted ad is weighed by the Data Scientist ads
     assert {(s["demand_source"], s["total_ads"]) for s in result["skills"]} == {(source, n_ads)}
-    # 17 Oct: a bare "AI" no longer names the skill, so finance subjects titled "AI-..." stop outranking
-    # 43007 Advanced Artificial Intelligence and the path covers LLMs (before: 84.9%, LLMs not covered).
+    # 17 Oct (#162): 31250 and 43007 are Bachelor-only subjects, closed to an MDSI student: they are dropped with
+    # the reason and never on the path (before #162 the path was 31250, 43007, 36106 and covered LLMs).
     path, recs = result["learning_path"], {r["subject_code"]: r for r in result["recommendations"]}
+    dropped = {d["subject_code"]: d["reason"] for d in path["dropped"]}
+    assert not {"31250", "43007"} & set(path["subjects"])
+    assert "43007" in dropped and "undergraduate" in dropped["43007"]
+    assert all("undergraduate" in dropped[c] for c in ("31005", "41040") if c in dropped)
     weight = {s["skill_label"]: s["demand_pct"] + 1 for s in result["skills"] if s["status"] != "have"}
     closed = {c for code in path["subjects"] for c in recs.get(code, {}).get("covers", [])} & set(weight)
-    assert "Large language models" in closed
     # The "covers X% of the employer demand" line agrees with the gaps the path closes (+1 as recommend._weight).
     assert path["demand_covered_pct"] == round(100 * sum(weight[k] for k in closed) / sum(weight.values()), 1)
 

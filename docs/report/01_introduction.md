@@ -34,7 +34,7 @@ lacks) and recommends the few UTS subjects that close the most demand-weighted g
 recommendation quotes the sentence of the subject outline that justifies it and says whether it
 came from a learning objective, a weekly topic or the description. Gaps no subject covers are
 filled with outside courses and certifications, marked as not counting for credit. For a sample
-Data Scientist ad the path is 31250, 43007, 36106, which cover 96.9% of the demand-weighted gap.
+Data Scientist ad the path is 36106, 36121, 32130, which cover 82.8% of the demand-weighted gap.
 
 ## 1.4 Contributions
 

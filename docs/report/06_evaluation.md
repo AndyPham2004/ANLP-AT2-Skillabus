@@ -9,7 +9,7 @@ We ran every stage of the pipeline on hand-labelled test sets, using `python -m 
 | Extraction | 20 Seek ads, 217 skill labels | Dictionary F1 0.767; spaCy 0.690; GPT-4o-mini 0.585 (0.777 / 0.796 / 0.792 on dictionary skills) |
 | Matching | 45 CV–JD pairs, 287 skill rows | Accuracy 0.909 end to end, 0.927 with gold ad skills |
 | Evidence ranking | 87 have/partial rows | Hit@5 0.943, MRR 0.829 |
-| Subject recommendation | 33 skill–subject pairs | P@3 0.95 to 1.00, but not a method comparison |
+| Subject recommendation | 33 pairs, 13 data skills; 30 pairs, 11 IT skills | Data: P@3 0.95 to 1.00 (not a method comparison); IT: 0.87 (y or partly), 0.43 (y only) |
 | Chat | 15 questions | Hit@5 0.933; judge relevance 4.13, faithfulness 4.33 (of 5) |
 | Annotator agreement | 20 ads, two annotators | Kappa 0.856 (dictionary skills), 0.686 (all labels) |
 
@@ -58,6 +58,10 @@ The right sentence is in the top five for 94% of rows and is usually first. TF-I
 ## 6.5 Subject recommendation and chat
 
 **Subject P@3** is 0.950 for keyword and TF-IDF and 1.000 for embeddings against the 33 labelled pairs (Appendix B.5). This is not a comparison of the three methods. For a skill in the dictionary, `subject_evidence()` gives similarity 1.0 to every subject that names the skill, so those subjects always come first; all three methods share the same top three for 12 of 13 skills. Also, only about half of the recommended subjects carry a label (coverage 0.51 to 0.54), and 25 of the 33 labelled pairs are "y", so P@3 is optimistic.
+
+**IT skills.** Phuong Nhi checked the top three subjects for the 15 most demanded IT skills of the seven non-data roles against the Handbook (`inputs/it_skill_subjects_to_check.csv`). All 30 recommended pairs are labelled, unlike the data set above: P@3 is 0.87 counting "partly" and 0.43 counting only "y", and the first subject is right for 10 of the 11 skills that have one. IT skills are more often touched (one weekly topic, a platform named as an example) than taught. The wrong matches are word-sense errors: incident response matched a clinical incident-management subject, and test automation matched two iOS subjects whose code is graded by automated tests and one on industrial automation. Terraform, CI/CD, Kubernetes and SIEM have no UTS subject; the outside courses cover them.
+
+**Learning paths.** Van Thong read the 11 role paths of an MDSI student (`labels/role_paths_review.csv`): 26 of 32 path subjects were sensible, but 16 rows were subjects UTS lists only in Bachelor courses, among them 31250 and 43007 on the sample ad's path. The Handbook gives them no access rule, so the recommender had treated them as open; `enrolment()` now closes Bachelor-only subjects to a postgraduate student, and the sample path is 36106, 36121, 32130 (82.8% of the demand-weighted gap).
 
 **Chat retrieval.** At least one subject named in the reference answer is in the top five for 93.3% of the 15 questions with TF-IDF and 80.0% with embeddings; recall of all cited subjects is 77.8% and 56.7%. The difference is two questions. **LLM judge.** GPT-4o-mini answered each question from the five TF-IDF passages, and GPT-4o-mini then scored the answer against the reference from 1 to 5. Mean relevance is 4.13 and mean faithfulness 4.33; 14 of 15 answers (93%) score 4 or 5 on faithfulness. The weakest, Q05, gave a wrong subject code and left out techniques the reference lists. The same model writes and judges, which tends to flatter it, and the answers are written afresh each run: three runs gave relevance 4.13 to 4.40 and faithfulness 4.33 to 4.47. A difference below about 0.3 is therefore not a result.
 
