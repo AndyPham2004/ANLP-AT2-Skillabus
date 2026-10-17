@@ -1,73 +1,97 @@
 # 5 System
 
-> Draft by Quan (with Claude), 4 Oct 2026. Screens: `docs/wireframes/`. Code: `app/`, `src/skillabus/`.
+> Phuong Nhi, 17 Oct 2026, rewritten for the app after #143 and #150 (#158). Code: `src/skillabus/` (pipeline),
+> `app/` (Streamlit). Screenshots: `docs/report/figures/`.
 
 ## 5.1 Architecture
 
 ```mermaid
 flowchart LR
-  subgraph Inputs
-    AD[Job ad<br/>pasted]
+  subgraph In[Inputs]
+    AD[Job ad<br/>pasted, sample or browsed]
     CV[Resume<br/>PDF or text]
-    ROLE[Target role<br/>top-15 Seek skills]
+    ROLE[Target role<br/>11 IT roles]
   end
-  subgraph Pipeline [src/skillabus]
-    EX[Extract<br/>dictionary → spaCy NER → GPT-4o-mini]
-    NO[Normalise<br/>dictionary → ESCO exact → ESCO embedding<br/>→ Lightcast → emerging]
-    MA[Match<br/>have / partial / missing]
-    RE[Recommend<br/>evidence by layer<br/>+ demand-weighted path]
+  subgraph P[Pipeline: src/skillabus]
+    EX[extract<br/>vocabulary → spaCy → GPT-4o-mini]
+    NO[normalise<br/>vocabulary → ESCO exact → ESCO embedding<br/>→ Lightcast → emerging]
+    MA[match<br/>have / partial / missing + demand]
+    RE[recommend<br/>subject evidence by layer<br/>→ greedy path → outside courses]
   end
-  subgraph Data
-    SEED[(138-skill dictionary<br/>skills_seed_v2.csv)]
-    ESCO[(ESCO v1.2.1<br/>13,960 skills)]
-    DEM[(Demand %<br/>3,204 Seek ads)]
-    SUB[(Subject profiles<br/>70 subjects, 1,039 rows<br/>3 layers, assessment pending)]
+  subgraph D[Data]
+    VOC[(Skill vocabulary<br/>ESCO + 145 added skills)]
+    DEM[(Role × skill demand<br/>2026 job-board ads)]
+    SUB[(Subject profiles<br/>360 subjects, 6,853 rows)]
+    REQ[(Prerequisites<br/>and sessions)]
+    RES[(Self-study and<br/>certifications)]
   end
-  subgraph App [Streamlit]
-    UI[Gap chart · shortest path<br/>evidence panel · votes]
-    CHAT[Chat, RAG<br/>retrieve: FAISS or TF-IDF<br/>→ GPT-4o-mini]
+  subgraph A[App: Streamlit]
+    UI[Results tabs<br/>Skills · Your path · Outside UTS · Certifications]
+    EV[Evidence page<br/>ad sentence ↔ Handbook sentence, votes]
+    CHAT[Chat page<br/>RAG over the Handbook]
   end
   AD --> EX
   CV --> EX
   ROLE --> MA
-  EX --> NO --> MA --> RE --> UI
-  SEED --> EX
-  SEED --> NO
-  ESCO --> NO
+  EX --> NO --> MA --> RE --> UI --> EV
+  VOC --> EX
+  VOC --> NO
   DEM --> MA
   SUB --> RE
+  REQ --> RE
+  RES --> RE
   SUB --> CHAT
-  UI -. votes .-> FB[(feedback.csv)]
 ```
 
-One seam connects the app to the pipeline (`app/backend.py`). It runs the pipeline stages and,
-if one is not built yet or fails, falls back to a dictionary-and-keyword baseline that returns
-the same JSON (`docs/data_contract.md`). The page states which engine produced the result, so a
-demo never breaks and a reader always knows which method they are looking at.
+**Figure 5.1** The pipeline and the data each stage reads.
 
-The deployed app (Streamlit Community Cloud) installs without PyTorch, so subject evidence and chat
-retrieval run their TF-IDF paths there; the embedding paths are used in the local evaluation
-(sections 4 and 6).
+The app calls the pipeline through one module (`app/backend.py`). If a stage fails, it falls back to a dictionary-and-
+keyword baseline that returns the same JSON (`docs/data_contract.md`), and the page says which engine produced the
+result. Without an OpenAI key everything except the GPT-4o-mini tier and the chat's written answers still runs. The free
+Streamlit host has no PyTorch, so the deployed app uses the TF-IDF paths for subject evidence and chat retrieval.
 
-## 5.2 Design choices
+## 5.2 What a user sees
 
-| Choice | Reason |
-|---|---|
-| Every skill the LLM returns must occur verbatim in the text; the evidence sentence is cut from the text, not generated | The model cannot invent skills or quotes, which keeps the evidence panel honest |
-| Generative AI and LLMs skip the ESCO steps of normalisation | ESCO v1.2.1 has no concept for them; an embedding would force them onto a loosely related concept. They are kept and flagged ✦ instead |
-| Hand-checked blocklist of wrong ESCO concepts | ESCO "SPARK" is a Java web framework, not Apache Spark; our dictionary's link to it was wrong (section 6) |
-| Learning path: greedy set cover weighted by `demand + 1` | Picks subjects by employer demand, not keyword hits; the +1 keeps 0%-demand skills (LLMs in 2019-22 ads) in play |
-| A subject covers a gap only when it is at least 60% as strong as the best subject for that gap (at most five); every gap shows its strongest subject | One passing mention does not count next to a subject that teaches the skill, and a low-demand gap still shows its evidence (section 4.4) |
-| Thumbs up/down per subject-skill pair, with "I've taken it" | Turns users into validators of the subject mapping (section 6) |
-| Resumes stay in memory; emails, phones and URLs are masked before any LLM call; resumes never reach the chat | Privacy (section 7). Person names are not masked yet |
-| Responses cached by hash of model + prompt + text | Repeatable evaluation at near-zero cost |
+A bar at the top shows the three steps (who you are, inputs, results) and opens the chat.
 
-## 5.3 Screens
+1. **Start.** Three users: a *UTS student* choosing electives for a role, a *job seeker* checking a resume against one
+   ad, and a *career switcher* measuring the distance to a new field.
+2. **Inputs.** A role (11 IT roles, grouped by field) or an ad (browse 2026 ads, paste one, or try the sample), the
+   resume, and the subjects already taken.
+3. **Results** (Figure 5.2), one tab at a time:
+   - *Skills*: how many of the asked-for skills are missing, a bar per skill with its share of 2026 ads (the 2019–22
+     share on hover), and emerging skills marked ✦;
+   - *Your path*: the 2–3 UTS subjects that close the most demand, with prerequisites and sessions;
+   - *Outside UTS*: self-study courses for gaps no subject covers, marked as not for credit, with level and cost;
+   - *Certifications* (role modes), from foundational to expert.
+4. **Skill page** (Figure 5.3). For each gap: its share of Data Scientist ads in 2019–22 and in 2026, the ad's sentence,
+   and why it is missing; below, a row of UTS subject cards, each with the Handbook sentence that justifies it and the
+   layer it came from (learning objective, assessment, weekly topic, description), then a row of self-study cards.
+   Students can vote "teaches it" or "not really", and an "Already taken" tick on a path card shows the path without
+   that subject.
+5. **Chat.** Questions about subjects, answered from Handbook passages with citations.
 
-1. **Start**: choose elective chooser, job seeker or career switcher.
-2. **Inputs**: ad or target role, resume, subjects already taken.
-3. **Results**: "6 of 8" headline, gap chart, shortest path.
-4. **Evidence**: ad sentence beside subject sentence, layer label, vote.
-5. **Chat**: Handbook-grounded answers with cited subjects.
+![Skills tab](figures/05_results_skills.png)
 
-**[Figure: screenshots 03 and 04 side by side; QR code to the deployed app.]**
+![Your path tab](figures/05_results_path.png)
+
+**Figure 5.2** Results for the sample Data Scientist ad and resume: the Skills tab (bars are the share of 2026 Data
+Scientist ads; hatched bars mark emerging skills) and the Your path tab (three subjects close 5 of 6 gaps, with sessions
+and prerequisites).
+
+![Skill page](figures/05_evidence.png)
+
+**Figure 5.3** The skill page for machine learning: 72% of the 3,204 Seek ads of 2019–22 and 67% of the 89 Data
+Scientist ads of September–October 2026 ask for it, the ad's sentence, and why it counts as missing.
+
+## 5.3 How to run it
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env          # optional: OPENAI_API_KEY for the GPT tier and the chat
+streamlit run app/Home.py
+```
+
+The evaluation reruns with `python -m skillabus.evaluate --all`; GPT answers are read from a committed cache, so only the
+chat judge needs a key. The deployed app and its QR code are in the appendix.
