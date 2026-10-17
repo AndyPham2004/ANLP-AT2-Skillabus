@@ -1,14 +1,19 @@
 """Normalisation rules that do not depend on the embedding model (runs without data/raw)."""
 
-import os
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-os.environ["SKILLABUS_NO_EMBED"] = "1"
-os.environ.pop("LIGHTCAST_CLIENT_ID", None)
 
 from skillabus.normalise import key, normalise  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def rules_only(tfidf_only, monkeypatch):
+    """No embedding model and no live Lightcast call, per test: set at import, both leaked into every later file."""
+    monkeypatch.delenv("LIGHTCAST_CLIENT_ID", raising=False)
 
 
 def norm(*phrases):

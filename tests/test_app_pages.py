@@ -5,13 +5,12 @@ with ad counts (Data Engineer) and one without (Cybersecurity Analyst), Job seek
 and with a browsed ad, the what-if tick box and the plan download. Uses streamlit.testing (AppTest), so no
 browser is needed.
 """
-import os
 import sys
 from pathlib import Path
 
 import pytest
 
-os.environ.setdefault("SKILLABUS_NO_EMBED", "1")   # TF-IDF: fast, and the same on every machine
+pytestmark = pytest.mark.usefixtures("tfidf_only")   # TF-IDF per test (conftest): fast, the same on every machine
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "app"))

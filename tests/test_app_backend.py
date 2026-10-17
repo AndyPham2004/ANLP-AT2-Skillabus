@@ -4,11 +4,12 @@ They read the committed data files (role_occupations.csv, occupation_skills.csv,
 certifications.csv, resources.csv), so a rebuilt file that breaks the app fails here first.
 """
 import csv
-import os
 import sys
 from pathlib import Path
 
-os.environ.setdefault("SKILLABUS_NO_EMBED", "1")   # TF-IDF: fast, and the same on every machine
+import pytest
+
+pytestmark = pytest.mark.usefixtures("tfidf_only")   # TF-IDF per test (conftest): fast, the same on every machine
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "app"))

@@ -210,6 +210,14 @@ def test_score_matrix_rejects_unknown_method():
 needs_model = pytest.mark.skipif(not embeddings_available(), reason="sentence-transformers model not available")
 
 
+def test_no_test_file_switches_the_model_off_for_the_whole_session():
+    # 17 Oct: test_app_*.py and test_normalise.py set SKILLABUS_NO_EMBED when imported, so the needs_model
+    # tests below (and test_recommend's) were skipped in every full run. They switch it per test now.
+    import os
+    from conftest import NO_EMBED_AT_START
+    assert os.environ.get("SKILLABUS_NO_EMBED") == NO_EMBED_AT_START
+
+
 @needs_model
 def test_embeddings_see_meaning_not_words():
     sims = similarity(["deep learning"], ["neural networks and backpropagation", "stakeholder management"], "embed")[0]
