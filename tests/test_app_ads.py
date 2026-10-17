@@ -22,6 +22,7 @@ def test_role_and_location_chips():
     # The chips use the app's role names and show only roles that have ads (17 Oct UI check):
     # AI Engineer ads count as Machine Learning Engineer, BI Developer ads as Data Analyst.
     assert ads.ROLE_CHIPS == ["All roles", "Data Analyst", "Data Engineer", "Data Scientist", "Machine Learning Engineer"]
+    assert all(ads.search(role=chip, limit=1) for chip in ads.ROLE_CHIPS[1:])      # no chip that finds no ad
     assert ads.role_of("Senior Data Scientist, Personalisation") == "Data Scientist"
     assert ads.role_of("Machine Learning Engineer - AI Platform") == "Machine Learning Engineer"
     assert ads.role_of("Applied AI Engineer, Codex") == "Machine Learning Engineer"
@@ -41,12 +42,14 @@ def test_search_filters_combine():
     assert len(ads.search(limit=5)) == 5
 
 
-def test_highlight_marks_each_skill_once_in_its_colour():
-    text = "Strong Python and SQL. Deep learning is a plus; Python again."
+def test_highlight_marks_every_mention_in_its_skill_s_colour():
+    # One mark per mention (Python twice). Of two overlapping matches the longest wins, whatever the order of
+    # the skills: "SQL Server" over "SQL", "Deep learning" over "learning". The rest of the ad is escaped.
+    text = "Strong Python & SQL Server <3. Deep learning is a plus; Python again."
     skills = [{"skill_label": "Python", "status": "have"}, {"skill_label": "SQL", "status": "missing"},
+              {"skill_label": "SQL Server", "status": "have"}, {"skill_label": "learning", "status": "missing"},
               {"skill_label": "Deep learning", "status": "partial"}]
     html = ui.highlight(text, skills, lambda label: re.compile(re.escape(label), re.I))
-    assert html.count("<mark") == 4
-    assert f"border-bottom-color:{ui.HAVE}'>Python" in html
-    assert f"border-bottom-color:{ui.MISSING}'>SQL" in html
-    assert "&lt;" not in html and "Deep learning is a plus" in html.replace("</mark>", "")
+    marks = re.findall(r"<mark style='[^']*border-bottom-color:([^']+)'>([^<]*)</mark>", html)
+    assert marks == [(ui.HAVE, "Python"), (ui.HAVE, "SQL Server"), (ui.PARTIAL, "Deep learning"), (ui.HAVE, "Python")]
+    assert "</mark> &amp; <mark" in html and "&lt;3" in html and "<3" not in html

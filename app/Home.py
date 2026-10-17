@@ -2,10 +2,11 @@
 
 Run from the repo root:  streamlit run app/Home.py
 
-The look follows the v2 design in docs/design/ (Claude Design, 16 Oct 2026). One user, a UTS student
-(Quan, 17 Oct: no user modes): Inputs (what you have | your goal, a role or a job ad; or Browse ads)
--> Results -> Evidence for one skill, plus a subject dialog and the Handbook chat. app/ui.py holds the
-CSS and the HTML helpers, app/backend.py calls the pipeline, app/ads.py serves the ads to browse.
+The look follows the v2 design in docs/design/ (Claude Design, 16 Oct 2026), reshaped with Quan on 16-17 Oct:
+a top bar with the steps and the "Ask the Handbook" button (the chat is a page of its own), and one user, a UTS
+student (no user modes): Inputs (what you have | your goal, a role or a job ad; or Browse ads) -> Results, one
+tab at a time -> Evidence for one skill, plus a subject dialog. app/ui.py holds the CSS and the HTML helpers,
+app/backend.py calls the pipeline, app/ads.py serves the ads to browse.
 """
 
 from __future__ import annotations
@@ -56,7 +57,7 @@ CHAT_SUGGESTIONS = ("Which subject teaches LLMs?", "What does Applied NLP cover?
 STEP_OF = {"inputs": 1, "jobs": 1, "results": 2, "evidence": 2}     # the chat page shows the step it came from
 CHAT_BACK = {"inputs": "← Back to your inputs", "jobs": "← Back to the ads",
              "results": "← Back to results", "evidence": "← Back to the skill"}
-CERTS_SHOWN = 6                                                # then "Show all 11"
+CERTS_SHOWN = 6                                                # then a "Show all" button
 SUBJECT_NAME = dict(backend.subjects())                      # code -> name, all 360 subjects
 
 
@@ -348,7 +349,7 @@ def open_chat() -> None:
     ss.step = "chat"
 
 
-# ---------------------------------------------------------------- sidebar: steps and the chat button
+# ---------------------------------------------------------------- top bar: steps and the chat button
 
 def inputs_note() -> str:
     """What the Inputs page holds, in a few words for the top bar: the goal, the resume, the subjects."""
@@ -1007,7 +1008,8 @@ def page_evidence() -> None:
 # ---------------------------------------------------------------- the subject dialog
 
 def subject_dialog(code: str) -> None:
-    """Open the subject dialog; the title is the code, as a dialog's title is fixed when it is declared."""
+    """Open the subject dialog, titled with the subject's name: a dialog's title is fixed when it is declared,
+    so the dialog is declared here, per subject."""
     st.dialog(subject_name(code), width="large")(subject_body)(code)
 
 

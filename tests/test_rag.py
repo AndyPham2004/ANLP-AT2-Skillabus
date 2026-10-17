@@ -92,7 +92,8 @@ def test_ad_corpus_skill_pattern_follows_the_vocabulary():
     # Follow-up to #109: the pattern that keeps an ad sentence comes from the extractor's rows.
     rx = rag._skill_pattern()
     assert rx.search("Grafana dashboards") and rx.search("kubernetes clusters")   # vocabulary-only skills
-    assert rx.search("Python and R") and not rx.search("let it go")               # strict rows match as written
+    assert rx.search("SAS and SQL").group() == "SAS"                              # a strict row, as written
+    assert not rx.search("saas and sas-like products")                            # ... and only as written
 
 
 def test_unknown_method_is_an_error():

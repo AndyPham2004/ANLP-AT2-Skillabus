@@ -7,7 +7,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data-eda" / "src"))
 
-from role_rank_agreement import COLUMNS, OUT, agreement  # noqa: E402
+from role_rank_agreement import OUT, agreement  # noqa: E402
 from skillabus import paths  # noqa: E402
 
 TABLE = pd.read_csv(paths.ROLE_SKILL_DEMAND)
@@ -15,12 +15,12 @@ COMMITTED = pd.read_csv(OUT)
 
 
 def test_committed_file_is_current():
+    # also the columns and their order: agreement() builds its frame with role_rank_agreement.COLUMNS
     pd.testing.assert_frame_equal(COMMITTED, agreement(TABLE).astype(COMMITTED.dtypes.to_dict()), check_exact=False,
                                   atol=1e-9)
 
 
 def test_one_row_per_role_and_compared_source():
-    assert list(COMMITTED.columns) == COLUMNS
     data_jobs_roles = set(TABLE[TABLE.source == "data_jobs_2023"].role)
     assert set(COMMITTED[COMMITTED.compared_with == "data_jobs_2023"].role) == data_jobs_roles
     assert set(COMMITTED[COMMITTED.compared_with == "seek_2019_22"].role) == {"Data Scientist"}

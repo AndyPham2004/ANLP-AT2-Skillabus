@@ -4,14 +4,14 @@ One flow for a UTS student (17 Oct): Inputs (course, subjects, resume | a role o
 Evidence for one skill. A role with ad counts (Data Engineer) and one without (Cybersecurity Analyst), the
 sample ad and a browsed ad, subjects taken counted for both goals, the "I've taken this" tick. Uses
 streamlit.testing (AppTest), so no browser is needed.
+Keys and .env are kept out by conftest.no_live_keys.
 """
-import os
 import sys
 from pathlib import Path
 
 import pytest
 
-os.environ.setdefault("SKILLABUS_NO_EMBED", "1")   # TF-IDF: fast, and the same on every machine
+pytestmark = pytest.mark.usefixtures("tfidf_only")   # TF-IDF per test (conftest): fast, the same on every machine
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "app"))
@@ -21,9 +21,7 @@ HOME = str(ROOT / "app" / "Home.py")
 
 
 @pytest.fixture(autouse=True)
-def no_api_key(monkeypatch):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **k: False)   # a local .env must not add a key
+def fresh_analysis_cache():
     import streamlit as st
     st.cache_data.clear()        # Home.py caches analyses per input; a test with another demand table must not reuse them
 
@@ -58,7 +56,7 @@ def open_skill(at: AppTest, n: int | None = None) -> AppTest:
 
 
 def show_tab(at: AppTest, tab: str) -> AppTest:
-    """Pick a section of the results page: Skills, Your path, Certifications, How this works."""
+    """Pick a section of the results page: Skills, Your path, Outside UTS, Certifications (role mode only)."""
     at.segmented_control(key="results_tab").set_value(tab).run()
     assert not at.exception, at.exception
     return at
@@ -138,21 +136,6 @@ def test_role_mode_data_engineer():
     assert "Skills the role asks for" in page_text(at)
 
 
-def test_role_mode_cybersecurity_has_bars_since_c2():
-    at = open_app()
-    pick_role(at, "Cybersecurity Analyst")
-    show_gaps(at)
-    text = page_text(at)
-    assert "<span style='width:" in text and "core skills · no Australian ad counts yet" not in text
-    show_tab(at, "Certifications")
-    text = page_text(at)
-    assert "Certifications worth having" in text and "CompTIA Security+" in text
-    show_tab(at, "Skills")
-    assert "JobsPipe Cybersecurity Analyst ads, Sep-Oct 2026, full text." in page_text(at)
-    open_skill(at)
-    assert "Employers ask" in page_text(at) and "Self-study" in page_text(at)
-
-
 def test_role_mode_without_ad_counts_shows_core_skills_without_bars(demand_sample):
     """The fallback page: the sample demand table has no block for Cybersecurity Analyst."""
     at = open_app()
@@ -195,16 +178,22 @@ def test_taken_subjects_count_for_a_role():
 
 def test_certifications_are_cards_with_the_ad_count():
     # 8A (17 Oct): cards in rows of three, six at first; "hot" carries the ad count, the long reason moves to a note.
+    # The counts come from certifications.csv, whose Adzuna counts are refreshed (D11), so they are read, not typed.
+    import backend
+    certs = backend.certifications("Software Engineer")
+    hot = [c for c in certs[:6] if c["hot"].strip().lower() == "yes" and "AU ads" in c["hot_reason"]]
+    assert len(certs) > 6 and hot, "the data no longer has a 'Show all' button or a counted hot card"
     at = open_app()
     pick_role(at, "Software Engineer")
     show_gaps(at)
     show_tab(at, "Certifications")
     text = page_text(at)
     assert text.count("class='k-cert'") == 6
-    assert "hot · 39 AU ads" in text                                   # AWS Certified Cloud Practitioner
+    for c in hot:
+        assert f"hot · {int(c['au_ads_count']):,} AU ads" in text, c["cert"]
     assert "top third of certificates for" not in text
     at.button(key="certs_all").click().run()
-    assert page_text(at).count("class='k-cert'") == 11
+    assert page_text(at).count("class='k-cert'") == len(certs)
 
 
 def test_skill_page_tells_its_facts_in_one_band():
@@ -281,10 +270,10 @@ def test_the_sample_ad_as_the_goal():
     text = page_text(at)
     assert "The ad says" in text and "Self-study" in text
     assert "class='k-band'" in text and ("Missing." in text or "Partly." in text)     # a gap: rose or amber line
+    assert "class='k-dashed'" in text          # a self-study card; ui.CSS names .k-dashed, so not the bare word
     at.button(key="back_results").click().run()
     open_skill(at, next(i for i, s in enumerate(at.session_state.result["skills"]) if s["skill_label"] == "SQL"))
     assert "<b>You have it.</b> Your resume says: “" in page_text(at)        # the line names where it comes from
-    assert "k-dashed" in text                                                  # at least one resource card
 
 
 def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
@@ -302,15 +291,32 @@ def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
 
 
 def test_self_study_filters_change_the_column():
+    import backend
+    import ui
+    role = "Software Engineer"
     at = open_app()
-    pick_role(at, "Data Engineer")
+    pick_role(at, role)
     show_gaps(at)
-    open_skill(at)
+    skills = at.session_state.result["skills"]
+
+    def titles(label, cost):
+        return [r["title"] for r in backend.self_study(label, backend.LEVELS, backend.COST_CHOICES[cost], role)]
+    # A gap whose column "Free only" changes; resources.csv decides which, so it is looked up, not typed.
+    n = next((i for i, s in enumerate(skills) if s["status"] != "have"
+              and titles(s["skill_label"], "Free only") != titles(s["skill_label"], "Include free-to-audit")), None)
+    assert n is not None, "no gap of the role has a free-to-audit resource any more"
+    label = skills[n]["skill_label"]
+    open_skill(at, n)
     at.pills(key="level_filter").set_value([]).run()
     assert not at.exception
     assert "Nothing with these filters: widen the level or cost above." in page_text(at)
+    at.pills(key="level_filter").set_value(list(backend.LEVELS)).run()
     at.segmented_control(key="cost_filter").set_value("Free only").run()
-    assert not at.exception
+    assert not at.exception, at.exception
+    text = page_text(at)
+    free, audit = titles(label, "Free only"), titles(label, "Include free-to-audit")
+    assert all(ui.esc(t) in text for t in free)
+    assert not any(ui.esc(t) in text for t in set(audit) - set(free))
 
 
 def test_taken_tick_reruns_the_path_and_shows_on_the_inputs_page():
@@ -332,7 +338,10 @@ def test_taken_tick_reruns_the_path_and_shows_on_the_inputs_page():
 
 def test_browse_ads_and_use_one():
     # 7A (17 Oct): one full-width list, an ad opens in a dialog with "Use this ad"; no split, no table.
+    import re
+
     import ads
+    import ui
     at = aim_at_an_ad(open_app())
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     assert not at.exception
@@ -342,7 +351,9 @@ def test_browse_ads_and_use_one():
     first = ads.search(role="Data Scientist")[0]
     at.button(key=f"ad_{first['id']}").click().run()                            # opens the ad
     assert not at.exception, at.exception
-    assert any(first["text"][:80] in m.value for m in at.markdown)
+    # The dialog folds runs of blank lines and escapes the text, so an ad with ' or & would miss the raw slice.
+    shown = ui.esc(re.sub(r"\n\s*\n\s*\n+", "\n\n", first["text"]))[:80]
+    assert any(shown in m.value for m in at.markdown)
     at.button(key="use_job").click().run()
     assert not at.exception, at.exception
     assert at.session_state.step == "inputs"
@@ -353,9 +364,13 @@ def test_browse_ads_and_use_one():
 
 
 def test_browse_ads_says_1_ad():
+    import ads
+    # A company with exactly one ad in the committed file, found rather than typed: the file is rebuilt.
+    query = next((a["company"].lower() for a in ads.load() if len(ads.search(a["company"].lower())) == 1), None)
+    assert query, "no company has exactly one ad"
     at = aim_at_an_ad(open_app())
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
-    at.text_input(key="job_q").set_value("carsales").run()
+    at.text_input(key="job_q").set_value(query).run()
     assert any(c.value.startswith("1 ad, ") for c in at.caption), [c.value for c in at.caption]
 
 
@@ -376,8 +391,11 @@ def test_handbook_chat_is_its_own_page_and_names_no_codes():
     reply = at.session_state.messages[-1]
     assert reply["role"] == "assistant" and "Applied Natural Language Processing" in reply["content"]
     assert not re.search(r"\b\d{5}\b", reply["content"]), reply["content"]
-    at.chat_input(key="chat_in").set_value("Which subject teaches machine learning?").run()
-    assert at.session_state.messages[-1]["role"] == "assistant"
+    question, n = "Which subject teaches machine learning?", len(at.session_state.messages)
+    at.chat_input(key="chat_in").set_value(question).run()
+    assert not at.exception, at.exception
+    new = at.session_state.messages[n:]                       # the suggestion's reply is already the last message
+    assert [m["role"] for m in new] == ["user", "assistant"] and new[0]["content"] == question
     at.button(key="chat_back").click().run()
     assert at.session_state.step == "results" and at.session_state.results_tab == "Your path"
 

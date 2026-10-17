@@ -65,8 +65,9 @@ def test_costs_are_numbers_or_varies(certs):
 
 
 def test_skills_use_the_dictionary_spelling(certs):
-    seed = pd.read_csv(paths.SKILLS_SEED, skiprows=1)
-    canon = {c.lower(): c for c in seed["canonical"]}
+    """The dictionary since C2: the vocabulary's detection rows (the old dictionary plus the IT skills of D5)."""
+    vocab = pd.read_csv(paths.SKILLS_VOCABULARY, dtype=str, keep_default_na=False)
+    canon = {c.lower(): c for c in vocab.label[vocab.used_for.str.contains("extract")]}
     wrong = {s for row in certs["skills"] for s in split(row) if s.lower() in canon and s != canon[s.lower()]}
     assert not wrong, wrong
 
