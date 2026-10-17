@@ -27,7 +27,7 @@ MODEL = os.getenv("SKILLABUS_LLM_MODEL", "gpt-4o-mini")
 PROMPT_VERSION = "v3"
 MAX_CHARS = 12_000
 CACHE_DIR = paths.LLM_CACHE            # read first, and the only place new responses are written
-EVAL_CACHE_DIR = paths.LLM_CACHE_EVAL  # the 30 committed responses for the evaluation sets: read only
+EVAL_CACHE_DIR = paths.LLM_CACHE_EVAL  # the 48 committed responses for the evaluation sets: read only
 
 # v1 (4 Oct) split resumes into fragments ("joins", "charts", "writing queries") and kept vague
 # phrases ("AI solutions"). v2 (10 Oct) merged too much: listed techniques ("supervised learning,

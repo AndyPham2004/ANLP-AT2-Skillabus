@@ -7,11 +7,12 @@ We ran every stage of the pipeline on hand-labelled test sets, using `python -m 
 | Stage | Test set | Result in one line |
 |---|---|---|
 | Extraction | 20 Seek ads, 217 skill labels | Dictionary F1 0.767; spaCy 0.690; GPT-4o-mini 0.585 (0.777 / 0.796 / 0.792 on dictionary skills) |
+| Extraction, 2026 | 18 ATS ads of 10 roles, 273 labels | F1 on vocabulary skills: dictionary 0.742, spaCy 0.744, GPT-4o-mini 0.702 |
 | Matching | 45 CV–JD pairs, 287 skill rows | Accuracy 0.909 end to end, 0.927 with gold ad skills |
 | Evidence ranking | 87 have/partial rows | Hit@5 0.943, MRR 0.829 |
 | Subject recommendation | 33 pairs, 13 data skills; 30 pairs, 11 IT skills | Data: P@3 0.95 to 1.00 (not a method comparison); IT: 0.87 (y or partly), 0.43 (y only) |
 | Chat | 15 questions | Hit@5 0.933; judge relevance 4.13, faithfulness 4.33 (of 5) |
-| Annotator agreement | 20 ads, two annotators | Kappa 0.856 (dictionary skills), 0.686 (all labels) |
+| Annotator agreement | 20 ads, two annotators; 6 ads of 2026 | Kappa 0.856 (dictionary skills), 0.686 (all labels); 2026: 0.361, 0.319 |
 
 The test sets are much smaller than planned (200 ads and 50 pairs), so every figure is a small-sample estimate. Extraction is scored after `normalise()`, as the app runs it.
 
@@ -29,6 +30,8 @@ The test sets are much smaller than planned (200 ads and 50 pairs), so every fig
 The labels contain only skills from the 148-row seed dictionary, while tiers 1 and 2 read the 283 detection rows of the skill vocabulary (section 4.1). Any skill outside the labels counts as wrong, even when the ad does ask for it. That is why spaCy (87 false positives) and GPT-4o-mini (151, of which 136 are outside the dictionary) look weak on all skills. Those off-dictionary skills are what the tiers are for. On dictionary skills the three tiers are close: F1 0.777, 0.796 and 0.792, with GPT-4o-mini the most precise (0.910). The differences are within what 20 ads can resolve.
 
 **Where the dictionary fails.** Of 64 misses, 25 are soft skills, 13 programming and 12 machine learning. Eleven of the 13 programming misses are the bare letter "R", which the dictionary refuses to match by design (section 4.1). Of the 29 false positives, 12 are real errors, such as a degree list ("Statistics, Data Science, Mathematics") read as skills or "Dash" read as Plotly. The other 17 are judgement calls or label gaps, such as tools that entered the dictionary after labelling. Precision is 0.934 if these count as correct. The later tiers recover the soft skills and the bare "R".
+
+**2026 ads of ten roles.** Because the 20 ads above are Data Scientist ads of 2019–22 labelled on the old dictionary, Van Thong labelled 18 ATS ads of September–October 2026, two per role for ten roles (no QA ad in the source), on the skill vocabulary: 273 labels, 178 of them vocabulary skills (#153, #161). On vocabulary skills the three tiers are close: F1 0.742 for the dictionary (precision 0.686, recall 0.809), 0.744 for spaCy and 0.702 for GPT-4o-mini, whose precision is the highest (0.843) and recall the lowest (0.601). Recall is higher than on the old set (0.809 against 0.705) and precision lower (0.686 against 0.864): IT ads name tools the vocabulary holds, while more of the extractor's finds are skills the labeller did not count as asked for. On all labels F1 falls to 0.596, 0.574 and 0.477, because 95 of the labels are tools the vocabulary lacks (BGP, EKS, SOAR, NetSuite). Phuong Nhi labelled six of the ads independently (#154, #167): kappa is 0.361 on vocabulary skills ("fair"), against 0.856 on the old set. The two disagree mainly in coverage, not in what a skill is: 9 labels are shared, 29 are only Van Thong's and 2 only hers, and she labelled none for one ad. So the 2026 gold set rests on one annotator's broader reading, and its precision figures are the least certain number in this section (Appendix B).
 
 ## 6.3 Matching
 

@@ -58,5 +58,23 @@ Cohen's kappa between hoaithuongnguyen-uts and tompham9016 on 20 ads:
 
 LLM judge (retrieval: tfidf, n=15, unparsed=0): relevance 4.13/5, faithfulness 4.33/5, share of answers with faithfulness 4+: 0.93
 
+## Extraction, 2026 ads (18 ATS ads, 10 roles, 273 labels)
+
+| Tier | Scored on | P | R | F1 | TP / FP / FN |
+|---|---|---|---|---|---|
+| dictionary | all labels | 0.686 | 0.527 | 0.596 | 144 / 66 / 129 |
+| dictionary | vocabulary skills only | 0.686 | 0.809 | 0.742 | 144 / 66 / 34 |
+| ner | all labels | 0.500 | 0.674 | 0.574 | 184 / 184 / 89 |
+| ner | vocabulary skills only | 0.677 | 0.826 | 0.744 | 147 / 70 / 31 |
+| llm | all labels | 0.392 | 0.608 | 0.477 | 166 / 257 / 107 |
+| llm | vocabulary skills only | 0.843 | 0.601 | 0.702 | 107 / 20 / 71 |
+
+Cohen's kappa between tompham9016 and nhinguyenuts on 6 ads:
+
+| Items | kappa | Interpretation | Observed agreement | both / first only / second only |
+|---|---|---|---|---|
+| Vocabulary skills only | 0.361 | fair | 0.982 | 9 / 29 / 2 |
+| All labels | 0.319 | fair | 0.965 | 17 / 66 / 3 |
+
 ## Not run
 

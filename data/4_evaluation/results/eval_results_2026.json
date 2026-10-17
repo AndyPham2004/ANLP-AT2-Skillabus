@@ -1,0 +1,94 @@
+{
+ "n_ads": 18,
+ "n_labels": 273,
+ "n_roles": 10,
+ "tiers": {
+  "dictionary": {
+   "all": {
+    "precision": 0.6857142857142857,
+    "recall": 0.5274725274725275,
+    "f1": 0.5962732919254659,
+    "tp": 144,
+    "fp": 66,
+    "fn": 129,
+    "n_ads": 18
+   },
+   "vocabulary": {
+    "precision": 0.6857142857142857,
+    "recall": 0.8089887640449438,
+    "f1": 0.7422680412371134,
+    "tp": 144,
+    "fp": 66,
+    "fn": 34,
+    "n_ads": 18
+   }
+  },
+  "ner": {
+   "all": {
+    "precision": 0.5,
+    "recall": 0.673992673992674,
+    "f1": 0.5741029641185648,
+    "tp": 184,
+    "fp": 184,
+    "fn": 89,
+    "n_ads": 18
+   },
+   "vocabulary": {
+    "precision": 0.6774193548387096,
+    "recall": 0.8258426966292135,
+    "f1": 0.7443037974683544,
+    "tp": 147,
+    "fp": 70,
+    "fn": 31,
+    "n_ads": 18
+   }
+  },
+  "llm": {
+   "all": {
+    "precision": 0.39243498817966904,
+    "recall": 0.608058608058608,
+    "f1": 0.4770114942528736,
+    "tp": 166,
+    "fp": 257,
+    "fn": 107,
+    "n_ads": 18
+   },
+   "vocabulary": {
+    "precision": 0.84251968503937,
+    "recall": 0.601123595505618,
+    "f1": 0.7016393442622951,
+    "tp": 107,
+    "fp": 20,
+    "fn": 71,
+    "n_ads": 18
+   }
+  }
+ },
+ "skipped": {},
+ "kappa": {
+  "kappa": 0.36092562465094946,
+  "interpretation": "fair",
+  "observed_agreement": 0.9817432273262662,
+  "n_ads": 6,
+  "n_items": 1698,
+  "both_yes": 9,
+  "a_only": 29,
+  "b_only": 2,
+  "both_no": 1658,
+  "all_labels": {
+   "kappa": 0.318976810231898,
+   "interpretation": "fair",
+   "observed_agreement": 0.9650455927051672,
+   "n_ads": 6,
+   "n_items": 1974,
+   "both_yes": 17,
+   "a_only": 66,
+   "b_only": 3,
+   "both_no": 1888
+  },
+  "annotators": [
+   "tompham9016",
+   "nhinguyenuts"
+  ]
+ }
+}
