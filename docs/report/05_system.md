@@ -64,14 +64,25 @@ A bar at the top shows the three steps (who you are, inputs, results) and opens 
    - *Your path*: the 2–3 UTS subjects that close the most demand, with prerequisites and sessions;
    - *Outside UTS*: self-study courses for gaps no subject covers, marked as not for credit, with level and cost;
    - *Certifications* (role modes), from foundational to expert.
-4. **Evidence** (Figure 5.3). For each gap, the ad sentence beside the Handbook sentence that justifies each subject,
-   with the layer it came from (learning objective, assessment, weekly topic, description). Students can vote "teaches
-   it" or "not really", and tick "I've taken it" to see the path without that subject.
+4. **Skill page** (Figure 5.3). For each gap: its share of Data Scientist ads in 2019–22 and in 2026, the ad's sentence,
+   and why it is missing; below, a row of UTS subject cards, each with the Handbook sentence that justifies it and the
+   layer it came from (learning objective, assessment, weekly topic, description), then a row of self-study cards.
+   Students can vote "teaches it" or "not really", and an "Already taken" tick on a path card shows the path without
+   that subject.
 5. **Chat.** Questions about subjects, answered from Handbook passages with citations.
 
-**Figure 5.2** Results for the sample Data Scientist ad and resume. **[screenshot: Skills tab, then Your path tab]**
+![Skills tab](figures/05_results_skills.png)
 
-**Figure 5.3** Evidence for one missing skill. **[screenshot: evidence page]**
+![Your path tab](figures/05_results_path.png)
+
+**Figure 5.2** Results for the sample Data Scientist ad and resume: the Skills tab (bars are the share of 2026 Data
+Scientist ads; hatched bars mark emerging skills) and the Your path tab (three subjects close 5 of 6 gaps, with sessions
+and prerequisites).
+
+![Skill page](figures/05_evidence.png)
+
+**Figure 5.3** The skill page for machine learning: 72% of the 3,204 Seek ads of 2019–22 and 67% of the 89 Data
+Scientist ads of September–October 2026 ask for it, the ad's sentence, and why it counts as missing.
 
 ## 5.3 How to run it
 
