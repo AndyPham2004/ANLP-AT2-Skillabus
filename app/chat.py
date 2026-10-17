@@ -30,6 +30,8 @@ POOL = 15              # passages retrieved, so the answer can draw on several s
 MAX_SUBJECTS = 4       # subjects shown and cited
 MAX_CHOICES = 10       # subjects the model may choose from when the student asks what to take
 PER_SUBJECT = 2        # passages kept per subject
+HISTORY = 6            # earlier chat messages the model sees
+FOLLOW_UP = "FOLLOW-UP:"   # how the model marks a question back to the student
 # "I took ..., which one more should I pick?": a request for a choice, so the student's own course subjects
 # join the retrieved ones (words of the question alone found the subjects already taken).
 ADVICE = re.compile(r"\b(took|taken|completed|already|planning|plan to|next semester|last semester|one more|"
@@ -187,19 +189,30 @@ def has_llm() -> bool:
     return bool(os.getenv("OPENAI_API_KEY"))
 
 
-def answer(question: str, gap: dict | None, taken: list[str] | tuple = (),
-           home_course: str | None = None) -> tuple[str, list[dict]]:
-    """Answer and its sources, one per subject (see by_subject). taken: the subjects the student ticked in the app;
-    home_course: their course, for the subjects closed to them and, when they ask what to take, its own subjects."""
+def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_course: str | None = None,
+           history: list[dict] | tuple = ()) -> tuple[str, list[dict] | None]:
+    """Answer and its sources, one per subject (see by_subject); sources None = the reply is a follow-up question.
+
+    taken: the subjects the student ticked in the app; home_course: their course, for the subjects closed to them and,
+    when they ask what to take, its own subjects; history: the chat so far ({"role", "content", "followup"?}), so a
+    vague request can get one follow-up question and the student's reply is read together with the request.
+    """
     home_course = home_course or backend.HOME_COURSE
-    done, advice = set(taken), bool(ADVICE.search(question))
-    passages = retrieve(question, k=POOL)
+    history = list(history)[-HISTORY:]
+    replying = bool(history) and history[-1].get("followup", False)       # this message answers our follow-up
+    query = question
+    if replying:
+        asked = next((m["content"] for m in reversed(history) if m["role"] == "user"), "")
+        query = f"{asked} {question}"
+    done, advice = set(taken), bool(ADVICE.search(query))
+    passages = retrieve(query, k=POOL)
     if advice:
         lp = (gap or {}).get("learning_path")
         path = lp.get("subjects", []) if isinstance(lp, dict) else []
-        passages = (subject_passages(path, done) + subject_passages(backend.course_subjects(home_course), done)
-                    + passages)
-        named = named_in(question, passages)          # taken or planned, as the student wrote them
+        # the path and what the question is about first, then the rest of the student's course
+        passages = (subject_passages(path, done) + passages
+                    + subject_passages(backend.course_subjects(home_course), done))
+        named = named_in(query, passages)             # taken or planned, as the student wrote them
         passages = [p for p in passages if p.get("subject_code") not in named]
     sources = by_subject(passages, done, home_course, MAX_CHOICES if advice else MAX_SUBJECTS)
     if not sources:
@@ -224,6 +237,14 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (),
         + (f" (runs in {', '.join(s['sessions'])})" if s.get("sessions") else "") + ": "
         + " ".join(f"({LAYER_NAME.get(p.get('layer'), p.get('layer'))}) {p['text']}" for p in s["passages"])
         for i, s in enumerate(sources))
+    follow_up = (
+        "The student has just answered your follow-up question: answer now and do not ask another."
+        if replying else
+        "If the request is too unclear to give a useful suggestion (they ask what to take but give no goal, interest "
+        "or skill gaps; a word could mean quite different things), reply with one short follow-up question that "
+        f"starts with \"{FOLLOW_UP}\" and nothing else. A clear question, such as which subject teaches a skill, "
+        "never needs one.")
+    turns = [{"role": m["role"], "content": m["content"]} for m in history]
     resp = OpenAI().chat.completions.create(
         model=MODEL,
         temperature=0.2,
@@ -237,8 +258,12 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (),
                 "student has taken or says they have taken or plan to take, nor one whose name or topic is "
                 "nearly the same (a second deep learning subject for someone taking Deep Learning). If the "
                 "student names a session, suggest only subjects that run in it. Two to four sentences. "
-                "Suggestions, not advice.")},
+                "Suggestions, not advice. " + follow_up)},
+            *turns,
             {"role": "user", "content": f"{gaps}Subjects:\n{context}\n\nQuestion: {question}"},
         ],
     )
-    return cited_only(resp.choices[0].message.content, sources)
+    reply = resp.choices[0].message.content.strip()
+    if reply.upper().startswith(FOLLOW_UP.upper()):
+        return reply[len(FOLLOW_UP):].strip(), None
+    return cited_only(reply, sources)

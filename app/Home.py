@@ -345,8 +345,12 @@ def pick_role(n: int) -> None:
 
 
 def ask(question: str) -> None:
+    history = list(ss.messages)
     ss.messages.append({"role": "user", "content": question})
-    reply, sources = chat.answer(question, ss.result, ss.taken_keep, ss.course_keep or backend.HOME_COURSE)
+    reply, sources = chat.answer(question, ss.result, ss.taken_keep, ss.course_keep or backend.HOME_COURSE, history)
+    if sources is None:                     # a follow-up question: no sources, and the next message answers it
+        ss.messages.append({"role": "assistant", "content": reply, "followup": True})
+        return
     if sources and chat.has_llm():
         reply += "\n\n" + "  \n".join(f"[{i + 1}] {chat.source_name(s)}" for i, s in enumerate(sources))
     ss.messages.append({"role": "assistant", "content": reply})
