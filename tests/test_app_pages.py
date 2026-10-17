@@ -196,6 +196,23 @@ def test_certifications_are_cards_with_the_ad_count():
     assert page_text(at).count("class='k-cert'") == 11
 
 
+def test_skill_page_tells_its_facts_in_one_band():
+    # 17 Oct, Quan's pick B: one band (then-and-now bars, coloured lines) instead of three grey cards, and
+    # "new skill" in plain words; a student never reads "ESCO".
+    at = start("elective")
+    pick_role(at, "Data Scientist")
+    at.multiselect(key="taken_box").set_value(["36118"]).run()
+    show_gaps(at)
+    skills = at.session_state.result["skills"]
+    open_skill(at, next(i for i, s in enumerate(skills) if s["skill_label"] == "Large language models"))
+    text = page_text(at)
+    assert "class='k-band'" in text and text.count("class='k-tbar'") == 2       # 2019-22 and now
+    assert "✦ New skill" in text and "Too new for the EU's official skills list" in text
+    assert "Employers barely asked for it before 2022." in text                 # 0% of the 2019-22 ads
+    assert "You have it." in text
+    assert "ESCO" not in text and "Emerging skill" not in text
+
+
 def test_subject_picker_enter_picks_one_subject_not_every_match():
     # Typing "Statistical" + Enter added all 8 fuzzy matches via "Select 8 matches" (17 Oct UI check).
     from streamlit.proto.MultiSelect_pb2 import MultiSelect
@@ -250,6 +267,10 @@ def test_job_seeker_mode_with_the_sample_ad():
     open_skill(at)
     text = page_text(at)
     assert "The ad says" in text and "Self-study" in text
+    assert "class='k-band'" in text and ("Missing." in text or "Partly." in text)     # a gap: rose or amber line
+    at.button(key="back_results").click().run()
+    open_skill(at, next(i for i, s in enumerate(at.session_state.result["skills"]) if s["skill_label"] == "SQL"))
+    assert "<b>You have it.</b> Your resume says: “" in page_text(at)        # the line names where it comes from
     assert "k-dashed" in text                                                  # at least one resource card
 
 
