@@ -135,11 +135,28 @@ def _words(s: str) -> list[str]:
     return re.findall(r"[a-z0-9]+", s.lower().replace("visualization", "visualisation"))
 
 
+# Short forms students type that the Handbook spells out ("Which subject teaches ML?" found no ML subject).
+ABBREVIATIONS = {"ML": "machine learning", "AI": "artificial intelligence", "NLP": "natural language processing",
+                 "DL": "deep learning", "LLM": "large language models", "LLMs": "large language models",
+                 "BI": "business intelligence", "GenAI": "generative AI", "DS": "data science"}
+
+
+def spell_out(question: str) -> str:
+    """The question with ABBREVIATIONS written in full, for retrieval only (case-sensitive, whole words)."""
+    return re.sub(r"\b(" + "|".join(sorted(ABBREVIATIONS, key=len, reverse=True)) + r")\b",
+                  lambda m: ABBREVIATIONS[m.group(1)], question)
+
+
+DONE_OR_PLANNED = re.compile(r"\b(took|taken|completed|finished|done|passed|already|planning|plan to|going to take|"
+                             r"will take|enrolled)\b", re.I)
+
+
 def named_in(question: str, sources: list[dict]) -> set[str]:
-    """Codes of the subjects the question names ("I already took Data Visualization, ..."): a code, or the first two or
-    more words of the subject's name, typos allowed (ratio 0.85). Used only to leave them out of a suggestion."""
+    """Codes of the subjects the student says they took or plan to take ("I already took Data Visualization, ..."):
+    named in a sentence with such a word, by code or by the first two or more words of the name, typos allowed
+    (ratio 0.85). "Should I take 36121 or 36123?" names subjects to compare, so they stay."""
     from difflib import SequenceMatcher
-    q = _words(question)
+    q = _words(" ".join(s for s in re.split(r"[.!?;\n]", question) if DONE_OR_PLANNED.search(s)))
     out = set()
     for s in sources:
         code, name = s.get("subject_code"), _words(s.get("subject_name") or "")
@@ -157,15 +174,19 @@ def named_in(question: str, sources: list[dict]) -> set[str]:
 
 
 def cited_only(reply: str, sources: list[dict]) -> tuple[str, list[dict]]:
-    """Keep the sources the answer cites or names by code, in the order it first does, with the citations renumbered;
-    all of them if it does neither."""
-    first = {}
+    """The sources the answer names by code, in the order it names them, and the answer without [n] marks: it names
+    each subject by code and name already, and a mark could disagree with the list (a [2] numbered after an earlier
+    answer pointed at another subject). An answer that names no code keeps its marks, renumbered, and the sources
+    they cite; all sources if it does neither."""
+    named = {}
     for i, s in enumerate(sources, 1):
-        hits = [m.start() for m in re.finditer(rf"\[{i}\]", reply)]
         if s.get("subject_code"):
-            hits += [m.start() for m in re.finditer(rf"\b{re.escape(s['subject_code'])}\b", reply)]
-        if hits:
-            first[i] = min(hits)
+            hits = [m.start() for m in re.finditer(rf"\b{re.escape(s['subject_code'])}\b", reply)]
+            if hits:
+                named[i] = min(hits)
+    if named:
+        return re.sub(r"\s*\[\d+\]", "", reply), [sources[n - 1] for n in sorted(named, key=named.get)]
+    first = {i: m.start() for i in range(len(sources), 0, -1) for m in re.finditer(rf"\[{i}\]", reply)}
     if not first:
         return reply, sources
     order = sorted(first, key=first.get)
@@ -205,7 +226,7 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
         asked = next((m["content"] for m in reversed(history) if m["role"] == "user"), "")
         query = f"{asked} {question}"
     done, advice = set(taken), bool(ADVICE.search(query))
-    passages = retrieve(query, k=POOL)
+    passages = retrieve(spell_out(query), k=POOL)
     if advice:
         lp = (gap or {}).get("learning_path")
         path = lp.get("subjects", []) if isinstance(lp, dict) else []
@@ -240,11 +261,13 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     follow_up = (
         "The student has just answered your follow-up question: answer now and do not ask another."
         if replying else
-        "If the request is too unclear to give a useful suggestion (they ask what to take but give no goal, interest "
-        "or skill gaps; a word could mean quite different things), reply with one short follow-up question that "
-        f"starts with \"{FOLLOW_UP}\" and nothing else. A clear question, such as which subject teaches a skill, "
-        "never needs one.")
-    turns = [{"role": m["role"], "content": m["content"]} for m in history]
+        "Only if the student asks what to take and names no goal, interest, skill, subject or skill gaps, reply "
+        f"with one short follow-up question that starts with \"{FOLLOW_UP}\" and nothing else. Answer everything "
+        "else directly: a question about a skill (abbreviations such as ML, AI, NLP or BI are clear) or about a "
+        "named subject never needs one.")
+    # an earlier answer without the source list the app adds under it: seen in the history, the model copied the list
+    # into its next answer and the app added its own, so a repeated question showed it twice
+    turns = [{"role": m["role"], "content": m.get("answer", m["content"])} for m in history]
     resp = OpenAI().chat.completions.create(
         model=MODEL,
         temperature=0.2,
@@ -264,6 +287,7 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
         ],
     )
     reply = resp.choices[0].message.content.strip()
+    reply = re.sub(r"(\n\s*\[\d+\] [^\n]*)+\s*$", "", reply).strip()   # a source list the model wrote itself
     if reply.upper().startswith(FOLLOW_UP.upper()):
         return reply[len(FOLLOW_UP):].strip(), None
     return cited_only(reply, sources)

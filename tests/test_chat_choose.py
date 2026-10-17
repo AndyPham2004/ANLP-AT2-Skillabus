@@ -44,6 +44,14 @@ def test_subjects_the_question_names_are_found_with_typos():
     passages = chat.subject_passages(chat.backend.course_subjects("C04372"), set())
     assert {"36100", "36106", "36104", "36122", "94691"} <= chat.named_in(TAKEN_TEXT, passages)
     assert not chat.named_in("Which subject teaches large language models?", passages)
+    assert not chat.named_in("Should I take 36121 or 36123 in Autumn?", passages)      # to compare, not taken
+    assert not chat.named_in("Should I take Deep Learning next semester?", passages)
+
+
+def test_abbreviations_are_spelled_out_for_retrieval():
+    assert chat.spell_out("Which subject teaches ML or NLP?") == \
+        "Which subject teaches machine learning or natural language processing?"
+    assert chat.spell_out("Is AIR travel fine?") == "Is AIR travel fine?"                  # whole words only
 
 
 def test_one_source_per_subject_name_and_closed_subjects_dropped():
@@ -57,9 +65,11 @@ def test_one_source_per_subject_name_and_closed_subjects_dropped():
 
 
 def test_sources_keep_what_the_answer_cites_or_names():
-    s = [{"subject_code": c, "subject_name": n} for c, n in (("1", "A"), ("36118", "NLP"), ("43023", "AI"))]
-    reply, kept = chat.cited_only("Take 36118 NLP [2] or 43023 AI.", s)
-    assert [k["subject_code"] for k in kept] == ["36118", "43023"] and "[1]" in reply and "[2]" not in reply
+    s = [{"subject_code": c, "subject_name": n} for c, n in (("31005", "ML"), ("36118", "NLP"), ("43023", "AI"))]
+    reply, kept = chat.cited_only("Take 43023 AI [1] or 36118 NLP [3].", s)          # marks numbered wrongly
+    assert [k["subject_code"] for k in kept] == ["43023", "36118"] and reply == "Take 43023 AI or 36118 NLP."
+    reply, kept = chat.cited_only("The Handbook covers it [3].", s)                     # no code: marks renumbered
+    assert [k["subject_code"] for k in kept] == ["43023"] and reply == "The Handbook covers it [1]."
 
 
 def test_a_choice_leaves_out_taken_and_named_subjects(stub):
@@ -70,6 +80,17 @@ def test_a_choice_leaves_out_taken_and_named_subjects(stub):
     listed = context.split("Subjects:")[1]
     assert "36121" in listed and not any(c in listed for c in ("36100 ", "36106 ", "36103 ", "94691 "))
     assert [s["subject_code"] for s in sources] == ["36121"]
+
+
+def test_a_repeated_question_shows_its_sources_once(stub):
+    # 17 Oct: the history carried the source list the app adds; the model copied it and the app added its own.
+    stub.replies = ["Take 36118 Applied Natural Language Processing [1].\n\n[1] 36118 Applied Natural Language Processing"]
+    history = [{"role": "user", "content": "Which subject teaches LLMs?"},
+               {"role": "assistant", "content": "Take 36118 [1].\n\n[1] 36118 Applied Natural Language Processing",
+                "answer": "Take 36118 [1]."}]
+    reply, sources = chat.answer("Which subject teaches LLMs?", None, [], "C04372", history)
+    assert stub.calls[0][2]["content"] == "Take 36118 [1]."                # the answer only, not the list
+    assert reply == "Take 36118 Applied Natural Language Processing." and [s["subject_code"] for s in sources] == ["36118"]
 
 
 def test_a_vague_request_gets_one_follow_up_then_an_answer(stub):

@@ -351,9 +351,10 @@ def ask(question: str) -> None:
     if sources is None:                     # a follow-up question: no sources, and the next message answers it
         ss.messages.append({"role": "assistant", "content": reply, "followup": True})
         return
+    shown = reply
     if sources and chat.has_llm():
-        reply += "\n\n" + "  \n".join(f"[{i + 1}] {chat.source_name(s)}" for i, s in enumerate(sources))
-    ss.messages.append({"role": "assistant", "content": reply})
+        shown += "\n\n" + "  \n".join(f"[{i + 1}] {chat.source_name(s)}" for i, s in enumerate(sources))
+    ss.messages.append({"role": "assistant", "content": shown, "answer": reply})   # "answer" goes back to the model
 
 
 def open_chat() -> None:
