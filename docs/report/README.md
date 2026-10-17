@@ -22,5 +22,5 @@ the Word file first if the report changes again. The app it describes is `main` 
 
 Figures in `figures/`: `05_architecture.png` (Figure 5.1, drawn for the final app; source `05_architecture.html`, screenshot of `#fig` at 1560 px), `05_results_skills.png`,
 `05_results_path.png`, `05_evidence.png` (Figures 5.2–5.3, the sample Robert Walters ad and sample resume on
-`main` at bb2f366) and `qr_app.png` (`python src/make_qr.py https://anlp-at2-skillabus-eippveupf3g9iimpi93dma.streamlit.app`). Figure 3.1 is
+`main` at bb2f366) and `qr_app.png` (`python src/make_qr.py https://skillabus.streamlit.app`). Figure 3.1 is
 `../figures/fig4_ds_2019_vs_2026.png`.
