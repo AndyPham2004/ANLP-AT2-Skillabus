@@ -1,6 +1,7 @@
 """Can the student enrol in a subject, and when? Owner: Phuong Nhi.
 
-    load_rules()                         ->  Rules from prerequisites.csv and offerings.csv (data contract section 3)
+    load_rules()                         ->  Rules from prerequisites.csv, offerings.csv (data contract section 3)
+                                             and the courses of each subject in subject_profiles.csv
     enrolment(code, done, rules)         ->  {"status": "open" | "needs" | "closed", "needs": [...], "reason": ...}
     schedule(path, rules, start)         ->  the path laid out over sessions, prerequisites first
 
@@ -17,6 +18,9 @@ antirequisite list, or when it is on the antirequisite list of a subject they ha
 site often lists a pair on one side only). The rule string is ignored for antirequisites: the
 site prints the list as "(1 AND 2 AND 3)", and some rules name items it does not list. A rule left empty because the access-conditions site has no
 record of the subject (`evop_found` = n) is treated as open but flagged `unverified`.
+A subject listed only in Bachelor courses (C10xxx, Honours C09xxx) is closed to a student of a
+postgraduate course (#162: 31250 and 43007 sat in an MDSI student's path); the Handbook states no
+rule for it, but a master's student cannot enrol in an undergraduate subject.
 
 A subject that is not open may still be reachable: if its rule is met by taking at most
 MAX_NEEDS more subjects that are open now, recommend() adds them to the path before it.
@@ -38,6 +42,8 @@ from . import paths
 ROOT = paths.ROOT
 PREREQUISITES_CSV = paths.PREREQUISITES
 OFFERINGS_CSV = paths.OFFERINGS
+PROFILES_CSV = paths.SUBJECT_PROFILES
+UNDERGRADUATE = ("C09", "C10")     # UTS course codes: Bachelor (C10) and Bachelor Honours (C09); C04, C06, C11 are postgraduate
 HOME_COURSE = "C04372"
 MAX_NEEDS = 2              # at most this many prerequisites are added for one subject
 SESSIONS = ("Autumn", "Spring")
@@ -64,6 +70,7 @@ class Rules:
     unverified: set[str] = field(default_factory=set)       # no record on the access-conditions site
     offered: dict[str, tuple[str, ...]] = field(default_factory=dict)   # code -> teaching periods
     has_offerings: bool = False
+    courses: dict[str, frozenset] = field(default_factory=dict)          # code -> the courses that list it
 
     @property
     def loaded(self) -> bool:
@@ -77,8 +84,12 @@ def _read(path: Path) -> list[dict]:
         return [{k: (v or "").strip() for k, v in row.items()} for row in csv.DictReader(f)]
 
 
+def undergraduate(course: str) -> bool:
+    return course.startswith(UNDERGRADUATE)
+
+
 @lru_cache(maxsize=4)
-def _load(prereq: str, prereq_mtime: float, offer: str, offer_mtime: float) -> Rules:
+def _load(prereq: str, prereq_mtime: float, offer: str, offer_mtime: float, prof: str, prof_mtime: float) -> Rules:
     rules = Rules()
     if prereq:
         parts: dict[tuple[str, str], tuple[str, dict]] = {}
@@ -98,13 +109,20 @@ def _load(prereq: str, prereq_mtime: float, offer: str, offer_mtime: float) -> R
             periods.setdefault(row["subject_code"], []).append(row["teaching_period"])
         rules.offered = {code: tuple(dict.fromkeys(p)) for code, p in periods.items()}
         rules.has_offerings = True
+    if prof:
+        courses: dict[str, set[str]] = {}
+        for row in _read(Path(prof)):
+            courses.setdefault(row["subject_code"], set()).update(c.strip() for c in row.get("course", "").split("|") if c.strip())
+        rules.courses = {code: frozenset(c) for code, c in courses.items() if c}
     return rules
 
 
-def load_rules(prerequisites_csv: str | Path | None = None, offerings_csv: str | Path | None = None) -> Rules:
-    """The rules from the two files; a file that does not exist is skipped (everything open)."""
+def load_rules(prerequisites_csv: str | Path | None = None, offerings_csv: str | Path | None = None,
+               profiles_csv: str | Path | None = None) -> Rules:
+    """The rules from the three files; a file that does not exist is skipped (everything open)."""
     paths = []
-    for given, default in ((prerequisites_csv, PREREQUISITES_CSV), (offerings_csv, OFFERINGS_CSV)):
+    for given, default in ((prerequisites_csv, PREREQUISITES_CSV), (offerings_csv, OFFERINGS_CSV),
+                           (profiles_csv, PROFILES_CSV)):
         path = Path(given) if given else default
         path = path if path.is_absolute() else ROOT / path
         paths += [str(path), path.stat().st_mtime] if path.exists() else ["", 0.0]
@@ -268,6 +286,9 @@ def enrolment(code: str, done: set[str], rules: Rules, home_course: str | None =
     out = {"status": "open", "needs": [], "reason": "", "unverified": code in rules.unverified}
     if rules.has_offerings and code not in rules.offered and code in rules.requisite:   # scraped, no 2026 period
         return {**out, "status": "closed", "reason": "not taught in 2026 (Handbook)"}
+    listed = rules.courses.get(code)
+    if home_course and not undergraduate(home_course) and listed and all(undergraduate(c) for c in listed):
+        return {**out, "status": "closed", "reason": "undergraduate subject: only in Bachelor courses"}
     clash = antirequisite_clash(code, done, rules)
     if clash:
         return {**out, "status": "closed", "reason": f"antirequisite: already took {', '.join(clash)}"}
