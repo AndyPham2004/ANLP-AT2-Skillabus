@@ -237,8 +237,7 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     when they ask what to take, its own subjects; history: the chat so far ({"role", "content", "followup"?}), so a
     vague request can get one follow-up question and the student's reply is read together with the request.
     """
-    home_course = home_course or backend.HOME_COURSE
-    history = list(history)[-HISTORY:]
+    history = list(history)[-HISTORY:]          # home_course None = not enrolled yet: no course subjects, no course rules
     replying = bool(history) and history[-1].get("followup", False)       # this message answers our follow-up
     query = question
     # a reply to our follow-up, or a short follow-on ("Can you give me a full plan?"), is searched with the message before
