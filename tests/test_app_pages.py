@@ -488,15 +488,3 @@ def test_no_resume_counts_only_the_subjects():
     skills = at.session_state.result["skills"]
     assert at.session_state.resume_text == "" and all(s["status"] == "missing" for s in skills)
     assert "From subjects you have taken" not in page_text(at)
-
-
-def test_start_over_clears_the_inputs():
-    at = open_app()
-    pick_role(at, "Data Engineer")
-    at.multiselect(key="taken_box").set_value(["94693"]).run()
-    show_gaps(at)
-    at.button(key="start_over").click().run()
-    assert not at.exception, at.exception
-    assert at.session_state.step == "inputs" and at.session_state.result is None
-    assert at.session_state.taken_keep == [] and at.session_state.role_keep == "Data Scientist"
-    assert at.multiselect(key="taken_box").value == [] and chosen_roles(at) == ["Data Scientist"]

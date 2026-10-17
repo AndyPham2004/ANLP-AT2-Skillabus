@@ -204,8 +204,6 @@ DEFAULTS = {
 }
 for k, v in DEFAULTS.items():
     ss.setdefault(k, v)
-# Kept off screen but not in DEFAULTS: the resume the student gave (start_over() clears them too).
-RESUME_KEYS = ("resume_mode_keep", "resume_keep", "resume_text_keep")
 
 
 def go(step: str, **kw) -> None:
@@ -216,13 +214,6 @@ def go(step: str, **kw) -> None:
 
 def toggle(key: str) -> None:
     ss[key] = not ss[key]
-
-
-def start_over() -> None:
-    """Back to the Inputs page as a new visitor sees it; the Handbook chat stays."""
-    ss.update({k: v for k, v in DEFAULTS.items() if k != "messages"})
-    for k in RESUME_KEYS:
-        ss.pop(k, None)
 
 
 @st.cache_resource(show_spinner=False)
@@ -458,10 +449,11 @@ def job_ad_block() -> None:
 
 def role_block() -> None:
     """The 11 roles, one pills row per family with the family's name on the left."""
+    rows = st.container(key="role_rows")
     for n, (family, roles) in enumerate(FAMILIES.items()):
         ss.setdefault(f"role_f{n}", ss.role_keep if ss.role_keep in roles else None)
-        name_col, pills_col = st.columns([0.75, 3.6], vertical_alignment="center", gap="small")
-        name_col.markdown(f"<span class='k-small k-mute'>{ui.esc(family)}</span>", unsafe_allow_html=True)
+        name_col, pills_col = rows.columns([1, 3.6], vertical_alignment="center", gap="small")
+        name_col.markdown(f"<span class='k-small k-mute k-fam'>{ui.esc(family)}</span>", unsafe_allow_html=True)
         pills_col.pills(family, roles, key=f"role_f{n}", label_visibility="collapsed", on_change=pick_role, args=(n,),
                         format_func=lambda r: ROLE_SHORT.get(r, r))
     role = ss.role_keep
@@ -899,9 +891,7 @@ def page_results() -> None:
     n_part = sum(s["status"] == "partial" for s in skills)
     gaps = [s for s in skills if s["status"] != "have"]
 
-    top_l, top_r = st.columns([5, 1])
-    top_l.button("← Change inputs", key="back_inputs", type="tertiary", on_click=go, args=("inputs",))
-    top_r.button("Start over", key="start_over", type="tertiary", on_click=start_over)
+    st.button("← Change inputs", key="back_inputs", type="tertiary", on_click=go, args=("inputs",))
 
     if not skills:
         if ss.engine.startswith("none"):
