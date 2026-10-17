@@ -149,6 +149,18 @@ button[data-testid="stBaseButton-pills"]:hover, button[data-testid="stBaseButton
 .k-count.o { background: transparent; border: 1px solid; }
 .k-swatch { display: inline-block; width: 16px; height: 6px; border-radius: 3px; background: #4fd1b8; margin-right: 7px; vertical-align: middle; }
 .k-dotted { border-bottom: 1px dotted currentColor; }
+/* the start page: the size of the data under the three doors; the third door (not sure yet) stands out */
+.k-nums { display: flex; gap: 36px; margin-top: 26px; }
+.k-nums div { display: grid; } .k-nums b { font: 500 26px 'Literata', Georgia, serif; color: #e8e6e1; }
+.k-nums span { font-size: 12.5px; color: #9a9a94; }
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-door_fit_box), .st-key-door_fit_box[data-testid="stVerticalBlockBorderWrapper"] { border-color: rgba(79,209,184,.55); background: rgba(79,209,184,.04); }
+/* the UTS courses tab: one row per course, the student's own course tinted */
+.k-crow { display: grid; grid-template-columns: minmax(300px, 38%) 1fr 56px; gap: 6px 18px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(255,255,255,.08); }
+.k-crow.mine { background: rgba(143,188,255,.06); margin: 0 -12px; padding: 10px 12px; border-radius: 6px; }
+.k-crow .c { font-size: 15px; font-weight: 500; } .k-crow .c small { display: block; font-weight: 400; font-size: 12px; color: #9a9a94; }
+.k-crow .subs { grid-column: 1 / -1; display: flex; gap: 0; flex-wrap: wrap; }
+.k-crow .subs .k-chip { font-size: 12px; padding: 2px 9px; }
+.k-yours { font: 500 10.5px 'Public Sans', system-ui, sans-serif; color: #8fbcff; border: 1px solid rgba(143,188,255,.5); border-radius: 99px; padding: 1px 7px; margin-left: 8px; vertical-align: 2px; }
 div[data-testid="stDataFrame"] { border-radius: 6px; overflow: hidden; }
 div[data-testid="stTextArea"] textarea { font-family: 'Literata', Georgia, serif; font-size: 16px; line-height: 1.6; }
 /* A chosen item in a multiselect: Streamlit paints it in the (light) primary colour with light text. Dark chip instead.

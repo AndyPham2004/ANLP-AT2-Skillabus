@@ -225,6 +225,89 @@ def self_study_ladder(skill: str, role: str | None = None, limit: int = MAX_SELF
     return sorted(chosen, key=lambda r: LEVELS.index(r["level"]))       # stable: pool order within a level
 
 
+# ---------------------------------------------------------------- which UTS course, which role (Quan, 17 Oct)
+
+COURSE_SIZE = [   # how many subjects a kind of course lets a student take (the first matching word wins)
+    ("Graduate Certificate", 4), ("Graduate Diploma", 8), ("(Honours)", 8), ("Master", 12), ("Bachelor", 24),
+]
+
+
+def course_size(name: str) -> int:
+    return next((n for word, n in COURSE_SIZE if word in name), 12)
+
+
+def course_base(name: str) -> str:
+    """'Master of Business Analytics (C04380)' -> 'Master of Business Analytics': one course under two codes."""
+    return name.split(" (C")[0]
+
+
+def _weights(role: str) -> dict[str, float]:
+    """The role's 15 skills, each weighed by its share of the role's ads plus one (as the gap weight)."""
+    from skillabus.match import match_role
+    return {s["skill_label"]: (s.get("demand_pct") or 0) + 1 for s in match_role([], role)}
+
+
+@lru_cache(maxsize=16)
+def course_fit(role: str) -> list[dict]:
+    """UTS courses ranked for a role: the share of the role's ad demand that the best subjects a student can take
+    in the course teach. A subject teaches a skill when its learning objectives, topics or assessments name it
+    (a description alone does not count). Each item: code, course, kind, size, pct, covered, subjects, missing."""
+    from skillabus.recommend import subject_evidence
+
+    weight = _weights(role)
+    labels = list(weight)
+    total = sum(weight.values())
+    teaches: dict[str, set[str]] = {}
+    for label, items in subject_evidence(labels, method="keyword").items():
+        for e in items:
+            if e.get("layer") != "description":
+                teaches.setdefault(e["subject_code"], set()).add(label)
+    members: dict[str, set[str]] = {}
+    for subject, codes in subject_courses().items():
+        for c in codes:
+            members.setdefault(c, set()).add(subject)
+    name_of = dict(courses())
+    subject_name = dict(subjects())
+    best: dict[str, dict] = {}
+    for code, subs in members.items():
+        name = name_of.get(code, code)
+        size, covered, picked = course_size(name), set(), []
+        for _ in range(size):                               # greedy: the subject that adds the most demand
+            gain = {s: sum(weight[k] for k in teaches.get(s, set()) - covered) for s in subs - set(picked)}
+            s = max(gain, key=gain.get, default=None)
+            if s is None or gain[s] <= 0:
+                break
+            picked.append(s)
+            covered |= teaches[s]
+        row = {"code": code, "course": course_base(name), "kind": next((w for w, _ in COURSE_SIZE if w in name), "Course"),
+               "size": size, "pct": 100 * sum(weight[k] for k in covered) / total, "covered": sorted(covered),
+               "subjects": [subject_name.get(s, s) for s in picked],
+               "missing": [k for k in labels if k not in covered]}
+        key = row["course"]
+        if key not in best or row["pct"] > best[key]["pct"]:
+            best[key] = row
+    return sorted(best.values(), key=lambda r: (-r["pct"], r["size"], r["course"]))
+
+
+def role_fit(result_of, roles: list[str] | None = None) -> list[dict]:
+    """The 11 roles ranked by how much of each role's ad demand the student already covers (have in full,
+    partial by half). `result_of(role)` returns the analyse() result for that role (the app caches them)."""
+    out = []
+    for family, names in role_families().items():
+        for role in names:
+            if roles is not None and role not in roles:
+                continue
+            skills = result_of(role)["skills"]
+            weight = {s["skill_label"]: (s.get("demand_pct") or 0) + 1 for s in skills}
+            total = sum(weight.values()) or 1
+            got = sum(weight[s["skill_label"]] * (1 if s["status"] == "have" else 0.5 if s["status"] == "partial" else 0)
+                      for s in skills)
+            out.append({"role": role, "family": family, "pct": 100 * got / total,
+                        "have": sum(s["status"] == "have" for s in skills), "total": len(skills),
+                        "missing": [s["skill_label"] for s in skills if s["status"] != "have"][:3]})
+    return sorted(out, key=lambda r: (-r["pct"], r["role"]))
+
+
 # ---------------------------------------------------------------- analysis
 
 def baseline_ranking(gaps: list[dict], taken: list[str]) -> dict:
