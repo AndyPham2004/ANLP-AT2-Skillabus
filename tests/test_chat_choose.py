@@ -1,6 +1,7 @@
 """Tests for the Handbook chat's subject choice (app/chat.py, 17 Oct): codes and names, one source per subject,
 subjects taken or named left out, and one follow-up question for a vague request. The model is a stub, so no key
 is needed and the run is the same on every machine."""
+import re
 import sys
 import types
 from pathlib import Path
@@ -120,9 +121,12 @@ def test_a_plan_without_a_course_asks_which_course_then_links_it(stub):
     assert sources is None and "Which UTS course" in reply and not stub.calls             # asked without the model
     history = [{"role": "user", "content": "Give me a full 2-year study plan"},
                {"role": "assistant", "content": reply, "followup": True}]
-    stub.replies = ["The course structure is in the UTS Handbook. Consider 36103 Statistical Thinking for Data Science."]
     reply, sources = chat.answer("Master of Data Science and Innovation", None, [], None, history)
-    assert "(https://coursehandbook.uts.edu.au/course/2026/C04372)" in reply and "do not lay one out" in stub.calls[0][0]["content"]
+    assert "(https://coursehandbook.uts.edu.au/course/2026/C04372)" in reply and sources == [] and not stub.calls
+    # enrolled: the link only, no subjects "for your goal" when none was given (17 Oct test, Master of Cybersecurity)
+    reply, sources = chat.answer("Give me a 2-year study plan", None, [], "C04430")
+    assert "(https://coursehandbook.uts.edu.au/course/2026/C04430)" in reply and sources == [] and not stub.calls
+    assert not re.search(r"\b\d{5,6}\b", reply)                                       # no subject codes
     assert chat.course_named("I'm in MDSI") == "C04372" and chat.course_named("the Master of Cybersecurity") == "C04430"
 
 

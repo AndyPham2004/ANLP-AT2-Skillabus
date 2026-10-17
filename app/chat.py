@@ -382,6 +382,13 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     if PLAN.search(query) and not course and not replying:
         return ("Which UTS course are you in, or planning to take (for example the Master of Data Science and "
                 "Innovation, C04372)? I'll point you to its structure in the Handbook."), None
+    if PLAN.search(query) and course:
+        # the link only: subjects suggested "for your goal" when no goal was given read as random (17 Oct test)
+        label, url = course_page(course)
+        return (f"The structure of the {label.replace(' in the UTS Handbook', '')} (core subjects, electives, credit "
+                f"points) is on its page in the Handbook: [{label}]({url}). I can't lay out a full study plan here. "
+                "Tell me your goal or the skills you want, and I can suggest electives; please confirm your plan "
+                "with your course coordinator."), []
     advice = advice or bool(named_course)     # "How about the Master of Business Analytics?": its own subjects too
     if advice:
         lp = (gap or {}).get("learning_path")
@@ -442,11 +449,7 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
                 "student's skill gaps only when the question is about them. Never suggest a subject the "
                 "student has taken or says they have taken or plan to take, nor one whose name or topic is "
                 "nearly the same (a second deep learning subject for someone taking Deep Learning). If the "
-                "student names a session, suggest only subjects that run in it. If asked for a full study plan "
-                "or a course's structure, do not lay one out: say in one sentence that the course structure (core "
-                "subjects, electives, credit points) is on the course's page in the UTS Handbook, suggest two or "
-                "three subjects for their goal with the sessions they run in, and suggest confirming the plan with "
-                "their course coordinator. Two to five sentences. "
+                "student names a session, suggest only subjects that run in it. Two to five sentences. "
                 "Suggestions, not advice. " + follow_up)},
             *turns,
             {"role": "user", "content": f"{gaps}Subjects:\n{context}\n\nQuestion: {question}"},
