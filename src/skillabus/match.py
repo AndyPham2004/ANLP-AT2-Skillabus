@@ -354,6 +354,13 @@ def role_profile(role: str = DEFAULT_ROLE, top_n: int = 15) -> list[dict]:
     return mentions
 
 
+def match_ad(ad_skills: list[dict], resume_skills: list[dict], role: str = DEFAULT_ROLE) -> list[dict]:
+    """match() for a pasted ad weighed by the ads of `role` (backend.analyse finds it from the ad's first line):
+    the same shares, caption and trend as match_role(), so a Cybersecurity ad is not weighed by Data Scientist ads."""
+    return match(ad_skills, resume_skills, demand=role_demand(role), demand_2026=_shares(block_2026(role)),
+                 block=_block(role), demand_2019_22=_shares(block_2019_22(role)))
+
+
 def match_role(resume_skills: list[dict], role: str = DEFAULT_ROLE, top_n: int = 15) -> list[dict]:
     """match() against a role instead of an ad: `demand_pct` is the share of the role's ads (demand_block),
     `demand_pct_2026` the share of its 2026 ads (block_2026, today the same block), and for Data
