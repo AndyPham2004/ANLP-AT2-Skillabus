@@ -10,4 +10,5 @@
 | `06_evaluation.md` | Metrics, results, error analysis | Hoai Thuong | 12 Oct |
 | `07_ethics_limitations.md` | Ethics, limitations | Akash (draft), Van Thong (final) | 17 Oct |
 | `08_conclusion.md` | Takeaways, future work | Quan | 12 Oct |
-| `10_appendix.md` | Links, data sources and licences, data dictionary, glossary, moved tables | Van Thong, Akash (B, C) | 17 Oct |
+| `10_appendix.md` | Appendix A: links, data sources and licences, ads per role, rank agreement, subject layers | Van Thong | 17 Oct |
+| `12_appendix_reference.md` | Appendix C data dictionary, Appendix D glossary (after `11_appendix_evaluation.md`, Appendix B) | Akash, Van Thong | 17 Oct |
