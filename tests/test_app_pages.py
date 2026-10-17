@@ -454,15 +454,29 @@ def test_handbook_chat_is_its_own_page_and_names_no_codes():
 def test_taken_subjects_count_for_a_job_ad_and_ask_for_the_resume():
     # 17 Oct: a skill the student has from a subject counts as "have" for an ad too, flagged as not on the resume.
     at = aim_at_an_ad(open_app())
-    at.multiselect(key="taken_box").set_value(["36120"]).run()                  # Machine Learning Algorithms and Applications
+    at.multiselect(key="taken_box").set_value(["36120"]).run()                  # Advanced Machine Learning Application
     show_gaps(at)
     skills = at.session_state.result["skills"]
     ml = next(s for s in skills if s["skill_label"] == "Machine learning")
     assert ml["status"] == "have" and ml["resume_evidence"].startswith("From 36120")
     assert "36120" not in [r["subject_code"] for r in at.session_state.result["recommendations"]]
     assert "From subjects you have taken but not on your resume: machine learning" in page_text(at)
+    # its row says so in amber, not as a plain "have" (17 Oct: the note under the list was easy to miss)
+    from_subjects = sum((s["resume_evidence"] or "").endswith("(taken)") for s in skills)
+    assert page_text(at).count("have · not on CV") == from_subjects >= 1
     open_skill(at, next(i for i, s in enumerate(skills) if s["skill_label"] == "Machine learning"))
-    assert "a subject you have taken. Your resume does not mention it: add it." in page_text(at)
+    text = page_text(at)
+    assert "you have it · not on your CV" in text
+    assert "a subject you have taken. Your resume does not mention it: add it." in text
+
+
+def test_a_skill_from_a_subject_without_a_resume_is_a_plain_have():
+    at = open_app()
+    at.segmented_control(key="resume_mode").set_value("No resume").run()
+    at.multiselect(key="taken_box").set_value(["36120"]).run()
+    show_gaps(at)
+    assert any((s["resume_evidence"] or "").endswith("(taken)") for s in at.session_state.result["skills"])
+    assert "not on CV" not in page_text(at) and "not on your resume" not in page_text(at)
 
 
 def test_no_resume_counts_only_the_subjects():
