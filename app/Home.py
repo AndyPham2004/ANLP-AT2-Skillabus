@@ -346,7 +346,7 @@ def pick_role(n: int) -> None:
 
 def ask(question: str) -> None:
     ss.messages.append({"role": "user", "content": question})
-    reply, sources = chat.answer(question, ss.result)
+    reply, sources = chat.answer(question, ss.result, ss.taken_keep, ss.course_keep or backend.HOME_COURSE)
     if sources and chat.has_llm():
         reply += "\n\n" + "  \n".join(f"[{i + 1}] {chat.source_name(s)}" for i, s in enumerate(sources))
     ss.messages.append({"role": "assistant", "content": reply})
