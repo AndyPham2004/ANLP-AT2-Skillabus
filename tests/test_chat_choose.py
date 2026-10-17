@@ -126,6 +126,37 @@ def test_a_plan_without_a_course_asks_which_course_then_links_it(stub):
     assert chat.course_named("I'm in MDSI") == "C04372" and chat.course_named("the Master of Cybersecurity") == "C04430"
 
 
+def test_fixes_from_the_17_oct_test_run(stub):
+    # an invented code loses it; a real code gets its own name back
+    assert chat.fix_codes('The subject is "36119 Machine Learning."') == 'The subject is "Machine Learning."'
+    assert chat.fix_codes("1. 36106 Data Analytics for Business (runs in Spring)") == \
+        "1. 36106 Machine Learning Algorithms and Applications (runs in Spring)"
+    ok = "Take 36118 Applied Natural Language Processing in Autumn 2027."
+    assert chat.fix_codes(ok) == ok
+    assert chat.fix_codes("I have nothing on 99999.", "What does 99999 teach?") == "I have nothing on 99999."
+    assert chat.fix_codes("See the Master of Business Analytics (C04444) page.") == "See the Master of Business Analytics page."
+    assert chat.fix_codes("See C04372.") == "See C04372."
+    # the model's own link to the Handbook front page is pointed at the course; no link inside a link
+    reply = chat.link_handbook("See [the UTS Handbook](https://coursehandbook.uts.edu.au).", "C04379")
+    assert reply == "See [the UTS Handbook](https://coursehandbook.uts.edu.au/course/2026/C04379)."
+    bad = "See [MBA (C04444) in the UTS Handbook](https://coursehandbook.uts.edu.au/course/2026/C04444)."
+    assert chat.link_handbook(chat.fix_codes(bad), "C04379") == \
+        "See [MBA in the UTS Handbook](https://coursehandbook.uts.edu.au/course/2026/C04379)."
+    # "Master of AI" is the Master of Artificial Intelligence; a subject named like the question comes first
+    assert chat.course_named("Give me a study plan, Master of AI") == "C04443"
+    assert "36122" in [p["subject_code"] for p in chat.name_matches("Which subject teaches Python?")]
+    assert not chat.name_matches("I want to be a data scientist, give me a full 2-year study plan for my degree")
+    # an answer that names no subject lists none
+    assert chat.cited_only("I'm unable to answer that question.", [{"subject_code": "26899"}]) == \
+        ("I'm unable to answer that question.", [])
+    # a short question of its own is not read with the one before
+    stub.replies = ["36106 Machine Learning Algorithms and Applications teaches it."]
+    history = [{"role": "user", "content": "Give me a list of subjects that teach Python."},
+               {"role": "assistant", "content": "36122 Python Programming", "answer": "36122 Python Programming"}]
+    chat.answer("Which subject teaches ML?", None, [], "C04372", history)
+    assert "Python Programming:" not in stub.calls[0][-1]["content"].split("Question:")[0].split("Subjects:")[1][:80]
+
+
 def test_a_subject_asked_about_stays_even_when_taken(stub):
     # 17 Oct: "36106 or 36120 for deep learning?" with both ticked as taken answered "couldn't find anything".
     stub.replies = ["36120 Advanced Machine Learning Application goes further than 36106; you have taken both."]

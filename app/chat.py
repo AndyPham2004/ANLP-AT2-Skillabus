@@ -31,6 +31,8 @@ MAX_SUBJECTS = 4       # subjects shown and cited
 MAX_CHOICES = 10       # subjects the model may choose from when the student asks what to take
 PER_SUBJECT = 2        # passages kept per subject
 HISTORY = 6            # earlier chat messages the model sees
+FOLLOW_ON = re.compile(r"\b(it|its|that|this|those|these|them|they|more|else|another|other|others|again|instead|"
+                       r"what about|how about|full plan|the plan)\b", re.I)
 FOLLOW_UP = "FOLLOW-UP:"   # how the model marks a question back to the student
 # "I took ..., which one more should I pick?": a request for a choice, so the student's own course subjects
 # join the retrieved ones (words of the question alone found the subjects already taken).
@@ -108,6 +110,21 @@ def subject_passages(codes: list[str], exclude: set[str]) -> list[dict]:
     return out
 
 
+NAME_STOP = set(STOP_WORDS) | {"want", "give", "need", "help", "best", "good", "list", "year", "years", "semester",
+                                "autumn", "spring", "plan", "study", "full", "take", "which", "what", "like", "know"}
+
+
+def name_matches(question: str, k: int = 3) -> list[dict]:
+    """Subjects whose name holds every topic word of a short question ("Which subject teaches Python?" -> 36122 Python
+    Programming): the search ranks a subject's text, and 36118's Python exercises came first. Only for questions of
+    one to three topic words; a long one names too many."""
+    words = [w for w in _words(spell_out(question)) if w not in NAME_STOP and len(w) > 2 and not w.isdigit()]
+    if not 1 <= len(words) <= 3:
+        return []
+    hits = [c for c, n in backend.subjects() if all(re.search(rf"\b{w}", n.lower()) for w in words)]
+    return subject_passages(hits[:k], set())
+
+
 def by_subject(passages: list[dict], exclude: set[str] = frozenset(), home_course: str | None = None,
                limit: int = MAX_SUBJECTS) -> list[dict]:
     """One source per subject, best first: '36118 Applied Natural Language Processing' with up to PER_SUBJECT
@@ -178,7 +195,7 @@ def cited_only(reply: str, sources: list[dict]) -> tuple[str, list[dict]]:
     """The sources the answer names by code, in the order it names them, and the answer without [n] marks: it names
     each subject by code and name already, and a mark could disagree with the list (a [2] numbered after an earlier
     answer pointed at another subject). An answer that names no code keeps its marks, renumbered, and the sources
-    they cite; all sources if it does neither."""
+    they cite; none if it does neither ("I'm unable to answer that" listed four unrelated subjects)."""
     named = {}
     for i, s in enumerate(sources, 1):
         if s.get("subject_code"):
@@ -189,7 +206,7 @@ def cited_only(reply: str, sources: list[dict]) -> tuple[str, list[dict]]:
         return re.sub(r"\s*\[\d+\]", "", reply), [sources[n - 1] for n in sorted(named, key=named.get)]
     first = {i: m.start() for i in range(len(sources), 0, -1) for m in re.finditer(rf"\[{i}\]", reply)}
     if not first:
-        return reply, sources
+        return reply, []
     order = sorted(first, key=first.get)
     new = {old: i + 1 for i, old in enumerate(order)}
     reply = re.sub(r"\[(\d+)\]", lambda m: f"[{new[int(m.group(1))]}]" if int(m.group(1)) in new else "", reply)
@@ -251,17 +268,56 @@ def course_named(text: str) -> str | None:
         return code
     if re.search(r"\bMDSI\b", text):
         return "C04372"
-    low = text.lower()
+    low = spell_out(text).lower()                    # "Master of AI" -> Master of Artificial Intelligence
     names = sorted(((n, c) for c, n in known.items() if not re.search(r"\(C\d{5}\)$", n)), key=lambda x: -len(x[0]))
     return next((c for n, c in names if n.lower() in low), None)
 
 
 def link_handbook(reply: str, home_course: str | None) -> str:
-    """Link the first mention of the Handbook to the student's course page, unless the answer already links it."""
+    """Link the first mention of the Handbook to the student's course page, unless the answer already links it. A link
+    the model wrote to the Handbook's front page is pointed at the course page; text inside a link is left alone (a
+    link put inside the model's own link label rendered as broken brackets)."""
     label, url = course_page(home_course)
+    known = dict(backend.courses())
+    reply = re.sub(rf"\]\({re.escape(HANDBOOK)}/?\)", f"]({url})", reply)
+    # a link the model wrote to a course page that does not exist (C04444) goes to the course page
+    reply = re.sub(rf"\]\({re.escape(HANDBOOK)}/course/\d{{4}}/(\w*)\)",
+                   lambda m: m.group(0) if m.group(1) in known else f"]({url})", reply)
     if url in reply:
         return reply
-    return re.sub(r"(?<!\[)(?:the )?(?:course's page in the )?UTS Handbook", lambda m: f"[{label}]({url})", reply, count=1)
+    parts = re.split(r"(\[[^\]]*\]\([^)]*\))", reply)                   # odd items are existing links
+    for i in range(0, len(parts), 2):
+        parts[i], n = re.subn(r"(?:the )?(?:course's page in the )?UTS Handbook", lambda m: f"[{label}]({url})",
+                              parts[i], count=1)
+        if n:
+            break
+    return "".join(parts)
+
+
+def fix_codes(reply: str, question: str = "") -> str:
+    """Subject codes the model wrote that are not UTS subjects lose the code ("36119 Machine Learning" was invented);
+    a real code followed by another subject's name gets its own name back ("36106 Data Analytics for Business"); a
+    course code that is not a UTS course is dropped ("Master of Business Analytics (C04444)"). A code the student
+    typed stays ("I don't have information on 99999")."""
+    names, typed = dict(backend.subjects()), set(re.findall(r"\b[C]?\d{5,6}\b", question))
+    courses = dict(backend.courses())
+    reply = re.sub(r"\s*\((C\d{5})\)|(?<![/\w])(C\d{5})\b",
+                   lambda m: m.group(0) if (m.group(1) or m.group(2)) in courses or (m.group(1) or m.group(2)) in typed
+                   else "", reply)
+
+    def fix(m):
+        code, title = m.group(1), m.group(2) or ""
+        if code in typed:
+            return m.group(0)
+        if code not in names:
+            return title.lstrip()
+        if title.strip() and not title.strip().lower().startswith(names[code].lower()[:12]):
+            return f"{code} {names[code]}"
+        return m.group(0)
+
+    # a code, then the Title Case words that follow it (up to punctuation): the name the model gave it
+    return re.sub(r"(?<![\w/\[])(\d{5,6})(?![\w/])((?:\s+[A-Z0-9][\w&'’-]*(?:\s+(?:and|of|for|in|to|the|&))?)*)",
+                  fix, reply)
 
 
 def link_courses(reply: str) -> str:
@@ -307,22 +363,26 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     history = list(history)[-HISTORY:]          # home_course None = not enrolled yet: no course subjects, no course rules
     replying = bool(history) and history[-1].get("followup", False)       # this message answers our follow-up
     query = question
-    # a reply to our follow-up, or a short follow-on ("Can you give me a full plan?"), is searched with the message before
-    if replying or (history and len(question.split()) < 8):
+    # a reply to our follow-up, or a short follow-on that points back ("Give me two more", "How about ...?"), is searched
+    # with the message before; a short question of its own is not ("Which subject teaches ML?" after a Python question
+    # was searched as Python and answered with an invented code)
+    if replying or (history and len(question.split()) < 8 and FOLLOW_ON.search(question)):
         asked = next((m["content"] for m in reversed(history) if m["role"] == "user"), "")
         query = f"{asked} {question}"
     done, advice = set(taken), bool(ADVICE.search(query))
-    passages = retrieve(spell_out(query), k=POOL)
+    passages = name_matches(query) + retrieve(spell_out(query), k=POOL)
     # a subject the student asks about stays even when taken ("36106 or 36120 for deep learning?" with both ticked
     # found nothing); only the subjects the question does not name are left out as taken
     asked = named_in(query, passages, done_or_planned=False) - named_in(query, passages)
     done -= asked
     # the course the question names, else the student's; a plan for an unknown course asks which one, once, so the
     # answer can link the right course page
-    course = course_named(query) or home_course
+    named_course = course_named(question) or course_named(query)   # this message's course before an earlier one's
+    course = named_course or home_course
     if PLAN.search(query) and not course and not replying:
         return ("Which UTS course are you in, or planning to take (for example the Master of Data Science and "
                 "Innovation, C04372)? I'll point you to its structure in the Handbook."), None
+    advice = advice or bool(named_course)     # "How about the Master of Business Analytics?": its own subjects too
     if advice:
         lp = (gap or {}).get("learning_path")
         path = lp.get("subjects", []) if isinstance(lp, dict) else []
@@ -397,4 +457,4 @@ def answer(question: str, gap: dict | None, taken: list[str] | tuple = (), home_
     at = reply.upper().find(FOLLOW_UP.upper())        # the marker, even after a sentence the model put before it
     if at != -1:
         return reply[at + len(FOLLOW_UP):].strip(), None
-    return cited_only(link_courses(link_handbook(reply, course)), sources)
+    return cited_only(link_courses(link_handbook(fix_codes(reply, question), course)), sources)

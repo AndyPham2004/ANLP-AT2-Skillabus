@@ -479,7 +479,10 @@ def chat_thread() -> None:
         if question:
             ask(question)
         with thread:
-            if not ss.messages:
+            if ss.messages:                          # the chat remembers the thread; a new topic may want a clean one
+                st.button("New chat", key="chat_new", type="tertiary", icon=":material/refresh:",
+                          on_click=lambda: ss.update(messages=[]))
+            else:
                 for col, (i, text) in zip(st.columns(3, gap="small"), enumerate(CHAT_SUGGESTIONS)):
                     col.button(text, key=f"chat_sug_{i}", width="stretch", on_click=ask, args=(text,))
             for m in ss.messages:
