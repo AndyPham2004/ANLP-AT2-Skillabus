@@ -6,10 +6,10 @@ Skillabus puts ads, resumes and UTS subject outlines on one skills vocabulary an
 
 ## 8.2 What does not work yet
 
-- Soft skills and the bare letter "R" are the main extraction misses, and partial matches are unreliable.
+- Soft skills and the bare letter “R” are the main extraction misses, and partial matches are unreliable.
 - Subject P@3 does not compare methods, and the chat judge is the same model that writes the answers.
 - The test sets are small (20 ads, 45 pairs, 33 skill–subject pairs, 15 questions).
-- We did not test the app with students (issue #32), so we do not know whether it changes what they enrol in.
+- We did not test the app with students (issue \#32), so we do not know whether it changes what they enrol in.
 
 ## 8.3 Recommendations
 
@@ -17,7 +17,7 @@ Use the app as a shortlist with evidence: read the quoted sentence before trusti
 
 ## 8.4 Next steps
 
-1. Tighten the umbrella rule to require a method or library, which removes four of six false partials.
-2. Rank subjects by similarity alone to compare the three methods.
-3. Label more ads and resumes with a second annotator.
-4. Run the user test with students.
+1.  Tighten the umbrella rule to require a method or library, which removes four of six false partials.
+2.  Rank subjects by similarity alone to compare the three methods.
+3.  Label more ads and resumes with a second annotator.
+4.  Run the user test with students.
