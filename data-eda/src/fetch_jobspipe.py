@@ -102,7 +102,7 @@ RAW_DIR = paths.RAW / "jobspipe"
 OUT = paths.JOBSPIPE_SKILLS
 TOTALS_DIR = paths.DEMAND / "collection"
 SKILL_COLUMNS = ["ad_id", "role", "title", "company", "location", "date_posted", "employer_type", "seniority",
-                 "providers", "url", "n_chars", "skills", "esco_tags"]
+                 "providers", "url", "n_chars", "skills", "esco_tags", "fetched"]
 
 
 def api_key() -> str:
@@ -147,7 +147,10 @@ def union_raw(folder: Path = RAW_DIR) -> pd.DataFrame:
     """Every raw fetch in date order; an ad fetched again for the same role keeps the row of its first fetch.
     An ad fetched for two roles keeps both rows: derive() keeps the one whose query matches the title."""
     files = sorted(folder.glob("jobspipe_ads_*.csv"))
-    raw = pd.concat([pd.read_csv(f, dtype=str, keep_default_na=False) for f in files], ignore_index=True)
+    # `fetched` names the batch (the file's date): the app asks JobsPipe for an ad's text with that batch's key,
+    # which paid for the ad and gets it again without a credit this month (app/ads.py)
+    raw = pd.concat([pd.read_csv(f, dtype=str, keep_default_na=False).assign(fetched=f.stem.removeprefix("jobspipe_ads_"))
+                     for f in files], ignore_index=True)
     return raw.drop_duplicates(["ad_id", "role_query"]).reset_index(drop=True)
 
 
