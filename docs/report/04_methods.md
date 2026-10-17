@@ -45,7 +45,7 @@ outside the dictionary that spaCy proposed, 69 (33%) are not skills (employers, 
 ## 4.2 Normalisation
 
 Each mention passes five steps, first hit wins: the vocabulary; an exact ESCO label (after dropping filler such as
-"skills"); the nearest ESCO label by MiniLM embedding (cosine ≥ 0.82); the Lightcast Open Skills API; and an explicit
+"skills"); the nearest ESCO label by MiniLM embedding (cosine ≥ 0.82); a Lightcast Open Skills lookup (built, not run: no API key); and an explicit
 **emerging** class. A vocabulary skill keeps its own id, and the ESCO id only when the link is exact: a broad link would
 merge distinct tools (Tableau and Power BI fall under one ESCO concept).
 
