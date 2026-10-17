@@ -93,13 +93,21 @@ st.markdown(ui.CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------------- small helpers
 
+# One-word skills that are concepts, not products: lower case in running text ("statistics", but "Python", "Spring").
+GENERIC_ONE_WORD = {"Clustering", "Communication", "Documentation", "Econometrics", "Encryption", "Firewalls",
+                    "Leadership", "Microservices", "Observability", "Optimisation", "Probability", "Serverless",
+                    "Statistics", "Teamwork"}
+
+
 def lc(label: str) -> str:
     """Lower-case a generic skill name for running text: "Machine learning" -> "machine learning",
     "Generative AI" -> "generative AI". Product and proper names keep their case ("Azure", "Microsoft Office",
-    "SQL Server"): one-word names are left alone, and so are names whose second word starts with a capital
-    followed by small letters."""
+    "SQL Server"): one-word names are left alone except the concepts in GENERIC_ONE_WORD ("Statistics"), and so
+    are names whose second word starts with a capital followed by small letters."""
     words = label.split()
-    if len(words) < 2 or not label[1:2].islower():
+    if len(words) < 2:
+        return label.lower() if label in GENERIC_ONE_WORD else label
+    if not label[1:2].islower():
         return label
     second = words[1]
     if second[:1].isupper() and second[1:2].islower():
@@ -156,16 +164,23 @@ def resource_html(r: dict) -> str:
     return ui.card(head + meta, dashed=True)
 
 
+HOT_TIP = ("<b>hot</b>: in the top third of certificates that live Australian ads for the role name (Adzuna, "
+           "16 Oct 2026), or in the Robert Half 2027 Salary Guide.")
+PRICE_TIP = "One exam attempt, from the vendor's page."
+
+
 def cert_card(c: dict) -> str:
     """One certification as a card: name linked, vendor, level, exam code, exam price, and "hot" with its ad count.
-    The long reason behind "hot" is in one note under the cards."""
-    price = (f"<div class='k-mono'>A${ui.esc(c['cost_aud'])}</div>" if c["cost_aud"] and c["cost_aud"] != "varies"
-             else "<div class='k-small k-mute'>Exam price varies by country</div>")
+    What "hot" means and where the price comes from show on hover (no note under the cards)."""
+    if c["cost_aud"] and c["cost_aud"] != "varies":
+        price = "<div>" + ui.tip(f"<span class='k-mono'>A${ui.esc(c['cost_aud'])}</span>", PRICE_TIP) + "</div>"
+    else:
+        price = "<div class='k-small k-mute'>Exam price varies by country</div>"
     exam = f" · exam {c['exam_code']}" if c["exam_code"] else ""
     hot = ""
     if c.get("hot", "").strip().lower() == "yes":
         n = re.search(r"\((\d[\d,]*) AU ads", c.get("hot_reason") or "")
-        hot = ui.chip(f"hot · {n.group(1)} AU ads" if n else "hot · salary guide", colour=ui.PARTIAL)
+        hot = ui.tip(ui.chip(f"hot · {n.group(1)} AU ads" if n else "hot · salary guide", colour=ui.PARTIAL), HOT_TIP)
     return (f"<div class='k-cert'><a href='{ui.esc(c['official_url'])}' target='_blank'>{ui.esc(c['cert'])}</a>"
             f"<div class='k-small k-mute'>{ui.esc(c['vendor'])} · {ui.esc(c['level'])}{ui.esc(exam)}</div>"
             f"{price}{hot}</div>")
@@ -613,6 +628,8 @@ def use_ad(ad_id: str) -> None:
 
 
 FAMILY_ALL = "All"
+ADS_SOURCE = ("<b>JobsPipe</b>: LinkedIn, Indeed and job boards, posted 1 Sep to 16 Oct 2026; a role's skill bars "
+              "count these same ads. <b>Employers' own job boards</b>: 65 of them, Aug to Oct 2026.")
 JOBS_PAGE = 30                                                  # ads listed at a time, then "Show 30 more"
 
 
@@ -668,8 +685,11 @@ def page_jobs() -> None:
         ss.jobs_filters, ss.jobs_shown = filters, JOBS_PAGE
     rows = found[:ss.jobs_shown]
     n = len(found)
-    st.caption(f"{n:,} ad{'' if n == 1 else 's'}, newest first" + (f" (showing {len(rows)})" if n > len(rows) else "")
-               + " · click an ad to read it here")
+    # The sources show on hover over "from 2026" (no note under the list: Quan's pick C, 17 Oct).
+    from_2026 = ui.tip("<span class='k-dotted'>from 2026</span>", ADS_SOURCE)
+    st.markdown(f"<div class='k-small k-soft'>{n:,} ad{'' if n == 1 else 's'} {from_2026}, newest first"
+                + (f" (showing {len(rows)})" if n > len(rows) else "") + " · click an ad to read it here</div>",
+                unsafe_allow_html=True)
     with st.container(key="ad_list"):
         for a in rows:
             is_open = ss.ad_open == a["id"]
@@ -685,8 +705,6 @@ def page_jobs() -> None:
     if n > len(rows):
         st.button(f"Show {min(JOBS_PAGE, n - len(rows))} more", key="jobs_more", type="tertiary",
                   on_click=show_more_ads)
-    st.caption("2026 ads: JobsPipe (LinkedIn, Indeed and job boards, 1 Sep to 16 Oct) and 65 employers' own "
-               "job boards (Aug to Oct). A role's skill bars count the same JobsPipe ads.")
     ad = ads.by_id(ss.get("ad_full")) if ss.get("ad_full") else None
     if ad:
         st.dialog(ad["title"], width="large", on_dismiss=close_full_ad)(ad_body)(ad)
@@ -729,24 +747,30 @@ def ad_body(ad: dict) -> None:
 
 # ---------------------------------------------------------------- step 3: results
 
-def bars_note(skills: list[dict], counted: bool, role: str | None) -> str:
-    """One line on where the bars come from (the only data note left on the page)."""
+def bars_aside(skills: list[dict], counted: bool, role: str | None, hatched: bool) -> str:
+    """Where the bars come from, on the right of the skills heading; how to read them on hover (no footnote)."""
+    click = "Click a skill for the evidence and where to learn it."
     if not counted:
-        return backend.role_source(role)
+        return ui.tip("core skills · no Australian ad counts yet", ui.tip_lines([ui.esc(backend.role_source(role)), click]),
+                      "right")
     who = backend.DEFAULT_ROLE if role is None else role      # a pasted ad is weighed by the Data Scientist ads
-    note = "Bars: share of " + backend.role_source(who, skills[0].get("demand_source"), skills[0].get("demand_period"))
+    source = backend.role_source(who, skills[0].get("demand_source"), skills[0].get("demand_period"))
+    lines = [f"<b>Each bar</b>: the share of these ads that name the skill. {ui.esc(source)}"]
     if backend.source_2019_22(role):
         from skillabus.match import trend_period
-        note += (f" Hover a bar for the {trend_period(who)} share; a hatched bar is a skill those older ads"
-                 " never named.")
-    return note
+        lines.append(f"Hover a bar for its {trend_period(who)} share."
+                     + (f" A hatched bar: a skill the {trend_period(who)} ads never named." if hatched else ""))
+    lines.append(click)
+    face = f"<span class='k-swatch'></span><span style='color:{ui.MUTE}'>share of {ui.esc(source.split(', full text')[0].rstrip('.'))}</span>"
+    return ui.tip(face, ui.tip_lines(lines), "right")
 
 
 def skills_section(skills: list[dict], counted: bool, noun: str, role: str | None = None) -> None:
-    aside = "bar = how often employers ask" if counted else "core skills · no Australian ad counts yet"
-    st.markdown(ui.h2(f"Skills the {noun} asks for", aside), unsafe_allow_html=True)
     from skillabus.match import trend_period
     period = trend_period(role or backend.DEFAULT_ROLE)      # "2019-22" for Data Scientist, "2020-21" for the others
+    hatched = counted and any(s.get("demand_pct_2019_22") is not None and s["demand_pct_2019_22"] < 1
+                              <= (s.get("demand_pct") or 0) for s in skills)
+    st.markdown(ui.h2(f"Skills the {noun} asks for", bars_aside(skills, counted, role, hatched)), unsafe_allow_html=True)
     for i, s in enumerate(skills):
         name_col, bar_col, status_col = st.columns([2.4, 4.4, 1.1], vertical_alignment="center")
         name_col.button(s["skill_label"] + (" ✦" if s["emerging"] else ""), key=f"open_{i}", type="tertiary",
@@ -765,15 +789,6 @@ def skills_section(skills: list[dict], counted: bool, noun: str, role: str | Non
             bar_col.markdown(f"<span class='k-small k-mute'>{CORE_SOURCE.get(s.get('core_source'), '')}</span>",
                              unsafe_allow_html=True)
         status_col.markdown(status_cell(s), unsafe_allow_html=True)
-    also = ss.result.get("also_in_ad") or []       # GPT-4o-mini found them; the vocabulary has no count for them
-    if also:
-        st.caption(f"Also in the ad, outside our skills list: {', '.join(also)}. Found by GPT-4o-mini; "
-                   "not counted above.")
-    st.caption(bars_note(skills, counted, role) + " Click a skill for the evidence and where to learn it.")
-    off_cv = [lc(s["skill_label"]) for s in skills if not_on_cv(s)]
-    if off_cv:
-        st.caption(f"From subjects you have taken but not on your resume: {', '.join(off_cv)}. "
-                   "Add them to your resume: employers read it, not your transcript.")
     if is_ad(ss.result) and ss.ad_keep.strip():
         st.button("Hide the ad" if ss.show_ad else "Show where these appear in the ad", key="toggle_ad",
                   type="tertiary", on_click=toggle, args=("show_ad",))
@@ -814,11 +829,29 @@ def outside_card(o: dict, by: dict) -> None:
 
 def path_section(res: dict, by: dict, counted: bool) -> None:
     lp, recs = res["learning_path"], {r["subject_code"]: r for r in res["recommendations"]}
-    aside = (f"<span style='color:{ui.HAVE}'>closes {lp['gaps_closed']} of {lp['gaps_total']} gaps</span>"
-             if lp["gaps_total"] else "")
-    st.markdown(ui.h2("Your path", aside), unsafe_allow_html=True)
     plan = {p["subject_code"]: p for p in lp.get("plan", []) if isinstance(p, dict)}
     subjects = [code for code in lp["subjects"] if code in recs]
+    aside = (ui.tip(f"<span style='color:{ui.HAVE}'>closes {lp['gaps_closed']} of {lp['gaps_total']} gaps</span>",
+                    "Tick &ldquo;I've taken this&rdquo; on a subject: it joins your subjects on the Inputs page, and "
+                    "the gaps and the path are recomputed.", "right") if lp["gaps_total"] else "")
+    st.markdown(ui.h2("Your path", aside), unsafe_allow_html=True)
+    open_gaps = [k for k in by if by[k]["status"] != "have"
+                 and not any(k in recs[c]["covers"] for c in lp["subjects"] if c in recs)]
+    no_subject = [k for k in open_gaps if not any(k in r["covers"] for r in res["recommendations"])]
+    later = [k for k in open_gaps if k not in no_subject]
+    items = []
+    if counted and lp["subjects"]:
+        items.append(ui.count_pill(f"{lp['demand_covered_pct']:.0f}%", "of the demand", ui.HAVE,
+                                   "The path covers this share of the employer demand behind your gaps."))
+    if later:
+        items.append(ui.count_pill(len(later), "still open", ui.PARTIAL, ui.tip_lines(
+            [f"Still open after this path: <b>{ui.esc(', '.join(lc(u) for u in later))}</b>.",
+             "Other subjects teach them: click the skill on the Skills tab."])))
+    if no_subject:
+        items.append(ui.count_pill(len(no_subject), "no UTS subject", ui.MISSING, ui.tip_lines(
+            [f"No subject's Handbook text names <b>{ui.esc(', '.join(lc(u) for u in no_subject))}</b>.",
+             "See the Outside UTS tab."])))
+    st.markdown(ui.pills(items), unsafe_allow_html=True)
     if not subjects:
         msg = ("You already have every skill on the list." if not lp["gaps_total"]
                else "No subject in the Handbook text covers these gaps; see the Outside UTS tab.")
@@ -828,23 +861,6 @@ def path_section(res: dict, by: dict, counted: bool) -> None:
         for col, code in zip(st.columns(3, gap="medium"), subjects[i:i + 3]):
             with col:
                 path_card(code, recs[code], by, plan)
-    open_gaps = [k for k in by if by[k]["status"] != "have"
-                 and not any(k in recs[c]["covers"] for c in lp["subjects"] if c in recs)]
-    no_subject = [k for k in open_gaps if not any(k in r["covers"] for r in res["recommendations"])]
-    later = [k for k in open_gaps if k not in no_subject]
-    notes = []
-    if later:
-        notes.append(f"Still open after this path: {', '.join(lc(u) for u in later)}. "
-                     "Click a skill for the other subjects that teach it.")
-    if no_subject:
-        notes.append(f"No subject text names: {', '.join(lc(u) for u in no_subject)}.")
-    if counted and lp["subjects"]:
-        notes.append(f"The path covers {lp['demand_covered_pct']:.0f}% of the employer demand behind your gaps.")
-    if notes:
-        st.caption(" ".join(notes))
-    if subjects:
-        st.caption("Tick \"I've taken this\" on a subject and it joins your subjects from the Inputs page; "
-                   "the gaps and the path are recomputed.")
 
 
 def outside_section(res: dict, by: dict) -> None:
@@ -854,7 +870,7 @@ def outside_section(res: dict, by: dict) -> None:
     chosen = [c for c in block.get("courses", []) if c in names]
     left_open = block.get("gaps_open_before", 0)
     aside = (f"<span style='color:{ui.HAVE}'>closes {block.get('gaps_closed', 0)} of the {left_open} gaps the UTS path "
-             "leaves open</span>" if chosen else "")
+             "leaves open</span> · not for UTS credit" if chosen else "not for UTS credit")
     st.markdown(ui.h2("Outside UTS", aside), unsafe_allow_html=True)
     if not chosen:
         msg = ("The UTS path covers every gap: nothing to add from outside." if not left_open
@@ -866,9 +882,9 @@ def outside_section(res: dict, by: dict) -> None:
         outside_card(names[code], by)
     others = [r for c, r in names.items() if c not in chosen]
     if others:
-        st.caption("Also teach these gaps: " + "; ".join(
-            f"{r['subject_name']} ({r.get('provider', '')})" for r in others[:3]) + ".")
-    st.caption("Free or free-to-audit where marked; none of these count for UTS credit.")
+        st.markdown(ui.pills([ui.count_pill(f"+{len(others)}", "more courses teach these gaps", ui.MUTE, ui.tip_lines(
+            [f"<b>{ui.esc(r['subject_name'])}</b> · {ui.esc(r.get('provider', ''))}" for r in others[:6]]))]),
+                    unsafe_allow_html=True)
 
 
 def certs_section(role: str) -> None:
@@ -881,12 +897,25 @@ def certs_section(role: str) -> None:
         if len(certs) > CERTS_SHOWN:
             st.button("Show fewer" if ss.certs_more else f"Show all {len(certs)}", key="certs_all", type="tertiary",
                       on_click=toggle, args=("certs_more",))
-        st.caption("\"hot\": in the top third of certificates that live Australian ads for the role name "
-                   "(Adzuna, 16 Oct 2026), or in the Robert Half 2027 Salary Guide. Exam price for one attempt, "
-                   "from the vendor's page.")
     else:
         st.markdown("<span class='k-mute'>No certification in our list for this role yet.</span>",
                     unsafe_allow_html=True)
+
+
+def result_pills(res: dict) -> tuple[str, ...]:
+    """The outlined counts after have / partial / missing: skills not on the resume, terms outside the list."""
+    out = []
+    off_cv = [s for s in res["skills"] if not_on_cv(s)]
+    if off_cv:
+        out.append(ui.count_pill(len(off_cv), "not on CV", ui.PARTIAL, ui.tip_lines(
+            [f"<b>{ui.esc(lc(s['skill_label']))}</b> · from {ui.esc(from_subject(s).group(2))}" for s in off_cv]
+            + ["You have these from your subjects, but employers read your resume, not your transcript: add them."])))
+    also = res.get("also_in_ad") or []             # GPT-4o-mini found them; the vocabulary has no count for them
+    if also:
+        out.append(ui.count_pill(len(also), "outside our list", ui.MUTE, ui.tip_lines(
+            [f"Also in the ad: {ui.esc(', '.join(also))}.",
+             "Found by GPT-4o-mini; our skills list has no ad counts for them, so they are not counted."])))
+    return tuple(out)
 
 
 def page_results() -> None:
@@ -920,7 +949,7 @@ def page_results() -> None:
         tail = f"skills still to learn. Biggest gaps: {', '.join(top)}."
     st.markdown(ui.h1(f"<span style='color:{colour};font-weight:500'>{len(gaps)} of {len(skills)}</span> "
                       f"{ui.esc(tail)}", "lg"), unsafe_allow_html=True)
-    st.markdown(ui.counts(n_have, n_part, len(gaps) - n_part), unsafe_allow_html=True)
+    st.markdown(ui.counts(n_have, n_part, len(gaps) - n_part, result_pills(res)), unsafe_allow_html=True)
 
     # One section at a time, full width (Quan's pick): the tabs below the verdict.
     tabs = ["Skills", "Your path", "Outside UTS"] + (["Certifications"] if role else [])
@@ -958,7 +987,9 @@ def status_cell(s: dict, long: bool = False) -> str:
     """A skill's status; amber "not on CV" for one the student has from a subject but not on the resume (Quan, 17 Oct:
     the note under the list was easy to miss)."""
     if not_on_cv(s):
-        return ui.status_html("partial", "you have it · not on your CV" if long else "have · not on CV")
+        face = ui.status_html("partial", "you have it · not on your CV" if long else "have · not on CV")
+        return ui.tip(face, f"<b>From {ui.esc(from_subject(s).group(2))}</b>, a subject you have taken. Your resume "
+                            "does not mention it: add it.", "" if long else "right")
     return ui.status_html(s["status"], ui.STATUS_TEXT[s["status"]] if long else None)
 
 
@@ -1031,6 +1062,9 @@ def fact_lines(s: dict) -> str:
                    for kind, icon, html in lines)
 
 
+VOTE_HELP = "Does this subject really teach the skill? Your vote helps us check the matcher."
+
+
 def uts_cards(label: str, res: dict) -> None:
     """Learn at UTS: up to three subjects whose Handbook text names the skill, as a row of cards."""
     hits = [(r, e) for r in res["recommendations"] for e in r["evidence"] if e["skill_label"] == label][:3]
@@ -1052,15 +1086,21 @@ def uts_cards(label: str, res: dict) -> None:
                                 unsafe_allow_html=True)
                 up, down = votes.get((r["subject_code"], label), [0, 0])
                 v1, v2 = st.columns(2, gap="small")
-                v1.button(f"👍 {up}", key=f"up_{i}", width="stretch", on_click=vote, args=(r["subject_code"], label, "up"))
-                v2.button(f"👎 {down}", key=f"down_{i}", width="stretch", on_click=vote,
+                v1.button(f"👍 {up}", key=f"up_{i}", width="stretch", on_click=vote, help=VOTE_HELP,
+                          args=(r["subject_code"], label, "up"))
+                v2.button(f"👎 {down}", key=f"down_{i}", width="stretch", on_click=vote, help=VOTE_HELP,
                           args=(r["subject_code"], label, "down"))
                 taken_tick(r["subject_code"], f"wi_ev_{i}")
-        st.caption("👍 / 👎: does the subject really teach this? Your vote helps us check the matcher.")
-    for d in [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]][:2]:
-        reason = re.sub(r"\b\d{5,6} (?=[A-Z])", "", d["reason"])          # names, not codes
-        reason = reason if len(reason) <= 120 else reason[:117].rstrip() + "\u2026"
-        st.caption(f"{SUBJECT_LABEL.get(d['subject_code'], d['subject_name'])} also teaches it, but {reason}.")
+    dropped = [d for d in res["learning_path"].get("dropped", []) if label in d["covers"]][:5]
+    if dropped:
+        lines = []
+        for d in dropped:
+            reason = re.sub(r"\b\d{5,6} (?=[A-Z])", "", d["reason"])          # names, not codes
+            reason = reason if len(reason) <= 120 else reason[:117].rstrip() + "\u2026"
+            lines.append(f"<b>{ui.esc(SUBJECT_LABEL.get(d['subject_code'], d['subject_name']))}</b> also teaches it, "
+                         f"but {ui.esc(reason)}.")
+        st.markdown(ui.pills([ui.count_pill(f"+{len(dropped)}", "more teach it, not open to you", ui.MUTE,
+                                            ui.tip_lines(lines))]), unsafe_allow_html=True)
 
 
 @st.fragment

@@ -121,7 +121,10 @@ def test_role_mode_data_engineer():
     assert at.segmented_control(key="results_tab").options == ["Skills", "Your path", "Outside UTS", "Certifications"]
     show_tab(at, "Outside UTS")
     assert "Outside UTS" in page_text(at)
-    assert "Bars: share of " in text and "JobsPipe Data Engineer ads, Sep-Oct 2026, full text." in text
+    # the source sits on the heading, how to read the bars on hover (C, 17 Oct: no footnotes)
+    assert "<span class='k-swatch'></span>" in text
+    assert "<b>Each bar</b>: the share of these ads that name the skill." in text
+    assert "JobsPipe Data Engineer ads, Sep-Oct 2026, full text." in text and not at.caption
     assert "Skills the role asks for" in text and "<span style='width:" in text        # the percentage bars
     show_tab(at, "Your path")
     assert "Your path" in page_text(at) and "closes" in page_text(at)
@@ -231,8 +234,9 @@ def test_skill_page_tells_apart_dropped_subjects_that_share_a_name():
     at.multiselect(key="taken_box").set_value(["36103", "36118"]).run()
     show_gaps(at)
     open_skill(at, next(i for i, s in enumerate(at.session_state.result["skills"]) if s["skill_label"] == "SQL"))
-    notes = [c.value for c in at.caption if "also teaches it" in c.value]
-    assert len(notes) == 2 and len(set(notes)) == 2, notes
+    import re
+    notes = re.findall(r"<div class='k-tipline'>(<b>[^<]*</b> also teaches it[^<]*)</div>", page_text(at))
+    assert len(notes) >= 2 and len(set(notes)) == len(notes), notes      # up to five, each named apart
 
 
 def scroll_scripts(at: AppTest) -> list:
@@ -286,7 +290,7 @@ def test_terms_outside_the_vocabulary_are_shown_apart_and_not_counted():
     at.run()
     assert not at.exception, at.exception
     text = page_text(at)
-    assert "Also in the ad, outside our skills list: Metaflow, problem framing." in text
+    assert "<b>2</b> outside our list" in text and "Also in the ad: Metaflow, problem framing." in text
     assert f"of {n}</span>" in text and "Metaflow" not in [b.label for b in at.button]
 
 
@@ -379,7 +383,8 @@ def test_browse_ads_lists_thirty_then_more():
     at = aim_at_an_ad(open_app())
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     assert sum((b.key or "").startswith("ad_") for b in at.button if b.key not in ("ad_full_btn",)) == 30
-    assert any(c.value.startswith(f"{len(ads.load()):,} ads, newest first (showing 30)") for c in at.caption)
+    text = page_text(at)
+    assert f">{len(ads.load()):,} ads <span class='k-tip" in text and ", newest first (showing 30)" in text
     at.button(key="jobs_more").click().run()
     assert sum((b.key or "").startswith("ad_") for b in at.button) == 60
 
@@ -422,7 +427,7 @@ def test_browse_ads_says_1_ad():
     at = aim_at_an_ad(open_app())
     at.segmented_control(key="ad_mode").set_value("Browse ads").run()
     at.text_input(key="job_q").set_value(query).run()
-    assert any(c.value.startswith("1 ad, ") for c in at.caption), [c.value for c in at.caption]
+    assert ">1 ad <span class='k-tip" in page_text(at)
 
 
 def test_handbook_chat_is_its_own_page_and_names_no_codes():
@@ -460,7 +465,8 @@ def test_taken_subjects_count_for_a_job_ad_and_ask_for_the_resume():
     ml = next(s for s in skills if s["skill_label"] == "Machine learning")
     assert ml["status"] == "have" and ml["resume_evidence"].startswith("From 36120")
     assert "36120" not in [r["subject_code"] for r in at.session_state.result["recommendations"]]
-    assert "From subjects you have taken but not on your resume: machine learning" in page_text(at)
+    text = page_text(at)
+    assert "not on CV</span>" in text and "<b>machine learning</b> · from Advanced Machine Learning Application" in text
     # its row says so in amber, not as a plain "have" (17 Oct: the note under the list was easy to miss)
     from_subjects = sum((s["resume_evidence"] or "").endswith("(taken)") for s in skills)
     assert page_text(at).count("have · not on CV") == from_subjects >= 1
@@ -487,7 +493,7 @@ def test_no_resume_counts_only_the_subjects():
     show_gaps(at)
     skills = at.session_state.result["skills"]
     assert at.session_state.resume_text == "" and all(s["status"] == "missing" for s in skills)
-    assert "From subjects you have taken" not in page_text(at)
+    assert "not on CV" not in page_text(at)
 
 
 def test_start_over_clears_the_inputs():
@@ -500,3 +506,30 @@ def test_start_over_clears_the_inputs():
     assert at.session_state.step == "inputs" and at.session_state.result is None
     assert at.session_state.taken_keep == [] and at.session_state.role_keep == "Data Scientist"
     assert at.multiselect(key="taken_box").value == [] and chosen_roles(at) == ["Data Scientist"]
+
+
+def test_no_footnotes_on_the_results_and_skill_pages():
+    # C (17 Oct): counts and short labels on top, the details on hover; no caption under a list or a row of cards.
+    at = open_app()
+    pick_role(at, "Data Engineer")
+    at.multiselect(key="taken_box").set_value(["94693"]).run()                   # Big Data Engineering
+    show_gaps(at)
+    for tab in ("Skills", "Your path", "Outside UTS", "Certifications"):
+        show_tab(at, tab)
+        assert not at.caption, (tab, [c.value for c in at.caption])
+    text = page_text(at)
+    assert "class='k-tip" in text and "<b>hot</b>: in the top third of certificates" in text
+    show_tab(at, "Skills")
+    open_skill(at)
+    assert not at.caption, [c.value for c in at.caption]
+    assert all(b.help for b in at.button if (b.key or "").startswith(("up_", "down_")))   # the votes say why on hover
+
+
+def test_generic_one_word_skills_are_lower_case_in_running_text():
+    src = (ROOT / "app" / "Home.py").read_text(encoding="utf-8")
+    start, end = src.index("# One-word skills that are concepts"), src.index("def read_resume(")
+    ns = {}
+    exec(src[start:end], ns)
+    assert ns["lc"]("Statistics") == "statistics" and ns["lc"]("Teamwork") == "teamwork"
+    assert ns["lc"]("Python") == "Python" and ns["lc"]("Spring") == "Spring" and ns["lc"]("Tableau") == "Tableau"
+    assert ns["lc"]("Machine learning") == "machine learning" and ns["lc"]("Power BI") == "Power BI"

@@ -128,6 +128,20 @@ button[data-testid="stBaseButton-pillsActive"] p, button[data-testid="stBaseButt
 button[data-testid="stBaseButton-pills"], button[data-testid="stBaseButton-segmented_control"] { transition: border-color .15s, background .15s; }
 button[data-testid="stBaseButton-pills"]:hover, button[data-testid="stBaseButton-segmented_control"]:hover { border-color: rgba(255,255,255,.4) !important; }
 .k-mono, .k-count b { font-variant-numeric: tabular-nums; }
+/* No footnotes (Quan's pick C, 17 Oct): a count or a short label on top, its details on hover or keyboard focus */
+.k-tip { position: relative; display: inline-flex; align-items: center; cursor: help; outline: none; }
+.k-tipbox { display: none; position: absolute; z-index: 60; left: 0; top: calc(100% + 6px); width: max-content;
+  max-width: 340px; background: #1b1e22; border: 1px solid rgba(255,255,255,.16); border-radius: 6px; padding: 8px 11px;
+  font: 400 12.5px/1.5 'Public Sans', system-ui, sans-serif; color: #c9c8c2; text-align: left; white-space: normal;
+  letter-spacing: 0; text-transform: none; box-shadow: 0 6px 18px rgba(0,0,0,.45); }
+.k-tipbox b { color: #e8e6e1; font-weight: 500; }
+.k-tipbox .k-tipline + .k-tipline { margin-top: 3px; }
+.k-tip:hover .k-tipbox, .k-tip:focus .k-tipbox { display: block; }
+.k-tip.right .k-tipbox { left: auto; right: 0; }
+.k-tip:focus-visible { outline: 1px dotted #8fbcff; outline-offset: 2px; }
+.k-count.o { background: transparent; border: 1px solid; }
+.k-swatch { display: inline-block; width: 16px; height: 6px; border-radius: 3px; background: #4fd1b8; margin-right: 7px; vertical-align: middle; }
+.k-dotted { border-bottom: 1px dotted currentColor; }
 div[data-testid="stDataFrame"] { border-radius: 6px; overflow: hidden; }
 div[data-testid="stTextArea"] textarea { font-family: 'Literata', Georgia, serif; font-size: 16px; line-height: 1.6; }
 /* A chosen item in a multiselect: Streamlit paints it in the (light) primary colour with light text. Dark chip instead.
@@ -198,11 +212,34 @@ def h2(text: str, aside: str = "") -> str:
             f"<div class='k-h2' role='heading' aria-level='2'>{text}</div>{right}</div>")
 
 
-def counts(have: int, partial: int, missing: int) -> str:
+def tip(face: str, body: str, where: str = "") -> str:
+    """`face` (inline HTML) that shows `body` (inline HTML) on hover or keyboard focus: what a footnote used to say
+    (Quan's pick C, 17 Oct). where="right" opens it leftwards, for something at the right edge."""
+    return (f"<span class='k-tip {where}' tabindex='0'>{face}"
+            f"<span class='k-tipbox' role='tooltip'>{body}</span></span>")
+
+
+def tip_lines(lines: list[str]) -> str:
+    """Tooltip body of several short lines (each inline HTML)."""
+    return "".join(f"<div class='k-tipline'>{line}</div>" for line in lines)
+
+
+def count_pill(n, word: str, colour: str, body: str = "", where: str = "") -> str:
+    """An outlined count ("2 not on CV") whose details show on hover; filled pills are have / partial / missing."""
+    face = f"<span class='k-count o' style='border-color:{colour}88;color:{colour}'><b>{n}</b> {esc(word)}</span>"
+    return tip(face, body, where) if body else face
+
+
+def counts(have: int, partial: int, missing: int, extra: tuple[str, ...] = ()) -> str:
     def pill(n, word, colour):
         return f"<span class='k-count' style='background:{colour}1f;color:{colour}'><b>{n}</b> {word}</span>"
     return ("<div class='k-counts'>" + pill(have, "have", HAVE) + pill(partial, "partial", PARTIAL)
-            + pill(missing, "missing", MISSING) + "</div>")
+            + pill(missing, "missing", MISSING) + "".join(extra) + "</div>")
+
+
+def pills(items: list[str]) -> str:
+    """A row of count pills (count_pill) under a heading."""
+    return "<div class='k-counts' style='margin:0 0 12px'>" + "".join(items) + "</div>" if items else ""
 
 
 def chip(label: str, status: str | None = None, colour: str | None = None) -> str:
